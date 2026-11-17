@@ -1,12 +1,12 @@
 {
-  "name": "Köprü – Deutsch ⇄ Türkisch lernen",
-  "short_name": "Köprü",
+  "name": "Deutsch ⇄ Türkçe",
+  "short_name": "DE ⇄ TR",
   "description": "Deutsch für Türkischsprechende und Türkisch für Deutschsprechende – von A1 bis C1.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f5f6fa",
-  "theme_color": "#e03131",
+  "theme_color": "#3b5bdb",
   "icons": [
     { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },

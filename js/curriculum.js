@@ -1,4 +1,4 @@
-/* Köprü – Lehrplan (A1–C1) für beide Kurse.
+/* Deutsch ⇄ Türkçe – Lehrplan (A1–C1) für beide Kurse.
  * Jedes Thema bekommt seine Inhalte über KOPRU.add(id, {...}) aus den Dateien in js/content/.
  * Themen ohne Inhalte erscheinen als „in Vorbereitung“.
  */
@@ -18,7 +18,7 @@ window.KOPRU = {
     /* Deutsch lernen – für Türkischsprechende (Erklärungen auf Türkisch) */
     de: {
       id: 'de', ui: 'tr', target: 'de', tts: 'de-DE', flag: '🇩🇪',
-      label: 'Almanca öğren', sublabel: 'Açıklamalar Türkçe',
+      label: 'Almanca Öğren', sublabel: 'Açıklamalar Türkçe',
       chars: ['ä', 'ö', 'ü', 'ß', 'Ä', 'Ö', 'Ü'],
       levels: {
         A1: [

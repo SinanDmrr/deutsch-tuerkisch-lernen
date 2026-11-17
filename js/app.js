@@ -1,4 +1,4 @@
-/* Köprü – App-Logik (Vanilla JS, keine Abhängigkeiten).
+/* Deutsch ⇄ Türkçe – App-Logik (Vanilla JS, keine Abhängigkeiten).
  * Fortschritt wird pro Profil im localStorage gespeichert (Schlüssel „kopru.v1“).
  */
 (function () {
@@ -110,7 +110,7 @@
     newBadge: ['neu', 'yeni'],
     doneBadge: ['fertig', 'bitti'],
     mistakesBadge: ['Fehler', 'hata'],
-    footer: ['Köprü – Deutsch ⇄ Türkçe · Fortschritt bleibt in deinem Browser', 'Köprü – Deutsch ⇄ Türkçe · İlerlemen tarayıcında kalır'],
+    footer: ['Türkisch lernen · Dein Fortschritt bleibt in deinem Browser', 'Almanca Öğren · İlerlemen tarayıcında kalır'],
     fromAllTopics: ['Fehler aus allen Themen', 'Tüm konulardan hatalar'],
     mixedPractice: ['Fehlertraining', 'Hata çalışması'],
     goLessons: ['Zu den Lektionen', 'Derslere git']
@@ -197,7 +197,7 @@
     if (!canSpeak) return '';
     return '<button class="speak" data-speak="' + esc(plain(text)) + '" title="' + esc(t('listen')) + '" aria-label="' + esc(t('listen')) + '">🔊</button>';
   }
-  var LOGO = '<svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e03131"/><stop offset="1" stop-color="#c2255c"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#lg)"/><path d="M10 44c8-17 36-17 44 0" stroke="#ffd43b" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M22 44v-9M32 44v-12M42 44v-9" stroke="#ffd43b" stroke-width="3" stroke-linecap="round"/><path d="M7 46h50" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg>';
+  var LOGO = '<svg class="logo" aria-hidden="true" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#3b5bdb"/><path d="M11 14h26a5 5 0 0 1 5 5v13a5 5 0 0 1-5 5H24l-7 6v-6h-6a5 5 0 0 1-5-5V19a5 5 0 0 1 5-5z" fill="#fff"/><path d="M53 26H30a5 5 0 0 0-5 5v12a5 5 0 0 0 5 5h12l7 6v-6h4a5 5 0 0 0 5-5V31a5 5 0 0 0-5-5z" fill="#fcc419"/><path d="M14 22h18M14 28h12" stroke="#3b5bdb" stroke-width="3" stroke-linecap="round"/><path d="M32 35h18M32 41h12" stroke="#3b5bdb" stroke-width="3" stroke-linecap="round"/></svg>';
 
   /* ================= Lehrplan-Zugriff ================= */
   function topicsOf(cid) {
@@ -303,13 +303,14 @@
       ['settings', '⚙️', t('settings')]
     ];
     document.documentElement.lang = uiLang();
+    document.title = c.label + ' · Deutsch ⇄ Türkçe';
     return '' +
       '<header class="topbar"><div class="topbar-inner">' +
         '<div class="toprow">' +
-          '<a class="brand" href="#/dashboard">' + LOGO + '<span>Köprü<small>Deutsch ⇄ Türkçe</small></span></a>' +
+          '<a class="brand" href="#/dashboard">' + LOGO + '<span>' + esc(c.label) + '<small>Deutsch ⇄ Türkçe</small></span></a>' +
           '<span class="spacer"></span>' +
           '<button class="pill-btn" data-act="toggle-course" title="' + esc(t('courseToggle')) + ' → ' + esc(other.label) + '">' +
-            '<span>' + c.flag + '</span><span class="pb-label">' + esc(c.label) + '</span><span aria-hidden="true">⇄</span></button>' +
+            '<span aria-hidden="true">⇄</span><span>' + other.flag + '</span><span class="pb-label">' + esc(other.label) + '</span></button>' +
           '<button class="icon-btn" data-act="toggle-theme" title="' + esc(t('themeToggle')) + '" aria-label="' + esc(t('themeToggle')) + '">' + (currentThemeIsDark() ? '☀️' : '🌙') + '</button>' +
         '</div>' +
         '<nav class="tabs" aria-label="Navigation">' + tabs.map(function (x) {
@@ -330,7 +331,7 @@
         '<span class="muted">' + esc(c.sublabel) + ' · A1 → C1</span></button>';
     }).join('');
     return '<main><div class="onboard">' + LOGO +
-      '<h1>Köprü</h1><p class="muted">Deutsch ⇄ Türkçe — Willkommen! · Hoş geldin!</p>' +
+      '<h1>Deutsch ⇄ Türkçe</h1><p class="muted">Willkommen! · Hoş geldin!</p>' +
       '<div class="course-cards">' + cards + '</div>' +
       '<div class="field"><label for="ob-name">Name / İsim <span class="muted">(optional / isteğe bağlı)</span></label>' +
       '<input id="ob-name" class="input" maxlength="30" autocomplete="nickname" value="' + esc(obName) + '"></div>' +
@@ -743,7 +744,7 @@
     if (!db.active || !db.profiles[db.active]) {
       var ids = Object.keys(db.profiles);
       if (ids.length) { db.active = ids[0]; save(); }
-      else { document.documentElement.lang = 'de'; app.innerHTML = viewOnboarding(); return; }
+      else { document.documentElement.lang = 'de'; document.title = 'Deutsch ⇄ Türkçe'; app.innerHTML = viewOnboarding(); return; }
     }
     var r = parseHash(), active = r.page, inner;
     // Player zurücksetzen, wenn man die Übungsansicht verlässt
@@ -886,10 +887,10 @@
   }
   function doExport() {
     var p = prof();
-    var data = { app: 'koepru', v: 1, exported: new Date().toISOString(), profile: { name: p.name, course: p.course, prog: p.prog } };
+    var data = { app: 'deutsch-tuerkce', v: 1, exported: new Date().toISOString(), profile: { name: p.name, course: p.course, prog: p.prog } };
     var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     var a = document.createElement('a');
-    a.href = URL.createObjectURL(blob); a.download = 'koepru-' + (p.name || 'profil').replace(/[^\wäöüßçğışı-]+/gi, '_') + '.json';
+    a.href = URL.createObjectURL(blob); a.download = 'fortschritt-ilerleme-' + (p.name || 'profil').replace(/[^\wäöüßçğışı-]+/gi, '_') + '.json';
     document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
   }
   function doImport(file) {

@@ -1,4 +1,4 @@
-# Köprü – Deutsch ⇄ Türkçe
+# Deutsch ⇄ Türkçe
 
 Lernplattform für **Türkischsprechende, die Deutsch lernen** (Erklärungen auf Türkisch) und **Deutschsprechende, die Türkisch lernen** (Erklärungen auf Deutsch) – Ziel: von null bis C1.
 
@@ -10,10 +10,9 @@ Lernplattform für **Türkischsprechende, die Deutsch lernen** (Erklärungen auf
 
 ## Auf GitHub Pages veröffentlichen
 
-1. Auf GitHub ein neues, **öffentliches** Repository anlegen (z. B. `koepru`).
-2. Den Inhalt dieses Ordners hochladen (*Add file → Upload files*, Ordner per Drag & Drop) und committen.
-3. *Settings → Pages → Build and deployment → Source: Deploy from a branch → Branch: `main` / `(root)` → Save.*
-4. Nach 1–2 Minuten ist die Seite unter `https://<dein-name>.github.io/koepru/` erreichbar.
+1. Repository: https://github.com/SinanDmrr/deutsch-tuerkisch-lernen
+2. *Settings → Pages → Build and deployment → Source: Deploy from a branch → Branch: `main` / `(root)` → Save.*
+3. Seite: https://sinandmrr.github.io/deutsch-tuerkisch-lernen/
 
 ## Inhalte erweitern
 
