@@ -30,3 +30,11 @@ Der Fortschritt liegt im Browser der Nutzer (`localStorage`, Schlüssel `dt-data
 - Aufgabe löschen → ihr Eintrag wird nur nicht mehr gezählt (nichts wird gelöscht).
 - Ändert sich das Speicherformat, kommt in `migrate()` (`js/app.js`) ein neuer Schritt dazu; vorher wird automatisch eine Sicherung unter `dt-backup` abgelegt.
 - Nutzer können ihren Stand in den Einstellungen exportieren/importieren (z. B. für ein neues Gerät).
+
+## Sprachausgabe (Piper TTS, Open Source)
+
+- Beispiele, Vokabeln und Lösungen (Lückentext/Satzbau) werden mit **Piper**-Stimmen vorgelesen, die **GitHub Actions** automatisch erzeugt (`.github/workflows/tts.yml`).
+- Bei jedem Push mit geänderten Inhalten: `tools/extract-texts.js` sammelt die Texte → `tools/gen_audio.py` erzeugt nur **neue** MP3s → Commit „Audio aktualisiert (Piper TTS)“ durch `github-actions[bot]`.
+- Stimmen (weiblich/männlich je Sprache) und Hörproben: `tools/tts-voices.json`. Lizenz der Stimmen siehe jeweilige MODEL_CARD auf https://huggingface.co/rhasspy/piper-voices.
+- Fehlt eine Audiodatei (z. B. direkt nach einem Update, bevor die Action fertig ist), nutzt die Seite eine **passende Gerätestimme** – nie eine fremdsprachige.
+- Manuell neu erzeugen: Repo → *Actions* → „Sprachausgabe (Piper TTS)“ → *Run workflow*.

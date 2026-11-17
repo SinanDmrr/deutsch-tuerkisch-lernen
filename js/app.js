@@ -8,7 +8,7 @@
   var BACKUP = 'dt-backup';          // Kopie vor jedem App-Update / jeder Migration
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var SCHEMA = 2;                    // Version des Speicherformats
-  var APP_VERSION = '2026-11-17.10';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-17.11';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -137,6 +137,10 @@
     noSpeech: ['Dieser Browser kann nicht vorlesen.', 'Bu tarayıcı sesli okuma desteklemiyor.'],
     test: ['Testen', 'Dene'],
     voiceAuto: ['Automatisch', 'Otomatik'],
+    piperInfo: ['Beispiele, Vokabeln und Lösungen werden mit Open-Source-Stimmen (Piper) vorgelesen – auf jedem Gerät gleich:', 'Örnekler, kelimeler ve cevaplar açık kaynak seslerle (Piper) okunur – her cihazda aynı:'],
+    piperMissing: ['Die Open-Source-Audiodateien werden gerade erzeugt oder sind nicht erreichbar – bis dahin wird die Gerätestimme genutzt.', 'Açık kaynak ses dosyaları şu an hazırlanıyor veya erişilemiyor – o zamana kadar cihaz sesi kullanılır.'],
+    samples: ['Hörproben', 'Ses örnekleri'],
+    deviceVoice: ['Gerätestimme (für alles andere)', 'Cihaz sesi (diğer her şey için)'],
     female: ['Weiblich', 'Kadın'],
     male: ['Männlich', 'Erkek'],
     notInstalled: ['Auf diesem Gerät nicht installiert', 'Bu cihazda yüklü değil'],
@@ -306,15 +310,50 @@
     if (g) { var byG = list.filter(function (v) { return voiceGender(v) === g; })[0]; if (byG) return byG; }
     return list[0] || null;
   }
+  /* ---------- Piper-Audio (Open Source, in GitHub Actions erzeugt: audio/manifest.json) ---------- */
+  var AUDIO = null, curAudio = null;
+  function loadAudioManifest() {
+    if (!window.fetch) return;
+    fetch('audio/manifest.json?v=' + APP_VERSION, { cache: 'no-cache' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) { AUDIO = j; if (db.active && parseHash().page === 'settings') render(); })
+      .catch(function () { /* offline oder lokal geöffnet → Gerätestimme */ });
+  }
+  function piperVoices(lang2) { return (AUDIO && AUDIO.voices && AUDIO.voices[lang2]) || {}; }
+  function playUrl(url, onFail) {
+    try {
+      if (canSpeak) speechSynthesis.cancel();
+      if (curAudio) curAudio.pause();
+      curAudio = new Audio(url);
+      var p = curAudio.play();
+      if (p && p.catch) p.catch(function () { if (onFail) onFail(); });
+    } catch (e) { if (onFail) onFail(); }
+  }
+  // Reihenfolge der Quellen je nach Wunsch: Automatisch → Piper ♀, Piper ♂, Gerät; ♀/♂ → Piper gewünscht, Gerät gewünscht, Rest
   function speak(text, lang, voiceName, retried) {
-    if (!canSpeak) return;
+    var key = plain(text).trim(), lang2 = lang.slice(0, 2), g = db.voiceGender || '';
+    if (!voiceName && AUDIO) {
+      var pv = piperVoices(lang2), order = g === 'm' ? ['male', 'female'] : ['female', 'male'];
+      var deviceHasG = g && sortedVoices(lang).some(function (v) { return voiceGender(v) === g; });
+      for (var i = 0; i < order.length; i++) {
+        var vk = pv[order[i]];
+        if (i > 0 && deviceHasG) break;  // gewünschtes Geschlecht lieber von der Gerätestimme als falsches Geschlecht
+        var fid = vk && AUDIO.files && AUDIO.files[vk] && AUDIO.files[vk][key];
+        if (fid) { playUrl('audio/' + vk + '/' + fid + '.mp3', function () { deviceSpeak(text, lang, null, retried); }); return; }
+      }
+    }
+    deviceSpeak(text, lang, voiceName, retried);
+  }
+  function deviceSpeak(text, lang, voiceName, retried) {
+    if (!canSpeak) { showVoiceHelp(lang); return; }
     if (!voicesCache.length) loadVoices();
     var v = voiceName ? voicesFor(lang).filter(function (x) { return x.name === voiceName; })[0] : bestVoice(lang);
     if (!v) {
-      if (!voicesCache.length && !retried) { setTimeout(function () { loadVoices(); speak(text, lang, voiceName, true); }, 700); return; }
+      if (!voicesCache.length && !retried) { setTimeout(function () { loadVoices(); deviceSpeak(text, lang, voiceName, true); }, 700); return; }
       showVoiceHelp(lang); return;   // lieber gar nicht vorlesen als mit falscher (z. B. englischer) Stimme
     }
     try {
+      if (curAudio) curAudio.pause();
       speechSynthesis.cancel();
       var u = new SpeechSynthesisUtterance(plain(text));
       u.voice = v; u.lang = v.lang || lang; u.rate = 0.92;
@@ -355,22 +394,40 @@
     el.addEventListener('click', function (e) { if (e.target === el || e.target.hasAttribute('data-close') || e.target.closest('a')) el.remove(); });
     document.body.appendChild(el);
   }
+  function prettyVoice(key) {   // „tr_TR-fahrettin-medium“ → „Fahrettin“
+    var n = (key.split('-')[1] || key).replace(/_/g, ' ');
+    return n.charAt(0).toUpperCase() + n.slice(1);
+  }
   function voiceSettingsHtml() {
-    if (!canSpeak) return '<p class="muted">' + esc(t('noSpeech')) + '</p>';
-    var lang = course().tts, list = sortedVoices(lang), cur = bestVoice(lang);
-    if (!list.length) return voiceHelpHtml();
-    var g = db.voiceGender || '';
-    var hasF = list.some(function (v) { return voiceGender(v) === 'f'; }), hasM = list.some(function (v) { return voiceGender(v) === 'm'; });
-    var seg = '<div class="seg" style="margin:4px 0 12px">' + [['', t('voiceAuto')], ['f', '♀ ' + t('female')], ['m', '♂ ' + t('male')]].map(function (x) {
+    var lang = course().tts, lang2 = lang.slice(0, 2), list = canSpeak ? sortedVoices(lang) : [], cur = bestVoice(lang);
+    var pv = piperVoices(lang2), g = db.voiceGender || '';
+    var hasF = !!pv.female || list.some(function (v) { return voiceGender(v) === 'f'; });
+    var hasM = !!pv.male || list.some(function (v) { return voiceGender(v) === 'm'; });
+    var seg = '<div class="seg" style="margin:4px 0 10px">' + [['', t('voiceAuto')], ['f', '♀ ' + t('female')], ['m', '♂ ' + t('male')]].map(function (x) {
       var dis = (x[0] === 'f' && !hasF) || (x[0] === 'm' && !hasM);
       return '<button data-act="voice-gender" data-v="' + x[0] + '" class="' + (g === x[0] ? 'on' : '') + '"' + (dis ? ' disabled title="' + esc(t('notInstalled')) + '"' : '') + '>' + esc(x[1]) + '</button>';
     }).join('') + '</div>' + ((g === 'f' && !hasF) || (g === 'm' && !hasM) ? '<p class="muted small">' + esc(t('genderMissing')) + '</p>' : '');
-    return seg + '<label class="small" for="voice-sel" style="display:block"><b>' + esc(t('voiceFor')) + '</b></label><div class="inline-form" style="margin-top:6px">' +
+    var piper = '';
+    if (pv.female || pv.male) {
+      var samples = (AUDIO.samples && AUDIO.samples[lang2]) || {};
+      piper = '<p class="small" style="margin:6px 0 8px">' + esc(t('piperInfo')) + ' ' +
+        ['female', 'male'].filter(function (x) { return pv[x]; }).map(function (x) { return (x === 'female' ? '♀ ' : '♂ ') + esc(prettyVoice(pv[x])); }).join(' · ') + '</p>' +
+        (Object.keys(samples).length ? '<div class="btn-row" style="margin-bottom:12px"><span class="small muted">' + esc(t('samples')) + ':</span>' + Object.keys(samples).map(function (k) {
+          return '<button class="btn small" data-act="play-sample" data-url="audio/' + esc(samples[k]) + '">▶ ' + esc(prettyVoice(k)) + '</button>';
+        }).join('') + '</div>' : '');
+    } else {
+      piper = '<p class="muted small">' + esc(t('piperMissing')) + '</p>';
+    }
+    var device;
+    if (!canSpeak) device = '<p class="muted small">' + esc(t('noSpeech')) + '</p>';
+    else if (!list.length) device = voiceHelpHtml();
+    else device = '<div class="inline-form" style="margin-top:6px">' +
       '<select id="voice-sel" class="input" data-act="voice" style="max-width:420px">' + list.map(function (v, i) {
         var vg = voiceGender(v);
         return '<option value="' + esc(v.name) + '"' + (cur && cur.name === v.name ? ' selected' : '') + '>' + (vg === 'f' ? '♀ ' : vg === 'm' ? '♂ ' : '') + esc(v.name) + (i === 0 ? ' ★' : '') + '</option>';
       }).join('') + '</select><button class="btn" data-act="voice-test">▶ ' + esc(t('test')) + '</button></div>' +
       '<p class="muted small" style="margin-top:8px">' + esc(t('voiceTip')) + '</p>';
+    return seg + piper + '<h3 style="margin:14px 0 4px;font-size:.95rem">' + esc(t('deviceVoice')) + '</h3>' + device;
   }
   function speakBtn(text) {
     if (!canSpeak) return '';
@@ -823,7 +880,7 @@
     var why = res.hint || t('genericWrong');
     return '<div class="fb bad"><div class="fb-title">' + esc(t('notQuite')) + '</div>' +
       '<div class="fb-row"><span class="k">' + esc(t('yourAnswer')) + ':</span><s>' + md(res.given || '–') + '</s></div>' +
-      '<div class="fb-row"><span class="k">' + esc(t('rightAnswer')) + ':</span><b>' + md(res.correct) + '</b> ' + speakBtn(res.correct) + '</div>' +
+      '<div class="fb-row"><span class="k">' + esc(t('rightAnswer')) + ':</span><b>' + md(res.correct) + '</b> ' + ((ex.t === 'gap' || ex.t === 'order') ? speakBtn(res.correct) : '') + '</div>' +
       '<div class="fb-sec"><h4>' + esc(t('whyWrong')) + '</h4><p>' + md(why) + '</p></div>' + e + '</div>';
   }
   function renderSummary() {
@@ -1056,7 +1113,13 @@
         break;
       }
       case 'export': doExport(); break;
-      case 'voice-gender': if (!el.disabled) { db.voiceGender = el.getAttribute('data-v'); db.voices = db.voices || {}; delete db.voices[course().tts]; save(); render(); speak(t('testSentence'), course().tts); } break;
+      case 'voice-gender': if (!el.disabled) {
+        db.voiceGender = el.getAttribute('data-v'); db.voices = db.voices || {}; delete db.voices[course().tts]; save(); render();
+        var pvx = piperVoices(course().target), gk = db.voiceGender === 'm' ? pvx.male : (pvx.female || (db.voiceGender ? null : pvx.male));
+        var smp = gk && AUDIO && AUDIO.samples && AUDIO.samples[course().target] && AUDIO.samples[course().target][gk];
+        if (smp) playUrl('audio/' + smp); else deviceSpeak(t('testSentence'), course().tts);
+      } break;
+      case 'play-sample': playUrl(el.getAttribute('data-url')); break;
       case 'voice-test': { var sel = document.getElementById('voice-sel'); speak(t('testSentence'), course().tts, sel ? sel.value : null); break; }
       case 'reset-course': if (armed(el, t('confirmReset'))) { prof().prog[courseId()] = {}; save(); player = null; render(); } break;
     }
@@ -1159,5 +1222,6 @@
     rd.readAsText(file);
   }
 
+  loadAudioManifest();
   render();
 })();

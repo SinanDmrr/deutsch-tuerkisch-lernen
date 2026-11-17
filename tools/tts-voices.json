@@ -1,0 +1,21 @@
+{
+  "_info": "Piper-Stimmen (https://huggingface.co/rhasspy/piper-voices). Pro Sprache und Geschlecht wird die erste verfügbare Stimme der Liste genommen. 'samples' = Stimmen, von denen nur eine Hörprobe erzeugt wird.",
+  "voices": {
+    "de": {
+      "female": ["de_DE-kerstin-low", "de_DE-ramona-low", "de_DE-eva_k-x_low"],
+      "male": ["de_DE-thorsten-high", "de_DE-thorsten-medium"]
+    },
+    "tr": {
+      "male": ["tr_TR-fahrettin-medium", "tr_TR-fettah-medium"],
+      "female": []
+    }
+  },
+  "samples": {
+    "de": ["de_DE-kerstin-low", "de_DE-ramona-low", "de_DE-eva_k-x_low", "de_DE-thorsten-high", "de_DE-karlsson-low"],
+    "tr": ["tr_TR-fahrettin-medium", "tr_TR-fettah-medium", "tr_TR-dfki-medium"]
+  },
+  "sampleText": {
+    "de": "Guten Tag! Ich lerne jeden Tag ein bisschen Deutsch.",
+    "tr": "Merhaba! Her gün biraz Türkçe öğreniyorum. Şeker yok."
+  }
+}
