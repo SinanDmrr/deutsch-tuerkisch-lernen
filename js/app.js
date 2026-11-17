@@ -8,7 +8,7 @@
   var BACKUP = 'dt-backup';          // Kopie vor jedem App-Update / jeder Migration
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var SCHEMA = 2;                    // Version des Speicherformats
-  var APP_VERSION = '2026-11-17.7';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-17.8';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -118,11 +118,17 @@
     fromAllTopics: ['Fehler aus allen Themen', 'Tüm konulardan hatalar'],
     mixedPractice: ['Fehlertraining', 'Hata çalışması'],
     goLessons: ['Zu den Lektionen', 'Derslere git'],
-    mascotNew: ['Hallo, ich bin Lingo! Lass uns mit der ersten Lektion starten.', 'Merhaba, ben Lingo! Hadi ilk dersle başlayalım.'],
-    mascotToday: ['Heute schon gelernt – stark! 👍', 'Bugün çalıştın – harika! 👍'],
-    mascotYesterday: ['Zuletzt gestern gelernt – super, bleib dran! 👍', 'En son dün çalıştın – süper, böyle devam! 👍'],
-    mascotDays: ['Du hast zuletzt vor {n} Tagen gelernt. Lust auf eine kurze Runde?', 'En son {n} gün önce çalıştın. Kısa bir tur yapalım mı?'],
-    mascotSad: ['Du hast zuletzt vor {n} Tagen gelernt … ich vermisse dich! Komm zurück 🥺', 'En son {n} gün önce çalıştın… seni özledim! Geri gel 🥺'],
+    // Deutsche Texte (Kurs „Türkisch lernen“) und türkische Texte (Kurs „Almanca Öğren“) – bewusst frei formuliert, nicht 1:1 übersetzt
+    mascotNew: ['Hallo, ich bin Lingo! Schön, dass du da bist – lass uns mit der ersten Lektion starten. Türkisch, wir kommen!',
+      'Merhaba, ben Lingo! Hoş geldin – hadi ilk dersle başlayalım. Almanca seni bekliyor!'],
+    mascotToday: ['Du hast heute schon gelernt – klasse! Wenn du so weitermachst, sprichst du Türkisch im Handumdrehen. 👍',
+      'Bugün de çalıştın, helal olsun! Böyle devam edersen Almancayı su gibi konuşacaksın. 👍'],
+    mascotYesterday: ['Du hast gestern schon gelernt – super, dass du heute wieder da bist! Weiter so, dann kannst du Türkisch im Handumdrehen. 👍',
+      'Dün de çalışmışsın, bugün yine buradasın – süpersin! Bu tempoyla Almancayı kısa sürede kaparsın. 👍'],
+    mascotDays: ['Hi, schön, dich wieder hier zu sehen! Dein letztes Training ist {n} Tage her – super, dass du weiterlernen willst. Bleib dran, dann lernst du ganz schnell Türkisch.',
+      'Selam, seni yeniden görmek ne güzel! Son çalışmanın üzerinden {n} gün geçti. Devam etmek istemen harika – azimle sürdür, Almancayı çok çabuk öğreneceksin.'],
+    mascotSad: ['Oh … da bist du ja wieder. Dein letztes Training ist schon {n} Tage her – ich hab dich echt vermisst! 🥺 Lass uns heute wenigstens eine kleine Runde machen, sonst rostet dein Türkisch ein.',
+      'Ah, sonunda geldin… Son çalışmanın üzerinden tam {n} gün geçmiş, seni çok özledim! 🥺 Hadi bugün küçük bir tur yapalım, yoksa Almancan paslanacak.'],
     lastLearned: ['Zuletzt gelernt', 'Son çalışma']
   };
 

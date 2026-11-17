@@ -191,7 +191,7 @@ main { max-width: 1040px; margin: 0 auto; padding: 22px 16px 80px; }
 /* ---------- Maskottchen ---------- */
 .mascot-card { display: flex; align-items: center; gap: 18px; padding: 14px 20px; }
 .mascot { width: 104px; height: 104px; flex: none; color: var(--text); overflow: visible; }
-.m-bubble { position: relative; background: var(--surface-2); border-radius: 14px; padding: 12px 16px; display: flex; flex-direction: column; gap: 4px; }
+.m-bubble { position: relative; max-width: 640px; line-height: 1.45; background: var(--surface-2); border-radius: 14px; padding: 12px 16px; display: flex; flex-direction: column; gap: 4px; }
 .m-bubble::before { content: ""; position: absolute; left: -8px; top: 50%; margin-top: -8px; border: 8px solid transparent; border-left: 0; border-right-color: var(--surface-2); }
 .mascot.happy .m-body { animation: m-hop 1.8s ease-in-out infinite; transform-origin: 60px 100px; }
 .mascot.neutral .m-body { animation: m-breathe 3.2s ease-in-out infinite; transform-origin: 60px 100px; }
