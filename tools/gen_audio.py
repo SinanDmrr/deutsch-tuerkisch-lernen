@@ -21,6 +21,9 @@ def voice_url(key):
     return f"{HF}{region.split('_')[0]}/{region}/{name}/{quality}/{key}"
 
 
+ERRORS = {}
+
+
 def fetch_voice(key):
     MODELS.mkdir(exist_ok=True)
     onnx, cfg = MODELS / f'{key}.onnx', MODELS / f'{key}.onnx.json'
@@ -32,6 +35,7 @@ def fetch_voice(key):
         return PiperVoice.load(str(onnx), config_path=str(cfg))
     except Exception as e:  # Stimme existiert nicht / Download fehlgeschlagen
         print(f'  ! Stimme {key} nicht verfügbar: {e}', flush=True)
+        ERRORS[key] = f'{type(e).__name__}: {e}'[:300]
         for p in (onnx, cfg):
             if p.exists() and p.stat().st_size < 1000:
                 p.unlink()
@@ -58,7 +62,7 @@ def file_id(text):
 def main():
     texts = json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))
     cfg = json.loads((ROOT / 'tools' / 'tts-voices.json').read_text(encoding='utf-8'))
-    manifest = {'voices': {}, 'files': {}, 'samples': {}}
+    manifest = {'voices': {}, 'files': {}, 'samples': {}, 'errors': ERRORS}
     loaded = {}
 
     def get(key):
