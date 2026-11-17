@@ -8,7 +8,7 @@
   var BACKUP = 'dt-backup';          // Kopie vor jedem App-Update / jeder Migration
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var SCHEMA = 2;                    // Version des Speicherformats
-  var APP_VERSION = '2026-11-17.6';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-17.7';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -451,11 +451,11 @@
         '<path d="M36 40l14-5M82 40l-14-5" stroke="#1b1f2a" stroke-width="3.5" stroke-linecap="round"/>';
       mouth = '<path d="M49 74q10-9 20 0" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round"/>';
       extra = '<path d="M80 58q5 8 0 11q-5-3 0-11z" fill="#74c0fc"/>';
-      arm = '<path d="M98 66L106 80" stroke="' + B + '" stroke-width="10" stroke-linecap="round"/><circle cx="107" cy="83" r="6.5" fill="#fcc419" stroke="#d9480f" stroke-width="2"/>';
+      arm = '';   // ohne Arm
     } else {
       eyes = '<circle cx="45" cy="48" r="8" fill="#fff"/><circle cx="73" cy="48" r="8" fill="#fff"/><circle cx="46" cy="49" r="4" fill="#1b1f2a"/><circle cx="74" cy="49" r="4" fill="#1b1f2a"/>';
       mouth = '<path d="M50 67q9 4 18 0" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round"/>';
-      arm = '<path d="M98 62L108 74" stroke="' + B + '" stroke-width="10" stroke-linecap="round"/><circle cx="110" cy="77" r="6.5" fill="#fcc419" stroke="#d9480f" stroke-width="2"/>';
+      arm = '';   // ohne Arm
     }
     return '<svg class="mascot ' + mood + '" viewBox="0 0 128 120" role="img" aria-label="Lingo">' +
       '<ellipse cx="60" cy="112" rx="34" ry="5" fill="currentColor" opacity=".12"/>' +
