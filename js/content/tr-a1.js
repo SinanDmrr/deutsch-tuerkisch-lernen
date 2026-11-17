@@ -1,0 +1,505 @@
+/* Türkisch A1 – für Deutschsprechende (Erklärungen auf Deutsch)
+ * Format siehe js/content/de-a1.js. Neue Aufgaben nur hinten anhängen.
+ */
+(function (K) {
+
+K.add('tr-a1-01', {
+  lesson: [
+    { p: "Das türkische Alphabet hat **29 Buchstaben**. Gute Nachricht: Türkisch wird fast **genau so gesprochen, wie es geschrieben wird**. Es gibt kein q, w und x – dafür einige Sonderzeichen." },
+    { table: { head: ["Buchstabe", "Aussprache", "Beispiel"], rows: [
+      ["c", "**dsch** wie in *Dschungel*", "cami (Moschee)"],
+      ["ç", "**tsch** wie in *deutsch*", "çay (Tee)"],
+      ["ş", "**sch** wie in *Schule*", "şeker (Zucker)"],
+      ["ğ", "stumm – dehnt den Vokal davor", "dağ (Berg) ≈ „daa“"],
+      ["ı (ohne Punkt)", "dumpfes i, ähnlich dem e in *bitte*", "ılık (lauwarm)"],
+      ["i / İ", "i wie in *Kino*; groß: **İ**", "İstanbul"],
+      ["ö, ü", "wie im Deutschen", "göz (Auge), üç (drei)"],
+      ["s", "immer stimmlos (wie in *Haus*)", "su (Wasser)"],
+      ["z", "stimmhaftes s (wie in *Sonne*)", "zaman (Zeit)"],
+      ["v", "wie deutsches **w**", "ev (Haus)"],
+      ["y", "wie deutsches **j**", "yok (gibt es nicht)"],
+      ["j", "wie in *Journal*", "jeton"],
+      ["h", "wird immer gesprochen", "hayır (nein)"],
+      ["e", "offen, ähnlich wie ä", "ev"]
+    ] } },
+    { warn: "**I/ı und İ/i sind zwei verschiedene Buchstaben!** Großes i mit Punkt = **İ**, großes ı ohne Punkt = **I**. *ılık* (lauwarm) ≠ *ilik* (Knochenmark)." },
+    { tip: "Die Betonung liegt meistens auf der **letzten Silbe**: *ki-TAP*, *o-KUL*." },
+    { ex: [["Merhaba!", "Hallo!"], ["Çay ister misin?", "Möchtest du Tee?"], ["Şeker yok.", "Es gibt keinen Zucker."]] }
+  ],
+  exercises: [
+    { t: "mc", q: "Wie spricht man „çay“ (Tee) aus?", o: ["kai", "tschai", "sai", "dschai"], a: 1,
+      why: { 0: "Das ç ist kein k.", 2: "Das ç ist kein s – das Häkchen macht daraus **tsch**.", 3: "„dsch“ ist das türkische **c** (ohne Häkchen)." },
+      e: "**ç = tsch** → „tschai“." },
+    { t: "mc", q: "Wie spricht man das c in „cami“ (Moschee) aus?", o: ["k", "ts", "dsch", "tsch"], a: 2,
+      why: { 0: "Im Türkischen ist c nie k.", 1: "Das ist das deutsche z – im Türkischen gibt es diesen Laut so nicht.", 3: "„tsch“ wäre ç (mit Häkchen)." },
+      e: "**c = dsch** → „dschami“." },
+    { t: "mc", q: "Was macht das ğ in „dağ“ (Berg)?", o: ["Es wird wie g gesprochen.", "Es ist stumm und dehnt den Vokal davor.", "Es wird wie ch gesprochen."], a: 1,
+      why: { 0: "Das „yumuşak g“ (weiches g) wird nie wie ein g gesprochen.", 2: "Es gibt keinen ch-Laut." },
+      e: "**ğ** ist stumm und verlängert den Vokal: dağ ≈ „daa“." },
+    { t: "mc", q: "Wie schreibt man „i“ als Großbuchstaben (z. B. in İstanbul)?", o: ["I", "İ"], a: 1,
+      why: { 0: "„I“ ist der Großbuchstabe von **ı** (ohne Punkt) – ein anderer Buchstabe!" },
+      e: "i → **İ** (mit Punkt), ı → **I** (ohne Punkt)." },
+    { t: "mc", q: "Wie spricht man „şeker“ (Zucker) aus?", o: ["seker", "scheker", "tscheker"], a: 1,
+      why: { 0: "Das Häkchen macht aus s ein **sch**.", 2: "„tsch“ wäre ç." },
+      e: "**ş = sch** → „scheker“." },
+    { t: "mc", q: "Wie spricht man das y in „yok“ aus?", o: ["wie ü", "wie j", "wie i"], a: 1,
+      why: { 0: "Das türkische y ist ein Konsonant, kein ü.", 2: "Es ist ein Konsonant, kein Vokal." },
+      e: "**y = j** → „jok“." },
+    { t: "mc", q: "Welche Buchstaben gibt es im Türkischen NICHT?", o: ["q, w, x", "ç, ş, ğ", "ö, ü, ı", "c, j, v"], a: 0,
+      why: { 1: "Das sind typisch türkische Buchstaben.", 2: "Die gibt es alle im Türkischen.", 3: "Gibt es auch: cami, jeton, ev." },
+      e: "Türkisch hat **kein q, w, x** (und auch kein ä oder ß)." },
+    { t: "mc", q: "Wie spricht man das v in „ev“ (Haus) aus?", o: ["wie deutsches f", "wie deutsches w"], a: 1,
+      why: { 0: "Im Deutschen ist v oft f (Vater) – im Türkischen nie." },
+      e: "Türkisches **v = w** → „ew“." }
+  ]
+});
+
+K.add('tr-a1-02', {
+  lesson: [
+    { p: "Türken grüßen herzlich – und beim Abschied gibt es unterschiedliche Formeln für den, der **geht**, und den, der **bleibt**!" },
+    { table: { head: ["Türkisch", "Deutsch", "Wann?"], rows: [
+      ["Merhaba!", "Hallo!", "immer"], ["Selam!", "Hi!", "locker, unter Freunden"], ["Günaydın!", "Guten Morgen!", "morgens"],
+      ["İyi günler!", "Guten Tag! / Schönen Tag!", "tagsüber, auch beim Abschied"], ["İyi akşamlar!", "Guten Abend!", "abends"],
+      ["İyi geceler!", "Gute Nacht!", "vor dem Schlafen"], ["Hoşça kal!", "Tschüss! (sagt, wer **geht**)", "Abschied"],
+      ["Güle güle!", "Tschüss! (sagt, wer **bleibt**)", "Abschied"], ["Görüşürüz!", "Bis dann!", "Abschied"]
+    ] } },
+    { h: "Sich vorstellen" },
+    { table: { head: ["Frage (du)", "Frage (Sie)", "Antwort"], rows: [
+      ["Adın ne?", "Adınız ne?", "Benim adım … / Ben …"],
+      ["Nasılsın?", "Nasılsınız?", "İyiyim, teşekkürler. Sen? / Siz?"],
+      ["Nerelisin?", "Nerelisiniz?", "Almanyalıyım. / Almanım."],
+      ["Nerede oturuyorsun?", "Nerede oturuyorsunuz?", "Berlin’de oturuyorum."]
+    ] } },
+    { tip: "Wie im Deutschen gibt es **sen** (du) und **siz** (Sie – höflich, und auch Plural „ihr“)." },
+    { vocab: [["Teşekkürler / Teşekkür ederim", "Danke"], ["Lütfen", "Bitte (wenn man um etwas bittet)"], ["Rica ederim", "Bitte (gern geschehen)"], ["Evet", "Ja"], ["Hayır", "Nein"], ["Memnun oldum", "Freut mich"], ["Özür dilerim", "Entschuldigung"]] }
+  ],
+  exercises: [
+    { t: "mc", q: "Du verlässt die Wohnung eines Freundes. Was sagst DU?", o: ["Hoşça kal!", "Güle güle!", "Günaydın!"], a: 0,
+      why: { 1: "„Güle güle“ sagt die Person, die **bleibt** – also dein Freund.", 2: "Das ist „Guten Morgen“." },
+      e: "Wer geht, sagt **Hoşça kal**; wer bleibt, antwortet **Güle güle**." },
+    { t: "mc", q: "Dein Freund geht, du bleibst zu Hause. Was sagst du?", o: ["Hoşça kal!", "Güle güle!", "İyi akşamlar!"], a: 1,
+      why: { 0: "„Hoşça kal“ sagt der, der **geht**.", 2: "„Guten Abend“ ist eine Begrüßung." },
+      e: "Wer bleibt: **Güle güle!** (wörtlich „lachend, lachend“ – geh mit einem Lächeln)." },
+    { t: "mc", q: "Morgens um 8 im Büro:", o: ["İyi geceler!", "Günaydın!", "İyi akşamlar!"], a: 1,
+      why: { 0: "Gute Nacht – nur vor dem Schlafen.", 2: "Guten Abend." },
+      e: "**Günaydın** = Guten Morgen." },
+    { t: "gap", q: "Benim ___ Ali. (Mein Name ist Ali.)", a: ["adım"],
+      wrong: { "adim": "Fast! Achte auf das **ı** ohne Punkt: adım.", "ad": "„ad“ = Name. „mein Name“ braucht das Possessivsuffix: **adım**.", "adı": "„adı“ = sein/ihr Name. Mein Name → **adım**." },
+      e: "ad (Name) + -ım (mein) = **adım**." },
+    { t: "mc", q: "Höflich: „Wie geht es Ihnen?“", o: ["Nasılsın?", "Nasılsınız?", "Ne haber?"], a: 1,
+      why: { 0: "Das ist die du-Form.", 2: "„Was geht?“ – sehr locker." },
+      e: "Höflich/Plural: **Nasılsınız?**" },
+    { t: "match", q: "Ordne zu:", p: [["Merhaba", "Hallo"], ["Teşekkürler", "Danke"], ["Lütfen", "Bitte (Bitte um etwas)"], ["Evet", "Ja"], ["Hayır", "Nein"]],
+      e: "Die wichtigsten Grundwörter für den Alltag." },
+    { t: "gap", q: "Memnun ___ . (Freut mich.)", a: ["oldum"],
+      wrong: { "olduk": "„olduk“ = wir. Ich → **oldum**." },
+      e: "**Memnun oldum** = Freut mich (wörtlich: „Ich bin erfreut geworden“)." },
+    { t: "order", q: "Bilde den Satz: „Wie ist Ihr Name?“", w: ["ne", "Sizin", "adınız"], a: ["Sizin adınız ne"],
+      e: "Im Türkischen steht das Fragewort oft am Ende: Sizin adınız **ne**?" }
+  ]
+});
+
+K.add('tr-a1-03', {
+  lesson: [
+    { p: "Die **Vokalharmonie** ist das wichtigste Prinzip des Türkischen. Endungen passen ihren Vokal an den **letzten Vokal des Wortes** an. Wer das versteht, versteht fast alle Endungen." },
+    { table: { head: ["", "ungerundet", "gerundet"], rows: [["hintere Vokale", "a, ı", "o, u"], ["vordere Vokale", "e, i", "ö, ü"]] } },
+    { h: "Kleine Vokalharmonie (2 Formen: a / e)" },
+    { p: "Letzter Vokal **a, ı, o, u** → Endung mit **a**. Letzter Vokal **e, i, ö, ü** → Endung mit **e**. Beispiel Plural: kitap-**lar**, ev-**ler**." },
+    { h: "Große Vokalharmonie (4 Formen: ı / i / u / ü)" },
+    { table: { head: ["letzter Vokal", "Endung", "Beispiel (Frage mI)"], rows: [
+      ["a, ı", "**ı**", "kız **mı**?"], ["e, i", "**i**", "güzel **mi**?"], ["o, u", "**u**", "okul **mu**?"], ["ö, ü", "**ü**", "Türk **mü**?"]
+    ] } },
+    { tip: "In Grammatiken schreibt man **A** für die kleine (a/e) und **I** für die große Harmonie (ı/i/u/ü): -lAr, mI, -DA." },
+    { warn: "Ausnahmen: einige Lehnwörter, z. B. *saat → saatler*, *kalp → kalpler* (nicht „-lar“)." }
+  ],
+  exercises: [
+    { t: "mc", q: "Plural von „kitap“ (Buch):", o: ["kitapler", "kitaplar"], a: 1,
+      why: { 0: "Letzter Vokal ist **a** → Endung mit a." },
+      e: "kit**a**p → -l**a**r: **kitaplar**." },
+    { t: "mc", q: "Plural von „ev“ (Haus):", o: ["evlar", "evler"], a: 1,
+      why: { 0: "Letzter Vokal ist **e** → -ler." },
+      e: "**evler**." },
+    { t: "mc", q: "Plural von „göz“ (Auge):", o: ["gözlar", "gözler"], a: 1,
+      why: { 0: "ö ist ein **vorderer** Vokal → -ler." },
+      e: "ö → -ler: **gözler**." },
+    { t: "mc", q: "Okul ___? (Ist das die Schule?)", o: ["mı", "mi", "mu", "mü"], a: 2,
+      why: { 0: "mı steht nach a/ı.", 1: "mi steht nach e/i.", 3: "mü steht nach ö/ü." },
+      e: "Letzter Vokal **u** → **mu**." },
+    { t: "mc", q: "Güzel ___? (Ist es schön?)", o: ["mı", "mi", "mu", "mü"], a: 1,
+      why: { 0: "mı steht nach a/ı.", 2: "mu steht nach o/u.", 3: "mü steht nach ö/ü." },
+      e: "Letzter Vokal **e** → **mi**." },
+    { t: "mc", q: "Türk ___? (Ist er Türke?)", o: ["mı", "mi", "mu", "mü"], a: 3,
+      why: { 0: "mı steht nach a/ı.", 1: "mi steht nach e/i.", 2: "mu steht nach o/u." },
+      e: "Letzter Vokal **ü** → **mü**." },
+    { t: "mc", q: "Kız ___? (Ist es ein Mädchen?)", o: ["mı", "mi", "mu", "mü"], a: 0,
+      why: { 1: "Achtung: kız hat ein **ı** ohne Punkt → mı.", 2: "mu steht nach o/u.", 3: "mü steht nach ö/ü." },
+      e: "Letzter Vokal **ı** → **mı**." },
+    { t: "gap", q: "Plural von „kalem“ (Stift): ___", a: ["kalemler"],
+      wrong: { "kalemlar": "Letzter Vokal ist **e** (kal-**e**-m) → -ler." },
+      e: "Entscheidend ist der **letzte** Vokal: kal**e**m → **kalemler**." },
+    { t: "mc", q: "Plural von „saat“ (Uhr/Stunde):", o: ["saatlar", "saatler"], a: 1,
+      why: { 0: "Regulär wäre es -lar – aber saat ist eine **Ausnahme** (arabisches Lehnwort)." },
+      e: "Ausnahme: **saatler**." }
+  ]
+});
+
+K.add('tr-a1-04', {
+  lesson: [
+    { p: "Der Plural wird mit **-lAr** (-lar / -ler) gebildet. Es gibt **keine Artikel**: *ev* = Haus / das Haus. Für „ein(e)“ benutzt man **bir**." },
+    { table: { head: ["Singular", "Plural", "Deutsch"], rows: [
+      ["araba", "araba**lar**", "Auto(s)"], ["öğrenci", "öğrenci**ler**", "Student(en)"], ["masa", "masa**lar**", "Tisch(e)"], ["gün", "gün**ler**", "Tag(e)"]
+    ] } },
+    { warn: "**Nach Zahlen und Mengenwörtern steht KEIN Plural!** *iki kitap* (zwei Bücher), *çok insan* (viele Menschen), *birkaç gün* (ein paar Tage)." },
+    { tip: "**bir** steht vor dem Nomen: *bir ev* (ein Haus). Mit Adjektiv meist dazwischen: *güzel bir ev* (ein schönes Haus)." }
+  ],
+  exercises: [
+    { t: "gap", q: "araba → Plural: ___", a: ["arabalar"],
+      wrong: { "arabaler": "Letzter Vokal **a** → -l**a**r." },
+      e: "Letzter Vokal a → **-lar**." },
+    { t: "gap", q: "öğrenci → Plural: ___", a: ["öğrenciler"],
+      wrong: { "öğrencilar": "Letzter Vokal **i** → -l**e**r." },
+      e: "Letzter Vokal i → **-ler**." },
+    { t: "mc", q: "„drei Bücher“", o: ["üç kitap", "üç kitaplar"], a: 0,
+      why: { 1: "Nach Zahlen steht im Türkischen **kein** Plural." },
+      e: "Zahl + Singular: **üç kitap**." },
+    { t: "mc", q: "„viele Menschen“", o: ["çok insan", "çok insanlar"], a: 0,
+      why: { 1: "Nach „çok“ (viel) steht kein Plural." },
+      e: "**çok insan**." },
+    { t: "gap", q: "gün → Plural: ___", a: ["günler"],
+      wrong: { "günlar": "ü ist ein vorderer Vokal → -l**e**r." },
+      e: "Letzter Vokal ü → **-ler**." },
+    { t: "mc", q: "„ein Haus“", o: ["bir ev", "ev bir", "bir evler"], a: 0,
+      why: { 1: "bir steht **vor** dem Nomen.", 2: "Nach bir steht kein Plural." },
+      e: "**bir ev**." },
+    { t: "gap", q: "masa → Plural: ___", a: ["masalar"],
+      wrong: { "masaler": "Letzter Vokal **a** → -l**a**r." },
+      e: "Letzter Vokal a → **-lar**." }
+  ]
+});
+
+K.add('tr-a1-05', {
+  lesson: [
+    { p: "Türkisch hat kein eigenes Verb „sein“ im Präsens. Stattdessen hängt man **Personalendungen** an Nomen oder Adjektive: *öğretmen* (Lehrer) → *öğretmen**im*** (ich bin Lehrer)." },
+    { table: { head: ["Person", "Endung", "öğretmen", "hasta (krank)", "yorgun (müde)"], rows: [
+      ["ben", "-(y)Im", "öğretmen**im**", "hasta**yım**", "yorgun**um**"],
+      ["sen", "-sIn", "öğretmen**sin**", "hasta**sın**", "yorgun**sun**"],
+      ["o", "– (-dIr)", "öğretmen", "hasta", "yorgun"],
+      ["biz", "-(y)Iz", "öğretmen**iz**", "hasta**yız**", "yorgun**uz**"],
+      ["siz", "-sInIz", "öğretmen**siniz**", "hasta**sınız**", "yorgun**sunuz**"],
+      ["onlar", "(-lAr)", "öğretmen(**ler**)", "hasta(**lar**)", "yorgun(**lar**)"]
+    ] } },
+    { tip: "Endet das Wort auf einen **Vokal**, kommt bei ben/biz ein Puffer-**y** dazu: hasta**y**ım, öğrenci**y**im." },
+    { p: "**Verneinung** mit *değil* + Endung: *Ben hasta **değilim**.* (Ich bin nicht krank.)" },
+    { p: "Personalpronomen fallen meist weg, die Endung zeigt die Person: *Yorgunum.* = Ich bin müde." },
+    { ex: [["Ben öğrenciyim.", "Ich bin Student."], ["Yorgun musun?", "Bist du müde?"], ["Biz Almanız.", "Wir sind Deutsche."], ["Hasta değilim.", "Ich bin nicht krank."]] }
+  ],
+  exercises: [
+    { t: "gap", q: "Ben ___ . (öğrenci – Ich bin Student.)", a: ["öğrenciyim"],
+      wrong: { "öğrenciim": "Das Wort endet auf einen Vokal → Puffer-**y**: öğrenci**y**im.", "öğrenciym": "Die Endung ist -(y)**i**m: öğrenciyim.", "öğrenciyım": "Letzter Vokal **i** → -y**i**m (mit Punkt)." },
+      e: "öğrenci + **y** + **im** = **öğrenciyim**." },
+    { t: "gap", q: "Sen ___ . (yorgun – Du bist müde.)", a: ["yorgunsun"],
+      wrong: { "yorgunsin": "Letzter Vokal **u** → große Harmonie → -s**u**n.", "yorgunsın": "Letzter Vokal **u** → -s**u**n." },
+      e: "yorg**u**n → -s**u**n: **yorgunsun**." },
+    { t: "gap", q: "Biz ___ . (Alman – Wir sind Deutsche.)", a: ["Almanız"],
+      wrong: { "almaniz": "Achte auf **ı** ohne Punkt: Almanız.", "almanyız": "Kein Puffer-y nötig – Alman endet auf Konsonant: Alman**ız**." },
+      e: "Alm**a**n → -**ı**z: **Almanız**." },
+    { t: "gap", q: "Siz ___ . (doktor – Sie sind Arzt.)", a: ["doktorsunuz"],
+      wrong: { "doktorsınız": "Letzter Vokal **o** → -s**u**n**u**z.", "doktorsiniz": "Letzter Vokal **o** → -s**u**n**u**z." },
+      e: "dokt**o**r → **-sunuz**." },
+    { t: "mc", q: "„Ich bin nicht krank.“", o: ["Ben hasta değilim.", "Ben değil hastayım.", "Ben hastayım değil."], a: 0,
+      why: { 1: "değil steht **nach** dem Adjektiv.", 2: "Die Personalendung hängt an **değil**, nicht an hasta." },
+      e: "Adjektiv + **değil** + Endung: *hasta değilim*." },
+    { t: "mc", q: "Ben ___ . (Türk – Ich bin Türke.)", o: ["Türküm", "Türkim", "Türkum"], a: 0,
+      why: { 1: "Letzter Vokal **ü** → -üm, nicht -im.", 2: "ü ist ein vorderer Vokal → -üm." },
+      e: "T**ü**rk → **-üm**: **Türküm**." },
+    { t: "gap", q: "O çok ___ . (güzel – Sie ist sehr schön.)", a: ["güzel", "güzeldir"],
+      wrong: { "güzelsin": "„güzelsin“ = du bist schön. 3. Person → meist **ohne** Endung." },
+      e: "3. Person Singular: meist **ohne Endung**: *O çok güzel.* (-dir klingt förmlich, ist aber auch richtig.)" },
+    { t: "gap", q: "Ben ___ . (hasta – Ich bin krank.)", a: ["hastayım"],
+      wrong: { "hastaım": "Das Wort endet auf einen Vokal → Puffer-**y**: hasta**y**ım.", "hastayim": "Letzter Vokal **a** → -y**ı**m (ohne Punkt)." },
+      e: "hasta + y + ım = **hastayım**." }
+  ]
+});
+
+K.add('tr-a1-06', {
+  lesson: [
+    { p: "Ja/Nein-Fragen bildet man mit der Partikel **mI** (mı/mi/mu/mü). Sie wird **getrennt geschrieben**, folgt der großen Vokalharmonie – und die **Personalendung hängt an mI**." },
+    { table: { head: ["Person", "Beispiel", "Deutsch"], rows: [
+      ["ben", "Hasta **mıyım**?", "Bin ich krank?"], ["sen", "Öğrenci **misin**?", "Bist du Student?"], ["o", "Türk **mü**?", "Ist er Türke?"],
+      ["biz", "Geç **miyiz**?", "Sind wir spät dran?"], ["siz", "Yorgun **musunuz**?", "Sind Sie müde?"], ["onlar", "Evdeler **mi**?", "Sind sie zu Hause?"]
+    ] } },
+    { h: "Fragewörter" },
+    { table: { head: ["Türkisch", "Deutsch"], rows: [
+      ["ne?", "was?"], ["kim?", "wer?"], ["nerede?", "wo?"], ["nereye?", "wohin?"], ["nereden?", "woher?"],
+      ["ne zaman?", "wann?"], ["nasıl?", "wie?"], ["neden? / niye?", "warum?"], ["kaç?", "wie viel(e)?"], ["hangi?", "welche(r/s)?"]
+    ] } },
+    { tip: "Satzbau: **Subjekt – Objekt – Verb** (Verb am Ende). Das Fragewort steht dort, wo die Antwort stehen würde: *Sen **nerede** oturuyorsun?* – *Ben **Bonn’da** oturuyorum.*" }
+  ],
+  exercises: [
+    { t: "mc", q: "„Bist du Student?“", o: ["Öğrenci misin?", "Öğrencimi sin?", "Öğrenci sin mi?", "Mi öğrenci sin?"], a: 0,
+      why: { 1: "mI wird **getrennt** geschrieben.", 2: "Die Personalendung hängt **an mi**: misin.", 3: "mI steht **nach** dem Wort." },
+      e: "Wort + **mi** + Endung: *Öğrenci **misin**?*" },
+    { t: "mc", q: "„Sind Sie müde?“", o: ["Yorgun musunuz?", "Yorgun mısınız?", "Yorgunmusunuz?"], a: 0,
+      why: { 1: "Letzter Vokal **u** → mu, nicht mı.", 2: "mI wird getrennt geschrieben." },
+      e: "yorg**u**n → **mu** + sunuz." },
+    { t: "gap", q: "Türk ___ ? (Bist du Türke?)", a: ["müsün"],
+      wrong: { "misin": "Letzter Vokal **ü** (Türk) → **mü**sün.", "musun": "ü ist ein vorderer Vokal → **müsün**.", "mü": "„Türk mü?“ = Ist er Türke? Für „du“ braucht mü die Endung: **müsün**." },
+      e: "T**ü**rk → **müsün**." },
+    { t: "mc", q: "___ yaşındasın? (Wie alt bist du?)", o: ["Kaç", "Ne", "Nasıl"], a: 0,
+      why: { 1: "„ne“ = was.", 2: "„nasıl“ = wie (Art und Weise)." },
+      e: "Alter/Anzahl → **Kaç**: *Kaç yaşındasın?*" },
+    { t: "mc", q: "Adın ___ ? (Wie heißt du?)", o: ["kim", "ne", "nasıl"], a: 1,
+      why: { 0: "kim = wer.", 2: "Im Deutschen sagt man „wie“, im Türkischen fragt man „Dein Name – was?“" },
+      e: "**Adın ne?** = Was ist dein Name?" },
+    { t: "mc", q: "___ oturuyorsun? (Wo wohnst du?)", o: ["Nerede", "Nereye", "Nereden"], a: 0,
+      why: { 1: "nereye = wohin.", 2: "nereden = woher." },
+      e: "**Nerede** = wo?" },
+    { t: "mc", q: "___ gidiyorsun? (Wohin gehst du?)", o: ["Nerede", "Nereye", "Nereden"], a: 1,
+      why: { 0: "nerede = wo.", 2: "nereden = woher." },
+      e: "**Nereye** = wohin? (Dativ -e)" },
+    { t: "gap", q: "Bu kahve ___ ? (Ist das Kaffee?)", a: ["mi"],
+      wrong: { "mı": "Letzter Vokal von kahv**e** ist e → **mi** (mit Punkt).", "mu": "Letzter Vokal e → **mi**." },
+      e: "kahv**e** → **mi**." }
+  ]
+});
+
+K.add('tr-a1-07', {
+  lesson: [
+    { p: "„Mein“, „dein“ usw. werden als **Endung** ans Nomen gehängt. Das Pronomen (benim, senin …) kann davor stehen, ist aber oft optional." },
+    { table: { head: ["Person", "nach Konsonant", "nach Vokal", "Beispiel"], rows: [
+      ["benim (mein)", "-Im", "-m", "ev**im**, araba**m**"], ["senin (dein)", "-In", "-n", "ev**in**, araba**n**"],
+      ["onun (sein/ihr)", "-I", "-sI", "ev**i**, araba**sı**"], ["bizim (unser)", "-ImIz", "-mIz", "ev**imiz**, araba**mız**"],
+      ["sizin (euer/Ihr)", "-InIz", "-nIz", "ev**iniz**, araba**nız**"], ["onların (ihr)", "-lArI", "-lArI", "ev**leri**, araba**ları**"]
+    ] } },
+    { warn: "**Konsonantenerweichung**: Endet ein Wort auf **p, ç, t, k** und folgt ein Vokal, wird es oft weich: kitap → kita**b**ım, ağaç → ağa**c**ım, çocuk → çocu**ğ**um." },
+    { ex: [["Bu benim evim.", "Das ist mein Haus."], ["Araban nerede?", "Wo ist dein Auto?"], ["Kitabım masada.", "Mein Buch ist auf dem Tisch."]] }
+  ],
+  exercises: [
+    { t: "gap", q: "benim ___ (ev – mein Haus)", a: ["evim"],
+      wrong: { "evım": "Letzter Vokal **e** → -**i**m (mit Punkt).", "evm": "Nach Konsonant braucht es einen Vokal: ev**im**." },
+      e: "Konsonant + **-im** (Vokal e → i): **evim**." },
+    { t: "gap", q: "senin ___ (araba – dein Auto)", a: ["araban"],
+      wrong: { "arabaın": "Nach Vokal nur **-n**: araba**n**.", "arabanız": "„arabanız“ = euer/Ihr Auto. Dein → **araban**." },
+      e: "Endet auf Vokal → nur **-n**: **araban**." },
+    { t: "gap", q: "onun ___ (araba – sein/ihr Auto)", a: ["arabası"],
+      wrong: { "arabasi": "Achte auf **ı** ohne Punkt: arabası.", "arabaı": "Nach Vokal kommt ein **s** dazu: araba**sı**." },
+      e: "Nach Vokal: **-sI** → **arabası**." },
+    { t: "gap", q: "bizim ___ (okul – unsere Schule)", a: ["okulumuz"],
+      wrong: { "okulimiz": "Letzter Vokal **u** → große Harmonie: -**u**m**u**z.", "okulımız": "Letzter Vokal **u** → -**u**m**u**z." },
+      e: "ok**u**l → **-umuz**: **okulumuz**." },
+    { t: "gap", q: "benim ___ (kitap – mein Buch)", a: ["kitabım"],
+      wrong: { "kitapım": "Konsonantenerweichung: p → **b** vor Vokal: kita**b**ım.", "kitabim": "Letzter Vokal **a** → -**ı**m (ohne Punkt)." },
+      e: "kitap + ım → p wird **b**: **kitabım**." },
+    { t: "mc", q: "sizin ___ (anne – Ihre Mutter)", o: ["anneniz", "annesiniz", "anneleriniz"], a: 0,
+      why: { 1: "„annesiniz“ heißt „Sie sind Mutter“ – das ist die Personalendung!", 2: "Das wäre „Ihre Mütter“ (Plural)." },
+      e: "anne + **niz** = **anneniz**." },
+    { t: "mc", q: "benim ___ (çocuk – mein Kind)", o: ["çocuğum", "çocukum", "çocukim"], a: 0,
+      why: { 1: "k wird vor Vokal zu **ğ**.", 2: "k → ğ, und Vokalharmonie u → -um." },
+      e: "çocuk → **çocuğum** (k → ğ)." },
+    { t: "gap", q: "onun ___ (kedi – seine/ihre Katze)", a: ["kedisi"],
+      wrong: { "kedii": "Nach Vokal kommt ein **s** dazu: kedi**si**.", "kedisı": "Letzter Vokal **i** → -s**i**." },
+      e: "Nach Vokal: **-sI** → **kedisi**." }
+  ]
+});
+
+K.add('tr-a1-08', {
+  lesson: [
+    { p: "**var** = es gibt / vorhanden, **yok** = es gibt nicht / nicht vorhanden. Damit drückt man auch **„haben“** aus: Possessivsuffix + var/yok." },
+    { table: { head: ["Türkisch", "Deutsch"], rows: [
+      ["Burada bir market **var**.", "Hier gibt es einen Supermarkt."], ["Evde süt **yok**.", "Zu Hause gibt es keine Milch."],
+      ["Bir kedi**m** **var**.", "Ich habe eine Katze."], ["Zaman**ım** **yok**.", "Ich habe keine Zeit."], ["Araba**n** **var mı**?", "Hast du ein Auto?"]
+    ] } },
+    { tip: "Kurze Antworten: *Evet, var.* / *Hayır, yok.*" },
+    { warn: "**değil** verneint Nominalsätze („ist nicht“), **yok** verneint das Vorhandensein („gibt es nicht / habe nicht“). *Paran var mı? – Hayır, yok.* (nicht: değil)" }
+  ],
+  exercises: [
+    { t: "mc", q: "„Ich habe eine Katze.“", o: ["Bir kedim var.", "Ben bir kedi var.", "Bir kedi benim."], a: 0,
+      why: { 1: "„haben“ braucht das Possessivsuffix: kedi**m** var.", 2: "Das heißt „Eine Katze ist meine.“" },
+      e: "Possessiv + var: *Bir kedi**m** var.*" },
+    { t: "gap", q: "Zamanım ___ . (Ich habe keine Zeit.)", a: ["yok"],
+      wrong: { "değil": "„değil“ verneint „sein“. Für „nicht haben / gibt es nicht“ → **yok**.", "var": "„var“ = vorhanden. Gesucht ist das Gegenteil: **yok**." },
+      e: "**yok** = nicht vorhanden." },
+    { t: "mc", q: "„Gibt es hier eine Apotheke?“", o: ["Burada eczane var mı?", "Burada eczane var mi?", "Burada var eczane mı?"], a: 0,
+      why: { 1: "v**a**r → letzter Vokal a → **mı** (ohne Punkt).", 2: "var steht am Ende, mI danach." },
+      e: "**var mı?** = gibt es?" },
+    { t: "gap", q: "Araban var ___ ? (Hast du ein Auto?)", a: ["mı"],
+      wrong: { "mi": "Letzter Vokal von v**a**r ist a → **mı** (ohne Punkt).", "mu": "Letzter Vokal a → **mı**." },
+      e: "var → **mı**." },
+    { t: "mc", q: "„Paran var mı?“ – Negative Antwort:", o: ["Hayır, yok.", "Hayır, değil.", "Hayır, var değil."], a: 0,
+      why: { 1: "değil verneint nicht var.", 2: "Das Gegenteil von var ist **yok**." },
+      e: "Gegenteil von var: **yok**." },
+    { t: "gap", q: "Evde süt ___ . (Zu Hause gibt es keine Milch.)", a: ["yok"],
+      wrong: { "değil": "„gibt es nicht“ → **yok**, nicht değil." },
+      e: "**yok**." },
+    { t: "order", q: "Bilde den Satz: „Ich habe zwei Kinder.“", w: ["var", "çocuğum", "İki"], a: ["İki çocuğum var"],
+      e: "Zahl + Nomen mit Possessiv (im Singular!) + var: *İki çocuğum var.*" }
+  ]
+});
+
+K.add('tr-a1-09', {
+  lesson: [
+    { p: "Türkisch drückt „in, nach, aus“ mit **Endungen** aus, nicht mit Präpositionen." },
+    { table: { head: ["Fall", "Frage", "Endung", "Beispiele"], rows: [
+      ["Lokativ", "Wo? – nerede?", "-dA / -tA", "ev**de** (zu Hause), okul**da** (in der Schule), park**ta**"],
+      ["Dativ", "Wohin? – nereye?", "-(y)A", "ev**e** (nach Hause), okul**a**, Almanya’**ya**"],
+      ["Ablativ", "Woher? – nereden?", "-dAn / -tAn", "ev**den**, okul**dan**, park**tan**"]
+    ] } },
+    { tip: "Nach **f, s, t, k, ç, ş, h, p** wird **d → t**. Merksatz: **„FıSTıKÇı ŞaHaP“** (Pistazienverkäufer Şahap): park**ta**, sokak**tan**." },
+    { warn: "Bei **Eigennamen** steht ein **Apostroph**: *İstanbul’da, Berlin’e, Türkiye’den*. Nach Vokal im Dativ ein Puffer-y: *Almanya’**y**a*." },
+    { ex: [["Kitap masada.", "Das Buch ist auf dem Tisch."], ["Okula gidiyorum.", "Ich gehe zur Schule."], ["Almanya’dan geliyorum.", "Ich komme aus Deutschland."]] }
+  ],
+  exercises: [
+    { t: "gap", q: "Kitap ___ . (masa – Das Buch ist auf dem Tisch.)", a: ["masada"],
+      wrong: { "masaya": "-ya = wohin (Dativ). Gesucht ist **wo** → Lokativ: **masada**.", "masade": "Letzter Vokal **a** → -d**a**." },
+      e: "Lokativ (wo?): masa + **da** = **masada**." },
+    { t: "gap", q: "___ gidiyorum. (okul – Ich gehe zur Schule.)", a: ["okula"],
+      wrong: { "okulda": "-da = wo (Lokativ). „zur Schule“ = wohin → Dativ: **okula**.", "okule": "Letzter Vokal **u** → kleine Harmonie: -**a**." },
+      e: "Dativ (wohin?): **okula**." },
+    { t: "gap", q: "___ geliyorum. (Almanya – Ich komme aus Deutschland.)", a: ["Almanya'dan"],
+      wrong: { "almanyadan": "Fast! Bei Eigennamen steht ein **Apostroph**: Almanya’dan.", "almanya'den": "Letzter Vokal **a** → -d**a**n.", "almanya'da": "-da = in (wo). „aus“ = woher → **-dan**." },
+      e: "Ablativ (woher?): **Almanya’dan**." },
+    { t: "mc", q: "„im Park“", o: ["parkda", "parkta"], a: 1,
+      why: { 0: "park endet auf **k** (FıSTıKÇı ŞaHaP) → d wird **t**." },
+      e: "**parkta**." },
+    { t: "mc", q: "„nach Istanbul“", o: ["İstanbul’a", "İstanbul’ya", "İstanbul’e"], a: 0,
+      why: { 1: "Das Puffer-y kommt nur nach Vokal – İstanbul endet auf Konsonant.", 2: "Letzter Vokal **u** → -a." },
+      e: "Dativ: **İstanbul’a**." },
+    { t: "mc", q: "„aus dem Büro“ (ofis)", o: ["ofisten", "ofisden", "ofistan"], a: 0,
+      why: { 1: "ofis endet auf **s** → d wird **t**.", 2: "Letzter Vokal **i** → -t**e**n." },
+      e: "**ofisten**." },
+    { t: "gap", q: "Annem ___ . (mutfak – Meine Mutter ist in der Küche.)", a: ["mutfakta"],
+      wrong: { "mutfakda": "mutfak endet auf **k** → -**t**a.", "mutfağa": "Das wäre „in die Küche“ (wohin). Wo? → **mutfakta**." },
+      e: "**mutfakta**." },
+    { t: "mc", q: "Welche Frage passt zu „Ankara’ya gidiyorum.“?", o: ["Nereye gidiyorsun?", "Nerede gidiyorsun?", "Nereden gidiyorsun?"], a: 0,
+      why: { 1: "Nerede = wo (Lokativ).", 2: "Nereden = woher." },
+      e: "-ya = Dativ → **Nereye?**" }
+  ]
+});
+
+K.add('tr-a1-10', {
+  lesson: [
+    { p: "Die **-(I)yor**-Zeit entspricht dem deutschen Präsens: was gerade passiert, aber auch nahe Zukunft. Aufbau: **Verbstamm + (I)yor + Personalendung**." },
+    { p: "Verbstamm = Infinitiv ohne -mak/-mek: gel**mek** → gel-, oku**mak** → oku-." },
+    { table: { head: ["Person", "gelmek (kommen)", "yapmak (machen)", "okumak (lesen)"], rows: [
+      ["ben", "gel**iyorum**", "yap**ıyorum**", "oku**yorum**"], ["sen", "gel**iyorsun**", "yap**ıyorsun**", "oku**yorsun**"],
+      ["o", "gel**iyor**", "yap**ıyor**", "oku**yor**"], ["biz", "gel**iyoruz**", "yap**ıyoruz**", "oku**yoruz**"],
+      ["siz", "gel**iyorsunuz**", "yap**ıyorsunuz**", "oku**yorsunuz**"], ["onlar", "gel**iyorlar**", "yap**ıyorlar**", "oku**yorlar**"]
+    ] } },
+    { tip: "Stamm auf **-a / -e**: dieser Vokal wird zu ı/i/u/ü: bekle-mek → bekl**i**yorum, ara-mak → ar**ı**yorum." },
+    { warn: "Bei **gitmek** (gehen) und **etmek** (machen) wird t → **d**: gi**d**iyorum, e**d**iyorum." },
+    { p: "**Verneinung**: -m(I)- vor -yor: gel**mi**yorum (ich komme nicht). **Frage**: gel**iyor musun**? (Kommst du?)" }
+  ],
+  exercises: [
+    { t: "gap", q: "Ben ___ . (gelmek – Ich komme.)", a: ["geliyorum"],
+      wrong: { "gelyorum": "Nach Konsonant braucht es einen Vokal: gel-**i**-yorum.", "geliyor": "Das ist „er/sie kommt“. Ich → **geliyorum**." },
+      e: "gel + **iyor** + **um** = **geliyorum**." },
+    { t: "gap", q: "Sen ne ___ ? (yapmak – Was machst du?)", a: ["yapıyorsun"],
+      wrong: { "yapiyorsun": "Achte auf **ı** ohne Punkt: yap**ı**yorsun (letzter Vokal a).", "yapıyorsın": "Nach -yor kommt immer **u**: -yors**u**n." },
+      e: "y**a**p → -**ı**yor: **yapıyorsun**." },
+    { t: "gap", q: "O kitap ___ . (okumak – Er liest ein Buch.)", a: ["okuyor"],
+      wrong: { "okuiyor": "Stamm endet auf Vokal → nur **-yor**: okuyor." },
+      e: "Stamm auf Vokal → nur **-yor**: **okuyor**." },
+    { t: "gap", q: "Biz Türkçe ___ . (öğrenmek – Wir lernen Türkisch.)", a: ["öğreniyoruz"],
+      wrong: { "öğreniyorüz": "Nach -yor kommt immer **u**: -yor**u**z." },
+      e: "öğren + iyor + uz = **öğreniyoruz**." },
+    { t: "mc", q: "„Ich warte.“ (beklemek)", o: ["bekliyorum", "bekleyorum", "beklüyorum"], a: 0,
+      why: { 1: "Das e des Stammes wird vor -yor zu **i**.", 2: "Vokalharmonie: e → **i** (nicht ü)." },
+      e: "bekle- → bekl**i**yorum." },
+    { t: "mc", q: "„Ich komme nicht.“", o: ["gelmiyorum", "gelmeyorum", "gelmiyor değilim"], a: 0,
+      why: { 1: "Die Verneinung -me- wird vor -yor zu -mi-.", 2: "-yor-Verben verneint man nicht mit değil." },
+      e: "gel + **mi** + yorum = **gelmiyorum**." },
+    { t: "mc", q: "„Gehst du?“ (gitmek)", o: ["Gidiyor musun?", "Gitiyor musun?", "Gidiyorsun mu?"], a: 0,
+      why: { 1: "Bei gitmek wird t → **d** vor Vokal.", 2: "Die Personalendung hängt an **mu**: gidiyor musun." },
+      e: "**Gidiyor musun?**" },
+    { t: "gap", q: "Onlar ___ . (çalışmak – Sie arbeiten.)", a: ["çalışıyorlar"],
+      wrong: { "çalışıyorlär": "Nach -yor kommt -l**a**r." },
+      e: "çalış + ıyor + lar = **çalışıyorlar**." },
+    { t: "order", q: "Bilde den Satz: „Ich lerne Türkisch.“", w: ["öğreniyorum", "Türkçe", "Ben"], a: ["Ben Türkçe öğreniyorum"],
+      e: "Subjekt – Objekt – **Verb am Ende**." }
+  ]
+});
+
+K.add('tr-a1-11', {
+  lesson: [
+    { table: { head: ["Zahl", "Türkisch", "Zahl", "Türkisch"], rows: [
+      ["0", "sıfır", "10", "on"], ["1", "bir", "20", "yirmi"], ["2", "iki", "30", "otuz"], ["3", "üç", "40", "kırk"],
+      ["4", "dört", "50", "elli"], ["5", "beş", "60", "altmış"], ["6", "altı", "70", "yetmiş"], ["7", "yedi", "80", "seksen"],
+      ["8", "sekiz", "90", "doksan"], ["9", "dokuz", "100", "yüz"], ["", "", "1000", "bin"]
+    ] } },
+    { p: "Zahlen werden **logisch von groß nach klein** gebildet – anders als im Deutschen: 21 = **yirmi bir** (zwanzig eins), 345 = üç yüz kırk beş." },
+    { tip: "100 = **yüz** und 1000 = **bin** – ohne „bir“ davor. Aber: 200 = iki yüz, 2000 = iki bin." },
+    { h: "Uhrzeit" },
+    { p: "Frage: *Saat kaç?* (Wie spät ist es?)" },
+    { table: { head: ["Uhrzeit", "Türkisch"], rows: [
+      ["3:00", "Saat üç."], ["3:30", "Saat üç **buçuk**."], ["12:30", "Saat **yarım**."], ["4:15", "Saat dördü çeyrek geçiyor."],
+      ["4:45", "Saat beşe çeyrek var."], ["4:10", "Saat dördü on geçiyor."], ["4:50", "Saat beşe on var."]
+    ] } },
+    { warn: "Im Deutschen „halb vier“ = 3:30. Im Türkischen sagt man „**üç buçuk**“ (drei-einhalb) – also umgekehrt denken!" }
+  ],
+  exercises: [
+    { t: "mc", q: "21", o: ["yirmi bir", "bir yirmi", "bir ve yirmi"], a: 0,
+      why: { 1: "Im Türkischen: erst Zehner, dann Einer.", 2: "Kein „und“ wie im Deutschen." },
+      e: "**yirmi bir**." },
+    { t: "gap", q: "50 = ___", a: ["elli"],
+      wrong: { "beşon": "Zehner haben eigene Namen: 50 = **elli**." },
+      e: "50 = **elli**." },
+    { t: "mc", q: "100", o: ["yüz", "bir yüz"], a: 0,
+      why: { 1: "Vor yüz (100) und bin (1000) steht kein „bir“." },
+      e: "100 = **yüz**." },
+    { t: "gap", q: "40 = ___", a: ["kırk"],
+      wrong: { "kirk": "Achte auf **ı** ohne Punkt: kırk." },
+      e: "40 = **kırk**." },
+    { t: "mc", q: "3:30", o: ["Saat üç buçuk.", "Saat dört buçuk.", "Saat yarım dört."], a: 0,
+      why: { 1: "Das wäre 4:30 – die deutsche Falle „halb vier“!", 2: "So sagt man es nicht." },
+      e: "3:30 = **üç buçuk** (drei-einhalb)." },
+    { t: "mc", q: "4:45", o: ["Saat beşe çeyrek var.", "Saat dörde çeyrek var.", "Saat dördü çeyrek geçiyor."], a: 0,
+      why: { 1: "Das wäre 3:45.", 2: "Das wäre 4:15." },
+      e: "„Bis fünf fehlt ein Viertel“ → **beşe çeyrek var**." },
+    { t: "gap", q: "1000 = ___", a: ["bin"],
+      wrong: { "bir bin": "Vor bin steht kein „bir“: **bin**." },
+      e: "1000 = **bin**." },
+    { t: "mc", q: "75", o: ["yetmiş beş", "yedi beş", "beş yetmiş"], a: 0,
+      why: { 1: "70 = yetmiş, nicht yedi (7).", 2: "Erst Zehner, dann Einer." },
+      e: "**yetmiş beş**." }
+  ]
+});
+
+K.add('tr-a1-12', {
+  lesson: [
+    { p: "Der Akkusativ **-(y)I** markiert ein **bestimmtes** direktes Objekt (deutsch: *das* Buch, *den* Mann). Unbestimmte Objekte bekommen **keine** Endung." },
+    { table: { head: ["unbestimmt", "bestimmt (Akkusativ)"], rows: [
+      ["Kitap okuyorum. (Ich lese (ein) Buch.)", "Kitab**ı** okuyorum. (Ich lese das Buch.)"],
+      ["Çay içiyorum. (Ich trinke Tee.)", "Çay**ı** içiyorum. (Ich trinke den Tee.)"],
+      ["Bir elma yiyorum. (Ich esse einen Apfel.)", "Elma**yı** yiyorum. (Ich esse den Apfel.)"]
+    ] } },
+    { p: "Große Vokalharmonie: ev**i**, okul**u**, göz**ü**, kız**ı** – nach Vokal mit **y**: kapı**yı**, araba**yı**. Eigennamen: Ali’**yi**, Ayşe’**yi**." },
+    { table: { head: ["Pronomen", "Akkusativ"], rows: [
+      ["ben", "**beni** (mich)"], ["sen", "**seni** (dich)"], ["o", "**onu** (ihn/sie/es)"], ["biz", "**bizi** (uns)"], ["siz", "**sizi** (euch/Sie)"], ["onlar", "**onları** (sie)"]
+    ] } }
+  ],
+  exercises: [
+    { t: "mc", q: "„Ich lese das Buch.“", o: ["Kitabı okuyorum.", "Kitap okuyorum."], a: 0,
+      why: { 1: "Ohne Endung = unbestimmt („ich lese (ein) Buch / bin am Lesen“)." },
+      e: "Bestimmt → Akkusativ: **kitabı** (p → b)." },
+    { t: "mc", q: "„Ich trinke Tee.“ (allgemein)", o: ["Çay içiyorum.", "Çayı içiyorum."], a: 0,
+      why: { 1: "Çayı = **den** Tee (einen bestimmten)." },
+      e: "Unbestimmt → **keine Endung**." },
+    { t: "gap", q: "___ seviyorum. (dich – Ich liebe dich.)", a: ["Seni"],
+      wrong: { "sen": "„sen“ = du (Subjekt). Objekt „dich“ → **seni**.", "sana": "„sana“ = dir (Dativ). sevmek braucht den Akkusativ → **seni**." },
+      e: "sen → Akkusativ **seni**." },
+    { t: "gap", q: "___ görüyorum. (ev – Ich sehe das Haus.)", a: ["Evi"],
+      wrong: { "ev": "„das Haus“ ist bestimmt → Akkusativ: ev**i**.", "evı": "Letzter Vokal **e** → -**i** (mit Punkt)." },
+      e: "ev + **i** = **evi**." },
+    { t: "gap", q: "___ tanıyor musun? (Ali – Kennst du Ali?)", a: ["Ali'yi"],
+      wrong: { "aliyi": "Eigennamen bekommen einen **Apostroph**: Ali’yi.", "ali'i": "Nach Vokal braucht es ein Puffer-**y**: Ali’**y**i." },
+      e: "Ali + ’ + y + i = **Ali’yi**." },
+    { t: "mc", q: "„Ich öffne die Tür.“ (kapı)", o: ["Kapıyı açıyorum.", "Kapıı açıyorum.", "Kapıyi açıyorum."], a: 0,
+      why: { 1: "Nach Vokal braucht man ein Puffer-**y**.", 2: "Letzter Vokal **ı** → -yı (ohne Punkt)." },
+      e: "kapı + y + ı = **kapıyı**." },
+    { t: "mc", q: "„Ich esse (irgend)einen Apfel.“", o: ["Bir elma yiyorum.", "Bir elmayı yiyorum."], a: 0,
+      why: { 1: "Für „irgendeinen Apfel“ keine Endung. „Bir elmayı“ hieße „einen bestimmten der Äpfel“." },
+      e: "Unbestimmt → **bir elma** ohne Endung." }
+  ]
+});
+
+})(window.KOPRU);
