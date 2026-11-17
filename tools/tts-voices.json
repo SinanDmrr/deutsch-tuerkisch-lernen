@@ -30,14 +30,14 @@
       "de_DE-karlsson-low"
     ],
     "tr": [
+      "tr_TR-dfki-medium",
       "tr_TR-fahrettin-medium",
-      "tr_TR-fettah-medium",
-      "tr_TR-dfki-medium"
+      "tr_TR-fettah-medium"
     ]
   },
   "sampleText": {
     "de": "Guten Tag! Ich lerne jeden Tag ein bisschen Deutsch.",
     "tr": "Merhaba! Her gün biraz Türkçe öğreniyorum. Şeker yok."
   },
-  "_genders": "Per Tonhöhe geprüft: kerstin/ramona/eva_k weiblich (~170–190 Hz), thorsten/karlsson männlich (~120 Hz), tr dfki männlich (~105 Hz)."
+  "_genders": "Per Tonhöhe geprüft: kerstin/ramona/eva_k weiblich (~170–190 Hz), thorsten/karlsson männlich (~120 Hz), tr dfki männlich (~105 Hz). Piper hat (Stand Nov. 2026) nur männliche türkische Stimmen (dfki, fahrettin, fettah)."
 }

@@ -11,14 +11,27 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 AUDIO = ROOT / 'audio'
 MODELS = ROOT / '.piper-voices'
-HF = 'https://huggingface.co/rhasspy/piper-voices/resolve/main/'
 
 from piper import PiperVoice  # pip install piper-tts
 
 
-def voice_url(key):
+REVISIONS = ['main', 'v1.0.0']  # manche Stimmen (z. B. tr fahrettin/fettah) gibt es nur noch im Tag v1.0.0
+
+
+def voice_url(key, rev='main'):
     region, name, quality = key.split('-', 2)
-    return f"{HF}{region.split('_')[0]}/{region}/{name}/{quality}/{key}"
+    return f"https://huggingface.co/rhasspy/piper-voices/resolve/{rev}/{region.split('_')[0]}/{region}/{name}/{quality}/{key}"
+
+
+def download(key, ext, target):
+    last = None
+    for rev in REVISIONS:
+        try:
+            urllib.request.urlretrieve(voice_url(key, rev) + ext, target)
+            return
+        except Exception as e:
+            last = e
+    raise last
 
 
 ERRORS = {}
@@ -31,7 +44,7 @@ def fetch_voice(key):
         for p, ext in ((onnx, '.onnx'), (cfg, '.onnx.json')):
             if not p.exists() or p.stat().st_size == 0:
                 print('  lade', key + ext, flush=True)
-                urllib.request.urlretrieve(voice_url(key) + ext, p)
+                download(key, ext, p)
         return PiperVoice.load(str(onnx), config_path=str(cfg))
     except Exception as e:  # Stimme existiert nicht / Download fehlgeschlagen
         print(f'  ! Stimme {key} nicht verfügbar: {e}', flush=True)
