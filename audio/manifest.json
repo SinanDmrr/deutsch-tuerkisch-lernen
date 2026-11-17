@@ -1,4 +1,8 @@
 {
+ "errors": {
+  "tr_TR-fahrettin-medium": "HTTPError: HTTP Error 404: Not Found",
+  "tr_TR-fettah-medium": "HTTPError: HTTP Error 404: Not Found"
+ },
  "files": {
   "de_DE-kerstin-low": {
    "Ayşe und ihr Mann wohnen in Köln.": "44c193fe0fd275ce",
@@ -167,6 +171,69 @@
    "trinkt": "8f0e4e88ba327dc5",
    "wohnst": "ffd9a5d2f59b772e",
    "wollen": "1bb77711f05bae8c"
+  },
+  "tr_TR-dfki-medium": {
+   "Ali'yi": "a9a795ba4d326b0d",
+   "Almanya'dan": "4814078d2f90b509",
+   "Almanya’dan geliyorum.": "deeecdd14660df1c",
+   "Almanız": "7e75353f01cd6fba",
+   "Araban nerede?": "d1b2c09e9afafa44",
+   "Ben Türkçe öğreniyorum": "721b3cb24dacc1c2",
+   "Ben öğrenciyim.": "5f2e12f8d284b4bf",
+   "Biz Almanız.": "03418c731a235662",
+   "Bu benim evim.": "01c9e5d69727108a",
+   "Evet": "d157d3a6859e9863",
+   "Evi": "d50e6a899cbe3537",
+   "Hasta değilim.": "cd0b9890a330cd3b",
+   "Hayır": "b861f134f81dc9d7",
+   "Kitabım masada.": "7b63c40743a3108e",
+   "Kitap masada.": "c9ae7a34ce9b2ba5",
+   "Lütfen": "2f8b16e279c28ec7",
+   "Memnun oldum": "aee321d9520c6794",
+   "Merhaba!": "2aa90fa634495c2e",
+   "Okula gidiyorum.": "c2900c2402893431",
+   "Rica ederim": "b6bdf385911eebf6",
+   "Seni": "d0a07c57c805c16a",
+   "Sizin adınız ne": "e59bf9556fc5c822",
+   "Teşekkürler / Teşekkür ederim": "cae540fd14cfdb07",
+   "Yorgun musun?": "ada81f1f81c87893",
+   "adım": "ae4b94349f3883fe",
+   "arabalar": "e2f163e9aa60c289",
+   "araban": "97f59e9d13445419",
+   "arabası": "5bd5e7cd3e8f0788",
+   "bin": "9a5d56716d566997",
+   "doktorsunuz": "dcefcac7086a3346",
+   "elli": "217bfaa25a26482e",
+   "evim": "f4efd3024b106402",
+   "geliyorum": "a9b855f8c6686ec3",
+   "günler": "13db0af1716cbc27",
+   "güzel": "1230c457c8bad32f",
+   "hastayım": "f172102cacd8c915",
+   "kalemler": "99cdae7cec7e0853",
+   "kedisi": "8aedc255706d1a69",
+   "kitabım": "33c7eadbee4ffb62",
+   "kırk": "3426701037df0123",
+   "masada": "ab6f8995d2798cfd",
+   "masalar": "f6555c846665815f",
+   "mi": "9c51ad8660eaae45",
+   "mutfakta": "89ee8fdbd81970d7",
+   "müsün": "10f009e6a4627178",
+   "mı": "61fa2b271c53534a",
+   "okula": "2aa9ad7e70ea500e",
+   "okulumuz": "fa0f66ca64c80354",
+   "okuyor": "01fb3aeeb4df2106",
+   "oldum": "4769a5946fda83e4",
+   "yapıyorsun": "fbbb2c91aaf024a4",
+   "yok": "68b8326a2e1db709",
+   "yorgunsun": "0befc6d050365647",
+   "Çay ister misin?": "fcc0a0d4cd0ef3aa",
+   "Özür dilerim": "d83f2c9e033fae55",
+   "çalışıyorlar": "d577b3324f71caed",
+   "öğrenciler": "ac2105ea9a98c6ff",
+   "öğrenciyim": "a8f4c63543b530c3",
+   "öğreniyoruz": "0f2331cf1a4aa2e4",
+   "İki çocuğum var": "897cc15b8bdc7bde",
+   "Şeker yok.": "8f3df26e2d72e3eb"
   }
  },
  "samples": {
@@ -186,6 +253,8 @@
    "female": "de_DE-kerstin-low",
    "male": "de_DE-thorsten-high"
   },
-  "tr": {}
+  "tr": {
+   "male": "tr_TR-dfki-medium"
+  }
  }
 }
