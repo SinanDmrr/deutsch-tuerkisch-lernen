@@ -1,8 +1,5 @@
 {
- "errors": {
-  "tr_TR-fahrettin-medium": "HTTPError: HTTP Error 404: Not Found",
-  "tr_TR-fettah-medium": "HTTPError: HTTP Error 404: Not Found"
- },
+ "errors": {},
  "files": {
   "de_DE-kerstin-low": {
    "Ayşe und ihr Mann wohnen in Köln.": "44c193fe0fd275ce",
@@ -172,7 +169,7 @@
    "wohnst": "ffd9a5d2f59b772e",
    "wollen": "1bb77711f05bae8c"
   },
-  "tr_TR-dfki-medium": {
+  "tr_TR-fahrettin-medium": {
    "Ali'yi": "a9a795ba4d326b0d",
    "Almanya'dan": "4814078d2f90b509",
    "Almanya’dan geliyorum.": "deeecdd14660df1c",
@@ -245,7 +242,9 @@
    "de_DE-thorsten-high": "samples/de_DE-thorsten-high.mp3"
   },
   "tr": {
-   "tr_TR-dfki-medium": "samples/tr_TR-dfki-medium.mp3"
+   "tr_TR-dfki-medium": "samples/tr_TR-dfki-medium.mp3",
+   "tr_TR-fahrettin-medium": "samples/tr_TR-fahrettin-medium.mp3",
+   "tr_TR-fettah-medium": "samples/tr_TR-fettah-medium.mp3"
   }
  },
  "voices": {
@@ -254,7 +253,7 @@
    "male": "de_DE-thorsten-high"
   },
   "tr": {
-   "male": "tr_TR-dfki-medium"
+   "male": "tr_TR-fahrettin-medium"
   }
  }
 }
