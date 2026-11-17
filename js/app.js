@@ -8,7 +8,7 @@
   var BACKUP = 'dt-backup';          // Kopie vor jedem App-Update / jeder Migration
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var SCHEMA = 2;                    // Version des Speicherformats
-  var APP_VERSION = '2026-11-17.5';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-17.6';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -117,7 +117,13 @@
     footer: ['Türkisch lernen · Dein Fortschritt bleibt in deinem Browser', 'Almanca Öğren · İlerlemen tarayıcında kalır'],
     fromAllTopics: ['Fehler aus allen Themen', 'Tüm konulardan hatalar'],
     mixedPractice: ['Fehlertraining', 'Hata çalışması'],
-    goLessons: ['Zu den Lektionen', 'Derslere git']
+    goLessons: ['Zu den Lektionen', 'Derslere git'],
+    mascotNew: ['Hallo, ich bin Lingo! Lass uns mit der ersten Lektion starten.', 'Merhaba, ben Lingo! Hadi ilk dersle başlayalım.'],
+    mascotToday: ['Heute schon gelernt – stark! 👍', 'Bugün çalıştın – harika! 👍'],
+    mascotYesterday: ['Zuletzt gestern gelernt – super, bleib dran! 👍', 'En son dün çalıştın – süper, böyle devam! 👍'],
+    mascotDays: ['Du hast zuletzt vor {n} Tagen gelernt. Lust auf eine kurze Runde?', 'En son {n} gün önce çalıştın. Kısa bir tur yapalım mı?'],
+    mascotSad: ['Du hast zuletzt vor {n} Tagen gelernt … ich vermisse dich! Komm zurück 🥺', 'En son {n} gün önce çalıştın… seni özledim! Geri gel 🥺'],
+    lastLearned: ['Zuletzt gelernt', 'Son çalışma']
   };
 
   /* ================= Speicher ================= */
@@ -334,7 +340,9 @@
     r.n = (r.n || 0) + 1;
     if (!ok) { r.w = (r.w || 0) + 1; r.a = given; }
     r.t = Date.now();
-    p[id] = r; save();
+    p[id] = r;
+    var pr = prof(); pr.last = pr.last || {}; pr.last[courseId()] = r.t;   // letzter Lerntag je Kurs
+    save();
   }
 
   /* ================= Theme ================= */
@@ -415,6 +423,60 @@
     db.active = id; save(); askPersist();
   }
 
+  /* ================= Maskottchen „Lingo“ ================= */
+  function lastLearned() {
+    var pr = prof(), ts = (pr.last && pr.last[courseId()]) || 0;
+    if (!ts) { var p = prog(); Object.keys(p).forEach(function (k) { if (p[k] && p[k].t > ts) ts = p[k].t; }); }
+    return ts || null;
+  }
+  function daysSince(ts) {
+    var a = new Date(ts), b = new Date();
+    var d0 = new Date(a.getFullYear(), a.getMonth(), a.getDate()), d1 = new Date(b.getFullYear(), b.getMonth(), b.getDate());
+    return Math.max(0, Math.round((d1 - d0) / 86400000));   // Kalendertage (sommerzeitfest)
+  }
+  function mascotSvg(mood) {
+    var B = '#4263eb', eyes, mouth, extra = '', arm;
+    if (mood === 'happy') {
+      eyes = '<path d="M37 50q8-10 16 0M65 50q8-10 16 0" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/>';
+      mouth = '<path d="M46 62q13 16 26 0z" fill="#fff"/><path d="M52 68q7 5 14 0" fill="#ff8fab"/>';
+      extra = '<ellipse cx="34" cy="62" rx="6" ry="4" fill="#ff8fab" opacity=".6"/><ellipse cx="84" cy="62" rx="6" ry="4" fill="#ff8fab" opacity=".6"/>' +
+        '<path d="M88 4l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#fcc419"/><path d="M12 30l1.5 3.5 3.5 1.5-3.5 1.5-1.5 3.5-1.5-3.5-3.5-1.5 3.5-1.5z" fill="#fcc419"/>';
+      // Arm nach oben + gelbe Hand mit Daumen hoch 👍
+      arm = '<path d="M98 66L110 52" stroke="' + B + '" stroke-width="10" stroke-linecap="round"/>' +
+        '<g stroke="#d9480f" stroke-width="2" stroke-linejoin="round"><rect x="104" y="17" width="9" height="22" rx="4.5" fill="#fcc419"/>' +
+        '<rect x="100" y="33" width="22" height="19" rx="6" fill="#fcc419"/></g>' +
+        '<path d="M108 39.5h12M108 45.5h12" stroke="#d9480f" stroke-width="1.8" stroke-linecap="round"/>';
+    } else if (mood === 'sad') {
+      eyes = '<circle cx="45" cy="50" r="8" fill="#fff"/><circle cx="73" cy="50" r="8" fill="#fff"/><circle cx="45" cy="53" r="4" fill="#1b1f2a"/><circle cx="73" cy="53" r="4" fill="#1b1f2a"/>' +
+        '<path d="M36 40l14-5M82 40l-14-5" stroke="#1b1f2a" stroke-width="3.5" stroke-linecap="round"/>';
+      mouth = '<path d="M49 74q10-9 20 0" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round"/>';
+      extra = '<path d="M80 58q5 8 0 11q-5-3 0-11z" fill="#74c0fc"/>';
+      arm = '<path d="M98 66L106 80" stroke="' + B + '" stroke-width="10" stroke-linecap="round"/><circle cx="107" cy="83" r="6.5" fill="#fcc419" stroke="#d9480f" stroke-width="2"/>';
+    } else {
+      eyes = '<circle cx="45" cy="48" r="8" fill="#fff"/><circle cx="73" cy="48" r="8" fill="#fff"/><circle cx="46" cy="49" r="4" fill="#1b1f2a"/><circle cx="74" cy="49" r="4" fill="#1b1f2a"/>';
+      mouth = '<path d="M50 67q9 4 18 0" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round"/>';
+      arm = '<path d="M98 62L108 74" stroke="' + B + '" stroke-width="10" stroke-linecap="round"/><circle cx="110" cy="77" r="6.5" fill="#fcc419" stroke="#d9480f" stroke-width="2"/>';
+    }
+    return '<svg class="mascot ' + mood + '" viewBox="0 0 128 120" role="img" aria-label="Lingo">' +
+      '<ellipse cx="60" cy="112" rx="34" ry="5" fill="currentColor" opacity=".12"/>' +
+      '<g class="m-body">' + arm +
+      '<path d="M34 84L27 104L52 86Z" fill="' + B + '"/><rect x="16" y="20" width="86" height="68" rx="24" fill="' + B + '"/>' +
+      '<rect x="22" y="24" width="40" height="10" rx="5" fill="#fff" opacity=".18"/>' + eyes + mouth + extra + '</g></svg>';
+  }
+  function mascotCard() {
+    var ts = lastLearned(), mood, msg;
+    if (!ts) { mood = 'neutral'; msg = t('mascotNew'); }
+    else {
+      var d = daysSince(ts);
+      if (d === 0) { mood = 'happy'; msg = t('mascotToday'); }
+      else if (d === 1) { mood = 'happy'; msg = t('mascotYesterday'); }
+      else if (d <= 5) { mood = 'neutral'; msg = t('mascotDays', { n: d }); }
+      else { mood = 'sad'; msg = t('mascotSad', { n: d }); }
+    }
+    var when = ts ? '<span class="muted small">' + esc(t('lastLearned')) + ': ' + new Date(ts).toLocaleDateString(locale(uiLang()), { weekday: 'long', day: 'numeric', month: 'long' }) + '</span>' : '';
+    return '<div class="card mascot-card">' + mascotSvg(mood) + '<div class="m-bubble"><b>' + esc(msg) + '</b>' + when + '</div></div>';
+  }
+
   /* ================= Dashboard ================= */
   function levelRow(lv, linkBase) {
     var list = levelTopics(lv), s = sumStats(list);
@@ -452,6 +514,7 @@
 
     return '<div class="hero"><div><h1>' + esc(t('hello')) + (p.name ? ', ' + esc(p.name) : '') + ' 👋</h1>' +
       '<p class="muted" style="margin:4px 0 0">' + flag(courseId()) + ' ' + esc(course().label) + ' · ' + esc(t('dashIntro')) + '</p></div></div>' +
+      '<div class="section">' + mascotCard() + '</div>' +
       '<div class="section">' + cont + '</div>' +
       '<div class="grid grid-3 section">' +
         '<div class="card stat"><span class="num">' + s.c + '<span class="muted" style="font-size:1rem"> / ' + s.n + '</span></span><span class="lbl">' + esc(t('tasks')) + ' ' + esc(t('solved')) + '</span></div>' +
