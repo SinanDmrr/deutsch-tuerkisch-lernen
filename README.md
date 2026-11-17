@@ -18,4 +18,15 @@ Lernplattform für **Türkischsprechende, die Deutsch lernen** (Erklärungen auf
 
 - Lehrplan (alle Themen A1–C1): `js/curriculum.js`
 - Inhalte je Niveau: `js/content/de-a1.js`, `js/content/tr-a1.js` – neue Dateien (z. B. `de-a2.js`) in `index.html` einbinden.
-- Übungsformat steht oben in `js/content/de-a1.js`. **Neue Aufgaben nur hinten anhängen** – die Position ist die ID, unter der der Fortschritt gespeichert wird.
+- Bei jedem Release `APP_VERSION` in `js/app.js` und die `?v=…`-Angaben in `index.html` erhöhen (damit Browser keine alten Dateien aus dem Cache nehmen).
+
+## Updates ohne Datenverlust für die Nutzer
+
+Der Fortschritt liegt im Browser der Nutzer (`localStorage`, Schlüssel `dt-data`) und hängt an der **festen ID jeder Aufgabe** (`id: "tr-a1-09.3"`), nicht an ihrer Position.
+
+- Eine vergebene ID **nie ändern** und **nie wiederverwenden**.
+- Neue Aufgaben → neue ID (nächste freie Nummer im Thema). Sie erscheinen für alle als „offen“, der Rest bleibt erhalten.
+- Text verbessern, Reihenfolge ändern, Aufgabe in ein anderes Thema verschieben → Fortschritt bleibt.
+- Aufgabe löschen → ihr Eintrag wird nur nicht mehr gezählt (nichts wird gelöscht).
+- Ändert sich das Speicherformat, kommt in `migrate()` (`js/app.js`) ein neuer Schritt dazu; vorher wird automatisch eine Sicherung unter `dt-backup` abgelegt.
+- Nutzer können ihren Stand in den Einstellungen exportieren/importieren (z. B. für ein neues Gerät).

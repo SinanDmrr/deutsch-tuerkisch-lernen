@@ -4,7 +4,11 @@
 (function () {
   'use strict';
   var K = window.KOPRU;
-  var STORE = 'kopru.v1';
+  var STORE = 'dt-data';            // Hauptspeicher (eigener Präfix „dt-“, gleiche Domain wie andere GitHub-Pages-Seiten)
+  var BACKUP = 'dt-backup';          // Kopie vor jedem App-Update / jeder Migration
+  var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
+  var SCHEMA = 2;                    // Version des Speicherformats
+  var APP_VERSION = '2026-11-17.4';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1'];
   var app = document.getElementById('app');
 
@@ -117,15 +121,76 @@
   };
 
   /* ================= Speicher ================= */
+  /* ---------- Aufgaben-Index: feste ID → Thema/Aufgabe ---------- */
+  var EXI = {};
+  Object.keys(K.content).forEach(function (tid) {
+    (K.content[tid].exercises || []).forEach(function (ex, i) {
+      if (!ex.id) { ex.id = tid + '#' + i; if (window.console) console.warn('Aufgabe ohne feste ID:', tid, i); }
+      if (EXI[ex.id] && window.console) console.error('Doppelte Aufgaben-ID:', ex.id);
+      EXI[ex.id] = { topicId: tid, idx: i, ex: ex };
+    });
+  });
+
+  /* ---------- Laden, Migrieren, Sichern ----------
+   * Grundsatz: Gespeicherter Fortschritt wird NIE gelöscht oder überschrieben, nur ergänzt bzw. umbenannt.
+   * Einträge zu Aufgaben, die es (noch) nicht gibt, bleiben erhalten und werden nur nicht gezählt. */
+  function rawGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function rawSet(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } }
+  var storageBroken = false;
   var db = load();
+  function emptyDb() { return { v: SCHEMA, app: APP_VERSION, theme: 'system', active: null, profiles: {} }; }
   function load() {
-    try {
-      var d = JSON.parse(localStorage.getItem(STORE));
-      if (d && d.profiles) return d;
-    } catch (e) { /* ignore */ }
-    return { v: 1, theme: 'system', active: null, profiles: {} };
+    var raw = rawGet(STORE), d = null, migrated = false;
+    if (raw) {
+      try { d = JSON.parse(raw); } catch (e) {
+        // Beschädigte Daten nicht überschreiben, sondern beiseitelegen
+        rawSet('dt-corrupt-' + Date.now(), raw); storageBroken = true;
+      }
+    }
+    if (!d) {
+      for (var i = 0; i < LEGACY_KEYS.length && !d; i++) {
+        var old = rawGet(LEGACY_KEYS[i]);
+        if (old) { try { d = JSON.parse(old); migrated = true; } catch (e) { /* ignore */ } }
+      }
+    }
+    if (!d || !d.profiles) return emptyDb();
+    if ((d.v || 1) < SCHEMA || d.app !== APP_VERSION) rawSet(BACKUP, JSON.stringify(d));  // Sicherung vor Änderungen
+    d = migrate(d);
+    d.app = APP_VERSION;
+    if (migrated || raw !== JSON.stringify(d)) rawSet(STORE, JSON.stringify(d));
+    return d;
   }
-  function save() { try { localStorage.setItem(STORE, JSON.stringify(db)); } catch (e) { /* voll/gesperrt */ } }
+  function migrate(d) {
+    var v = d.v || 1;
+    if (v < 2) {
+      // v1 → v2: Fortschritt war an der Position („thema#3“) gespeichert, jetzt an der festen Aufgaben-ID
+      Object.keys(d.profiles || {}).forEach(function (pid) {
+        var pr = d.profiles[pid].prog || {};
+        Object.keys(pr).forEach(function (cid) {
+          var src = pr[cid] || {}, dst = {};
+          Object.keys(src).forEach(function (key) {
+            // Die IDs wurden beim Umstieg genau als „thema.(position+1)“ vergeben – die Zuordnung ist also fest
+            // und hängt NICHT von der aktuellen Reihenfolge ab (auch wenn jemand erst nach vielen Updates zurückkommt).
+            var m = /^([a-z]{2}-[a-z0-9]{2}-\d{2})#(\d+)$/.exec(key);
+            dst[m ? m[1] + '.' + (+m[2] + 1) : key] = src[key];
+          });
+          pr[cid] = dst;
+        });
+      });
+      v = 2;
+    }
+    // künftige Migrationen hier anhängen: if (v < 3) { … v = 3; }
+    d.v = v;
+    return d;
+  }
+  function save() {
+    if (storageBroken && !db.active) return;
+    db.v = SCHEMA; db.app = APP_VERSION;
+    rawSet(STORE, JSON.stringify(db));
+  }
+  function askPersist() {
+    try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) { /* ignore */ }
+  }
   function prof() { return db.profiles[db.active]; }
   function courseId() { return prof().course; }
   function course() { return K.courses[courseId()]; }
@@ -197,6 +262,11 @@
     if (!canSpeak) return '';
     return '<button class="speak" data-speak="' + esc(plain(text)) + '" title="' + esc(t('listen')) + '" aria-label="' + esc(t('listen')) + '">🔊</button>';
   }
+  var FLAGS = {
+    de: '<svg class="flag-ico" viewBox="0 0 5 3" aria-hidden="true"><rect width="5" height="3" fill="#FFCE00"/><rect width="5" height="2" fill="#DD0000"/><rect width="5" height="1" fill="#000"/></svg>',
+    tr: '<svg class="flag-ico" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#E30A17"/><circle cx="10.6" cy="10" r="5" fill="#fff"/><circle cx="11.9" cy="10" r="4" fill="#E30A17"/><polygon fill="#fff" points="13.80,10.00 15.55,9.38 15.60,7.53 16.72,9.00 18.50,8.47 17.45,10.00 18.50,11.53 16.72,11.00 15.60,12.47 15.55,10.62"/></svg>'
+  };
+  function flag(cid) { return FLAGS[cid] || ''; }
   var LOGO = '<svg class="logo" aria-hidden="true" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#3b5bdb"/><path d="M11 14h26a5 5 0 0 1 5 5v13a5 5 0 0 1-5 5H24l-7 6v-6h-6a5 5 0 0 1-5-5V19a5 5 0 0 1 5-5z" fill="#fff"/><path d="M53 26H30a5 5 0 0 0-5 5v12a5 5 0 0 0 5 5h12l7 6v-6h4a5 5 0 0 0 5-5V31a5 5 0 0 0-5-5z" fill="#fcc419"/><path d="M14 22h18M14 28h12" stroke="#3b5bdb" stroke-width="3" stroke-linecap="round"/><path d="M32 35h18M32 41h12" stroke="#3b5bdb" stroke-width="3" stroke-linecap="round"/></svg>';
 
   /* ================= Lehrplan-Zugriff ================= */
@@ -212,12 +282,12 @@
   }
   function allTopics() { return topicsOf(courseId()); }
   function topicById(id) { return allTopics().filter(function (x) { return x.id === id; })[0]; }
-  function exId(topicId, i) { return topicId + '#' + i; }
+  function exId(topicId, i) { return K.content[topicId].exercises[i].id; }
   function exById(id) {
-    var parts = id.split('#'); var tp = topicById(parts[0]);
+    var e = EXI[id]; if (!e) return null;
+    var tp = topicById(e.topicId);
     if (!tp || !tp.avail) return null;
-    var ex = tp.data.exercises[+parts[1]];
-    return ex ? { topic: tp, ex: ex, idx: +parts[1], id: id } : null;
+    return { topic: tp, ex: e.ex, idx: e.idx, id: id };
   }
   function topicStats(tp) {
     var s = { n: 0, c: 0, w: 0, o: 0, first: 0, firstW: 0, answered: 0 };
@@ -310,7 +380,7 @@
           '<a class="brand" href="#/dashboard">' + LOGO + '<span>' + esc(c.label) + '<small>Deutsch ⇄ Türkçe</small></span></a>' +
           '<span class="spacer"></span>' +
           '<button class="pill-btn" data-act="toggle-course" title="' + esc(t('courseToggle')) + ' → ' + esc(other.label) + '">' +
-            '<span aria-hidden="true">⇄</span><span>' + other.flag + '</span><span class="pb-label">' + esc(other.label) + '</span></button>' +
+            '<span aria-hidden="true">⇄</span>' + flag(other.id) + '<span class="pb-label">' + esc(other.label) + '</span></button>' +
           '<button class="icon-btn" data-act="toggle-theme" title="' + esc(t('themeToggle')) + '" aria-label="' + esc(t('themeToggle')) + '">' + (currentThemeIsDark() ? '☀️' : '🌙') + '</button>' +
         '</div>' +
         '<nav class="tabs" aria-label="Navigation">' + tabs.map(function (x) {
@@ -342,7 +412,7 @@
   function createProfile(name, cid) {
     var id = 'p' + Date.now().toString(36);
     db.profiles[id] = { id: id, name: (name || '').trim(), course: cid, prog: { de: {}, tr: {} }, created: Date.now() };
-    db.active = id; save();
+    db.active = id; save(); askPersist();
   }
 
   /* ================= Dashboard ================= */
@@ -381,7 +451,7 @@
       }).join('') + '</div>' : '';
 
     return '<div class="hero"><div><h1>' + esc(t('hello')) + (p.name ? ', ' + esc(p.name) : '') + ' 👋</h1>' +
-      '<p class="muted" style="margin:4px 0 0">' + course().flag + ' ' + esc(course().label) + ' · ' + esc(t('dashIntro')) + '</p></div></div>' +
+      '<p class="muted" style="margin:4px 0 0">' + flag(courseId()) + ' ' + esc(course().label) + ' · ' + esc(t('dashIntro')) + '</p></div></div>' +
       '<div class="section">' + cont + '</div>' +
       '<div class="grid grid-3 section">' +
         '<div class="card stat"><span class="num">' + s.c + '<span class="muted" style="font-size:1rem"> / ' + s.n + '</span></span><span class="lbl">' + esc(t('tasks')) + ' ' + esc(t('solved')) + '</span></div>' +
@@ -416,7 +486,7 @@
         '</div><div class="topic-grid">' + list.map(topicCard).join('') + '</div></section>';
     }).join('');
     setTimeout(function () { if (focusLevel) { var el = document.getElementById('lv-' + focusLevel); if (el) el.scrollIntoView({ block: 'start' }); } }, 0);
-    return '<h1>' + esc(t('lessons')) + '</h1><p class="muted">' + course().flag + ' ' + esc(course().label) + ' · ' + esc(course().sublabel) + '</p>' + html;
+    return '<h1>' + esc(t('lessons')) + '</h1><p class="muted">' + flag(courseId()) + ' ' + esc(course().label) + ' · ' + esc(course().sublabel) + '</p>' + html;
   }
 
   /* ================= Thema: Erklärung ================= */
@@ -654,7 +724,7 @@
       list = '<div class="card empty"><div class="big">🌟</div><p>' + esc(t('noMistakes')) + '</p><a class="btn" href="#/lessons">' + esc(t('goLessons')) + '</a></div>';
     } else {
       var groups = {};
-      ids.forEach(function (id) { var tid = id.split('#')[0]; (groups[tid] = groups[tid] || []).push(id); });
+      ids.forEach(function (id) { var tid = EXI[id].topicId; (groups[tid] = groups[tid] || []).push(id); });
       list = '<div class="btn-row" style="margin:6px 0 18px"><a class="btn primary" href="#/practice">▶ ' + esc(t('practiceAll')) + ' (' + ids.length + ')</a></div>' +
         Object.keys(groups).map(function (tid) {
           var tp = topicById(tid);
@@ -718,12 +788,12 @@
     }).join('') + '</div>';
     var courseSeg = '<div class="seg">' + ['de', 'tr'].map(function (cid) {
       var c = K.courses[cid];
-      return '<button data-act="set-course" data-v="' + cid + '" class="' + (courseId() === cid ? 'on' : '') + '">' + c.flag + ' ' + esc(c.label) + '</button>';
+      return '<button data-act="set-course" data-v="' + cid + '" class="' + (courseId() === cid ? 'on' : '') + '">' + flag(cid) + ' ' + esc(c.label) + '</button>';
     }).join('') + '</div>';
     var profiles = Object.keys(db.profiles).map(function (id) {
       var p = db.profiles[id], isA = id === db.active;
       return '<div class="profile-row"><div><b>' + esc(p.name || '—') + '</b> ' + (isA ? '<span class="badge ok">' + esc(t('active')) + '</span>' : '') +
-        ' <span class="muted small">' + K.courses[p.course].flag + ' ' + esc(K.courses[p.course].label) + '</span></div><div class="btn-row">' +
+        ' <span class="muted small">' + flag(p.course) + ' ' + esc(K.courses[p.course].label) + '</span></div><div class="btn-row">' +
         (isA ? '' : '<button class="btn small" data-act="switch-profile" data-id="' + id + '">' + esc(t('switchTo')) + '</button>') +
         (Object.keys(db.profiles).length > 1 ? '<button class="btn small danger" data-act="delete-profile" data-id="' + id + '">' + esc(t('del')) + '</button>' : '') + '</div></div>';
     }).join('');
@@ -865,7 +935,7 @@
     prof().course = cid; save(); player = null;
     var r = parseHash();
     if (r.page === 'topic' || r.page === 'practice') location.hash = '#/dashboard';
-    render(); toast(K.courses[cid].flag + ' ' + K.courses[cid].label);
+    render(); toast(K.courses[cid].label);
   }
   function doCheck() {
     if (!player || player.checked) return;

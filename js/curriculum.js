@@ -17,7 +17,7 @@ window.KOPRU = {
   courses: {
     /* Deutsch lernen – für Türkischsprechende (Erklärungen auf Türkisch) */
     de: {
-      id: 'de', ui: 'tr', target: 'de', tts: 'de-DE', flag: '🇩🇪',
+      id: 'de', ui: 'tr', target: 'de', tts: 'de-DE',
       label: 'Almanca Öğren', sublabel: 'Açıklamalar Türkçe',
       chars: ['ä', 'ö', 'ü', 'ß', 'Ä', 'Ö', 'Ü'],
       levels: {
@@ -82,7 +82,7 @@ window.KOPRU = {
 
     /* Türkisch lernen – für Deutschsprechende (Erklärungen auf Deutsch) */
     tr: {
-      id: 'tr', ui: 'de', target: 'tr', tts: 'tr-TR', flag: '🇹🇷',
+      id: 'tr', ui: 'de', target: 'tr', tts: 'tr-TR',
       label: 'Türkisch lernen', sublabel: 'Erklärungen auf Deutsch',
       chars: ['ç', 'ğ', 'ı', 'İ', 'ö', 'ş', 'ü', "'"],
       levels: {
