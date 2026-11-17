@@ -1,7 +1,7 @@
 {
   "name": "Deutsch ⇄ Türkçe",
   "short_name": "DE ⇄ TR",
-  "description": "Deutsch für Türkischsprechende und Türkisch für Deutschsprechende – von A1 bis C1.",
+  "description": "Deutsch für Türkischsprechende und Türkisch für Deutschsprechende – von A1 bis C2.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

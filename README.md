@@ -1,11 +1,11 @@
 # Deutsch ⇄ Türkçe
 
-Lernplattform für **Türkischsprechende, die Deutsch lernen** (Erklärungen auf Türkisch) und **Deutschsprechende, die Türkisch lernen** (Erklärungen auf Deutsch) – Ziel: von null bis C1.
+Lernplattform für **Türkischsprechende, die Deutsch lernen** (Erklärungen auf Türkisch) und **Deutschsprechende, die Türkisch lernen** (Erklärungen auf Deutsch) – Ziel: von null bis C2.
 
 - Reiter: **Dashboard**, **Lektionen**, **Meine Lücken**, **Gesamtüberblick**, **Einstellungen**
 - Jedes Thema: Erklärung → Übungen (Multiple Choice, Lückentext, Satzbau, Zuordnen) → „Lösung prüfen“ mit Erklärung, *warum* die eigene Antwort falsch und die Lösung richtig ist
 - Fehler werden pro Profil im `localStorage` gespeichert und lassen sich am Kapitelende oder gesammelt wiederholen
-- Fortschritt pro Niveau (A1–C1) in Prozent, Light/Dark-Mode, mehrere Profile pro Gerät, Export/Import, Vorlesefunktion (Browser-Sprachausgabe)
+- Fortschritt pro Niveau (A1–C2) in Prozent, Light/Dark-Mode, mehrere Profile pro Gerät, Export/Import, Vorlesefunktion (Browser-Sprachausgabe)
 - Keine Abhängigkeiten, kein Build – reines HTML/CSS/JS
 
 ## Auf GitHub Pages veröffentlichen
@@ -16,7 +16,7 @@ Lernplattform für **Türkischsprechende, die Deutsch lernen** (Erklärungen auf
 
 ## Inhalte erweitern
 
-- Lehrplan (alle Themen A1–C1): `js/curriculum.js`
+- Lehrplan (alle Themen A1–C2): `js/curriculum.js`
 - Inhalte je Niveau: `js/content/de-a1.js`, `js/content/tr-a1.js` – neue Dateien (z. B. `de-a2.js`) in `index.html` einbinden.
 - Bei jedem Release `APP_VERSION` in `js/app.js` und die `?v=…`-Angaben in `index.html` erhöhen (damit Browser keine alten Dateien aus dem Cache nehmen).
 

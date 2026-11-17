@@ -8,8 +8,8 @@
   var BACKUP = 'dt-backup';          // Kopie vor jedem App-Update / jeder Migration
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var SCHEMA = 2;                    // Version des Speicherformats
-  var APP_VERSION = '2026-11-17.4';  // bei jedem Release erhöhen (auch in index.html ?v=…)
-  var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1'];
+  var APP_VERSION = '2026-11-17.5';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
   /* ================= Texte der Oberfläche (de = deutsche UI, tr = türkische UI) ================= */
@@ -83,7 +83,7 @@
     overviewIntro: ['Alle Themen auf einen Blick: wie viel davon ist richtig, falsch oder noch offen.', 'Tüm konular bir bakışta: ne kadarı doğru, yanlış ya da açık.'],
     topic: ['Thema', 'Konu'],
     total: ['Gesamt', 'Toplam'],
-    totalProgress: ['Gesamtfortschritt (A1–C1)', 'Genel ilerleme (A1–C1)'],
+    totalProgress: ['Gesamtfortschritt (A1–C2)', 'Genel ilerleme (A1–C2)'],
     theme: ['Darstellung', 'Görünüm'],
     light: ['☀️ Hell', '☀️ Açık'],
     dark: ['🌙 Dunkel', '🌙 Koyu'],
@@ -397,8 +397,8 @@
     var cards = ['de', 'tr'].map(function (cid) {
       var c = K.courses[cid];
       return '<button class="course-card' + (obChoice === cid ? ' selected' : '') + '" data-act="ob-choose" data-c="' + cid + '">' +
-        '<span class="flag">' + c.flag + '</span><b>' + esc(cid === 'de' ? 'Almanca öğrenmek istiyorum' : 'Ich möchte Türkisch lernen') + '</b>' +
-        '<span class="muted">' + esc(c.sublabel) + ' · A1 → C1</span></button>';
+        '<span class="flag">' + flag(cid) + '</span><b>' + esc(cid === 'de' ? 'Almanca öğrenmek istiyorum' : 'Ich möchte Türkisch lernen') + '</b>' +
+        '<span class="muted">' + esc(c.sublabel) + ' · A1 → C2</span></button>';
     }).join('');
     return '<main><div class="onboard">' + LOGO +
       '<h1>Deutsch ⇄ Türkçe</h1><p class="muted">Willkommen! · Hoş geldin!</p>' +

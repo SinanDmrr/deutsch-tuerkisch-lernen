@@ -1,4 +1,4 @@
-/* Deutsch ⇄ Türkçe – Lehrplan (A1–C1) für beide Kurse.
+/* Deutsch ⇄ Türkçe – Lehrplan (A1–C2) für beide Kurse.
  * Jedes Thema bekommt seine Inhalte über KOPRU.add(id, {...}) aus den Dateien in js/content/.
  * Themen ohne Inhalte erscheinen als „in Vorbereitung“.
  */
@@ -11,7 +11,8 @@ window.KOPRU = {
     A2: { de: 'Grundlagen', tr: 'Temel' },
     B1: { de: 'Mittelstufe', tr: 'Orta' },
     B2: { de: 'Gute Mittelstufe', tr: 'İyi orta' },
-    C1: { de: 'Fortgeschritten', tr: 'İleri' }
+    C1: { de: 'Fortgeschritten', tr: 'İleri' },
+    C2: { de: 'Nahezu muttersprachlich', tr: 'Ana dile yakın' }
   },
 
   courses: {
@@ -76,6 +77,15 @@ window.KOPRU = {
           ['de-c1-05', 'Konjunktiv I & II vertieft', 'Dilek kipleri – ileri'],
           ['de-c1-06', 'Textkohärenz & Konnektoren', 'Metin bütünlüğü'],
           ['de-c1-07', 'Redewendungen & Idiomatik', 'Deyimler']
+        ],
+        C2: [
+          ['de-c2-01', 'Stil & Register meistern', 'Üslup incelikleri ve dil düzeyleri'],
+          ['de-c2-02', 'Fach- & Wissenschaftssprache', 'Akademik ve bilimsel Almanca'],
+          ['de-c2-03', 'Wortbildung: Präfixe, Suffixe, Komposita', 'Kelime türetme ve birleşik kelimeler'],
+          ['de-c2-04', 'Literarische Texte & Stilmittel', 'Edebî metinler ve söz sanatları'],
+          ['de-c2-05', 'Ironie, Andeutungen & Zwischentöne', 'İroni, ima ve satır arası anlam'],
+          ['de-c2-06', 'Redewendungen & Sprichwörter vertieft', 'Deyimler ve atasözleri (ileri)'],
+          ['de-c2-07', 'Regionale Varietäten: Österreich, Schweiz, Dialekte', 'Bölgesel farklılıklar ve lehçeler']
         ]
       }
     },
@@ -139,6 +149,15 @@ window.KOPRU = {
           ['tr-c1-04', 'Stil & Register', 'Üslup'],
           ['tr-c1-05', 'Redewendungen & Sprichwörter', 'Deyimler ve atasözleri'],
           ['tr-c1-06', 'Komplexe Satzgefüge', 'Karmaşık cümleler']
+        ],
+        C2: [
+          ['tr-c2-01', 'Bedeutungsnuancen der Suffixe', 'Eklerin anlam incelikleri'],
+          ['tr-c2-02', 'Fach- & Wissenschaftssprache', 'Akademik ve bilimsel Türkçe'],
+          ['tr-c2-03', 'Osmanische & gehobene Wendungen', 'Osmanlıca kökenli ve yüksek üslup ifadeler'],
+          ['tr-c2-04', 'Literarische Texte & Stilmittel', 'Edebî metinler ve söz sanatları'],
+          ['tr-c2-05', 'Ironie, Höflichkeit & Andeutungen', 'İroni, nezaket ve ima'],
+          ['tr-c2-06', 'Redewendungen & Sprichwörter vertieft', 'Deyimler ve atasözleri (ileri)'],
+          ['tr-c2-07', 'Regionale Varianten (ağızlar)', 'Yöresel ağızlar']
         ]
       }
     }
