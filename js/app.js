@@ -8,7 +8,7 @@
   var BACKUP = 'dt-backup';          // Kopie vor jedem App-Update / jeder Migration
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var SCHEMA = 2;                    // Version des Speicherformats
-  var APP_VERSION = '2026-11-17.8';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-17.10';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -129,7 +129,19 @@
       'Selam, seni yeniden görmek ne güzel! Son çalışmanın üzerinden {n} gün geçti. Devam etmek istemen harika – azimle sürdür, Almancayı çok çabuk öğreneceksin.'],
     mascotSad: ['Oh … da bist du ja wieder. Dein letztes Training ist schon {n} Tage her – ich hab dich echt vermisst! 🥺 Lass uns heute wenigstens eine kleine Runde machen, sonst rostet dein Türkisch ein.',
       'Ah, sonunda geldin… Son çalışmanın üzerinden tam {n} gün geçmiş, seni çok özledim! 🥺 Hadi bugün küçük bir tur yapalım, yoksa Almancan paslanacak.'],
-    lastLearned: ['Zuletzt gelernt', 'Son çalışma']
+    lastLearned: ['Zuletzt gelernt', 'Son çalışma'],
+    voiceTitle: ['Vorlesen', 'Sesli okuma'],
+    voiceFor: ['Stimme für Türkisch', 'Almanca için ses'],
+    voiceTip: ['★ = automatisch gewählt (die natürlichste gefundene Stimme). Am besten klingen „Natural/Online“-Stimmen in Microsoft Edge oder Google-Stimmen in Chrome.', '★ = otomatik seçilen (bulunan en doğal ses). En iyi sonucu Microsoft Edge’deki “Natural/Online” sesler veya Chrome’daki Google sesleri verir.'],
+    voiceMissing: ['Keine türkische Stimme gefunden', 'Almanca ses bulunamadı'],
+    noSpeech: ['Dieser Browser kann nicht vorlesen.', 'Bu tarayıcı sesli okuma desteklemiyor.'],
+    test: ['Testen', 'Dene'],
+    voiceAuto: ['Automatisch', 'Otomatik'],
+    female: ['Weiblich', 'Kadın'],
+    male: ['Männlich', 'Erkek'],
+    notInstalled: ['Auf diesem Gerät nicht installiert', 'Bu cihazda yüklü değil'],
+    genderMissing: ['Für dieses Geschlecht ist hier keine passende Stimme installiert – es wird die beste verfügbare genutzt.', 'Bu cinsiyet için uygun ses yüklü değil – mevcut en iyi ses kullanılıyor.'],
+    testSentence: ['Merhaba! Her gün biraz Türkçe öğreniyorum.', 'Guten Tag! Ich lerne jeden Tag ein bisschen Deutsch.']
   };
 
   /* ================= Speicher ================= */
@@ -259,16 +271,106 @@
     var el = document.createElement('div'); el.className = 'toast'; el.textContent = msg;
     document.body.appendChild(el); setTimeout(function () { el.remove(); }, 2200);
   }
+  /* ---------- Vorlesen: echte deutsche/türkische Stimme wählen, nie eine fremde Stimme ---------- */
   var canSpeak = 'speechSynthesis' in window;
-  function speak(text, lang) {
+  var voicesCache = [];
+  function loadVoices() { try { voicesCache = speechSynthesis.getVoices() || []; } catch (e) { voicesCache = []; } }
+  if (canSpeak) {
+    loadVoices();
+    var onVoices = function () { loadVoices(); if (parseHash().page === 'settings' && db.active) render(); };
+    if (speechSynthesis.addEventListener) speechSynthesis.addEventListener('voiceschanged', onVoices); else speechSynthesis.onvoiceschanged = onVoices;
+  }
+  function vLang(v) { return String(v.lang || '').replace('_', '-').toLowerCase(); }
+  function voicesFor(lang) {
+    var l = lang.toLowerCase(), pfx = l.slice(0, 2) + '-';
+    return voicesCache.filter(function (v) { var x = vLang(v); return x === l || x.indexOf(pfx) === 0 || x === l.slice(0, 2); });
+  }
+  function voiceScore(v, lang) {
+    var n = v.name || '', s = 0;
+    if (vLang(v) === lang.toLowerCase()) s += 50;                       // genau tr-TR / de-DE
+    if (/natural|neural|premium|enhanced|wavenet|hd/i.test(n)) s += 40; // neuronale, natürlich klingende Stimmen
+    if (/google/i.test(n)) s += 25;
+    if (/online/i.test(n)) s += 10;
+    if (/multilingual/i.test(n)) s -= 30;                               // Mehrsprachige Stimmen haben oft Akzent
+    if (/espeak|compact/i.test(n)) s -= 40;                             // roboterhaft
+    return s;
+  }
+  // Geschlecht ist in der Web-Speech-API nicht angegeben → bekannte Stimmennamen (Windows/Edge, Apple, Google)
+  var FEMALE = /\b(katja|hedda|amala|louisa|seraphina|elke|gisela|klarissa|maja|tanja|ingrid|anna|petra|helena|marlene|vicki|emel|seda|yelda|filiz|zeynep|aylin)\b/i;
+  var MALE = /\b(conrad|stefan|killian|florian|bernd|christoph|kasper|klaus|ralf|markus|yannick|hans|reed|ahmet|tolga|cem|fettah|fahrettin|murat|emre)\b/i;
+  function voiceGender(v) { var n = v.name || ''; return FEMALE.test(n) ? 'f' : (MALE.test(n) ? 'm' : ''); }
+  function sortedVoices(lang) { return voicesFor(lang).sort(function (a, b) { return voiceScore(b, lang) - voiceScore(a, lang); }); }
+  function bestVoice(lang) {
+    var list = sortedVoices(lang), pref = db.voices && db.voices[lang], g = db.voiceGender || '';
+    if (pref) { var f = list.filter(function (v) { return v.name === pref; })[0]; if (f) return f; }
+    if (g) { var byG = list.filter(function (v) { return voiceGender(v) === g; })[0]; if (byG) return byG; }
+    return list[0] || null;
+  }
+  function speak(text, lang, voiceName, retried) {
     if (!canSpeak) return;
+    if (!voicesCache.length) loadVoices();
+    var v = voiceName ? voicesFor(lang).filter(function (x) { return x.name === voiceName; })[0] : bestVoice(lang);
+    if (!v) {
+      if (!voicesCache.length && !retried) { setTimeout(function () { loadVoices(); speak(text, lang, voiceName, true); }, 700); return; }
+      showVoiceHelp(lang); return;   // lieber gar nicht vorlesen als mit falscher (z. B. englischer) Stimme
+    }
     try {
       speechSynthesis.cancel();
-      var u = new SpeechSynthesisUtterance(plain(text)); u.lang = lang; u.rate = 0.9;
-      var v = speechSynthesis.getVoices().filter(function (x) { return x.lang && x.lang.replace('_', '-').indexOf(lang.slice(0, 2)) === 0; })[0];
-      if (v) u.voice = v;
+      var u = new SpeechSynthesisUtterance(plain(text));
+      u.voice = v; u.lang = v.lang || lang; u.rate = 0.92;
       speechSynthesis.speak(u);
     } catch (e) { /* ignore */ }
+  }
+  function osName() {
+    var ua = navigator.userAgent || '';
+    if (/android/i.test(ua)) return 'android';
+    if (/iphone|ipad|ipod/i.test(ua) || (/macintosh/i.test(ua) && 'ontouchend' in document)) return 'ios';
+    if (/windows/i.test(ua)) return 'windows';
+    if (/macintosh|mac os/i.test(ua)) return 'mac';
+    return 'other';
+  }
+  function voiceHelpHtml() {
+    var os = osName(), de = uiLang() === 'de';
+    var L = de ? 'Türkisch' : 'Almanca';
+    var steps = {
+      windows: de ? 'Am natürlichsten klingt es in <b>Microsoft Edge</b> (Online-Stimmen, z. B. „Emel“). Oder in Windows: <b>Einstellungen → Zeit und Sprache → Sprache & Region → Sprache hinzufügen → ' + L + '</b> und dabei „Sprachausgabe/Text-to-Speech“ anhaken.'
+        : 'En doğal ses <b>Microsoft Edge</b> tarayıcısında (çevrim içi sesler, ör. “Katja”). Ya da Windows’ta: <b>Ayarlar → Saat ve dil → Dil ve bölge → Dil ekle → ' + L + '</b> ve “Metin okuma (Text-to-Speech)” seçeneğini işaretle.',
+      android: de ? '<b>Einstellungen → Text-in-Sprache-Ausgabe → Google-Sprachdienste → Sprachdaten installieren → ' + L + '</b>.'
+        : '<b>Ayarlar → Metin okuma çıkışı → Google konuşma hizmetleri → Ses verilerini yükle → ' + L + '</b>.',
+      ios: de ? '<b>Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen → ' + L + '</b> und eine Stimme (am besten „Premium“/„Erweitert“) laden.'
+        : '<b>Ayarlar → Erişilebilirlik → Seslendirilen İçerik → Sesler → ' + L + '</b> ve bir ses indir (tercihen “Gelişmiş/Premium”).',
+      mac: de ? '<b>Systemeinstellungen → Bedienungshilfen → Gesprochene Inhalte → Systemstimme → Stimmen verwalten → ' + L + '</b>.'
+        : '<b>Sistem Ayarları → Erişilebilirlik → Seslendirilen İçerik → Sistem sesi → Sesleri yönet → ' + L + '</b>.',
+      other: de ? 'Installiere eine ' + L + '-Stimme in den Sprach-/Vorlese-Einstellungen deines Geräts oder nutze Chrome bzw. Edge.'
+        : 'Cihazının dil/sesli okuma ayarlarından bir ' + L + ' sesi yükle ya da Chrome veya Edge kullan.'
+    };
+    return '<p>' + (de ? 'Auf diesem Gerät ist keine <b>türkische</b> Vorlese-Stimme installiert. Damit die Aussprache stimmt, lese ich nicht mit einer fremden Stimme vor.'
+      : 'Bu cihazda <b>Almanca</b> bir okuma sesi yüklü değil. Telaffuz yanlış olmasın diye yabancı bir sesle okumuyorum.') + '</p><p>' + steps[os] + '</p>';
+  }
+  function showVoiceHelp() {
+    var old = document.getElementById('voice-help'); if (old) old.remove();
+    var el = document.createElement('div'); el.id = 'voice-help'; el.className = 'help-pop'; el.setAttribute('role', 'dialog');
+    el.innerHTML = '<div class="card"><h3>🔊 ' + esc(t('voiceMissing')) + '</h3>' + voiceHelpHtml() +
+      '<div class="btn-row"><a class="btn" href="#/settings">' + esc(t('settings')) + '</a><button class="btn primary" data-close>OK</button></div></div>';
+    el.addEventListener('click', function (e) { if (e.target === el || e.target.hasAttribute('data-close') || e.target.closest('a')) el.remove(); });
+    document.body.appendChild(el);
+  }
+  function voiceSettingsHtml() {
+    if (!canSpeak) return '<p class="muted">' + esc(t('noSpeech')) + '</p>';
+    var lang = course().tts, list = sortedVoices(lang), cur = bestVoice(lang);
+    if (!list.length) return voiceHelpHtml();
+    var g = db.voiceGender || '';
+    var hasF = list.some(function (v) { return voiceGender(v) === 'f'; }), hasM = list.some(function (v) { return voiceGender(v) === 'm'; });
+    var seg = '<div class="seg" style="margin:4px 0 12px">' + [['', t('voiceAuto')], ['f', '♀ ' + t('female')], ['m', '♂ ' + t('male')]].map(function (x) {
+      var dis = (x[0] === 'f' && !hasF) || (x[0] === 'm' && !hasM);
+      return '<button data-act="voice-gender" data-v="' + x[0] + '" class="' + (g === x[0] ? 'on' : '') + '"' + (dis ? ' disabled title="' + esc(t('notInstalled')) + '"' : '') + '>' + esc(x[1]) + '</button>';
+    }).join('') + '</div>' + ((g === 'f' && !hasF) || (g === 'm' && !hasM) ? '<p class="muted small">' + esc(t('genderMissing')) + '</p>' : '');
+    return seg + '<label class="small" for="voice-sel" style="display:block"><b>' + esc(t('voiceFor')) + '</b></label><div class="inline-form" style="margin-top:6px">' +
+      '<select id="voice-sel" class="input" data-act="voice" style="max-width:420px">' + list.map(function (v, i) {
+        var vg = voiceGender(v);
+        return '<option value="' + esc(v.name) + '"' + (cur && cur.name === v.name ? ' selected' : '') + '>' + (vg === 'f' ? '♀ ' : vg === 'm' ? '♂ ' : '') + esc(v.name) + (i === 0 ? ' ★' : '') + '</option>';
+      }).join('') + '</select><button class="btn" data-act="voice-test">▶ ' + esc(t('test')) + '</button></div>' +
+      '<p class="muted small" style="margin-top:8px">' + esc(t('voiceTip')) + '</p>';
   }
   function speakBtn(text) {
     if (!canSpeak) return '';
@@ -871,6 +973,7 @@
       '<div class="card section"><h2>' + esc(t('course')) + '</h2>' + courseSeg + '</div>' +
       '<div class="card section"><h2>' + esc(t('profiles')) + '</h2><p class="muted small">' + esc(t('profilesIntro')) + '</p>' + profiles +
         '<form class="inline-form" data-form="new-profile"><input class="input" name="name" maxlength="30" placeholder="' + esc(t('namePh')) + '" required><button class="btn" type="submit">+ ' + esc(t('newProfile')) + '</button></form></div>' +
+      '<div class="card section"><h2>🔊 ' + esc(t('voiceTitle')) + '</h2>' + voiceSettingsHtml() + '</div>' +
       '<div class="card section"><h2>' + esc(t('data')) + '</h2><p class="muted small">' + esc(t('storageNote')) + '</p><div class="btn-row">' +
         '<button class="btn" data-act="export">' + esc(t('exportBtn')) + '</button>' +
         '<label class="btn" style="cursor:pointer">' + esc(t('importBtn')) + '<input type="file" accept="application/json,.json" data-act="import" hidden></label>' +
@@ -953,6 +1056,8 @@
         break;
       }
       case 'export': doExport(); break;
+      case 'voice-gender': if (!el.disabled) { db.voiceGender = el.getAttribute('data-v'); db.voices = db.voices || {}; delete db.voices[course().tts]; save(); render(); speak(t('testSentence'), course().tts); } break;
+      case 'voice-test': { var sel = document.getElementById('voice-sel'); speak(t('testSentence'), course().tts, sel ? sel.value : null); break; }
       case 'reset-course': if (armed(el, t('confirmReset'))) { prof().prog[courseId()] = {}; save(); player = null; render(); } break;
     }
   });
@@ -969,6 +1074,7 @@
       var cb = document.getElementById('check-btn'); if (cb) cb.disabled = !canCheck(curEx().ex, player.cur);
     }
     if (el.matches('input[data-act="import"]')) doImport(el.files && el.files[0]);
+    if (el.matches('select[data-act="voice"]')) { db.voices = db.voices || {}; db.voices[course().tts] = el.value; save(); speak(t('testSentence'), course().tts, el.value); }
   });
   app.addEventListener('keydown', function (ev) {
     if (ev.key === 'Enter' && ev.target.id === 'gap-input') { ev.preventDefault(); doCheck(); }
@@ -1053,6 +1159,5 @@
     rd.readAsText(file);
   }
 
-  if (canSpeak && speechSynthesis.getVoices) speechSynthesis.getVoices();
   render();
 })();
