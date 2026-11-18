@@ -136,6 +136,11 @@
     voiceMissing: ['Keine türkische Stimme gefunden', 'Almanca ses bulunamadı'],
     noSpeech: ['Dieser Browser kann nicht vorlesen.', 'Bu tarayıcı sesli okuma desteklemiyor.'],
     test: ['Testen', 'Dene'],
+    bannerSaveFail: ['Dein Fortschritt kann gerade nicht gespeichert werden (Speicher voll oder gesperrt). Bitte exportiere ihn zur Sicherheit.', 'İlerlemen şu an kaydedilemiyor (depolama dolu veya engelli). Lütfen güvenlik için dışa aktar.'],
+    bannerReadOnly: ['Deine Daten konnten nicht aktualisiert werden. Sie sind unverändert gesichert – bitte exportiere sie und melde den Fehler.', 'Verilerin güncellenemedi. Değiştirilmeden saklanıyor – lütfen dışa aktar ve hatayı bildir.'],
+    bannerNewer: ['Diese Daten stammen von einer neueren Version der Seite. Bitte neu laden.', 'Bu veriler sitenin daha yeni bir sürümüne ait. Lütfen sayfayı yenile.'],
+    reload: ['Neu laden', 'Yenile'],
+    audioMissing: ['Für diese Höraufgabe ist gerade kein Ton verfügbar (z. B. direkt nach einem Update). Überspring sie einfach – sie wird nicht gewertet.', 'Bu dinleme alıştırması için şu an ses yok (ör. bir güncellemeden hemen sonra). Atlayabilirsin – puanlanmaz.'],
     speakQ: ['Sprich den Satz laut nach.', 'Cümleyi yüksek sesle tekrarla.'],
     speakNow: ['Jetzt sprechen', 'Şimdi konuş'],
     listening: ['Ich höre zu …', 'Dinliyorum …'],
@@ -192,7 +197,7 @@
    * Einträge zu Aufgaben, die es (noch) nicht gibt, bleiben erhalten und werden nur nicht gezählt. */
   function rawGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function rawSet(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } }
-  var storageBroken = false;
+  var storageBroken = false, readOnly = false, newerData = false, saveFailed = false;
   var db = load();
   function emptyDb() { return { v: SCHEMA, app: APP_VERSION, theme: 'system', active: null, profiles: {} }; }
   function load() {
@@ -210,8 +215,13 @@
       }
     }
     if (!d || !d.profiles) return emptyDb();
+    if ((d.v || 1) > SCHEMA) { newerData = true; return d; }   // Daten einer neueren App-Version: nicht anfassen
     if ((d.v || 1) < SCHEMA || d.app !== APP_VERSION) rawSet(BACKUP, JSON.stringify(d));  // Sicherung vor Änderungen
-    d = migrate(d);
+    try { d = migrate(d); } catch (e) {
+      // Migration fehlgeschlagen: Rohdaten NICHT überschreiben, App nur lesend
+      readOnly = true; if (window.console) console.error('Migration fehlgeschlagen', e);
+      try { return JSON.parse(raw || '{}').profiles ? JSON.parse(raw) : emptyDb(); } catch (e2) { return emptyDb(); }
+    }
     d.app = APP_VERSION;
     if (migrated || raw !== JSON.stringify(d)) rawSet(STORE, JSON.stringify(d));
     return d;
@@ -239,11 +249,25 @@
     d.v = v;
     return d;
   }
+  // Speichern mit Rückmeldung (ADR-1): nie die Schema-Version zurückstufen, Fehler sichtbar machen
   function save() {
-    if (storageBroken && !db.active) return;
-    db.v = SCHEMA; db.app = APP_VERSION;
-    rawSet(STORE, JSON.stringify(db));
+    if (readOnly || newerData) return false;
+    if (storageBroken && !db.active) return false;
+    db.v = Math.max(db.v || 0, SCHEMA); db.app = APP_VERSION; db.rev = (db.rev || 0) + 1;
+    var json = JSON.stringify(db);
+    if (rawSet(STORE, json)) { if (saveFailed) { saveFailed = false; } return true; }
+    try { localStorage.removeItem(BACKUP); } catch (e) { /* ignore */ }   // Platz schaffen und erneut versuchen
+    if (rawSet(STORE, json)) return true;
+    saveFailed = true;
+    var b = document.getElementById('save-banner'); if (!b && app) render();
+    return false;
   }
+  function backupNow() { rawSet(BACKUP, JSON.stringify(db)); }
+  // Mehrere Tabs: Änderungen aus einem anderen Tab übernehmen statt sie zu überschreiben
+  window.addEventListener('storage', function (e) {
+    if (e.key !== STORE || !e.newValue) return;
+    try { var d = JSON.parse(e.newValue); if (d && d.profiles && (d.v || 1) <= SCHEMA) { db = d; if (!db.profiles[db.active]) db.active = Object.keys(db.profiles)[0] || null; render(); } } catch (err) { /* ignore */ }
+  });
   function askPersist() {
     try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) { /* ignore */ }
   }
@@ -348,51 +372,76 @@
       .catch(function () { /* offline oder lokal geöffnet → Gerätestimme */ });
   }
   function piperVoices(lang2) { return (AUDIO && AUDIO.voices && AUDIO.voices[lang2]) || {}; }
-  var slowNext = false;   // nächste Wiedergabe langsamer (🐢)
-  var seqToken = 0;   // jede neue Wiedergabe beendet eine laufende Dialog-Kette
-  function playUrl(url, onFail, onEnd) {
+  /* Audio-Schicht (ADR-5): EIN wiederverwendetes <audio>-Element (nötig für Ketten auf iOS),
+   * Optionen statt globaler Flags: speak(text, lang, { gender, rate, onEnd, voiceName, chain }) */
+  var audioEl = null, seqToken = 0;
+  function getAudioEl() { if (!audioEl) { audioEl = new Audio(); audioEl.preload = 'auto'; } return audioEl; }
+  function stopAudio() {
+    seqToken++;
+    try { if (audioEl) { audioEl.onended = null; audioEl.pause(); } if (canSpeak) speechSynthesis.cancel(); } catch (e) { /* ignore */ }
+  }
+  function playUrl(url, o) {
+    o = o || {};
     try {
       if (canSpeak) speechSynthesis.cancel();
-      if (curAudio) curAudio.pause();
-      curAudio = new Audio(url);
-      if (slowNext) { curAudio.playbackRate = 0.72; try { curAudio.preservesPitch = true; } catch (e) { /* alt */ } }
-      if (onEnd) curAudio.onended = onEnd;
-      var p = curAudio.play();
-      if (p && p.catch) p.catch(function () { if (onFail) onFail(); });
-    } catch (e) { if (onFail) onFail(); }
+      var el = getAudioEl();
+      el.onended = null; el.pause();
+      el.src = url;
+      el.playbackRate = o.rate || 1;
+      try { el.preservesPitch = true; } catch (e) { /* ältere Browser */ }
+      el.onended = o.onEnd || null;
+      var p = el.play();
+      if (p && p.catch) p.catch(function () { if (o.onFail) o.onFail(); });
+    } catch (e) { if (o.onFail) o.onFail(); }
   }
-  // Reihenfolge der Quellen je nach Wunsch: Automatisch → Piper ♀, Piper ♂, Gerät; ♀/♂ → Piper gewünscht, Gerät gewünscht, Rest
-  function speak(text, lang, voiceName, retried, forceGender, onEnd) {
-    if (!onEnd) seqToken++;
-    var key = plain(text).trim(), lang2 = lang.slice(0, 2), g = forceGender || db.voiceGender || '';
-    if (!voiceName && AUDIO) {
-      var pv = piperVoices(lang2), order = g === 'm' ? ['male', 'female'] : ['female', 'male'];
-      var deviceHasG = g && sortedVoices(lang).some(function (v) { return voiceGender(v) === g; });
-      for (var i = 0; i < order.length; i++) {
-        var vk = pv[order[i]];
-        if (i > 0 && deviceHasG) break;  // gewünschtes Geschlecht lieber von der Gerätestimme als falsches Geschlecht
-        var fid = vk && AUDIO.files && AUDIO.files[vk] && AUDIO.files[vk][key];
-        if (fid) { playUrl('audio/' + vk + '/' + fid + '.mp3', function () { deviceSpeak(text, lang, null, retried, onEnd, g); }, onEnd); return; }
-      }
+  // Piper-Datei suchen. Reihenfolge: Automatisch → ♀, ♂; Wunschgeschlecht zuerst – fehlt es bei Piper,
+  // aber das Gerät hat es, lieber die Gerätestimme als das falsche Geschlecht.
+  function piperUrl(text, lang, g) {
+    if (!AUDIO) return null;
+    var key = plain(text).trim(), pv = piperVoices(lang.slice(0, 2)), order = g === 'm' ? ['male', 'female'] : ['female', 'male'];
+    var deviceHasG = g && canSpeak && sortedVoices(lang).some(function (v) { return voiceGender(v) === g; });
+    for (var i = 0; i < order.length; i++) {
+      if (i > 0 && deviceHasG) break;
+      var vk = pv[order[i]], fid = vk && AUDIO.files && AUDIO.files[vk] && AUDIO.files[vk][key];
+      if (fid) return 'audio/' + vk + '/' + fid + '.mp3';
     }
-    deviceSpeak(text, lang, voiceName, retried, onEnd, g);
+    return null;
   }
-  function deviceSpeak(text, lang, voiceName, retried, onEnd, g) {
+  // Kann dieser Text gerade vorgelesen werden? (Piper-Datei oder passende Gerätestimme)
+  function canPlay(text, lang) {
+    lang = lang || course().tts;
+    if (piperUrl(text, lang, '')) return true;
+    if (!canSpeak) return false;
+    if (!voicesCache.length) loadVoices();
+    return !voicesCache.length || sortedVoices(lang).length > 0;   // Stimmen noch nicht geladen → optimistisch
+  }
+  function speak(text, lang, o) {
+    o = o || {};
+    if (!o.chain) seqToken++;
+    var g = o.gender || db.voiceGender || '';
+    if (!o.voiceName) {
+      var url = piperUrl(text, lang, g);
+      if (url) { playUrl(url, { rate: o.rate, onEnd: o.onEnd, onFail: function () { deviceSpeak(text, lang, o, g); } }); return; }
+    }
+    deviceSpeak(text, lang, o, g);
+  }
+  function deviceSpeak(text, lang, o, g, retried) {
+    o = o || {};
     if (!canSpeak) { showVoiceHelp(lang); return; }
     if (!voicesCache.length) loadVoices();
-    var v = voiceName ? voicesFor(lang).filter(function (x) { return x.name === voiceName; })[0] : null;
+    var v = o.voiceName ? voicesFor(lang).filter(function (x) { return x.name === o.voiceName; })[0] : null;
     if (!v && g) v = sortedVoices(lang).filter(function (x) { return voiceGender(x) === g; })[0] || null;
     if (!v) v = bestVoice(lang);
     if (!v) {
-      if (!voicesCache.length && !retried) { setTimeout(function () { loadVoices(); deviceSpeak(text, lang, voiceName, true, onEnd, g); }, 700); return; }
+      if (!voicesCache.length && !retried) { setTimeout(function () { loadVoices(); deviceSpeak(text, lang, o, g, true); }, 700); return; }
       showVoiceHelp(lang); return;   // lieber gar nicht vorlesen als mit falscher (z. B. englischer) Stimme
     }
     try {
-      if (curAudio) curAudio.pause();
+      if (audioEl) { audioEl.onended = null; audioEl.pause(); }
       speechSynthesis.cancel();
       var u = new SpeechSynthesisUtterance(plain(text));
-      u.voice = v; u.lang = v.lang || lang; u.rate = slowNext ? 0.65 : 0.92;
-      if (onEnd) u.onend = onEnd;
+      u.voice = v; u.lang = v.lang || lang; u.rate = (o.rate && o.rate < 1) ? 0.65 : 0.92;
+      if (o.onEnd) u.onend = o.onEnd;
       speechSynthesis.speak(u);
     } catch (e) { /* ignore */ }
   }
@@ -495,7 +544,6 @@
     recog.onend = function () { if (!got) onError('no-speech'); };
     try { if (curAudio) curAudio.pause(); if (canSpeak) speechSynthesis.cancel(); recog.start(); } catch (e) { onError('error'); }
   }
-  function speakSlow(text, lang, g) { slowNext = true; speak(text, lang, null, false, g); setTimeout(function () { slowNext = false; }, 50); }
   function audioBar(say) {
     return '<div class="audio-bar"><button class="btn primary audio-main" data-act="play-say" data-say="' + esc(say) + '">🔊 ' + esc(t('play')) + '</button>' +
       '<button class="btn" data-act="play-say" data-slow="1" data-say="' + esc(say) + '" title="' + esc(t('slow')) + '">🐢 ' + esc(t('slow')) + '</button></div>';
@@ -536,11 +584,14 @@
     if (!tp || !tp.avail) return null;
     return { topic: tp, ex: e.ex, idx: e.idx, id: id };
   }
+  // Sprechübungen sind Bonus (ADR-6): zählen nicht in Prozente, Lücken und Wiederholung
+  function isCountable(ex) { return ex && ex.t !== 'speak'; }
   function topicStats(tp) {
     var s = { n: 0, c: 0, w: 0, o: 0, first: 0, firstW: 0, answered: 0 };
     if (!tp.avail) return s;
     var p = prog();
-    tp.data.exercises.forEach(function (_, i) {
+    tp.data.exercises.forEach(function (ex, i) {
+      if (!isCountable(ex)) return;
       var r = p[exId(tp.id, i)]; s.n++;
       if (!r) { s.o++; return; }
       s.answered++;
@@ -562,7 +613,7 @@
     var p = prog(), out = [];
     allTopics().forEach(function (tp) {
       if (!tp.avail || (filterTopic && tp.id !== filterTopic)) return;
-      tp.data.exercises.forEach(function (_, i) { var id = exId(tp.id, i); if (p[id] && p[id].s === 'w') out.push(id); });
+      tp.data.exercises.forEach(function (ex, i) { var id = exId(tp.id, i); if (isCountable(ex) && p[id] && p[id].s === 'w') out.push(id); });
     });
     return out;
   }
@@ -575,6 +626,9 @@
 
   /* ================= Fortschritt speichern ================= */
   function record(id, ok, given) {
+    var it = EXI[id];
+    if (it && !isCountable(it.ex) && !ok) return;   // misslungene Sprechversuche werden nicht gespeichert
+    if (typeof given === 'string' && given.length > 120) given = given.slice(0, 120) + '…';   // Speicher schonen
     var p = prog(), r = p[id] || {};
     if (!r.f) r.f = ok ? 'c' : 'w';
     r.s = ok ? 'c' : 'w';
@@ -608,7 +662,7 @@
     return { page: parts[0] || 'dashboard', a: parts[1], b: parts[2] };
   }
   function go(hash) { if (location.hash === hash) render(); else location.hash = hash; }
-  window.addEventListener('hashchange', function () { render(); window.scrollTo(0, 0); });
+  window.addEventListener('hashchange', function () { stopAudio(); render(); window.scrollTo(0, 0); });
 
   /* ================= Grundgerüst ================= */
   function shell(active, inner) {
@@ -636,6 +690,8 @@
           return '<a class="tab' + (x[0] === active ? ' active' : '') + '" href="#/' + x[0] + '"' + (x[0] === active ? ' aria-current="page"' : '') + '><span aria-hidden="true">' + x[1] + '</span>' + x[2] + '</a>';
         }).join('') + '</nav>' +
       '</div></header>' +
+      ((saveFailed || readOnly || newerData) ? '<div id="save-banner" class="save-banner" role="alert">⚠️ ' + esc(t(newerData ? 'bannerNewer' : (readOnly ? 'bannerReadOnly' : 'bannerSaveFail'))) +
+        (newerData ? ' <button class="btn small" onclick="location.reload()">' + esc(t('reload')) + '</button>' : ' <button class="btn small" data-act="export">' + esc(t('exportBtn')) + '</button>') + '</div>' : '') +
       '<main id="main">' + inner + '</main>' +
       '<footer class="foot">' + esc(t('footer')) + '</footer>';
   }
@@ -820,9 +876,7 @@
       if (i >= d.lines.length) return;
       var el = document.querySelector('.dl-line[data-line="' + i + '"]'); if (el) el.classList.add('playing');
       var l = d.lines[i++];
-      slowNext = !!slow;
-      speak(l.t, course().tts, null, false, l.g || '', function () { setTimeout(step, 350); });
-      setTimeout(function () { slowNext = false; }, 50);
+      speak(l.t, course().tts, { gender: l.g || '', rate: slow ? 0.72 : 1, chain: true, onEnd: function () { setTimeout(step, 350); } });
     }
     step();
   }
@@ -942,6 +996,10 @@
       }).join('');
     }
 
+    if ((ex.t === 'listen' || ex.t === 'dictation') && !checked && !canPlay(ex.say)) {
+      body = '<div class="callout warn">' + esc(t('audioMissing')) + '</div>';
+      c.noAudio = true;
+    }
     var meta = '<div class="qmeta"><span>' + esc(t('question')) + ' ' + (player.idx + 1) + ' ' + esc(t('of')) + ' ' + player.queue.length + '</span>' +
       (player.mode === 'gaps' ? '<span>' + esc(item.topic.level + ' · ' + item.topic.title) + '</span>' : '') + '</div>';
     var fb = checked ? feedbackHtml(ex, res) : '';
@@ -955,6 +1013,7 @@
       (hint ? '<p class="qhint">' + esc(hint) + '</p>' : '') + body + '<div aria-live="polite">' + fb + '</div>' + actions + '</div>';
   }
   function canCheck(ex, c) {
+    if (c.noAudio) return false;
     if (ex.t === 'mc' || ex.t === 'listen') return c.sel !== null;
     if (ex.t === 'gap' || ex.t === 'dictation') return String(c.input).trim().length > 0;
     if (ex.t === 'speak') return !!c.heardAlts || !!c.selfOk;
@@ -1263,7 +1322,7 @@
       case 'switch-profile': db.active = el.getAttribute('data-id'); save(); player = null; render(); break;
       case 'delete-profile': {
         var pid = el.getAttribute('data-id'), pn = db.profiles[pid].name || '—';
-        if (armed(el, t('confirmDelete', { n: pn }))) { delete db.profiles[pid]; if (db.active === pid) db.active = Object.keys(db.profiles)[0]; save(); render(); }
+        if (armed(el, t('confirmDelete', { n: pn }))) { backupNow(); delete db.profiles[pid]; if (db.active === pid) db.active = Object.keys(db.profiles)[0]; save(); render(); }
         break;
       }
       case 'export': doExport(); break;
@@ -1271,14 +1330,14 @@
         db.voiceGender = el.getAttribute('data-v'); db.voices = db.voices || {}; delete db.voices[course().tts]; save(); render();
         var pvx = piperVoices(course().target), gk = db.voiceGender === 'm' ? pvx.male : (pvx.female || (db.voiceGender ? null : pvx.male));
         var smp = gk && AUDIO && AUDIO.samples && AUDIO.samples[course().target] && AUDIO.samples[course().target][gk];
-        if (smp) playUrl('audio/' + smp); else deviceSpeak(t('testSentence'), course().tts);
+        if (smp) playUrl('audio/' + smp); else deviceSpeak(t('testSentence'), course().tts, {}, db.voiceGender || '');
       } break;
       case 'play-sample': playUrl(el.getAttribute('data-url')); break;
       case 'dl-play': { var tpd = topicById(parseHash().a); if (tpd) playDialog(tpd, !!el.getAttribute('data-slow')); break; }
       case 'dl-tr': { dialogShowTr = !dialogShowTr; var box = document.querySelector('.dialog'); if (box) box.classList.toggle('show-tr', dialogShowTr); el.setAttribute('aria-pressed', dialogShowTr); break; }
-      case 'play-say': if (el.getAttribute('data-slow')) speakSlow(el.getAttribute('data-say'), course().tts, el.getAttribute('data-g') || ''); else speak(el.getAttribute('data-say'), course().tts, null, false, el.getAttribute('data-g') || ''); break;
-      case 'voice-test': { var sel = document.getElementById('voice-sel'); speak(t('testSentence'), course().tts, sel ? sel.value : null); break; }
-      case 'reset-course': if (armed(el, t('confirmReset'))) { prof().prog[courseId()] = {}; save(); player = null; render(); } break;
+      case 'play-say': speak(el.getAttribute('data-say'), course().tts, { gender: el.getAttribute('data-g') || '', rate: el.getAttribute('data-slow') ? 0.72 : 1 }); break;
+      case 'voice-test': { var sel = document.getElementById('voice-sel'); speak(t('testSentence'), course().tts, { voiceName: sel ? sel.value : null }); break; }
+      case 'reset-course': if (armed(el, t('confirmReset'))) { backupNow(); prof().prog[courseId()] = {}; save(); player = null; render(); } break;
     }
   });
   app.addEventListener('input', function (ev) {
@@ -1294,7 +1353,7 @@
       var cb = document.getElementById('check-btn'); if (cb) cb.disabled = !canCheck(curEx().ex, player.cur);
     }
     if (el.matches('input[data-act="import"]')) doImport(el.files && el.files[0]);
-    if (el.matches('select[data-act="voice"]')) { db.voices = db.voices || {}; db.voices[course().tts] = el.value; save(); speak(t('testSentence'), course().tts, el.value); }
+    if (el.matches('select[data-act="voice"]')) { db.voices = db.voices || {}; db.voices[course().tts] = el.value; save(); speak(t('testSentence'), course().tts, { voiceName: el.value }); }
   });
   app.addEventListener('keydown', function (ev) {
     if (ev.key === 'Enter' && ev.target.id === 'gap-input') { ev.preventDefault(); doCheck(); }
@@ -1363,6 +1422,7 @@
     var rd = new FileReader();
     rd.onload = function () {
       try {
+        backupNow();
         var d = JSON.parse(rd.result);
         if (!d || !d.profile || !d.profile.prog) throw new Error('bad');
         var p = prof();

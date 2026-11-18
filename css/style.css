@@ -105,6 +105,8 @@ code { background: var(--surface-2); padding: .1em .35em; border-radius: 5px; }
 .tab .badge { margin-left: 2px; }
 
 /* ---------- Layout ---------- */
+.save-banner { background: var(--bad-soft); color: var(--bad); padding: 10px 16px; text-align: center; font-weight: 600; border-bottom: 1px solid var(--bad); }
+.save-banner .btn { margin-left: 8px; }
 main { max-width: 1040px; margin: 0 auto; padding: 22px 16px 80px; }
 .grid { display: grid; gap: 14px; }
 .grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
