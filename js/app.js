@@ -9,7 +9,7 @@
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var DT = window.DT;
   var SCHEMA = DT.storage.SCHEMA;    // Version des Speicherformats (Migrationen nur in js/core/storage.js)
-  var APP_VERSION = '2026-11-18.6';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-18.7';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -118,6 +118,52 @@
     doneBadge: ['fertig', 'bitti'],
     mistakesBadge: ['Fehler', 'hata'],
     rights: ['Alle Rechte vorbehalten', 'Tüm hakları saklıdır'],
+    badges: ['Abzeichen', 'Rozetler'],
+    badgeNew: ['Neues Abzeichen', 'Yeni rozet'],
+    badgesNew: ['{n} neue Abzeichen!', '{n} yeni rozet!'],
+    badgesAll: ['Alle ansehen', 'Hepsini gör'],
+    badgesNone: ['Noch keine – dein erstes gibt es schon für die erste Antwort.', 'Henüz yok – ilkini daha ilk cevabında kazanırsın.'],
+    badgeGot: ['erhalten am {d}', '{d} tarihinde kazanıldı'],
+    certTitle: ['{lv}-Zertifikat', '{lv} sertifikası'],
+    certCond: ['80 % der Aufgaben richtig und 70 % der Wörter sicher', 'Alıştırmaların %80’i doğru ve kelimelerin %70’i oturmuş olmalı'],
+    certEx: ['Aufgaben: {p} % (Ziel 80 %)', 'Alıştırmalar: %{p} (hedef %80)'],
+    certWords: ['Wörter: {p} % (Ziel 70 %)', 'Kelimeler: %{p} (hedef %70)'],
+    certGet: ['Zertifikat holen', 'Sertifikanı al'],
+    certNotYet: ['Noch nicht ganz – sobald du die Ziele erreichst, kannst du hier dein Zertifikat herunterladen.', 'Henüz değil – hedeflere ulaştığında sertifikanı buradan indirebilirsin.'],
+    certIntro: ['Glückwunsch! Trag deinen Namen ein und lade dein Zertifikat als Bild herunter.', 'Tebrikler! Adını yaz ve sertifikanı resim olarak indir.'],
+    certName: ['Name auf dem Zertifikat', 'Sertifikadaki isim'],
+    certDownload: ['Als Bild herunterladen', 'Resim olarak indir'],
+    certDisclaimer: ['Das ist ein Nachweis für dein Selbstlernen, kein offizielles Sprachzertifikat (z. B. Goethe, telc, Yunus Emre).', 'Bu, kendi kendine öğrenmenin bir belgesidir; resmî bir dil sertifikası değildir (ör. Goethe, telc, Yunus Emre).'],
+    certFail: ['Bild konnte nicht erstellt werden.', 'Resim oluşturulamadı.'],
+    micInfoTitle: ['Kurz vorab zum Mikrofon', 'Mikrofon hakkında kısa bir bilgi'],
+    micInfoText: ['Die Spracherkennung macht dein Browser, nicht diese Seite. Je nach Browser wird die Aufnahme dafür an dessen Anbieter geschickt (z. B. Chrome an Google). Wir selbst empfangen und speichern nichts. Die Übung ist freiwillig – du kannst den Satz auch einfach laut sagen.', 'Konuşmayı bu site değil, tarayıcın tanır. Tarayıcına göre kayıt bunun için sağlayıcısına gönderilir (ör. Chrome’da Google’a). Biz hiçbir şey almıyor ve saklamıyoruz. Alıştırma isteğe bağlı – cümleyi sadece sesli söyleyebilirsin de.'],
+    micInfoOk: ['Verstanden – Mikrofon starten', 'Anladım – mikrofonu başlat'],
+    placeTitle: ['Einstufungstest', 'Seviye testi'],
+    placeIntro: ['Du kannst schon etwas Türkisch? Dann finde in ein paar Minuten heraus, welche A1-Themen du überspringen kannst.', 'Biraz Almancan var mı? Birkaç dakikada hangi A1 konularını atlayabileceğini öğren.'],
+    placeHow1: ['ca. 5 Minuten, höchstens 24 Fragen', 'yaklaşık 5 dakika, en fazla 24 soru'],
+    placeHow2: ['pro Thema 1–2 Fragen – zwei richtig heißt: sitzt', 'her konudan 1–2 soru – ikisi de doğruysa konu tamam'],
+    placeHow3: ['zählt nicht in deine Statistik und landet nicht in „Meine Lücken“', 'istatistiğine sayılmaz, “Eksiklerim”e de düşmez'],
+    placePrev: ['Letzter Test am {d}: {n} Themen sicher.', 'Son test {d} tarihinde: {n} konu tamam.'],
+    placeStart: ['Test starten', 'Teste başla'],
+    placeSkipTest: ['Lieber von vorn anfangen', 'Baştan başlamayı tercih ederim'],
+    placeProgress: ['Thema {i} von {n}', 'Konu {i} / {n}'],
+    placeDone: ['Test geschafft!', 'Test bitti!'],
+    placeScore: ['{m} von {n} geprüften Themen sitzen schon.', 'Sorulan {n} konudan {m} tanesi zaten oturmuş.'],
+    placeStartAt: ['Starte am besten bei: {x}', 'En iyisi şuradan başla: {x}'],
+    placeAllKnown: ['Alle A1-Themen sitzen – stark!', 'Tüm A1 konuları oturmuş – harika!'],
+    placeSkipQ: ['Welche Themen möchtest du überspringen? Du kannst sie später jederzeit trotzdem üben.', 'Hangi konuları atlamak istersin? İstediğin zaman yine de çalışabilirsin.'],
+    placeKnown: ['sitzt', 'tamam'],
+    placeLearn: ['üben', 'çalış'],
+    placeNotAsked: ['nicht gefragt', 'sorulmadı'],
+    placeApply: ['Übernehmen', 'Kaydet'],
+    placeNone: ['Nichts überspringen', 'Hiçbirini atlama'],
+    placeSaved: ['Gespeichert – los geht’s!', 'Kaydedildi – haydi başlayalım!'],
+    placeOfferTitle: ['Schon Vorkenntnisse?', 'Biraz Almancan var mı?'],
+    placeOfferText: ['Mit dem Einstufungstest überspringst du, was du schon kannst – dauert etwa 5 Minuten.', 'Seviye testiyle bildiğin konuları atlarsın – yaklaşık 5 dakika sürer.'],
+    skippedBadge: ['übersprungen', 'atlandı'],
+    skippedPct: ['{p} % übersprungen', '%{p} atlandı'],
+    skippedInfo: ['Dieses Thema hast du nach dem Einstufungstest übersprungen. Üben kannst du es trotzdem jederzeit.', 'Bu konuyu seviye testinden sonra atladın. Yine de istediğin zaman çalışabilirsin.'],
+    undoSkip: ['Nicht mehr überspringen', 'Artık atlama'],
     legal: ['Rechtliches & Datenschutz', 'Yasal bilgiler ve gizlilik'],
     legalIntro: ['Urheberrecht, verwendete Open-Source-Bestandteile mit Lizenzen und was mit deinen Daten passiert.', 'Telif hakkı, kullandığımız açık kaynak bileşenler ve lisansları, verilerine ne olduğu.'],
     legalOpen: ['Öffnen', 'Aç'],
@@ -648,7 +694,7 @@
   }
   function nextTopic() {
     var list = allTopics().filter(function (x) { return x.avail; });
-    for (var i = 0; i < list.length; i++) { var s = topicStats(list[i]); if (s.c < s.n) return list[i]; }
+    for (var i = 0; i < list.length; i++) { var s = topicStats(list[i]); if (s.c < s.n && !isSkipped(list[i].id)) return list[i]; }
     return null;
   }
   function levelName(lv) { return K.levelNames[lv][uiLang()]; }
@@ -896,15 +942,16 @@
   /* ================= Dashboard ================= */
   function levelRow(lv, linkBase) {
     var list = levelTopics(lv), s = sumStats(list);
-    var has = s.n > 0, p = pct(s.c, s.n);
+    var has = s.n > 0, p = pct(s.c, s.n), sk = skippedOpenCount(list);
     return '<a class="level-row' + (has ? '' : ' disabled') + '" href="#/lessons/' + lv + '" style="color:inherit;text-decoration:none">' +
       '<span class="lvl lvl-' + lv + '">' + lv + '</span>' +
       '<div><div class="lr-title"><span>' + esc(levelName(lv)) + '</span><span class="muted small">' +
-        (has ? s.c + ' / ' + s.n + ' ' + esc(t('tasks')) : esc(t('comingSoon'))) + '</span></div>' +
-        '<div class="bar"><span class="fill-' + lv + '" style="width:' + p + '%"></span></div></div>' +
+        (has ? s.c + ' / ' + s.n + ' ' + esc(t('tasks')) + (sk ? ' · ' + esc(t('skippedPct', { p: pct(sk, s.n) })) : '') : esc(t('comingSoon'))) + '</span></div>' +
+        '<div class="bar"><span class="fill-' + lv + '" style="width:' + p + '%"></span>' + (sk ? '<span class="skip" style="width:' + pct(sk, s.n) + '%"></span>' : '') + '</div></div>' +
       '<span class="pct">' + (has ? p + '%' : '–') + '</span></a>';
   }
   function viewDashboard() {
+    checkBadges();
     var p = prof(), all = allTopics(), s = sumStats(all), wrongN = wrongIds().length;
     var nt = nextTopic();
     var cont;
@@ -933,11 +980,13 @@
       '<div class="section">' + mascotCard() + '</div>' +
       '<div class="section">' + dailyCard() + '</div>' +
       '<div class="section">' + cont + '</div>' +
+      (!s.answered && !ensureProfile(p).place[courseId()] ? '<div class="section"><div class="card place-offer"><div><h2>🧭 ' + esc(t('placeOfferTitle')) + '</h2><p class="muted small">' + esc(t('placeOfferText')) + '</p></div><a class="btn" href="#/placement">' + esc(t('placeStart')) + '</a></div></div>' : '') +
       '<div class="grid grid-3 section">' +
         '<div class="card stat"><span class="num">' + s.c + '<span class="muted" style="font-size:1rem"> / ' + s.n + '</span></span><span class="lbl">' + esc(t('tasks')) + ' ' + esc(t('solved')) + '</span></div>' +
         '<div class="card stat"><span class="num">' + (s.answered ? pct(s.first, s.answered) + '%' : '–') + '</span><span class="lbl">' + esc(t('accuracy')) + '</span></div>' +
         '<a class="card stat" href="#/gaps" style="color:inherit;text-decoration:none"><span class="num" style="color:' + (wrongN ? 'var(--bad)' : 'var(--ok)') + '">' + wrongN + '</span><span class="lbl">' + esc(t('openMistakes')) + ' →</span></a>' +
       '</div>' +
+      badgesStrip() +
       '<div class="card section"><div class="section-head"><h2>' + esc(t('levelProgress')) + '</h2><span class="muted small">' + esc(t('totalProgress')) + ': <b>' + pct(s.c, s.n) + '%</b></span></div>' + levels + '</div>' +
       probHtml;
   }
@@ -949,7 +998,8 @@
       return '<div class="topic-card planned"><span class="tc-num">' + tp.level + ' · ' + tp.num + '</span><span class="tc-title">' + esc(tp.title) + '</span>' +
         '<span class="tc-sub">' + esc(tp.sub) + '</span><div class="tc-foot"><span class="badge">' + esc(t('planned')) + '</span></div></div>';
     }
-    var badge = s.answered === 0 ? '<span class="badge primary">' + esc(t('newBadge')) + '</span>'
+    var badge = isSkipped(tp.id) && s.c < s.n ? '<span class="badge">⏭ ' + esc(t('skippedBadge')) + '</span>'
+      : s.answered === 0 ? '<span class="badge primary">' + esc(t('newBadge')) + '</span>'
       : (s.c === s.n ? '<span class="badge ok">✓ ' + esc(t('doneBadge')) + '</span>'
       : (s.w ? '<span class="badge bad">' + s.w + ' ' + esc(t('mistakesBadge')) + '</span>' : ''));
     return '<a class="topic-card" href="#/topic/' + tp.id + '/' + (s.answered ? 'exercises' : 'learn') + '">' +
@@ -962,13 +1012,14 @@
     var html = LEVELS.map(function (lv) {
       var list = levelTopics(lv), s = sumStats(list);
       return '<section class="level-section" id="lv-' + lv + '"><div class="level-head"><span class="lvl lvl-' + lv + '">' + lv + '</span><h2>' + esc(levelName(lv)) + '</h2>' +
-        (s.n ? '<div class="bar"><span class="fill-' + lv + '" style="width:' + pct(s.c, s.n) + '%"></span></div><b>' + pct(s.c, s.n) + '%</b>' : '<span class="badge">' + esc(t('comingSoon')) + '</span>') +
+        (s.n ? '<div class="bar"><span class="fill-' + lv + '" style="width:' + pct(s.c, s.n) + '%"></span>' + (skippedOpenCount(list) ? '<span class="skip" style="width:' + pct(skippedOpenCount(list), s.n) + '%"></span>' : '') + '</div><b>' + pct(s.c, s.n) + '%</b>' : '<span class="badge">' + esc(t('comingSoon')) + '</span>') +
         '</div><div class="topic-grid">' + list.filter(function (x) { return x.kind !== 'dialog'; }).map(topicCard).join('') + '</div>' +
         (list.some(function (x) { return x.kind === 'dialog'; }) ? '<h3 class="sub-head">💬 ' + esc(t('dialogsTitle')) + '</h3><div class="topic-grid">' + list.filter(function (x) { return x.kind === 'dialog'; }).map(topicCard).join('') + '</div>' : '') +
         '</section>';
     }).join('');
     setTimeout(function () { if (focusLevel) { var el = document.getElementById('lv-' + focusLevel); if (el) el.scrollIntoView({ block: 'start' }); } }, 0);
-    return '<h1>' + esc(t('lessons')) + '</h1><p class="muted">' + flag(courseId()) + ' ' + esc(course().label) + ' · ' + esc(course().sublabel) + '</p>' + html;
+    return '<h1>' + esc(t('lessons')) + '</h1><p class="muted">' + flag(courseId()) + ' ' + esc(course().label) + ' · ' + esc(course().sublabel) +
+      ' · <a href="#/placement">🧭 ' + esc(t('placeTitle')) + '</a></p>' + html;
   }
 
   /* ================= Thema: Erklärung ================= */
@@ -1046,6 +1097,10 @@
   }
 
   function playerDots() {
+    if (player.mode === 'placement') {   // keine Sprünge im Test – nur Fortschritt
+      return place ? '<div class="place-prog"><span class="muted small">' + esc(t('placeProgress', { i: Math.min(place.ti + 1, place.topics.length), n: place.topics.length })) + '</span>' +
+        '<div class="bar thin"><span class="fill" style="width:' + pct(place.ti, place.topics.length) + '%"></span></div></div>' : '';
+    }
     var p = prog();
     return '<div class="dots" role="list">' + player.queue.map(function (id, i) {
       var r = p[id], cls = r ? (r.s === 'c' ? ' c' : ' w') : '';
@@ -1089,7 +1144,12 @@
       qtext = md(ex.q || t('speakQ'));
       var scls = checked ? (res.ok ? ' right' : ' wrong') : '';
       body = '<div class="say-box' + scls + '" lang="' + target + '">' + md(ex.say) + '</div>' + audioBar(ex.say);
-      if (SR) {
+      if (SR && c.micInfo && !checked) {   // einmaliger Datenschutz-Hinweis vor dem ersten Mikrofon-Einsatz (ADR-6)
+        body += '<div class="callout tip mic-info"><b>🎤 ' + esc(t('micInfoTitle')) + '</b><br>' + esc(t('micInfoText')) +
+          ' <a href="#/legal">' + esc(t('legal')) + '</a><div class="btn-row" style="margin-top:10px">' +
+          '<button class="btn primary" data-act="mic-ok">' + esc(t('micInfoOk')) + '</button>' +
+          '<button class="btn" data-act="self-ok">✓ ' + esc(t('saidAloud')) + '</button></div></div>';
+      } else if (SR) {
         body += '<button class="btn mic-btn' + (c.listening ? ' on' : '') + '" data-act="mic"' + (checked ? ' disabled' : '') + '>🎤 ' + esc(c.listening ? t('listening') : t('speakNow')) + '</button>' +
           (c.heard && !checked ? '<p class="small" style="margin-top:10px">' + esc(t('recognized')) + ': <b>' + esc(c.heard) + '</b></p>' : '') +
           (c.micError ? '<p class="small" style="color:var(--bad);margin-top:10px">' + esc(t(c.micError === 'not-allowed' ? 'micDenied' : 'micNoSpeech')) + '</p>' : '');
@@ -1220,6 +1280,8 @@
       '<div class="fb-sec"><h4>' + esc(t('whyWrong')) + '</h4><p>' + md(why) + '</p></div>' + e + '</div>';
   }
   function renderSummary() {
+    if (player.mode === 'placement' && place) return placementResult();
+    if (!player.badgesChecked) { player.badgesChecked = true; checkBadges(); }
     if (['learn', 'wpractice', 'srs', 'daily'].indexOf(player.mode) >= 0) {
       var ids = player.queue.filter(function (q) { return q.indexOf('card:') !== 0; });
       var uniq = ids.filter(function (q, i) { return ids.indexOf(q) === i; });
@@ -1288,6 +1350,7 @@
     return '<div class="crumbs"><a href="#/lessons">' + esc(t('lessons')) + '</a> › <a href="#/lessons/' + tp.level + '">' + tp.level + ' · ' + esc(levelName(tp.level)) + '</a></div>' +
       '<div class="topic-header"><div><h1>' + esc(tp.title) + '</h1><div class="muted">' + esc(tp.sub) + '</div></div>' +
       '<span class="lvl lvl-' + tp.level + '">' + tp.level + '</span></div>' +
+      (isSkipped(tp.id) ? '<div class="callout tip skip-note">' + esc(t('skippedInfo')) + ' <button class="btn small" data-act="unskip" data-id="' + tp.id + '">' + esc(t('undoSkip')) + '</button></div>' : '') +
       '<nav class="subtabs">' + subtabs.map(function (x) {
         return '<a class="subtab' + (x[0] === tab ? ' active' : '') + '" href="#/topic/' + tp.id + '/' + x[0] + '">' + esc(x[1]) + '</a>';
       }).join('') + '</nav>' + content;
@@ -1435,7 +1498,7 @@
     }).join('');
     return '<div class="section-head"><h1>📊 ' + esc(t('overview')) + '</h1>' + legend + '</div><p class="muted">' + esc(t('overviewIntro')) + '</p>' +
       '<div class="card"><div class="section-head"><b>' + esc(t('totalProgress')) + '</b><span><b style="color:var(--ok)">' + tot.c + '</b> ✓ · <b style="color:var(--bad)">' + tot.w + '</b> ✗ · ' + tot.o + ' ○ / ' + tot.n + '</span></div>' +
-      '<div class="bar thick"><span class="ok" style="width:' + pct(tot.c, tot.n) + '%"></span><span class="bad" style="width:' + pct(tot.w, tot.n) + '%"></span></div></div>' + html;
+      '<div class="bar thick"><span class="ok" style="width:' + pct(tot.c, tot.n) + '%"></span><span class="bad" style="width:' + pct(tot.w, tot.n) + '%"></span></div></div>' + html + badgesCard();
   }
 
   /* ================= Einstellungen ================= */
@@ -1469,6 +1532,206 @@
         '<label class="btn" style="cursor:pointer">' + esc(t('importBtn')) + '<input type="file" accept="application/json,.json" data-act="import" hidden></label>' +
         '<button class="btn danger" data-act="reset-course">' + esc(t('resetCourse')) + '</button></div></div>' +
       '<div class="card section"><h2>⚖️ ' + esc(t('legal')) + '</h2><p class="muted small">' + esc(t('legalIntro')) + '</p><a class="btn" href="#/legal">' + esc(t('legalOpen')) + '</a></div>';
+  }
+
+  /* ================= Abzeichen & Zertifikat (ADR-9) ================= */
+  function certStatus(lv) {
+    var cid = courseId(), pr = prog(), n = 0, c = 0;
+    levelTopics(lv).forEach(function (tp) {
+      if (!tp.avail || isSkipped(tp.id)) return;          // per Einstufung übersprungene Themen fallen aus dem Nenner
+      tp.data.exercises.forEach(function (ex) { if (!isCountable(ex)) return; n++; if (pr[ex.id] && pr[ex.id].s === 'c') c++; });
+    });
+    var words = DT.vocab.wordsOf(K, cid, lv).map(function (w) { return w.id; });
+    var ws = DT.srs.stats(ensureProfile(prof()), cid, words);
+    var exOk = n > 0 && c / n >= 0.8, wOk = !words.length || ws.sicher / words.length >= 0.7;
+    return { c: c, n: n, wk: ws.sicher, wn: words.length, exPct: pct(c, n), wPct: pct(ws.sicher, words.length), ok: exOk && wOk, exOk: exOk, wOk: wOk };
+  }
+  function badgeCtx() {
+    var p = ensureProfile(prof()), cid = courseId(), pr = prog(), ctx = { answered: 0, topicsDone: 0, dialogsDone: 0, dialogsAll: 0, fixed: 0 };
+    allTopics().forEach(function (tp) {
+      if (!tp.avail) return;
+      var s = topicStats(tp); ctx.answered += s.answered;
+      if (tp.kind === 'dialog') ctx.dialogsAll++;
+      if (s.n && s.c === s.n) { if (tp.kind === 'dialog') ctx.dialogsDone++; else ctx.topicsDone++; }
+    });
+    Object.keys(pr).forEach(function (id) { if (EXI[id] && pr[id].f === 'w' && pr[id].s === 'c') ctx.fixed++; });
+    var words = DT.vocab.wordsOf(K, cid, 'A1').map(function (w) { return w.id; });
+    ctx.wordsKnown = DT.srs.stats(p, cid, words).sicher; ctx.wordsTotal = words.length;
+    var log = (p.daily && p.daily.log) || {};
+    ctx.streak = DT.daily.streak(log, todayKey()).days;
+    ctx.goalDays = Object.keys(log).filter(function (k) { return DT.daily.reached(log[k]); }).length;
+    ctx.cert = { A1: certStatus('A1').ok };
+    return ctx;
+  }
+  function checkBadges(quiet) {   // am Sitzungsende und beim Dashboard (nicht bei jedem Render)
+    var p = ensureProfile(prof()), fresh = DT.badges.award(p, courseId(), badgeCtx());
+    if (fresh.length) {
+      save();
+      if (!quiet) setTimeout(function () {
+        toast(fresh.length === 1 ? fresh[0].icon + ' ' + t('badgeNew') + ': ' + fresh[0].title[uiLang() === 'de' ? 0 : 1]
+          : fresh.map(function (b) { return b.icon; }).join(' ') + ' ' + t('badgesNew', { n: fresh.length }));
+      }, 400);
+    }
+    return fresh;
+  }
+  function certBox() {
+    var cs = certStatus('A1');
+    return '<div class="cert-box"><div><b>🎓 ' + esc(t('certTitle', { lv: 'A1' })) + '</b><div class="muted small">' + esc(t('certCond')) + '</div></div>' +
+      '<div class="cert-bars"><div class="small">' + esc(t('certEx', { p: cs.exPct })) + '<div class="bar thin"><span class="' + (cs.exOk ? 'ok' : 'fill') + '" style="width:' + Math.min(100, Math.round(cs.exPct / 0.8)) + '%"></span></div></div>' +
+        (cs.wn ? '<div class="small">' + esc(t('certWords', { p: cs.wPct })) + '<div class="bar thin"><span class="' + (cs.wOk ? 'ok' : 'fill') + '" style="width:' + Math.min(100, Math.round(cs.wPct / 0.7)) + '%"></span></div></div>' : '') + '</div>' +
+      (cs.ok ? '<a class="btn primary" href="#/certificate/A1">🎓 ' + esc(t('certGet')) + '</a>' : '') + '</div>';
+  }
+  function badgesStrip() {   // kompakt fürs Dashboard
+    var items = DT.badges.list(ensureProfile(prof()), courseId()), got = items.filter(function (x) { return x.at; });
+    var ui = uiLang() === 'de' ? 0 : 1;
+    return '<div class="card section"><div class="section-head"><h2>🏅 ' + esc(t('badges')) + ' <span class="muted small">' + got.length + ' / ' + items.length + '</span></h2><a href="#/overview">' + esc(t('badgesAll')) + ' →</a></div>' +
+      (got.length ? '<div class="badge-strip">' + got.map(function (x) { return '<span class="bs" title="' + esc(x.def.title[ui]) + '">' + x.def.icon + '</span>'; }).join('') + '</div>'
+        : '<p class="muted small">' + esc(t('badgesNone')) + '</p>') + certBox() + '</div>';
+  }
+  function badgesCard() {
+    var ui = uiLang() === 'de' ? 0 : 1, items = DT.badges.list(ensureProfile(prof()), courseId());
+    var got = items.filter(function (x) { return x.at; }).length;
+    var cert = certBox();
+    return '<div class="card section" id="badges"><div class="section-head"><h2>🏅 ' + esc(t('badges')) + '</h2><span class="muted small">' + got + ' / ' + items.length + '</span></div>' +
+      '<div class="badge-grid">' + items.map(function (x) {
+        var d = x.def, title = d.title[ui], tip = x.at ? t('badgeGot', { d: new Date(x.at).toLocaleDateString(locale(uiLang())) }) : d.hint[ui];
+        return '<div class="bdg' + (x.at ? ' got' : '') + '" title="' + esc(tip) + '"><span class="bdg-ic" aria-hidden="true">' + d.icon + '</span><span class="bdg-t">' + esc(title) + '</span><span class="bdg-h">' + esc(tip) + '</span></div>';
+      }).join('') + '</div>' + cert + '</div>';
+  }
+
+  /* Zertifikat als Bild (Canvas 1754 × 1240 = A4 quer bei 150 dpi; Logo mit Pfaden gezeichnet, keine fremden Bilder) */
+  function roundRect(g, x, y, w, h, r) { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
+  function drawCertificate(cv, d) {
+    var g = cv.getContext('2d'), W = 1754, H = 1240, F = 'system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", Arial, sans-serif';
+    cv.width = W; cv.height = H;
+    g.fillStyle = '#fbfaf6'; g.fillRect(0, 0, W, H);
+    g.strokeStyle = '#3b5bdb'; g.lineWidth = 10; roundRect(g, 40, 40, W - 80, H - 80, 28); g.stroke();
+    g.strokeStyle = '#12b886'; g.lineWidth = 3; roundRect(g, 64, 64, W - 128, H - 128, 20); g.stroke();
+    // Logo: zwei Sprechblasen
+    g.save(); g.translate(W / 2 - 60, 110);
+    g.fillStyle = '#3b5bdb'; roundRect(g, 0, 0, 92, 66, 16); g.fill(); g.beginPath(); g.moveTo(18, 62); g.lineTo(12, 86); g.lineTo(38, 64); g.fill();
+    g.fillStyle = '#fab005'; roundRect(g, 40, 34, 82, 58, 14); g.fill(); g.beginPath(); g.moveTo(102, 88); g.lineTo(110, 108); g.lineTo(86, 90); g.fill();
+    g.fillStyle = '#fff'; [[16, 22, 52], [16, 38, 36]].forEach(function (l) { roundRect(g, l[0], l[1], l[2], 8, 4); g.fill(); });
+    g.fillStyle = '#7a5600'; [[56, 52, 50], [56, 68, 34]].forEach(function (l) { roundRect(g, l[0], l[1], l[2], 7, 3.5); g.fill(); });
+    g.restore();
+    g.textAlign = 'center'; g.fillStyle = '#1f2937';
+    g.font = '600 34px ' + F; g.fillText('Deutsch ⇄ Türkçe', W / 2, 270);
+    g.font = '800 92px ' + F; g.fillText(d.title, W / 2, 390);
+    g.font = '400 36px ' + F; g.fillStyle = '#4b5563'; g.fillText(d.subtitle, W / 2, 445);
+    g.font = '700 84px ' + F; g.fillStyle = '#111827'; g.fillText(d.name || '—', W / 2, 600);
+    g.strokeStyle = '#d1d5db'; g.lineWidth = 2; g.beginPath(); g.moveTo(W / 2 - 420, 630); g.lineTo(W / 2 + 420, 630); g.stroke();
+    g.font = '500 42px ' + F; g.fillStyle = '#1f2937'; g.fillText(d.line1, W / 2, 715);
+    g.font = '400 36px ' + F; g.fillStyle = '#4b5563'; g.fillText(d.line2, W / 2, 770);
+    g.fillStyle = d.color; roundRect(g, W / 2 - 90, 820, 180, 90, 20); g.fill();
+    g.fillStyle = '#fff'; g.font = '800 58px ' + F; g.fillText(d.level, W / 2, 885);
+    g.fillStyle = '#4b5563'; g.font = '400 30px ' + F; g.fillText(d.stats, W / 2, 975);
+    g.fillText(d.date, W / 2, 1020);
+    g.fillStyle = '#6b7280'; g.font = 'italic 26px ' + F; g.fillText(d.note1, W / 2, 1095); g.fillText(d.note2, W / 2, 1132);
+  }
+  function viewCertificate(lv) {
+    lv = lv || 'A1';
+    var cs = certStatus(lv), p = prof(), cid = courseId(), de = cid === 'de';
+    var head = '<div class="crumbs"><a href="#/dashboard">' + esc(t('dashboard')) + '</a></div><h1>🎓 ' + esc(t('certTitle', { lv: lv })) + '</h1>';
+    if (!cs.ok) return head + '<div class="card empty"><p>' + esc(t('certNotYet')) + '</p><p class="muted small">' + esc(t('certEx', { p: cs.exPct }) + ' · ' + t('certWords', { p: cs.wPct })) + '</p><a class="btn" href="#/lessons">' + esc(t('lessons')) + '</a></div>';
+    setTimeout(function () { renderCertCanvas(lv); }, 0);
+    return head + '<p class="muted">' + esc(t('certIntro')) + '</p>' +
+      '<div class="card section"><div class="field"><label for="cert-name">' + esc(t('certName')) + '</label><input id="cert-name" class="input" maxlength="40" value="' + esc(p.name || '') + '" data-act="cert-name"></div>' +
+      '<canvas id="cert-canvas" class="cert-canvas" width="1754" height="1240" role="img" aria-label="' + esc(t('certTitle', { lv: lv })) + '"></canvas>' +
+      '<div class="btn-row" style="margin-top:14px"><button class="btn primary" data-act="cert-download" data-lv="' + lv + '">⬇ ' + esc(t('certDownload')) + '</button></div>' +
+      '<p class="muted small">' + esc(t('certDisclaimer')) + '</p></div>';
+  }
+  function renderCertCanvas(lv) {
+    var cv = document.getElementById('cert-canvas'); if (!cv) return;
+    var cs = certStatus(lv), cid = courseId(), nameEl = document.getElementById('cert-name');
+    var lvName = K.levelNames[lv], de = cid === 'de';
+    var d = new Date(), dateStr = d.toLocaleDateString('de-DE') + ' · ' + d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+    drawCertificate(cv, {
+      title: 'Zertifikat · Sertifika',
+      subtitle: 'Selbstlern-Nachweis · Kendi kendine öğrenme belgesi',
+      name: nameEl ? nameEl.value.trim() : (prof().name || ''),
+      line1: de ? 'Almanca – ' + lv + ' (' + lvName.tr + ') seviyesini tamamladı' : 'hat Türkisch auf Niveau ' + lv + ' (' + lvName.de + ') abgeschlossen',
+      line2: de ? 'hat Deutsch auf Niveau ' + lv + ' (' + lvName.de + ') abgeschlossen' : 'Türkçe – ' + lv + ' (' + lvName.tr + ') seviyesini tamamladı',
+      level: lv, color: getComputedStyle(document.documentElement).getPropertyValue('--lvl-' + lv).trim() || '#12b886',
+      stats: cs.c + ' / ' + cs.n + (de ? ' alıştırma · ' : ' Aufgaben · ') + cs.wk + (de ? ' kelime oturdu' : ' Wörter sicher'),
+      date: dateStr,
+      note1: 'Selbstlern-Nachweis – kein offizielles Sprachzertifikat (z. B. Goethe, telc, Yunus Emre).',
+      note2: 'Kendi kendine öğrenme belgesidir – resmî bir dil sertifikası değildir (ör. Goethe, telc, Yunus Emre).'
+    });
+  }
+  function downloadCertificate(lv) {
+    var cv = document.getElementById('cert-canvas'); if (!cv) return;
+    var name = 'zertifikat-sertifika-' + lv + '.png';
+    function fallback() { try { var w = window.open(); if (w) w.document.write('<img src="' + cv.toDataURL('image/png') + '" style="max-width:100%">'); } catch (e) { toast(t('certFail')); } }
+    try {
+      cv.toBlob(function (blob) {
+        if (!blob) { fallback(); return; }
+        var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+        document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 800);
+      }, 'image/png');
+    } catch (e) { fallback(); }
+  }
+
+  /* ================= Einstufungstest (ADR-7) =================
+   * Antworten werden NICHT in prog geschrieben (keine geschenkten Punkte, nichts landet in „Meine Lücken“).
+   * Ergebnis: place[cid] und – nur wenn der Nutzer zustimmt – skip[cid][topicId]. */
+  var place = null;
+  function placementTopics() { return levelTopics('A1').filter(function (x) { return x.avail && x.kind !== 'dialog'; }); }
+  function placementPool(tp) {
+    var all = tp.data.exercises, half = all.slice(Math.floor(all.length / 2)).map(function (e) { return e.id; });
+    var ok = all.filter(function (e) { return e.t === 'mc' || e.t === 'gap' || (e.t === 'listen' && canPlay(e.say)); });
+    var hard = ok.filter(function (e) { return half.indexOf(e.id) >= 0; });
+    var pool = (hard.length >= 2 ? hard : ok).map(function (e) { return e.id; });
+    return DT.vocab.shuffle(pool, DT.vocab.rng(DT.vocab.hash(tp.id + ':' + Date.now()))).slice(0, 2);
+  }
+  function startPlacement() {
+    var topics = placementTopics();
+    place = { topics: topics, ti: 0, step: 0, cur: placementPool(topics[0]), mastered: [], failed: [], streak: 0, asked: 0, finished: false, nextId: null };
+    newPlayer('placement', 'placement', [place.cur[0]], null);
+  }
+  function placementAnswer(ok) {
+    place.asked++;
+    var tp = place.topics[place.ti];
+    if (ok && place.step === 0 && place.cur.length > 1) { place.step = 1; place.nextId = place.cur[1]; return; }
+    if (ok) { place.mastered.push(tp.id); place.streak = 0; } else { place.failed.push(tp.id); place.streak++; }
+    place.ti++; place.step = 0;
+    while (place.ti < place.topics.length) {           // Themen ohne passende Aufgaben überspringen
+      place.cur = placementPool(place.topics[place.ti]);
+      if (place.cur.length) break;
+      place.ti++;
+    }
+    if (place.streak >= 3 || place.ti >= place.topics.length) { place.finished = true; place.nextId = null; }
+    else place.nextId = place.cur[0];
+  }
+  function viewPlacement() {
+    var head = '<div class="crumbs"><a href="#/lessons">' + esc(t('lessons')) + '</a></div><h1>🧭 ' + esc(t('placeTitle')) + '</h1>';
+    if (player && player.key === 'placement' && place) return head + renderPlayer();
+    var p = ensureProfile(prof()), prev = p.place[courseId()];
+    return head + '<div class="card section"><p>' + md(t('placeIntro')) + '</p><ul class="plain-list">' +
+      '<li>⏱️ ' + esc(t('placeHow1')) + '</li><li>🎯 ' + esc(t('placeHow2')) + '</li><li>🛡️ ' + esc(t('placeHow3')) + '</li></ul>' +
+      (prev ? '<p class="muted small">' + esc(t('placePrev', { d: new Date(prev.t).toLocaleDateString(locale(uiLang())), n: (prev.mastered || []).length })) + '</p>' : '') +
+      '<div class="btn-row"><button class="btn primary" data-act="place-start">' + esc(t('placeStart')) + ' →</button><a class="btn" href="#/lessons">' + esc(t('placeSkipTest')) + '</a></div></div>';
+  }
+  function placementResult() {
+    var cid = courseId(), skip = ensureProfile(prof()).skip[cid] || {}, firstOpen = null;
+    var rows = placementTopics().map(function (tp) {
+      var m = place.mastered.indexOf(tp.id) >= 0, f = place.failed.indexOf(tp.id) >= 0;
+      if (!m && !firstOpen) firstOpen = tp;
+      var tag = m ? '<span class="badge ok">✓ ' + esc(t('placeKnown')) + '</span>' : (f ? '<span class="badge bad">' + esc(t('placeLearn')) + '</span>' : '<span class="badge">' + esc(t('placeNotAsked')) + '</span>');
+      return '<label class="check-row"><input type="checkbox" name="skip" value="' + tp.id + '"' + (m || skip[tp.id] ? ' checked' : '') + '><span><b>' + esc(tp.num + '. ' + tp.title) + '</b> <span class="muted small">' + esc(tp.sub) + '</span></span>' + tag + '</label>';
+    }).join('');
+    return '<div class="card summary place-result"><div style="font-size:2.4rem">🧭</div><h2>' + esc(t('placeDone')) + '</h2>' +
+      '<p>' + esc(t('placeScore', { m: place.mastered.length, n: place.mastered.length + place.failed.length })) + '</p>' +
+      (firstOpen ? '<p><b>' + esc(t('placeStartAt', { x: firstOpen.num + '. ' + firstOpen.title })) + '</b></p>' : '<p><b>' + esc(t('placeAllKnown')) + '</b></p>') +
+      '<p class="muted small" style="text-align:left">' + esc(t('placeSkipQ')) + '</p><div class="check-list">' + rows + '</div>' +
+      '<div class="btn-row"><button class="btn primary" data-act="place-apply">' + esc(t('placeApply')) + '</button><button class="btn" data-act="place-apply" data-none="1">' + esc(t('placeNone')) + '</button></div></div>';
+  }
+  function skippedOpenCount(list) {   // offene (nicht richtig gelöste) Aufgaben in übersprungenen Themen
+    var n = 0, p = prog();
+    list.forEach(function (tp) {
+      if (!tp.avail || !isSkipped(tp.id)) return;
+      tp.data.exercises.forEach(function (ex) { if (isCountable(ex) && !(p[ex.id] && p[ex.id].s === 'c')) n++; });
+    });
+    return n;
   }
 
   /* ================= Rechtliches, Lizenzen & Datenschutz =================
@@ -1600,7 +1863,7 @@
     }
     var r = parseHash(), active = r.page, inner;
     // Player zurücksetzen, wenn man die Übungsansicht verlässt
-    var inPlayer = (r.page === 'topic' && (r.b === 'exercises' || r.b === 'review')) || r.page === 'practice' || r.page === 'review' || r.page === 'daily' || (r.page === 'words' && r.b);
+    var inPlayer = (r.page === 'topic' && (r.b === 'exercises' || r.b === 'review')) || r.page === 'practice' || r.page === 'review' || r.page === 'daily' || (r.page === 'words' && r.b) || r.page === 'placement';
     if (!inPlayer) player = null;
     switch (r.page) {
       case 'lessons': inner = viewLessons(r.a); break;
@@ -1612,6 +1875,8 @@
       case 'practice': inner = viewPractice(); active = 'gaps'; break;
       case 'overview': inner = viewOverview(); break;
       case 'settings': inner = viewSettings(); break;
+      case 'certificate': inner = viewCertificate(r.a); active = 'dashboard'; break;
+      case 'placement': inner = viewPlacement(); active = 'lessons'; break;
       case 'legal': inner = viewLegal(r.a === 'de' || r.a === 'tr' ? r.a : uiLang()); active = ''; break;
       default: inner = viewDashboard(); active = 'dashboard';
     }
@@ -1679,8 +1944,24 @@
         if (known) player.queue = player.queue.filter(function (q, i) { return i <= player.idx || q.indexOf('w:' + ci.word.id + ':') !== 0; });
         doNext(); break;
       }
+      case 'cert-download': downloadCertificate(el.getAttribute('data-lv') || 'A1'); break;
+      case 'place-start': startPlacement(); render(); break;
+      case 'place-apply': {
+        var pa = ensureProfile(prof()), pc = courseId(), now = Date.now();
+        pa.place[pc] = { t: now, level: 'A1', mastered: place ? place.mastered.slice() : [], asked: place ? place.asked : 0 };
+        pa.skip[pc] = pa.skip[pc] || {};
+        if (!el.getAttribute('data-none')) document.querySelectorAll('input[name="skip"]').forEach(function (cb) {
+          if (cb.checked) { if (!pa.skip[pc][cb.value]) pa.skip[pc][cb.value] = { t: now, by: 'placement' }; }
+          else delete pa.skip[pc][cb.value];
+        });
+        save(); place = null; player = null; toast(t('placeSaved')); go('#/dashboard'); break;
+      }
+      case 'unskip': { var pu = ensureProfile(prof()); delete (pu.skip[courseId()] || {})[el.getAttribute('data-id')]; save(); render(); break; }
       case 'set-goal': { var pg = ensureProfile(prof()); pg.daily.goal = +el.getAttribute('data-v'); save(); render(); break; }
+      case 'mic-ok': db.micInfoSeen = Date.now(); save(); if (player && player.cur) player.cur.micInfo = false;   // weiter wie 'mic'
+      /* falls through */
       case 'mic': if (player && !player.checked) {
+        if (!db.micInfoSeen) { player.cur.micInfo = true; rerenderPlayerOnly(); break; }
         var pc = player.cur; pc.listening = true; pc.micError = null; rerenderPlayerOnly();
         startListening(function (alts) { pc.listening = false; pc.heardAlts = alts; pc.heard = alts[0]; doCheck(); },
           function (err) { pc.listening = false; pc.micError = err; rerenderPlayerOnly(); });
@@ -1714,6 +1995,7 @@
     }
   });
   app.addEventListener('input', function (ev) {
+    if (ev.target.id === 'cert-name') { var lvc = (parseHash().a || 'A1'); renderCertCanvas(lvc); return; }
     if (ev.target.id === 'gap-input' && player) {
       player.cur.input = ev.target.value;
       var cb = document.getElementById('check-btn'); if (cb) cb.disabled = !ev.target.value.trim();
@@ -1771,16 +2053,17 @@
     var res = evaluate(item.ex, player.cur);
     player.result = res; player.checked = true;
     player.session[item.id] = res.ok;
-    recordAnswer(item, res.ok, res.given);
+    if (player.mode === 'placement') placementAnswer(res.ok); else recordAnswer(item, res.ok, res.given);
     if (item.kind === 'word' && res.ok && item.ex.mode !== 'listen') setTimeout(function () { speak(item.word.t, course().tts, { auto: true }); }, 150);
     // In Lern-/Wiederholungs-Sitzungen kommt ein Fehler am Ende noch einmal (höchstens einmal)
-    if (!res.ok && player.mode !== 'all' && player.mode !== 'review' && !player.requeued[item.id] && item.kind !== 'card') {
+    if (!res.ok && player.mode !== 'all' && player.mode !== 'review' && player.mode !== 'placement' && !player.requeued[item.id] && item.kind !== 'card') {
       player.requeued[item.id] = true; player.queue.push(item.id);
     }
     rerenderPlayerOnly();
   }
   function doNext() {
     if (!player) return;
+    if (player.mode === 'placement' && place && place.nextId && player.idx === player.queue.length - 1) { player.queue.push(place.nextId); place.nextId = null; }
     player.idx++; player.cur = null; player.checked = false; player.result = null;
     if (player.idx >= player.queue.length) player.done = true;
     rerenderPlayerOnly();

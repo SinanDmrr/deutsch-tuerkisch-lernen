@@ -422,3 +422,29 @@ footer.foot { max-width: 1040px; margin: 0 auto; padding: 0 16px 40px; color: va
   table.stack td { padding: 3px 0; border: 0; }
   table.stack td[data-l]::before { content: attr(data-l) ": "; font-weight: 650; color: var(--muted); font-size: .8rem; }
 }
+
+/* Einstufungstest */
+.bar .skip { background: repeating-linear-gradient(45deg, var(--muted) 0 3px, transparent 3px 7px); opacity: .55; }
+.place-prog { margin: 0 0 12px; display: grid; gap: 6px; }
+.place-offer { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: space-between; }
+.place-offer h2 { margin: 0 0 4px; }
+.plain-list { list-style: none; padding: 0; margin: 0 0 1em; display: grid; gap: 6px; }
+.check-list { display: grid; gap: 6px; margin: 0 0 16px; text-align: left; }
+.check-row { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; }
+.check-row input { width: 18px; height: 18px; accent-color: var(--primary); }
+.skip-note { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+
+/* Abzeichen & Zertifikat */
+.badge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.bdg { display: grid; justify-items: center; text-align: center; gap: 4px; padding: 12px 8px; border: 1px dashed var(--border); border-radius: var(--radius-sm); opacity: .55; }
+.bdg .bdg-ic { font-size: 1.8rem; filter: grayscale(1); }
+.bdg .bdg-t { font-weight: 700; font-size: .88rem; }
+.bdg .bdg-h { font-size: .74rem; color: var(--muted); line-height: 1.3; }
+.bdg.got { opacity: 1; border-style: solid; background: var(--surface-2); }
+.bdg.got .bdg-ic { filter: none; }
+.cert-box { margin-top: 16px; padding: 14px; border-radius: var(--radius-sm); background: var(--surface-2); display: grid; grid-template-columns: 1fr 1fr auto; gap: 14px; align-items: center; }
+.cert-bars { display: grid; gap: 8px; }
+@media (max-width: 640px) { .cert-box { grid-template-columns: 1fr; } }
+.cert-canvas { width: 100%; height: auto; border-radius: var(--radius-sm); box-shadow: 0 2px 12px rgba(0,0,0,.12); margin-top: 14px; background: #fff; }
+.badge-strip { display: flex; flex-wrap: wrap; gap: 8px; font-size: 1.6rem; }
+.badge-strip .bs { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 12px; background: var(--surface-2); }
