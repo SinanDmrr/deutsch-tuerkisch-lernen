@@ -1,0 +1,24 @@
+Copyright (c) 2026 Sinan Demir. Alle Rechte vorbehalten. / All rights reserved.
+
+DEUTSCH
+Dieses Repository und die Lernplattform „Deutsch ⇄ Türkçe“ (https://sinandmrr.github.io/deutsch-tuerkisch-lernen/)
+– insbesondere Quellcode, Lehrplan, Erklärungen, Übungen, Wortlisten, Beispielsätze, Dialoge, Texte,
+Grafiken, das Maskottchen „Lingo“ und das Design – sind urheberrechtlich geschützt.
+
+Dass der Code öffentlich einsehbar ist, bedeutet KEINE Erlaubnis zur Nutzung. Ohne vorherige schriftliche
+Zustimmung des Rechteinhabers ist es nicht gestattet, Inhalte ganz oder teilweise zu kopieren, zu verändern,
+zu veröffentlichen, zu verbreiten, in andere Produkte zu übernehmen oder kommerziell zu nutzen.
+
+Erlaubt ist die private Nutzung der Lernplattform über die oben genannte Webseite.
+
+Ausgenommen sind Bestandteile Dritter mit eigener Lizenz, insbesondere die mit Piper TTS erzeugten
+Sprachstimmen/-modelle (siehe tools/tts-voices.json und die jeweiligen Modell-Lizenzen).
+
+ENGLISH
+This repository and the learning platform "Deutsch ⇄ Türkçe" – including source code, curriculum,
+explanations, exercises, word lists, example sentences, dialogues, texts, graphics, the mascot "Lingo" and
+the design – are protected by copyright. Public visibility of the code does NOT grant any licence. Copying,
+modifying, publishing, distributing, incorporating into other products or commercial use, in whole or in part,
+is not permitted without prior written consent of the copyright holder. Personal use of the learning platform
+via the website above is permitted. Third-party components with their own licences (e.g. Piper TTS voice
+models) are excluded.

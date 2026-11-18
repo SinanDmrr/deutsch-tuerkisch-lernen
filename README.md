@@ -38,3 +38,8 @@ Der Fortschritt liegt im Browser der Nutzer (`localStorage`, Schlüssel `dt-data
 - Stimmen (weiblich/männlich je Sprache) und Hörproben: `tools/tts-voices.json`. Lizenz der Stimmen siehe jeweilige MODEL_CARD auf https://huggingface.co/rhasspy/piper-voices.
 - Fehlt eine Audiodatei (z. B. direkt nach einem Update, bevor die Action fertig ist), nutzt die Seite eine **passende Gerätestimme** – nie eine fremdsprachige.
 - Manuell neu erzeugen: Repo → *Actions* → „Sprachausgabe (Piper TTS)“ → *Run workflow*.
+
+## Urheberrecht
+
+© 2026 Sinan Demir – **Alle Rechte vorbehalten.** Der Code ist öffentlich einsehbar, damit die Seite über GitHub Pages laufen kann – das ist **keine** Erlaubnis zur Nutzung. Kopieren, Übernehmen oder Weiterverwenden von Code oder Inhalten (Übungen, Erklärungen, Wortlisten, Dialoge, Grafiken, Maskottchen) ist ohne schriftliche Zustimmung nicht gestattet. Details: [LICENSE](LICENSE).
+

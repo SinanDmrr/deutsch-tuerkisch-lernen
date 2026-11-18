@@ -9,7 +9,7 @@
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var DT = window.DT;
   var SCHEMA = DT.storage.SCHEMA;    // Version des Speicherformats (Migrationen nur in js/core/storage.js)
-  var APP_VERSION = '2026-11-18.3';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-18.4';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -117,6 +117,7 @@
     newBadge: ['neu', 'yeni'],
     doneBadge: ['fertig', 'bitti'],
     mistakesBadge: ['Fehler', 'hata'],
+    rights: ['Alle Rechte vorbehalten', 'Tüm hakları saklıdır'],
     footer: ['Türkisch lernen · Dein Fortschritt bleibt in deinem Browser', 'Almanca Öğren · İlerlemen tarayıcında kalır'],
     fromAllTopics: ['Fehler aus allen Themen', 'Tüm konulardan hatalar'],
     mixedPractice: ['Fehlertraining', 'Hata çalışması'],
@@ -807,7 +808,7 @@
       ((saveFailed || readOnly || newerData) ? '<div id="save-banner" class="save-banner" role="alert">⚠️ ' + esc(t(newerData ? 'bannerNewer' : (readOnly ? 'bannerReadOnly' : 'bannerSaveFail'))) +
         (newerData ? ' <button class="btn small" onclick="location.reload()">' + esc(t('reload')) + '</button>' : ' <button class="btn small" data-act="export">' + esc(t('exportBtn')) + '</button>') + '</div>' : '') +
       '<main id="main">' + inner + '</main>' +
-      '<footer class="foot">' + esc(t('footer')) + '</footer>';
+      '<footer class="foot">' + esc(t('footer')) + '<br><span>© 2026 Sinan Demir · ' + esc(t('rights')) + '</span></footer>';
   }
 
   /* ================= Onboarding ================= */
