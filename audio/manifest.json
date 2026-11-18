@@ -2539,16 +2539,42 @@
    "şu": "710581e946d7a6b6"
   }
  },
+ "licenses": {
+  "de_DE-kerstin-low": {
+   "base": "U.S. English Ryan voice (low quality)",
+   "card": "https://huggingface.co/rhasspy/piper-voices/blob/main/de/de_DE/kerstin/low/MODEL_CARD",
+   "checked": "2026-11-18",
+   "dataset": "https://github.com/rhasspy/dataset-voice-kerstin",
+   "license": "CC0"
+  },
+  "de_DE-thorsten-high": {
+   "base": "U.S. English lessac voice (high quality)",
+   "card": "https://huggingface.co/rhasspy/piper-voices/blob/main/de/de_DE/thorsten/high/MODEL_CARD",
+   "checked": "2026-11-18",
+   "dataset": "https://github.com/thorstenMueller/Thorsten-Voice",
+   "license": "CC0"
+  },
+  "tr_TR-fahrettin-medium": {
+   "base": "U.S. English lessac voice (medium quality)",
+   "card": "https://huggingface.co/rhasspy/piper-voices/blob/v1.0.0/tr/tr_TR/fahrettin/medium/MODEL_CARD",
+   "checked": "2026-11-18",
+   "dataset": "https://github.com/NabuCasa/voice-datasets",
+   "license": "CC0"
+  },
+  "tr_TR-fettah-medium": {
+   "base": "U.S. English lessac voice (medium quality)",
+   "card": "https://huggingface.co/rhasspy/piper-voices/blob/v1.0.0/tr/tr_TR/fettah/medium/MODEL_CARD",
+   "checked": "2026-11-18",
+   "dataset": "https://github.com/NabuCasa/voice-datasets",
+   "license": "CC0"
+  }
+ },
  "samples": {
   "de": {
-   "de_DE-eva_k-x_low": "samples/de_DE-eva_k-x_low.mp3",
-   "de_DE-karlsson-low": "samples/de_DE-karlsson-low.mp3",
    "de_DE-kerstin-low": "samples/de_DE-kerstin-low.mp3",
-   "de_DE-ramona-low": "samples/de_DE-ramona-low.mp3",
    "de_DE-thorsten-high": "samples/de_DE-thorsten-high.mp3"
   },
   "tr": {
-   "tr_TR-dfki-medium": "samples/tr_TR-dfki-medium.mp3",
    "tr_TR-fahrettin-medium": "samples/tr_TR-fahrettin-medium.mp3",
    "tr_TR-fettah-medium": "samples/tr_TR-fettah-medium.mp3"
   }
