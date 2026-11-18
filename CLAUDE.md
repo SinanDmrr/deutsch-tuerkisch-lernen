@@ -14,7 +14,7 @@ Lernplattform: **Deutsch für Türkischsprechende** (Kurs `de`, Erklärungen/Obe
 - Gespeichert in `localStorage` unter `dt-data` (Präfix `dt-`; andere Seiten derselben Domain nutzen andere Präfixe).
 - Jede Aufgabe, jedes Wort, jeder Dialog hat eine **feste ID**. IDs nie ändern, nie wiederverwenden. Neue Einträge → neue ID.
 - Texte verbessern, umsortieren, verschieben, löschen ist erlaubt – der Fortschritt hängt an der ID.
-- Änderungen am Speicherformat nur über einen neuen Schritt in `migrate()` (`js/app.js`); vorher wird automatisch `dt-backup` geschrieben.
+- Änderungen am Speicherformat nur über einen neuen Schritt in `migrateProfile()` (`js/core/storage.js`, `SCHEMA` erhöhen) – idempotent, mit Fixture in `tools/fixtures/` und Test in `tools/test-core.js`. Vorher schreibt die App automatisch `dt-backup`; der Stand vor Schema 3 liegt dauerhaft in `dt-backup-s2`.
 - Bei jedem Release `python3 tools/bump-version.py` (erhöht `APP_VERSION` in `js/app.js` **und** alle `?v=` in `index.html`).
 
 ## Git
@@ -24,7 +24,8 @@ Lernplattform: **Deutsch für Türkischsprechende** (Kurs `de`, Erklärungen/Obe
 
 ## Prüfen vor jedem Commit
 - `node tools/validate.js` – Inhaltsprüfung (IDs eindeutig, Antworten gültig, Erklärungen vorhanden). Läuft auch als GitHub Action.
-- `node --check js/*.js js/content/*.js`
+- `node tools/test-core.js` – Tests der Kernlogik (Migration, SRS, Tagesziel/Streak, Import/Export)
+- `node --check js/*.js js/core/*.js js/content/*.js`
 - Browser-Test (Playwright/Chrome) der geänderten Ansichten, hell und dunkel, Desktop und Handy-Breite.
 
 ## Dateien
@@ -34,7 +35,8 @@ Lernplattform: **Deutsch für Türkischsprechende** (Kurs `de`, Erklärungen/Obe
 | `js/content/<kurs>-<niveau>.js` | Grammatik-Themen: Erklärung + Übungen |
 | `js/content/<kurs>-<niveau>-vocab.js` | Wortschatz eines Niveaus |
 | `js/content/<kurs>-<niveau>-dialogs.js` | Alltagsdialoge mit Verständnisfragen |
-| `js/app.js` | gesamte App-Logik |
+| `js/core/` | reine Kernlogik ohne DOM: `time`, `srs` (Wiederholung), `daily` (Tagesziel/Streak), `storage` (Format, Migration, Import/Export), `vocab` (Wortabfragen) |
+| `js/app.js` | Oberfläche, Router, Player |
 | `css/style.css` | Design (hell/dunkel) |
 | `tools/` | Validator, Text-Extraktion & Audio-Erzeugung (Piper TTS) |
 | `audio/` | erzeugte MP3s – **nicht von Hand bearbeiten** |

@@ -203,6 +203,20 @@ main { max-width: 1040px; margin: 0 auto; padding: 22px 16px 80px; }
 @keyframes m-sway { 0%, 100% { transform: rotate(-2deg) translateY(2px); } 50% { transform: rotate(2deg) translateY(2px); } }
 @media (max-width: 640px) { .mascot { width: 76px; height: 76px; } .mascot-card { gap: 12px; padding: 12px; } }
 
+/* ---------- Tageskarte & Wortschatz ---------- */
+.daily-card { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.daily-card .dc-text { flex: 1; min-width: 200px; }
+.daily-card h2 { margin: 0 0 4px; }
+.ring { --p: 0; width: 76px; height: 76px; border-radius: 50%; flex: none; display: grid; place-items: center;
+  background: conic-gradient(var(--ok) calc(var(--p) * 1%), var(--surface-3) 0); }
+.ring span { width: 60px; height: 60px; border-radius: 50%; background: var(--surface); display: grid; place-items: center; font-weight: 800; font-size: 1.15rem; line-height: 1; }
+.ring small { font-size: .7rem; color: var(--muted); font-weight: 700; }
+.word-card .wc-main { display: flex; gap: 16px; align-items: center; margin: 6px 0 16px; }
+.wc-word { font-size: 2rem; font-weight: 800; letter-spacing: -.01em; line-height: 1.15; }
+.wc-trans { font-size: 1.15rem; margin-top: 6px; color: var(--primary); font-weight: 650; }
+.speak.big { width: 56px; height: 56px; font-size: 1.4rem; background: var(--primary-soft); }
+.dot.dot-new { border-style: dashed; color: var(--primary); }
+
 /* ---------- Lessons ---------- */
 .level-section { margin-top: 28px; scroll-margin-top: 130px; }
 .level-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }

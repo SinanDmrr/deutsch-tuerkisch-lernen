@@ -1,5 +1,5 @@
 /* Deutsch ⇄ Türkçe – App-Logik (Vanilla JS, keine Abhängigkeiten).
- * Fortschritt wird pro Profil im localStorage gespeichert (Schlüssel „kopru.v1“).
+ * Fortschritt wird pro Profil im localStorage gespeichert (Schlüssel „dt-data“, Format & Migration: js/core/storage.js).
  */
 (function () {
   'use strict';
@@ -7,8 +7,9 @@
   var STORE = 'dt-data';            // Hauptspeicher (eigener Präfix „dt-“, gleiche Domain wie andere GitHub-Pages-Seiten)
   var BACKUP = 'dt-backup';          // Kopie vor jedem App-Update / jeder Migration
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
-  var SCHEMA = 2;                    // Version des Speicherformats
-  var APP_VERSION = '2026-11-18.1';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var DT = window.DT;
+  var SCHEMA = DT.storage.SCHEMA;    // Version des Speicherformats (Migrationen nur in js/core/storage.js)
+  var APP_VERSION = '2026-11-18.2';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -107,6 +108,7 @@
     clickAgain: ['→ zum Bestätigen nochmal klicken', '→ onaylamak için tekrar tıkla'],
     imported: ['Fortschritt importiert ✔', 'İlerleme içe aktarıldı ✔'],
     importFail: ['Datei konnte nicht gelesen werden.', 'Dosya okunamadı.'],
+    importNewer: ['Diese Datei stammt aus einer neueren Version – bitte Seite neu laden (Strg+F5) und erneut importieren.', 'Bu dosya daha yeni bir sürümden – lütfen sayfayı yenile (Ctrl+F5) ve tekrar içe aktar.'],
     switched: ['Kurs gewechselt', 'Kurs değiştirildi'],
     listen: ['Anhören', 'Dinle'],
     themeToggle: ['Hell/Dunkel umschalten', 'Açık/koyu tema'],
@@ -136,6 +138,51 @@
     voiceMissing: ['Keine türkische Stimme gefunden', 'Almanca ses bulunamadı'],
     noSpeech: ['Dieser Browser kann nicht vorlesen.', 'Bu tarayıcı sesli okuma desteklemiyor.'],
     test: ['Testen', 'Dene'],
+    words: ['Wortschatz', 'Kelimeler'],
+    wordsN: ['Wörter', 'kelime'],
+    wordsIntro: ['Lerne die wichtigsten Wörter mit Karteikarten. Jedes Wort kommt genau dann wieder, wenn du es sonst vergessen würdest – erst morgen, dann nach 3 Tagen, einer Woche …', 'En önemli kelimeleri kartlarla öğren. Her kelime tam unutmak üzereyken tekrar karşına çıkar – önce yarın, sonra 3 gün, bir hafta sonra …'],
+    wordsKnown: ['Wörter sicher', 'kelime oturdu'],
+    known: ['sicher', 'oturdu'],
+    learning: ['im Lernen', 'öğreniliyor'],
+    newWordsN: ['neu', 'yeni'],
+    learnNew: ['Neue Wörter lernen', 'Yeni kelimeler öğren'],
+    learnNewN: ['{n} neue Wörter lernen', '{n} yeni kelime öğren'],
+    learnMore: ['Weitere Wörter', 'Daha fazla kelime'],
+    practiceField: ['Wörter üben', 'Kelimeleri çalış'],
+    reviewDue: ['{n} Wiederholungen bereit', '{n} tekrar hazır'],
+    reviewTitle: ['Wiederholen', 'Tekrar et'],
+    reviewIntro: ['Diese Wörter und Aufgaben sind heute dran – so bleiben sie im Langzeitgedächtnis.', 'Bu kelimeler ve alıştırmalar bugün sırada – böylece uzun süreli hafızana yerleşir.'],
+    nothingDue: ['Heute ist nichts fällig – super!', 'Bugün tekrar edilecek bir şey yok – süper!'],
+    newWord: ['Neues Wort', 'Yeni kelime'],
+    plural: ['Plural', 'Çoğul'],
+    example: ['Beispiel', 'Örnek'],
+    knowIt: ['Kenne ich schon', 'Bunu biliyorum'],
+    vqPick: ['Was bedeutet **{w}**?', '**{w}** ne demek?'],
+    vqListen: ['Was hörst du? Wähle die Bedeutung.', 'Ne duyuyorsun? Anlamını seç.'],
+    vqRev: ['Wie heißt **{w}** auf Türkisch?', '**{w}** Almancada nasıl denir?'],
+    vqType: ['Schreib auf Türkisch: **{w}**', 'Almanca yaz: **{w}**'],
+    vqWrongIs: ['„{a}“ gehört zu „{b}“.', '“{a}”, “{b}” demektir.'],
+    vqArticle: ['Fast! Lerne das Wort immer mit Artikel: **{w}**.', 'Neredeyse! Kelimeyi her zaman artikeliyle öğren: **{w}**.'],
+    dailyMix: ['5-Minuten-Tagesmix', '5 dakikalık günlük karışım'],
+    dailyIntro: ['Erst Wiederholungen, dann ein paar neue Wörter und Aufgaben aus deinen Themen.', 'Önce tekrarlar, sonra birkaç yeni kelime ve konularından alıştırmalar.'],
+    mixEmpty: ['Starte zuerst ein Thema in den Lektionen – dann stelle ich dir hier jeden Tag einen Mix zusammen.', 'Önce derslerden bir konuya başla – sonra sana burada her gün bir karışım hazırlarım.'],
+    todayGoal: ['Dein Tagesziel', 'Günlük hedefin'],
+    goalReached: ['Tagesziel geschafft! 🎉', 'Günlük hedef tamam! 🎉'],
+    goalReachedLong: ['Tagesziel für heute erreicht – stark! Alles Weitere ist Bonus.', 'Bugünkü hedefe ulaştın – harika! Gerisi bonus.'],
+    goalProgress: ['Heute: {d} von {g} – fast geschafft!', 'Bugün: {g} hedefin {d} tanesi tamam – az kaldı!'],
+    streakDays: ['{n} Tage in Folge', '{n} gün üst üste'],
+    streakDay1: ['1 Tag – deine Serie startet', 'Serin başladı: 1 gün'],
+    done: ['geschafft', 'tamam'],
+    streakStart: ['Erreiche heute dein Ziel und starte eine Serie.', 'Bugün hedefine ulaş ve bir seri başlat.'],
+    pauseFree: ['1 Pausentag diese Woche frei', 'bu hafta 1 mola günün var'],
+    pauseUsed: ['Pausentag dieser Woche genutzt', 'bu haftanın mola günü kullanıldı'],
+    dueN: ['{n} Wiederholungen', '{n} tekrar'],
+    startMix: ['Tagesmix starten', 'Günlük karışımı başlat'],
+    sessionDone: ['Runde geschafft', 'Tur tamam'],
+    dailyGoal: ['Tagesziel', 'Günlük hedef'],
+    dailyGoalIntro: ['Wie viele Antworten möchtest du pro Tag schaffen? Ein Tag zählt für deine Serie, wenn du das Ziel erreichst – ein Pausentag pro Woche ist erlaubt.', 'Günde kaç cevap vermek istiyorsun? Hedefe ulaştığın gün serine sayılır – haftada bir mola günü serbest.'],
+    perDay: ['pro Tag', 'günde'],
+    mascotGoal: ['Tagesziel geschafft – ich bin stolz auf dich! So wird Türkisch ganz schnell deins. 👍', 'Günlük hedefi tamamladın – seninle gurur duyuyorum! Böyle giderse Almanca çok yakında senin. 👍'],
     bannerSaveFail: ['Dein Fortschritt kann gerade nicht gespeichert werden (Speicher voll oder gesperrt). Bitte exportiere ihn zur Sicherheit.', 'İlerlemen şu an kaydedilemiyor (depolama dolu veya engelli). Lütfen güvenlik için dışa aktar.'],
     bannerReadOnly: ['Deine Daten konnten nicht aktualisiert werden. Sie sind unverändert gesichert – bitte exportiere sie und melde den Fehler.', 'Verilerin güncellenemedi. Değiştirilmeden saklanıyor – lütfen dışa aktar ve hatayı bildir.'],
     bannerNewer: ['Diese Daten stammen von einer neueren Version der Seite. Bitte neu laden.', 'Bu veriler sitenin daha yeni bir sürümüne ait. Lütfen sayfayı yenile.'],
@@ -216,8 +263,11 @@
     }
     if (!d || !d.profiles) return emptyDb();
     if ((d.v || 1) > SCHEMA) { newerData = true; return d; }   // Daten einer neueren App-Version: nicht anfassen
-    if ((d.v || 1) < SCHEMA || d.app !== APP_VERSION) rawSet(BACKUP, JSON.stringify(d));  // Sicherung vor Änderungen
-    try { d = migrate(d); } catch (e) {
+    var src = raw || JSON.stringify(d);
+    if ((d.v || 1) < SCHEMA || d.app !== APP_VERSION) rawSet(BACKUP, src);  // Sicherung vor Änderungen
+    // Stand vor der Umstellung auf Schema 3 einmalig dauerhaft aufheben (wird nie überschrieben)
+    if ((d.v || 1) < 3 && !rawGet(DT.storage.KEYS.backupS2)) rawSet(DT.storage.KEYS.backupS2, src);
+    try { d = DT.storage.migrate(d, DT.time.dayNum(), DT.time.dayKey()).data; } catch (e) {
       // Migration fehlgeschlagen: Rohdaten NICHT überschreiben, App nur lesend
       readOnly = true; if (window.console) console.error('Migration fehlgeschlagen', e);
       try { return JSON.parse(raw || '{}').profiles ? JSON.parse(raw) : emptyDb(); } catch (e2) { return emptyDb(); }
@@ -226,38 +276,13 @@
     if (migrated || raw !== JSON.stringify(d)) rawSet(STORE, JSON.stringify(d));
     return d;
   }
-  function migrate(d) {
-    var v = d.v || 1;
-    if (v < 2) {
-      // v1 → v2: Fortschritt war an der Position („thema#3“) gespeichert, jetzt an der festen Aufgaben-ID
-      Object.keys(d.profiles || {}).forEach(function (pid) {
-        var pr = d.profiles[pid].prog || {};
-        Object.keys(pr).forEach(function (cid) {
-          var src = pr[cid] || {}, dst = {};
-          Object.keys(src).forEach(function (key) {
-            // Die IDs wurden beim Umstieg genau als „thema.(position+1)“ vergeben – die Zuordnung ist also fest
-            // und hängt NICHT von der aktuellen Reihenfolge ab (auch wenn jemand erst nach vielen Updates zurückkommt).
-            var m = /^([a-z]{2}-[a-z0-9]{2}-\d{2})#(\d+)$/.exec(key);
-            dst[m ? m[1] + '.' + (+m[2] + 1) : key] = src[key];
-          });
-          pr[cid] = dst;
-        });
-      });
-      v = 2;
-    }
-    // künftige Migrationen hier anhängen: if (v < 3) { … v = 3; }
-    d.v = v;
-    return d;
-  }
   // Speichern mit Rückmeldung (ADR-1): nie die Schema-Version zurückstufen, Fehler sichtbar machen
   function save() {
     if (readOnly || newerData) return false;
     if (storageBroken && !db.active) return false;
-    db.v = Math.max(db.v || 0, SCHEMA); db.app = APP_VERSION; db.rev = (db.rev || 0) + 1;
-    var json = JSON.stringify(db);
-    if (rawSet(STORE, json)) { if (saveFailed) { saveFailed = false; } return true; }
-    try { localStorage.removeItem(BACKUP); } catch (e) { /* ignore */ }   // Platz schaffen und erneut versuchen
-    if (rawSet(STORE, json)) return true;
+    var ok = false;
+    try { ok = DT.storage.save(localStorage, db, APP_VERSION); } catch (e) { ok = false; }
+    if (ok) { saveFailed = false; return true; }
     saveFailed = true;
     var b = document.getElementById('save-banner'); if (!b && app) render();
     return false;
@@ -298,7 +323,8 @@
     return esc(s)
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
       .replace(/\*(.+?)\*/g, '<em>$1</em>')
-      .replace(/_{3,}/g, '<span class="blank"></span>');
+      .replace(/_{3,}/g, '<span class="blank"></span>')
+      .replace(/\n/g, '<br>');
   }
   function plain(s) { return String(s || '').replace(/\*\*|\*/g, ''); }
   function pct(a, b) { return b ? Math.round(a / b * 100) : 0; }
@@ -427,14 +453,14 @@
   }
   function deviceSpeak(text, lang, o, g, retried) {
     o = o || {};
-    if (!canSpeak) { showVoiceHelp(lang); return; }
+    if (!canSpeak) { if (!o.auto) showVoiceHelp(lang); return; }
     if (!voicesCache.length) loadVoices();
     var v = o.voiceName ? voicesFor(lang).filter(function (x) { return x.name === o.voiceName; })[0] : null;
     if (!v && g) v = sortedVoices(lang).filter(function (x) { return voiceGender(x) === g; })[0] || null;
     if (!v) v = bestVoice(lang);
     if (!v) {
       if (!voicesCache.length && !retried) { setTimeout(function () { loadVoices(); deviceSpeak(text, lang, o, g, true); }, 700); return; }
-      showVoiceHelp(lang); return;   // lieber gar nicht vorlesen als mit falscher (z. B. englischer) Stimme
+      if (!o.auto) showVoiceHelp(lang); return;   // lieber gar nicht vorlesen als mit falscher (z. B. englischer) Stimme
     }
     try {
       if (audioEl) { audioEl.onended = null; audioEl.pause(); }
@@ -625,7 +651,7 @@
   function levelName(lv) { return K.levelNames[lv][uiLang()]; }
 
   /* ================= Fortschritt speichern ================= */
-  function record(id, ok, given) {
+  function record(id, ok, given, noSave) {
     var it = EXI[id];
     if (it && !isCountable(it.ex) && !ok) return;   // misslungene Sprechversuche werden nicht gespeichert
     if (typeof given === 'string' && given.length > 120) given = given.slice(0, 120) + '…';   // Speicher schonen
@@ -637,7 +663,95 @@
     r.t = Date.now();
     p[id] = r;
     var pr = prof(); pr.last = pr.last || {}; pr.last[courseId()] = r.t;   // letzter Lerntag je Kurs
+    if (!noSave) save();
+  }
+
+  /* ================= Wiederholung (SRS), Tagesziel, Wortschatz ================= */
+  var WI = DT.vocab.index(K);               // Wort-Index: { wordId: { w, key, course, level } }
+  function today() { return DT.time.dayNum(); }
+  function todayKey() { return DT.time.dayKey(); }
+  function ensureProfile(p) {               // fehlende Bereiche anlegen (idempotent, löscht nie etwas)
+    p.srs = p.srs || { de: {}, tr: {} }; p.srs.de = p.srs.de || {}; p.srs.tr = p.srs.tr || {};
+    p.daily = p.daily || { goal: 10, log: {} }; p.daily.log = p.daily.log || {};
+    p.skip = p.skip || { de: {}, tr: {} }; p.place = p.place || {}; p.badges = p.badges || {};
+    return p;
+  }
+  var poolCache = {};
+  function poolFor(wi) { var k = wi.course + '|' + wi.level; return poolCache[k] || (poolCache[k] = DT.vocab.wordsOf(K, wi.course, wi.level)); }
+  function fieldName(id) { var f = (K.wordfields || []).filter(function (x) { return x[0] === id; })[0]; return f ? f[uiLang() === 'de' ? 1 : 2] : id; }
+  function vocabLabels() {
+    return { pickQ: t('vqPick'), listenQ: t('vqListen'), revQ: t('vqRev'), typeQ: t('vqType'), wrongIs: t('vqWrongIs'), example: t('example'), articleMissing: t('vqArticle') };
+  }
+  function hasAudioFor(text) { return !!piperUrl(text, course().tts, ''); }
+  /* Eine Antwort speichern: Aufgabe → Fortschritt (+ SRS bei Fehlern), Wort → SRS; immer Tageszähler */
+  function recordAnswer(item, ok, given) {
+    var p = ensureProfile(prof()), cid = courseId(), d = today();
+    if (item.kind === 'word') {
+      DT.srs.answer(p, cid, item.word.id, ok, d, 'word');
+      p.last = p.last || {}; p.last[cid] = Date.now();
+    } else {
+      if (!isCountable(item.ex) && !ok) return;
+      record(item.id, ok, given, true);
+      if (isCountable(item.ex) && (!ok || DT.srs.get(p, cid, item.id))) DT.srs.answer(p, cid, item.id, ok, d, 'ex');
+    }
+    DT.daily.tick(p, todayKey());
     save();
+  }
+  /* Abfragemodus eines Wortes je nach Fach */
+  function wordQ(wordId) {
+    var p = ensureProfile(prof()), e = DT.srs.get(p, courseId(), wordId), wi = WI[wordId];
+    var mode = e ? DT.srs.wordMode(e, hasAudioFor(wi.w.t)) : 'pick';
+    return 'w:' + wordId + ':' + mode;
+  }
+  function dueItems(limit) {
+    var p = ensureProfile(prof()), cid = courseId();
+    return DT.srs.due(p, cid, today(), limit || 30).filter(function (id) { return WI[id] ? WI[id].course === cid : !!exById(id); })
+      .map(function (id) { return WI[id] ? wordQ(id) : id; });
+  }
+  function newWords(field, n) {
+    var p = ensureProfile(prof()), cid = courseId(), lv = 'A1';
+    return DT.vocab.wordsOf(K, cid, lv, field).filter(function (w) { return !DT.srs.get(p, cid, w.id); }).slice(0, n);
+  }
+  /* Lern-Sitzung für neue Wörter: Karte → gleich danach eine leichte Abfrage, am Ende zweite Runde (hören/umgekehrt) */
+  function learnQueue(words) {
+    var q = [];
+    words.forEach(function (w, i) { q.push('card:' + w.id); if (i > 0) q.push('w:' + words[i - 1].id + ':pick'); });
+    if (words.length) q.push('w:' + words[words.length - 1].id + ':pick');
+    DT.vocab.shuffle(words, DT.vocab.rng(todayKey())).forEach(function (w) { q.push('w:' + w.id + ':' + (hasAudioFor(w.t) ? 'listen' : 'rev')); });
+    return q;
+  }
+  /* 5-Minuten-Tagesmix (ADR-4): fällige Wiederholungen → neue Wörter → offene Aufgaben aus begonnenen Themen */
+  function buildMix() {
+    var p = ensureProfile(prof()), cid = courseId(), goal = p.daily.goal || 10, q = [];
+    var due = dueItems(8); q = q.concat(due);
+    var backlog = DT.srs.due(p, cid, today(), 999).length;
+    if (backlog <= 30) {
+      var nw = newWords(null, DT.daily.newWordLimit(goal));
+      nw.forEach(function (w) { q.push('card:' + w.id); q.push('w:' + w.id + ':pick'); });
+    }
+    var pr = prog(), target = Math.max(12, q.length);
+    allTopics().forEach(function (tp) {
+      if (q.length >= target || !tp.avail || isSkipped(tp.id)) return;
+      var s = topicStats(tp); if (!s.answered) return;                // nur begonnene Themen
+      tp.data.exercises.forEach(function (ex) { if (q.length < target && isCountable(ex) && !pr[ex.id] && q.indexOf(ex.id) < 0) q.push(ex.id); });
+    });
+    return q;
+  }
+  function isSkipped(topicId) { var p = ensureProfile(prof()); return !!(p.skip[courseId()] || {})[topicId]; }
+  function resolveItem(q) {
+    if (!q) return null;
+    if (q.indexOf('card:') === 0) {
+      var wc = WI[q.slice(5)]; if (!wc) return null;
+      return { kind: 'card', id: q, word: wc.w, ex: { t: 'card', id: q }, topic: { level: wc.level, title: fieldName(wc.w.topic) } };
+    }
+    if (q.indexOf('w:') === 0) {
+      var parts = q.split(':'), wq = WI[parts[1]]; if (!wq) return null;
+      player.gen = player.gen || {};
+      var ex = player.gen[q] || (player.gen[q] = DT.vocab.makeQuestion(wq.w, parts[2], poolFor(wq), vocabLabels(), player.key));
+      return { kind: 'word', id: q, ex: ex, word: wq.w, topic: { level: wq.level, title: fieldName(wq.w.topic) } };
+    }
+    var it = exById(q); if (it) it.kind = 'ex';
+    return it;
   }
 
   /* ================= Theme ================= */
@@ -671,6 +785,7 @@
     var tabs = [
       ['dashboard', '🏠', t('dashboard')],
       ['lessons', '📚', t('lessons')],
+      ['words', '📖', t('words')],
       ['gaps', '🎯', t('gaps') + (wrongN ? ' <span class="badge bad">' + wrongN + '</span>' : '')],
       ['overview', '📊', t('overview')],
       ['settings', '⚙️', t('settings')]
@@ -765,7 +880,7 @@
     if (!ts) { mood = 'neutral'; msg = t('mascotNew'); }
     else {
       var d = daysSince(ts);
-      if (d === 0) { mood = 'happy'; msg = t('mascotToday'); }
+      if (d === 0) { mood = 'happy'; msg = DT.daily.progress(ensureProfile(prof()), todayKey()).reached ? t('mascotGoal') : t('mascotToday'); }
       else if (d === 1) { mood = 'happy'; msg = t('mascotYesterday'); }
       else if (d <= 5) { mood = 'neutral'; msg = t('mascotDays', { n: d }); }
       else { mood = 'sad'; msg = t('mascotSad', { n: d }); }
@@ -812,6 +927,7 @@
     return '<div class="hero"><div><h1>' + esc(t('hello')) + (p.name ? ', ' + esc(p.name) : '') + ' 👋</h1>' +
       '<p class="muted" style="margin:4px 0 0">' + flag(courseId()) + ' ' + esc(course().label) + ' · ' + esc(t('dashIntro')) + '</p></div></div>' +
       '<div class="section">' + mascotCard() + '</div>' +
+      '<div class="section">' + dailyCard() + '</div>' +
       '<div class="section">' + cont + '</div>' +
       '<div class="grid grid-3 section">' +
         '<div class="card stat"><span class="num">' + s.c + '<span class="muted" style="font-size:1rem"> / ' + s.n + '</span></span><span class="lbl">' + esc(t('tasks')) + ' ' + esc(t('solved')) + '</span></div>' +
@@ -914,10 +1030,10 @@
       var firstOpen = queue.findIndex(function (id) { return !p[id] || p[id].s !== 'c'; });
       start = firstOpen < 0 ? 0 : firstOpen;
     }
-    player = { key: key, mode: mode, queue: queue, idx: start, checked: false, cur: null, topicId: topicId, done: false, session: {} };
+    player = { key: key, mode: mode, queue: queue, idx: start, checked: false, cur: null, topicId: topicId, done: false, session: {}, gen: {}, requeued: {} };
     return player;
   }
-  function curEx() { return exById(player.queue[player.idx]); }
+  function curEx() { return resolveItem(player.queue[player.idx]); }
   function initCur(ex) {
     var c = { sel: null, input: '', picked: [], choice: [] };
     if (ex.t === 'order') c.pool = shuffleNotIdentity(ex.w.map(function (_, i) { return i; }));
@@ -925,18 +1041,34 @@
     return c;
   }
 
+  function playerDots() {
+    var p = prog();
+    return '<div class="dots" role="list">' + player.queue.map(function (id, i) {
+      var r = p[id], cls = r ? (r.s === 'c' ? ' c' : ' w') : '';
+      if (player.mode !== 'all') cls = player.session[id] === true ? ' c' : (player.session[id] === false ? ' w' : '');
+      if (id.indexOf('card:') === 0) cls += ' dot-new';
+      return '<button class="dot' + cls + (i === player.idx ? ' cur' : '') + '" data-act="jump" data-i="' + i + '" role="listitem" aria-label="' + esc(t('question')) + ' ' + (i + 1) + '">' + (id.indexOf('card:') === 0 ? '★' : (i + 1)) + '</button>';
+    }).join('') + '</div>';
+  }
+  function renderCard(item) {
+    var w = item.word, tgt = course().target;
+    return '<div class="card qcard word-card"><div class="qmeta"><span>✨ ' + esc(t('newWord')) + '</span><span>' + esc(item.topic.level + ' · ' + item.topic.title) + '</span></div>' +
+      '<div class="wc-main"><button class="speak big" data-act="play-say" data-say="' + esc(plain(w.t)) + '" aria-label="' + esc(t('listen')) + '">🔊</button>' +
+      '<div><div class="wc-word" lang="' + tgt + '">' + esc(w.t) + '</div>' + (w.pl ? '<div class="muted small" lang="' + tgt + '">' + esc(t('plural')) + ': ' + esc(w.pl) + '</div>' : '') +
+      '<div class="wc-trans">' + esc(w.n) + '</div></div></div>' +
+      (w.ex ? '<div class="example">' + speakBtn(w.ex) + '<div><div class="tgt" lang="' + tgt + '">' + esc(w.ex) + '</div><div class="nat">' + esc(w.exn || '') + '</div></div></div>' : '') +
+      (w.note ? '<div class="callout tip">' + md(w.note) + '</div>' : '') +
+      '<div class="qactions"><button class="btn" data-act="word-known">' + esc(t('knowIt')) + '</button><button class="btn primary" data-act="card-next" id="next-btn">' + esc(t('next')) + '</button></div></div>';
+  }
   function renderPlayer() {
     if (player.done || player.idx >= player.queue.length) return renderSummary();
     var item = curEx();
     if (!item) { player.idx++; return renderPlayer(); }
     var ex = item.ex, p = prog();
+    if (item.kind === 'card') return playerDots() + renderCard(item);
     if (!player.cur) player.cur = initCur(ex);
     var c = player.cur, checked = player.checked, res = player.result;
-    var dots = '<div class="dots" role="list">' + player.queue.map(function (id, i) {
-      var r = p[id], cls = r ? (r.s === 'c' ? ' c' : ' w') : '';
-      if (player.mode !== 'all') cls = player.session[id] === true ? ' c' : (player.session[id] === false ? ' w' : '');
-      return '<button class="dot' + cls + (i === player.idx ? ' cur' : '') + '" data-act="jump" data-i="' + i + '" role="listitem" aria-label="' + esc(t('question')) + ' ' + (i + 1) + '">' + (i + 1) + '</button>';
-    }).join('') + '</div>';
+    var dots = playerDots();
 
     var body = '', qtext = '', hint = '';
     var target = course().target;
@@ -1001,7 +1133,7 @@
       c.noAudio = true;
     }
     var meta = '<div class="qmeta"><span>' + esc(t('question')) + ' ' + (player.idx + 1) + ' ' + esc(t('of')) + ' ' + player.queue.length + '</span>' +
-      (player.mode === 'gaps' ? '<span>' + esc(item.topic.level + ' · ' + item.topic.title) + '</span>' : '') + '</div>';
+      (player.mode !== 'all' && player.mode !== 'review' && item.topic ? '<span>' + esc(item.topic.level + ' · ' + item.topic.title) + '</span>' : '') + '</div>';
     var fb = checked ? feedbackHtml(ex, res) : '';
     var isLast = player.idx >= player.queue.length - 1;
     var actions = '<div class="qactions">' +
@@ -1084,6 +1216,20 @@
       '<div class="fb-sec"><h4>' + esc(t('whyWrong')) + '</h4><p>' + md(why) + '</p></div>' + e + '</div>';
   }
   function renderSummary() {
+    if (['learn', 'wpractice', 'srs', 'daily'].indexOf(player.mode) >= 0) {
+      var ids = player.queue.filter(function (q) { return q.indexOf('card:') !== 0; });
+      var uniq = ids.filter(function (q, i) { return ids.indexOf(q) === i; });
+      var okN = uniq.filter(function (q) { return player.session[q] === true; }).length;
+      var pg = DT.daily.progress(ensureProfile(prof()), todayKey());
+      var b2 = '<a class="btn primary" href="#/dashboard">' + esc(t('dashboard')) + '</a>';
+      if (player.mode === 'learn' && player.field && newWords(player.field, 1).length) b2 = '<a class="btn primary" href="#/words/' + player.field + '/learn" data-act="restart-review">✨ ' + esc(t('learnMore')) + '</a>' + b2.replace(' primary', '');
+      if (player.mode !== 'srs' && dueItems(1).length) b2 += '<a class="btn" href="#/review" data-act="restart-review">🔁 ' + esc(t('review')) + '</a>';
+      b2 += '<a class="btn" href="#/words">' + esc(t('words')) + '</a>';
+      return '<div class="card summary"><div style="font-size:2.6rem">' + (pg.reached ? '🎉' : '💪') + '</div><h2>' + esc(t('sessionDone')) + '</h2>' +
+        '<p>' + esc(t('summaryText', { c: okN, n: uniq.length })) + '</p>' +
+        '<p class="muted">' + esc(pg.reached ? t('goalReachedLong') : t('goalProgress', { d: pg.done, g: pg.goal })) + '</p>' +
+        '<div class="btn-row">' + b2 + '</div></div>';
+    }
     var tp = player.topicId ? topicById(player.topicId) : null;
     var title, n, c, open;
     if (player.mode === 'all' && tp) {
@@ -1141,6 +1287,86 @@
       '<nav class="subtabs">' + subtabs.map(function (x) {
         return '<a class="subtab' + (x[0] === tab ? ' active' : '') + '" href="#/topic/' + tp.id + '/' + x[0] + '">' + esc(x[1]) + '</a>';
       }).join('') + '</nav>' + content;
+  }
+
+  /* ================= Wortschatz ================= */
+  function srsBar(st, total) {
+    return '<div class="bar"><span class="ok" style="width:' + pct(st.sicher, total) + '%"></span><span class="fill" style="width:' + pct(st.lernend, total) + '%"></span></div>';
+  }
+  function viewWords() {
+    var p = ensureProfile(prof()), cid = courseId(), all = DT.vocab.wordsOf(K, cid, 'A1');
+    if (!all.length) return '<h1>' + esc(t('words')) + '</h1><div class="card empty"><p>' + esc(t('comingSoon')) + '</p></div>';
+    var st = DT.srs.stats(p, cid, all.map(function (w) { return w.id; }));
+    var dueN = DT.srs.due(p, cid, today(), 999).filter(function (id) { return WI[id]; }).length;
+    var next = (K.wordfields || []).map(function (f) { return f[0]; }).filter(function (f) { return newWords(f, 1).length; })[0];
+    var fields = (K.wordfields || []).map(function (f) {
+      var ws = all.filter(function (w) { return w.topic === f[0]; }); if (!ws.length) return '';
+      var fs = DT.srs.stats(p, cid, ws.map(function (w) { return w.id; }));
+      return '<a class="topic-card" href="#/words/' + f[0] + '"><span class="tc-title">' + esc(fieldName(f[0])) + '</span>' +
+        '<span class="tc-sub">' + ws.length + ' ' + esc(t('wordsN')) + '</span>' + srsBar(fs, ws.length) +
+        '<div class="tc-foot"><span>' + fs.sicher + ' ' + esc(t('known')) + ' · ' + fs.lernend + ' ' + esc(t('learning')) + '</span>' + (fs.neu === ws.length ? '<span class="badge primary">' + esc(t('newBadge')) + '</span>' : '') + '</div></a>';
+    }).join('');
+    return '<h1>📖 ' + esc(t('words')) + ' <span class="lvl lvl-A1">A1</span></h1><p class="muted">' + esc(t('wordsIntro')) + '</p>' +
+      '<div class="card section"><div class="section-head"><b>' + st.sicher + ' / ' + all.length + ' ' + esc(t('wordsKnown')) + '</b><span class="muted small">' + st.lernend + ' ' + esc(t('learning')) + ' · ' + st.neu + ' ' + esc(t('newWordsN')) + '</span></div>' +
+        srsBar(st, all.length) +
+        '<div class="btn-row" style="margin-top:14px">' +
+          (dueN ? '<a class="btn primary" href="#/review">🔁 ' + esc(t('reviewDue', { n: Math.min(dueN, 30) })) + '</a>' : '<span class="badge ok">✓ ' + esc(t('nothingDue')) + '</span>') +
+          (next ? '<a class="btn' + (dueN ? '' : ' primary') + '" href="#/words/' + next + '/learn">✨ ' + esc(t('learnNew')) + ' · ' + esc(fieldName(next)) + '</a>' : '') +
+        '</div></div>' +
+      '<div class="topic-grid section">' + fields + '</div>';
+  }
+  function viewField(field) {
+    var p = ensureProfile(prof()), cid = courseId(), ws = DT.vocab.wordsOf(K, cid, 'A1', field), tgt = course().target;
+    var nNew = ws.filter(function (w) { return !DT.srs.get(p, cid, w.id); }).length;
+    var rows = ws.map(function (w) {
+      var e = DT.srs.get(p, cid, w.id), box = e ? e[DT.srs.B] : -1;
+      var chip = box < 0 ? '<span class="badge">' + esc(t('newBadge')) + '</span>' : (box >= 3 ? '<span class="badge ok">' + esc(t('known')) + '</span>' : '<span class="badge primary">' + esc(t('learning')) + '</span>');
+      return '<tr><td style="width:44px">' + speakBtn(w.t) + '</td><td lang="' + tgt + '"><b>' + esc(w.t) + '</b>' + (w.pl ? '<div class="muted small">' + esc(w.pl) + '</div>' : '') + '</td><td>' + esc(w.n) +
+        (w.ex ? '<div class="muted small" lang="' + tgt + '">' + esc(w.ex) + '</div>' : '') + '</td><td style="text-align:right">' + chip + '</td></tr>';
+    }).join('');
+    return '<div class="crumbs"><a href="#/words">' + esc(t('words')) + '</a></div><h1>' + esc(fieldName(field)) + '</h1>' +
+      '<div class="btn-row" style="margin:10px 0 16px">' +
+        (nNew ? '<a class="btn primary" href="#/words/' + field + '/learn">✨ ' + esc(t('learnNewN', { n: Math.min(5, nNew) })) + '</a>' : '') +
+        (nNew < ws.length ? '<a class="btn" href="#/words/' + field + '/practice">🔁 ' + esc(t('practiceField')) + '</a>' : '') + '</div>' +
+      '<div class="card lesson"><div class="tbl-wrap"><table><tbody>' + rows + '</tbody></table></div></div>';
+  }
+  function viewWordSession(field, kind) {
+    var key = 'words:' + field + ':' + kind;
+    if (!player || player.key !== key) {
+      var p = ensureProfile(prof()), cid = courseId(), q;
+      if (kind === 'learn') q = learnQueue(newWords(field, 5));
+      else q = DT.vocab.shuffle(DT.vocab.wordsOf(K, cid, 'A1', field).filter(function (w) { return DT.srs.get(p, cid, w.id); }), DT.vocab.rng(Date.now())).slice(0, 15).map(function (w) { return wordQ(w.id); });
+      if (!q.length) return viewField(field);
+      newPlayer(key, kind === 'learn' ? 'learn' : 'wpractice', q, null);
+      player.field = field;
+    }
+    return '<div class="crumbs"><a href="#/words">' + esc(t('words')) + '</a> › <a href="#/words/' + field + '">' + esc(fieldName(field)) + '</a></div>' +
+      '<h1>' + esc(kind === 'learn' ? t('learnNew') : t('practiceField')) + '</h1>' + renderPlayer();
+  }
+  function viewReview() {
+    if (!player || player.key !== 'srs') {
+      var q = dueItems(30);
+      if (!q.length) return '<h1>🔁 ' + esc(t('review')) + '</h1><div class="card empty"><div class="big">🌟</div><p>' + esc(t('nothingDue')) + '</p><a class="btn" href="#/words">' + esc(t('words')) + '</a></div>';
+      newPlayer('srs', 'srs', q, null);
+    }
+    return '<h1>🔁 ' + esc(t('reviewTitle')) + '</h1><p class="muted">' + esc(t('reviewIntro')) + '</p>' + renderPlayer();
+  }
+  function viewDaily() {
+    if (!player || player.key !== 'daily') {
+      var q = buildMix();
+      if (!q.length) return '<h1>☀️ ' + esc(t('dailyMix')) + '</h1><div class="card empty"><p>' + esc(t('mixEmpty')) + '</p><a class="btn primary" href="#/lessons">' + esc(t('goLessons')) + '</a></div>';
+      newPlayer('daily', 'daily', q, null);
+    }
+    return '<h1>☀️ ' + esc(t('dailyMix')) + '</h1><p class="muted">' + esc(t('dailyIntro')) + '</p>' + renderPlayer();
+  }
+  function dailyCard() {
+    var p = ensureProfile(prof()), pg = DT.daily.progress(p, todayKey()), sk = DT.daily.streak(p.daily.log, todayKey());
+    var dueN = DT.srs.due(p, courseId(), today(), 999).length;
+    var ring = '<div class="ring" style="--p:' + Math.min(100, pct(pg.done, pg.goal)) + '"><span>' + Math.min(pg.done, 999) + '<small>/' + pg.goal + '</small></span></div>';
+    return '<div class="card daily-card">' + ring + '<div class="dc-text"><h2>' + esc(t('todayGoal')) + (pg.reached ? ' <span class="badge ok">✓ ' + esc(t('done')) + '</span>' : '') + '</h2>' +
+      '<p class="muted small">' + (sk.days ? '🔥 ' + esc(t(sk.days === 1 ? 'streakDay1' : 'streakDays', { n: sk.days })) + (sk.pauseUsedThisWeek ? ' · ' + esc(t('pauseUsed')) : ' · ' + esc(t('pauseFree'))) : esc(t('streakStart'))) +
+      (dueN ? ' · 🔁 ' + esc(t('dueN', { n: Math.min(dueN, 30) })) : '') + '</p></div>' +
+      '<a class="btn primary" href="#/daily">▶ ' + esc(t('startMix')) + '</a></div>';
   }
 
   /* ================= Meine Lücken ================= */
@@ -1228,6 +1454,9 @@
     return '<h1>⚙️ ' + esc(t('settings')) + '</h1>' +
       '<div class="card section"><h2>' + esc(t('theme')) + '</h2>' + themeSeg + '</div>' +
       '<div class="card section"><h2>' + esc(t('course')) + '</h2>' + courseSeg + '</div>' +
+      '<div class="card section"><h2>🎯 ' + esc(t('dailyGoal')) + '</h2><p class="muted small">' + esc(t('dailyGoalIntro')) + '</p><div class="seg">' + [5, 10, 20].map(function (g) {
+        return '<button data-act="set-goal" data-v="' + g + '" class="' + ((ensureProfile(prof()).daily.goal || 10) === g ? 'on' : '') + '">' + g + ' ' + esc(t('perDay')) + '</button>';
+      }).join('') + '</div></div>' +
       '<div class="card section"><h2>' + esc(t('profiles')) + '</h2><p class="muted small">' + esc(t('profilesIntro')) + '</p>' + profiles +
         '<form class="inline-form" data-form="new-profile"><input class="input" name="name" maxlength="30" placeholder="' + esc(t('namePh')) + '" required><button class="btn" type="submit">+ ' + esc(t('newProfile')) + '</button></form></div>' +
       '<div class="card section"><h2>🔊 ' + esc(t('voiceTitle')) + '</h2>' + voiceSettingsHtml() + '</div>' +
@@ -1247,12 +1476,15 @@
     }
     var r = parseHash(), active = r.page, inner;
     // Player zurücksetzen, wenn man die Übungsansicht verlässt
-    var inPlayer = (r.page === 'topic' && (r.b === 'exercises' || r.b === 'review')) || r.page === 'practice';
+    var inPlayer = (r.page === 'topic' && (r.b === 'exercises' || r.b === 'review')) || r.page === 'practice' || r.page === 'review' || r.page === 'daily' || (r.page === 'words' && r.b);
     if (!inPlayer) player = null;
     switch (r.page) {
       case 'lessons': inner = viewLessons(r.a); break;
       case 'topic': inner = viewTopic(r.a, r.b); active = 'lessons'; break;
       case 'gaps': inner = viewGaps(); break;
+      case 'words': inner = !r.a ? viewWords() : (r.b ? viewWordSession(r.a, r.b) : viewField(r.a)); break;
+      case 'review': inner = viewReview(); active = 'words'; break;
+      case 'daily': inner = viewDaily(); active = 'dashboard'; break;
       case 'practice': inner = viewPractice(); active = 'gaps'; break;
       case 'overview': inner = viewOverview(); break;
       case 'settings': inner = viewSettings(); break;
@@ -1268,8 +1500,11 @@
   function afterRender() {
     if (player && !player.done && !player.checked) {
       var it = curEx();
-      if (it && it.ex.say && (it.ex.t === 'listen' || it.ex.t === 'dictation') && player.autoKey !== it.id) {
-        player.autoKey = it.id; setTimeout(function () { speak(it.ex.say, course().tts); }, 250);
+      if (it && it.ex.say && (it.ex.t === 'listen' || it.ex.t === 'dictation') && player.autoKey !== it.id + '@' + player.idx) {
+        player.autoKey = it.id + '@' + player.idx; setTimeout(function () { speak(it.ex.say, course().tts, { auto: true }); }, 250);
+      }
+      if (it && it.kind === 'card' && player.autoKey !== it.id + '@' + player.idx) {
+        player.autoKey = it.id + '@' + player.idx; setTimeout(function () { speak(it.word.t, course().tts, { auto: true }); }, 250);
       }
     }
     var gi = document.getElementById('gap-input');
@@ -1307,6 +1542,19 @@
       case 'pick': if (player && !player.checked) { player.cur.picked.push(+el.getAttribute('data-w')); rerenderPlayerOnly(); } break;
       case 'unpick': if (player && !player.checked) { player.cur.picked.splice(+el.getAttribute('data-k'), 1); rerenderPlayerOnly(); } break;
       case 'check': doCheck(); break;
+      case 'card-next': case 'word-known': {
+        var ci = player && curEx(); if (!ci || ci.kind !== 'card') break;
+        var pp = ensureProfile(prof()), known = act === 'word-known';
+        if (!DT.srs.get(pp, courseId(), ci.word.id)) {
+          DT.srs.introduce(pp, courseId(), ci.word.id, today(), known);
+          // Lernkarten zählen nicht fürs Tagesziel, aber als „neues Wort“ im Tageslog
+          var lk = todayKey(), lg = pp.daily.log[lk] || [0, pp.daily.goal || 10, 0]; lg[2] = (lg[2] || 0) + 1; pp.daily.log[lk] = lg;
+          save();
+        }
+        if (known) player.queue = player.queue.filter(function (q, i) { return i <= player.idx || q.indexOf('w:' + ci.word.id + ':') !== 0; });
+        doNext(); break;
+      }
+      case 'set-goal': { var pg = ensureProfile(prof()); pg.daily.goal = +el.getAttribute('data-v'); save(); render(); break; }
       case 'mic': if (player && !player.checked) {
         var pc = player.cur; pc.listening = true; pc.micError = null; rerenderPlayerOnly();
         startListening(function (alts) { pc.listening = false; pc.heardAlts = alts; pc.heard = alts[0]; doCheck(); },
@@ -1398,7 +1646,12 @@
     var res = evaluate(item.ex, player.cur);
     player.result = res; player.checked = true;
     player.session[item.id] = res.ok;
-    record(item.id, res.ok, res.given);
+    recordAnswer(item, res.ok, res.given);
+    if (item.kind === 'word' && res.ok && item.ex.mode !== 'listen') setTimeout(function () { speak(item.word.t, course().tts, { auto: true }); }, 150);
+    // In Lern-/Wiederholungs-Sitzungen kommt ein Fehler am Ende noch einmal (höchstens einmal)
+    if (!res.ok && player.mode !== 'all' && player.mode !== 'review' && !player.requeued[item.id] && item.kind !== 'card') {
+      player.requeued[item.id] = true; player.queue.push(item.id);
+    }
     rerenderPlayerOnly();
   }
   function doNext() {
@@ -1411,7 +1664,7 @@
   }
   function doExport() {
     var p = prof();
-    var data = { app: 'deutsch-tuerkce', v: 1, exported: new Date().toISOString(), profile: { name: p.name, course: p.course, prog: p.prog } };
+    var data = DT.storage.exportData(p, APP_VERSION);
     var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     var a = document.createElement('a');
     a.href = URL.createObjectURL(blob); a.download = 'fortschritt-ilerleme-' + (p.name || 'profil').replace(/[^\wäöüßçğışı-]+/gi, '_') + '.json';
@@ -1422,18 +1675,11 @@
     var rd = new FileReader();
     rd.onload = function () {
       try {
+        var r = DT.storage.importData(prof(), rd.result, today(), todayKey());
+        if (!r.ok) { toast(t(r.error === 'newer' ? 'importNewer' : 'importFail')); return; }
         backupNow();
-        var d = JSON.parse(rd.result);
-        if (!d || !d.profile || !d.profile.prog) throw new Error('bad');
-        var p = prof();
-        ['de', 'tr'].forEach(function (cid) {
-          var src = d.profile.prog[cid] || {}; p.prog[cid] = p.prog[cid] || {};
-          Object.keys(src).forEach(function (k) {
-            var cur = p.prog[cid][k];
-            if (!cur || (src[k].t || 0) > (cur.t || 0)) p.prog[cid][k] = src[k];
-          });
-        });
-        save(); toast(t('imported')); render();
+        db.profiles[db.active] = ensureProfile(r.profile);
+        save(); player = null; toast(t('imported')); render();
       } catch (e) { toast(t('importFail')); }
     };
     rd.readAsText(file);
