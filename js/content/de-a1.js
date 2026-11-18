@@ -16,7 +16,7 @@
 
 K.add('de-a1-01', {
   lesson: [
-    { p: "Almanca, Latin alfabesini kullanır: 26 harf + **ä, ö, ü** ve **ß**. Türkçeden en büyük farkı, bazı harf gruplarının birlikte farklı okunmasıdır. Almancada **ç, ş, ğ, ı** harfleri yoktur: ç ve ş sesleri harf gruplarıyla yazılır (**tsch**, **sch**), ğ sesi ise Almancada hiç yoktur." },
+    { p: "Almanca, Latin alfabesini kullanır: 26 harf + **ä, ö, ü** ve **ß**. Türkçeden en büyük farkı, bazı harf gruplarının birlikte farklı okunmasıdır. Almancada **ç, ş, ğ, ı** harfleri yoktur: ç ve ş sesleri harf gruplarıyla yazılır (**tsch**, **sch**); **ğ** ve **ı** sesleri ise Almancada yoktur (ı’ya en yakın ses: *bitte*’deki kısa, belirsiz e)." },
     { table: { head: ["Yazılış", "Okunuş (Türkçe)", "Örnek"], rows: [
       ["ei / ai", "ay", "mein (mayn), Mai"],
       ["ie", "uzun i", "Liebe (liibe)"],
@@ -32,7 +32,7 @@ K.add('de-a1-01', {
       ["s + sesli harf", "z", "Sonne (zonne)"],
       ["sp / st (kelime başında)", "şp / şt", "Sport (şport), Straße (ştrase)"],
       ["ß", "ss", "Straße, heißen"],
-      ["ä", "e (açık)", "Käse (keze)"],
+      ["ä", "e (açık)", "Käse (keeze)"],
       ["ö / ü", "Türkçedeki gibi", "schön, müde"]
     ] } },
     { tip: "**Önemli:** Almancada bütün isimler (Nomen) büyük harfle yazılır: *der Tisch, die Stadt, das Haus*." },
@@ -47,7 +47,7 @@ K.add('de-a1-01', {
       why: { 0: "“sch” üç harf birlikte tek bir ses verir: ş.", 2: "“ç” sesi Almancada “tsch” yazılır (Deutsch).", 3: "Harf harf okunmaz; “sch” birlikte “ş” olur." },
       e: "**sch = ş** → “şule”." },
     { id: "de-a1-01.3", t: "mc", q: "“Zeit” (zaman) kelimesindeki “z” nasıl okunur?", o: ["z", "s", "ts", "ç"], a: 2,
-      why: { 0: "Türkçedeki “z” sesi Almancada genelde sesli harften önceki “s” ile yazılır (Sonne).", 1: "“s” sesi “ß” veya “ss” ile yazılır.", 3: "“ç” sesi “tsch” ile yazılır." },
+      why: { 0: "Türkçedeki “z” sesi Almancada genelde sesli harften önceki “s” ile yazılır (Sonne).", 1: "Sert “s” sesi “ß”, “ss” ya da kelime sonundaki “s” ile yazılır (Haus). Burada “z” var → ts.", 3: "“ç” sesi “tsch” ile yazılır." },
       e: "Almanca **z = ts** → “tsayt”." },
     { id: "de-a1-01.4", t: "mc", q: "“Vater” (baba) kelimesindeki “V” nasıl okunur?", o: ["v", "f", "w", "b"], a: 1,
       why: { 0: "Almanca kelimelerde “v” çoğunlukla **f** okunur. Türkçe “v” sesi Almancada “w” ile yazılır.", 2: "“w” bir harftir; Almancada zaten “v” okunur.", 3: "“b” ile ilgisi yok." },
@@ -58,12 +58,12 @@ K.add('de-a1-01', {
     { id: "de-a1-01.6", t: "mc", q: "“heute” (bugün) nasıl okunur?", o: ["heute", "hoyte", "höte", "hayte"], a: 1,
       why: { 0: "“eu” harf harf okunmaz.", 2: "“ö” sesi “ö” ile yazılır; “eu” farklıdır.", 3: "“ay” sesi “ei” ile yazılır." },
       e: "**eu = oy** → “hoyte”. Aynı ses **äu** ile de yazılır: Häuser (hoyzer)." },
-    { id: "de-a1-01.7", t: "mc", q: "Almancada hangi kelimeler HER ZAMAN büyük harfle başlar?", o: ["Sadece özel isimler (Ali, Berlin)", "Bütün isimler (Nomen)", "Bütün fiiller", "Hiçbiri, Türkçedeki gibi"], a: 1,
-      why: { 0: "Türkçede böyle; ama Almancada **tüm** isimler büyük yazılır: der Tisch, die Liebe.", 2: "Fiiller küçük yazılır: gehen, lernen (cümle başı hariç).", 3: "Türkçeden farklı olarak Almancada isimler büyük harfle yazılır." },
+    { id: "de-a1-01.7", t: "mc", q: "Almancada hangi kelimeler HER ZAMAN büyük harfle başlar?", o: ["Sadece özel isimler (Ali, Berlin)", "Bütün isimler (Nomen)", "Bütün fiiller", "Sadece cümlenin ilk kelimesi"], a: 1,
+      why: { 0: "Türkçede böyle; ama Almancada **tüm** isimler büyük yazılır: der Tisch, die Liebe.", 2: "Fiiller küçük yazılır: gehen, lernen (cümle başı hariç).", 3: "Cümle başı her dilde büyük yazılır; ama Almancada ayrıca **bütün isimler** büyük harfle başlar." },
       e: "Almancada **her isim** büyük harfle başlar: *der Hund, die Zeit, das Wasser*." },
     { id: "de-a1-01.8", t: "mc", q: "“Sport” kelimesinin başındaki “sp” nasıl okunur?", o: ["sp", "şp", "zp", "s-p ayrı"], a: 1,
       why: { 0: "Kelime başında “sp” ve “st” → “şp” ve “şt” okunur.", 2: "“s” sadece tek başına bir sesli harften önce “z” olur (Sonne).", 3: "Ayrı okunmaz." },
-      e: "Kelime/hece başında **sp = şp**, **st = şt**: Sport (şport), Straße (ştrase), verstehen (ferştehen)." },
+      e: "Kelime ya da kelime kökü başında **sp = şp**, **st = şt**: Sport (şport), Straße (ştrase), ver**st**ehen (ver + stehen → ferştehen). Kelimenin içinde ise normal okunur: Fenster (fenster)." },
     { id: "de-a1-01.9", t: "gap", q: "“ß” yerine (ör. İsviçre’de) hangi iki harf yazılır? Stra___e", a: ["ss"],
       wrong: { "s": "Tek “s” yetmez – “ß” keskin, uzun bir s sesidir ve **ss** ile değiştirilir.", "sz": "Adı “Eszett” olsa da yerine **ss** yazılır." },
       e: "**ß = ss** → Strasse. Almanya’da “ß” uzun sesliden ve ei/au gibi çift seslilerden sonra (Straße, heißen), “ss” ise kısa sesliden sonra kullanılır (Wasser)." },
@@ -76,15 +76,15 @@ K.add('de-a1-01', {
 
 K.add('de-a1-02', {
   lesson: [
-    { p: "Almancada selamlaşma günün saatine göre değişir. Ayrıca **du** (sen – samimi) ve **Sie** (siz – resmi) ayrımı çok önemlidir. Tanımadığın yetişkinlere, iş yerinde ve resmî dairelerde **Sie** kullanılır." },
+    { p: "Almancada selamlaşma günün saatine göre değişir. Ayrıca **du** (sen – samimi) ve **Sie** (siz – resmî) ayrımı çok önemlidir. Tanımadığın yetişkinlere, iş yerinde ve resmî dairelerde **Sie** kullanılır." },
     { table: { head: ["Almanca", "Türkçe", "Ne zaman?"], rows: [
       ["Hallo!", "Merhaba!", "her zaman, samimi"],
       ["Guten Morgen!", "Günaydın!", "sabah (~11’e kadar)"],
-      ["Guten Tag!", "İyi günler! / Merhaba", "gündüz, resmi"],
+      ["Guten Tag!", "İyi günler! / Merhaba", "gündüz, resmî"],
       ["Guten Abend!", "İyi akşamlar!", "akşam selamlaşırken"],
       ["Gute Nacht!", "İyi geceler!", "sadece yatmadan önce vedalaşırken"],
       ["Tschüss!", "Hoşça kal! / Görüşürüz!", "samimi vedalaşma"],
-      ["Auf Wiedersehen!", "Hoşça kalın!", "resmi vedalaşma"]
+      ["Auf Wiedersehen!", "Hoşça kalın!", "resmî vedalaşma"]
     ] } },
     { h: "Kendini tanıtmak" },
     { table: { head: ["Soru (du)", "Soru (Sie)", "Cevap"], rows: [
@@ -101,16 +101,16 @@ K.add('de-a1-02', {
     { id: "de-a1-02.1", t: "mc", q: "Sabah saat 8’de ofise giriyorsun. Ne dersin?", o: ["Gute Nacht!", "Guten Abend!", "Guten Morgen!", "Tschüss!"], a: 2,
       why: { 0: "“Gute Nacht” sadece yatmadan önce vedalaşırken söylenir.", 1: "“Guten Abend” akşam selamıdır.", 3: "“Tschüss” vedalaşmadır, selamlaşma değil." },
       e: "Sabah selamı: **Guten Morgen!** (Günaydın)." },
-    { id: "de-a1-02.2", t: "mc", q: "Doktoruna adını resmi şekilde soruyorsun:", o: ["Wie heißt du?", "Wie heißen Sie?", "Wie heiße Sie?", "Wer bist du?"], a: 1,
+    { id: "de-a1-02.2", t: "mc", q: "Doktoruna adını resmî şekilde soruyorsun:", o: ["Wie heißt du?", "Wie heißen Sie?", "Wie heiße Sie?", "Wer bist du?"], a: 1,
       why: { 0: "Bu samimi “du” formu. Doktorla **Sie** kullanılır.", 2: "“Sie” ile fiil **heißen** olur (-en), “heiße” değil.", 3: "Bu hem samimi hem de kaba sayılabilir (“Sen kimsin?”)." },
-      e: "Resmi: **Wie heißen Sie?** – “Sie” ile fiil mastar gibi çekilir: heißen." },
+      e: "Resmî: **Wie heißen Sie?** – “Sie” ile fiil mastar gibi çekilir: heißen." },
     { id: "de-a1-02.3", t: "gap", q: "Ich ___ aus der Türkei. (kommen)", a: ["komme"],
       wrong: { "kommen": "“kommen” mastar hâlidir; “ich” ile fiil **-e** alır: komme.", "kommst": "“kommst” “du” içindir. ich → **komme**.", "kommt": "“kommt” er/sie/es veya ihr içindir. ich → **komme**." },
       e: "**ich komme** – “ich” ile fiil kökü + **-e**." },
     { id: "de-a1-02.4", t: "gap", q: "Ich komme aus ___ Türkei.", a: ["der"],
       wrong: { "die": "“die Türkei” doğru, ama **aus** edatından sonra Dativ gelir → die → **der**.", "dem": "“dem” eril/nötr Dativ’dir. Türkei dişil → **der**." },
       e: "“aus” her zaman Dativ ister. Dişil “die Türkei” → Dativ’de **der**: *aus der Türkei*." },
-    { id: "de-a1-02.5", t: "order", q: "Cümleyi kur: “Nasılsınız?” (resmi)", w: ["geht", "Ihnen", "Wie", "es"], a: ["Wie geht es Ihnen"],
+    { id: "de-a1-02.5", t: "order", q: "Cümleyi kur: “Nasılsınız?” (resmî)", w: ["geht", "Ihnen", "Wie", "es"], a: ["Wie geht es Ihnen"],
       e: "Soru kelimesi (Wie) + fiil (geht) + es + Ihnen → **Wie geht es Ihnen?**" },
     { id: "de-a1-02.6", t: "match", q: "Eşleştir:", p: [["Hallo", "Merhaba"], ["Tschüss", "Hoşça kal"], ["Danke", "Teşekkürler"], ["Entschuldigung", "Affedersiniz"], ["Gute Nacht", "İyi geceler"]],
       e: "Bu kalıplar günlük hayatta en sık kullanılanlardır." },
@@ -123,7 +123,7 @@ K.add('de-a1-02', {
     { id: "de-a1-02.9", t: "speak", say: "Guten Abend, wie geht es Ihnen?",
       e: "**geht** ve **Ihnen**’deki h okunmaz, sadece sesliyi uzatır: “geet”, “iinen”. **Guten**’daki u uzundur: “guuten”. **wie** = “vii” (w = v, ie = uzun i). Kibar bir soru olduğu için sesin sonda hafifçe yükselebilir." },
     { id: "de-a1-02.10", t: "speak", say: "Freut mich, Sie kennenzulernen.",
-      e: "**Freut** = “froyt” (eu = oy). **mich**’teki ch yumuşaktır, “miç” değil. **Sie** = “zii”: kelime başında sesliden önce s, z okunur. Uzun kelimeyi parçalara böl: ken-nen-**tsu**-ler-nen (z = ts); vurgu ilk hecede: **KEN**-nen-zu-ler-nen." }
+      e: "**Freut** = “froyt” (eu = oy). **mich**’teki ch yumuşaktır, “miç” değil. **Sie** = “zii”: kelime başında sesliden önce s, z okunur. Uzun kelimeyi parçalara böl: ken-nen-tsu-ler-nen (z = ts). Vurgu ilk hecede: **KEN**-nen-tsu-ler-nen." }
   ]
 });
 
@@ -132,10 +132,10 @@ K.add('de-a1-03', {
     { p: "Türkçede “öğrenciyim” derken **-im** ekini kullanırız. Almancada ise ayrı bir fiil vardır: **sein** (olmak). Bu fiil düzensizdir – ezberlenmelidir." },
     { table: { head: ["Zamir", "Türkçe", "sein"], rows: [
       ["ich", "ben", "**bin**"], ["du", "sen", "**bist**"], ["er / sie / es", "o (eril / dişil / nötr)", "**ist**"],
-      ["wir", "biz", "**sind**"], ["ihr", "siz (samimi, çoğul)", "**seid**"], ["sie", "onlar", "**sind**"], ["Sie", "Siz (resmi)", "**sind**"]
+      ["wir", "biz", "**sind**"], ["ihr", "siz (samimi, çoğul)", "**seid**"], ["sie", "onlar", "**sind**"], ["Sie", "Siz (resmî)", "**sind**"]
     ] } },
     { tip: "Türkçede tek bir “o” var. Almancada üç tane: **er** (eril), **sie** (dişil), **es** (nötr). Eşyalar için de kullanılır: *Der Tisch ist groß → **Er** ist groß.*" },
-    { warn: "**sie** üç anlama gelebilir: *sie ist* = o (kadın) … / *sie sind* = onlar … / *Sie sind* = Siz (resmi) … Fiile ve büyük harfe bak!" },
+    { warn: "**sie** üç anlama gelebilir: *sie ist* = o (kadın) … / *sie sind* = onlar … / *Sie sind* = Siz (resmî) … Fiile ve büyük harfe bak!" },
     { tip: "Meslekler artikelsiz söylenir: *Ich bin Lehrer.* (öğretmenim) – *Sie ist Ärztin.* (o doktordur)" },
     { ex: [["Ich bin Student.", "Ben öğrenciyim."], ["Bist du müde?", "Yorgun musun?"], ["Wir sind aus Ankara.", "Biz Ankaralıyız."], ["Sie ist Ärztin.", "O doktordur. (kadın)"]] }
   ],
@@ -155,11 +155,11 @@ K.add('de-a1-03', {
     { id: "de-a1-03.5", t: "mc", q: "Er ___ Lehrer.", o: ["bin", "bist", "ist", "sind"], a: 2,
       why: { 0: "“bin” ich içindir.", 1: "“bist” du içindir.", 3: "“sind” wir/sie/Sie içindir." },
       e: "**er ist** – o …-dir." },
-    { id: "de-a1-03.6", t: "mc", q: "“Sind Sie Herr Yılmaz?” – Buradaki “Sie” ne demek?", o: ["onlar", "o (kadın)", "Siz (resmi)", "sen"], a: 2,
+    { id: "de-a1-03.6", t: "mc", q: "“Sind Sie Herr Yılmaz?” – Buradaki “Sie” ne demek?", o: ["onlar", "o (kadın)", "Siz (resmî)", "sen"], a: 2,
       why: { 0: "“onlar” anlamında olsaydı cümle ortasında küçük yazılırdı: sind sie …", 1: "“o (kadın)” olsaydı fiil **ist** olurdu.", 3: "“sen” = du." },
-      e: "Cümle ortasında büyük **Sie** = resmi **Siz**. Fiil: **sind**." },
-    { id: "de-a1-03.7", t: "mc", q: "“Sie ist Ärztin.” – Buradaki “Sie” ne demek?", o: ["Siz (resmi)", "o (kadın)", "onlar"], a: 1,
-      why: { 0: "Resmi “Sie” ile fiil **sind** olur, “ist” değil.", 2: "“onlar” ile fiil **sind** olurdu." },
+      e: "Cümle ortasında büyük **Sie** = resmî **Siz**. Fiil: **sind**." },
+    { id: "de-a1-03.7", t: "mc", q: "“Sie ist Ärztin.” – Buradaki “Sie” ne demek?", o: ["Siz (resmî)", "o (kadın)", "onlar"], a: 1,
+      why: { 0: "Resmî “Sie” ile fiil **sind** olur, “ist” değil.", 2: "“onlar” ile fiil **sind** olurdu." },
       e: "Fiil **ist** → tekil 3. şahıs → **sie = o (kadın)**. Cümle başında olduğu için büyük yazılmış." },
     { id: "de-a1-03.8", t: "order", q: "Cümleyi kur: “Ben yorgun değilim.”", w: ["nicht", "Ich", "müde", "bin"], a: ["Ich bin nicht müde"],
       e: "Özne + **bin** + nicht + sıfat → *Ich bin nicht müde.*" },
@@ -172,7 +172,7 @@ K.add('de-a1-03', {
 
 K.add('de-a1-04', {
   lesson: [
-    { p: "Türkçede artikel (tanımlık) yoktur. Almancada her ismin bir **cinsiyeti** vardır ve bu, artikelden anlaşılır: **der** (eril), **die** (dişil), **das** (nötr). Çoğulda artikel her zaman **die**’dır." },
+    { p: "Türkçede artikel (tanımlık) yoktur. Almancada her ismin bir **cinsiyeti** vardır ve bu, artikelden anlaşılır: **der** (eril), **die** (dişil), **das** (nötr). Çoğulda artikel her zaman **die**’dir." },
     { tip: "Altın kural: Kelimeyi **her zaman artikeliyle birlikte** ezberle! Sadece “Tisch” değil, “**der** Tisch”." },
     { table: { head: ["", "eril", "dişil", "nötr", "çoğul"], rows: [
       ["belirli", "**der** Mann", "**die** Frau", "**das** Kind", "**die** Kinder"],
@@ -257,7 +257,7 @@ K.add('de-a1-05', {
       why: { 0: "“fahrt” ihr formudur. er ile kök değişir: a → ä.", 2: "“fährst” du içindir.", 3: "“fahren” wir/sie/Sie formudur." },
       e: "fahren → du **fährst**, er **fährt** (a → ä)." },
     { id: "de-a1-05.7", t: "gap", q: "Sie (o, kadın) ___ ein Auto. (haben)", a: ["hat"],
-      wrong: { "habt": "“habt” ihr içindir. sie (o) → **hat**.", "haben": "“haben” sadece “onlar/Siz” anlamındaki sie/Sie ile kullanılır. Burada “o (kadın)” → **hat**.", "hast": "“hast” du içindir." },
+      wrong: { "habt": "“habt” ihr içindir. sie (o) → **hat**.", "haben": "“haben” wir, sie (onlar) ve Sie (Siz) içindir. Burada “o (kadın)” → **hat**.", "hast": "“hast” du içindir." },
       e: "haben düzensizdir: du **hast**, er/sie **hat**." },
     { id: "de-a1-05.8", t: "gap", q: "Ihr ___ heute lange. (arbeiten)", a: ["arbeitet"],
       wrong: { "arbeitt": "Kök -t ile bitiyorsa araya **e** girer: ihr arbeit**e**t.", "arbeiten": "Mastar/wir formu. ihr → **arbeitet**." },
@@ -307,7 +307,7 @@ K.add('de-a1-06', {
     { id: "de-a1-06.6", t: "order", q: "Cümleyi kur: “Yarın futbol oynuyorum.” (“Morgen” ile başla)", w: ["spiele", "Fußball", "Morgen", "ich"], a: ["Morgen spiele ich Fußball"],
       e: "Morgen (1) – **spiele** (2) – ich – Fußball." },
     { id: "de-a1-06.7", t: "gap", q: "___ alt bist du? – Ich bin 25.", a: ["Wie"],
-      wrong: { "was": "Türkçede “Kaç yaşındasın?” deriz; Almancada **Wie alt** bist du? (Ne kadar yaşlısın?)", "wie viel": "Yaş için “wie viel” değil, **wie alt** kullanılır." },
+      wrong: { "was": "Türkçede “Kaç yaşındasın?” deriz; Almancada **Wie alt** bist du? (kelimesi kelimesine “Ne kadar yaşlısın?” – ama anlamı sadece “Kaç yaşındasın?”, kaba değil)", "wie viel": "Yaş için “wie viel” değil, **wie alt** kullanılır." },
       e: "Yaş sorarken: **Wie alt** bist du?" },
     { id: "de-a1-06.8", t: "mc", q: "___ lernst du Deutsch? – Weil ich in Deutschland arbeite.", o: ["Wann", "Warum", "Was", "Wohin"], a: 1,
       why: { 0: "Wann = ne zaman.", 2: "Was = ne.", 3: "Wohin = nereye." },
@@ -425,7 +425,7 @@ K.add('de-a1-09', {
       ["3:00", "drei Uhr", "saat üç"], ["3:15", "Viertel nach drei", "üçü çeyrek geçiyor"], ["3:30", "**halb vier**", "üç buçuk"],
       ["3:45", "Viertel vor vier", "dörde çeyrek var"], ["3:10", "zehn nach drei", "üçü on geçiyor"], ["3:50", "zehn vor vier", "dörde on var"]
     ] } },
-    { warn: "**halb vier = 3:30!** Almanlar “dördün yarısı” der, yani bir **sonraki** saate göre söylerler. Türkler için en sık hata!" }
+    { warn: "**halb vier = 3:30!** Almanlar “halb vier” der: **dörde yarım saat var**, yani bir **sonraki** saate göre söylerler. Türkler için en sık hata!" }
   ],
   exercises: [
     { id: "de-a1-09.1", t: "mc", q: "21", o: ["zwanzigeins", "einundzwanzig", "zweiundzwanzig", "einszwanzig"], a: 1,
@@ -441,7 +441,7 @@ K.add('de-a1-09', {
       wrong: { "sechszehn": "16’da “s” düşer: **sechzehn**.", "sechzig": "Bu 60. 16 = **sechzehn**." },
       e: "16 = **sechzehn** (sechs → sech)." },
     { id: "de-a1-09.5", t: "mc", q: "“Es ist halb acht.” Saat kaç?", o: ["8:30", "7:30", "7:50", "8:15"], a: 1,
-      why: { 0: "En sık yapılan hata! “halb acht” = sekizin yarısı → **7:30**.", 2: "7:50 = zehn vor acht.", 3: "8:15 = Viertel nach acht." },
+      why: { 0: "En sık yapılan hata! “halb acht” = **sekize yarım saat var** → **7:30**.", 2: "7:50 = zehn vor acht.", 3: "8:15 = Viertel nach acht." },
       e: "**halb + sonraki saat**: halb acht = **7:30**." },
     { id: "de-a1-09.6", t: "mc", q: "4:45", o: ["Viertel nach vier", "Viertel vor fünf", "halb fünf", "Viertel vor vier"], a: 1,
       why: { 0: "Bu 4:15.", 2: "Bu 4:30.", 3: "Bu 3:45." },
@@ -465,7 +465,7 @@ K.add('de-a1-10', {
     { table: { head: ["Kişi", "Türkçe", "eril / nötr", "dişil / çoğul"], rows: [
       ["ich", "benim", "mein", "meine"], ["du", "senin", "dein", "deine"], ["er / es", "onun (erkek / nötr)", "sein", "seine"],
       ["sie", "onun (kadın)", "ihr", "ihre"], ["wir", "bizim", "unser", "unsere"], ["ihr", "sizin", "euer", "eure"],
-      ["sie", "onların", "ihr", "ihre"], ["Sie", "Sizin (resmi)", "Ihr", "Ihre"]
+      ["sie", "onların", "ihr", "ihre"], ["Sie", "Sizin (resmî)", "Ihr", "Ihre"]
     ] } },
     { tip: "Sonları “ein” gibi değişir: mein Vater (der), **meine** Mutter (die), mein Kind (das), **meine** Eltern (çoğul). Akkusativ eril: **meinen** Vater." },
     { warn: "“onun” derken **sahibin** cinsiyetine bak: Ali → **sein**, Ayşe → **ihr**. *Ayşe und ihr Mann* (Ayşe ve kocası)." },
@@ -488,15 +488,15 @@ K.add('de-a1-10', {
       wrong: { "mein": "Eril isim nesne (Akkusativ) olunca → **meinen**.", "meine": "Schlüssel eril → **meinen**." },
       e: "Eril + Akkusativ: **meinen**." },
     { id: "de-a1-10.6", t: "mc", q: "Kinder, wo ist ___ Lehrer? (sizin – çocuklara)", o: ["euer", "eure", "Ihr"], a: 0,
-      why: { 1: "“Lehrer” eril → ek yok: **euer**.", 2: "“Ihr” resmi Siz içindir; çocuklarla konuşurken kullanılmaz." },
+      why: { 1: "“Lehrer” eril → ek yok: **euer**.", 2: "“Ihr” resmî Siz içindir; çocuklarla konuşurken kullanılmaz." },
       e: "ihr (siz, samimi) → **euer** (eril)." },
-    { id: "de-a1-10.7", t: "mc", q: "Herr Schmidt, ist das ___ Auto? (Sizin – resmi)", o: ["dein", "Ihr", "ihr"], a: 1,
+    { id: "de-a1-10.7", t: "mc", q: "Herr Schmidt, ist das ___ Auto? (Sizin – resmî)", o: ["dein", "Ihr", "ihr"], a: 1,
       why: { 0: "“dein” samimidir (senin).", 2: "Küçük “ihr” = onun (kadın) / onların." },
-      e: "Resmi “Sizin” → büyük **Ihr**." },
+      e: "Resmî “Sizin” → büyük **Ihr**." },
     { id: "de-a1-10.8", t: "speak", say: "Ist das deine Tasche oder meine?",
       e: "**deine** = “dayne”, **meine** = “mayne” (ei = ay). Sondaki **-e**’yi yutma: dişil isimde (die Tasche) iyelik kelimesinin sonunu o gösterir. **Tasche** = “taşe”. **oder**’in sonundaki r “a” gibi okunur → “ooda”." },
     { id: "de-a1-10.9", t: "speak", say: "Unser Sohn spielt gern Fußball.",
-      e: "**unser**: sondaki -er “a”ya döner → “unza”; r’yi Türkçedeki gibi yuvarlama. **Sohn** = “zoon” (s sesliden önce z, h okunmaz, o uzun). **spielt** = “şpiilt”. **Fußball** = “fuusbal”: ß = ss, u uzun." }
+      e: "**unser**: sondaki -er “a”ya döner → “unza”; r’yi Türkçedeki gibi titretme. **Sohn** = “zoon” (s sesliden önce z, h okunmaz, o uzun). **spielt** = “şpiilt”. **Fußball** = “fuusbal”: ß = ss, u uzun." }
   ]
 });
 
@@ -549,7 +549,7 @@ K.add('de-a1-12', {
     { p: "Bazı fiillerin başında ayrılabilen bir ön ek vardır: **auf**stehen, **an**rufen, **ein**kaufen. Çekimli cümlede bu ön ek **cümlenin sonuna** gider." },
     { table: { head: ["Mastar", "Türkçe", "Cümle"], rows: [
       ["aufstehen", "kalkmak", "Ich **stehe** um 7 Uhr **auf**."],
-      ["anrufen", "telefon etmek", "Ich **rufe** dich morgen **an**."],
+      ["anrufen", "(telefonla) aramak", "Ich **rufe** dich morgen **an**."],
       ["einkaufen", "alışveriş yapmak", "Wir **kaufen** im Supermarkt **ein**."],
       ["fernsehen", "televizyon izlemek", "Er **sieht** jeden Abend **fern**."],
       ["mitkommen", "birlikte gelmek", "**Kommst** du **mit**?"],

@@ -187,7 +187,7 @@ K.addVocab('de-a1', [
   { id: "de-a1.w168", t: "links", pos: "adv", n: "solda; sola", ex: "Das Café ist links.", exn: "Kafe solda.", topic: "city" },
   { id: "de-a1.w169", t: "rechts", pos: "adv", n: "sağda; sağa", ex: "Gehen Sie hier rechts.", exn: "Buradan sağa dönün.", topic: "city" },
   { id: "de-a1.w170", t: "geradeaus", pos: "adv", n: "dümdüz, düz ileri", ex: "Gehen Sie immer geradeaus.", exn: "Hep dümdüz gidin.", topic: "city" },
-  { id: "de-a1.w171", t: "in der Nähe", pos: "phr", n: "yakında, yakınlarda", ex: "Gibt es hier in der Nähe einen Supermarkt?", exn: "Buralarda yakında bir süpermarket var mı?", topic: "city" },
+  { id: "de-a1.w171", t: "in der Nähe", pos: "phr", n: "yakında (yakın bir yerde), yakınlarda, civarda", ex: "Gibt es hier in der Nähe einen Supermarkt?", exn: "Yakınlarda bir süpermarket var mı?", topic: "city" },
   { id: "de-a1.w172", t: "weit", pos: "adj", n: "uzak", ex: "Ist es weit bis zum Bahnhof?", exn: "Gara kadar uzak mı?", topic: "city", note: "Zıttı: nah (yakın). „weit weg“ = çok uzakta." },
   { id: "de-a1.w173", t: "fahren", pos: "v", n: "(araçla) gitmek; (araç) sürmek", ex: "Wir fahren morgen nach Berlin.", exn: "Yarın Berlin'e gidiyoruz.", topic: "city", note: "Kök ünlüsü değişir: du fährst, er fährt. Yürüyerek gidiyorsan: gehen." },
   { id: "de-a1.w174", t: "der Weg", pl: "die Wege", pos: "n", n: "yol", ex: "Ich frage nach dem Weg.", exn: "Yolu soruyorum.", topic: "city", note: "„e“ uzun okunur: Weg = veek." },
@@ -236,7 +236,7 @@ K.addVocab('de-a1', [
   { id: "de-a1.w213", t: "die E-Mail", pl: "die E-Mails", pos: "n", n: "e-posta", ex: "Ich schreibe Ihnen eine E-Mail.", exn: "Size bir e-posta yazacağım.", topic: "work", note: "Okunuşu: iimeyl. Güney Almanya, Avusturya ve İsviçre'de „das E-Mail“ da denir." },
   { id: "de-a1.w214", t: "der Computer", pl: "die Computer", pos: "n", n: "bilgisayar", ex: "Der Computer ist zu langsam.", exn: "Bilgisayar çok yavaş.", topic: "work" },
   { id: "de-a1.w215", t: "das Amt", pl: "die Ämter", pos: "n", n: "resmî daire", ex: "Ich muss morgen zum Amt.", exn: "Yarın resmî daireye gitmem lazım.", topic: "work", note: "Örnekler: das Bürgeramt (belediyenin vatandaş hizmetleri bürosu), das Finanzamt (vergi dairesi)." },
-  { id: "de-a1.w216", t: "unterschreiben", pos: "v", n: "imzalamak", ex: "Bitte unterschreiben Sie hier.", exn: "Lütfen buraya imzalayın.", topic: "work", note: "Bu fiil ayrılmaz: Ich unterschreibe. İmza: die Unterschrift." },
+  { id: "de-a1.w216", t: "unterschreiben", pos: "v", n: "imzalamak", ex: "Bitte unterschreiben Sie hier.", exn: "Lütfen burayı imzalayın.", topic: "work", note: "Bu fiil ayrılmaz: Ich unterschreibe. İmza: die Unterschrift." },
 
   /* ---------- body: Körper & Gesundheit ---------- */
   { id: "de-a1.w217", t: "der Kopf", pl: "die Köpfe", pos: "n", n: "baş, kafa", ex: "Mein Kopf tut weh.", exn: "Başım ağrıyor.", topic: "body", note: "Ağrıyı söylemenin kolay yolu: … tut weh (tekil), … tun weh (çoğul)." },
