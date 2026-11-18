@@ -5,6 +5,26 @@
 window.KOPRU = {
   content: {},
   add: function (id, data) { this.content[id] = data; },
+  vocab: {},     // Wortschatz je Kurs+Niveau, z. B. vocab['de-a1'] = [ {id, t, n, …}, … ]
+  addVocab: function (key, list) { this.vocab[key] = (this.vocab[key] || []).concat(list); },
+  // Wortfelder für den Wortschatz (gleich für beide Kurse): [id, Deutsch, Türkisch]
+  wordfields: [
+    ['greet', 'Begrüßung & Höflichkeit', 'Selamlaşma ve nezaket'],
+    ['people', 'Personen & Familie', 'Kişiler ve aile'],
+    ['numbers', 'Zahlen, Zeit & Kalender', 'Sayılar, zaman ve takvim'],
+    ['food', 'Essen & Trinken', 'Yiyecek ve içecek'],
+    ['home', 'Wohnen & Haushalt', 'Ev ve ev işleri'],
+    ['city', 'Stadt, Wege & Verkehr', 'Şehir, yol ve ulaşım'],
+    ['shop', 'Einkaufen & Kleidung', 'Alışveriş ve giyim'],
+    ['work', 'Arbeit, Schule & Ämter', 'İş, okul ve resmî daireler'],
+    ['body', 'Körper & Gesundheit', 'Vücut ve sağlık'],
+    ['free', 'Freizeit, Wetter & Natur', 'Boş zaman, hava ve doğa'],
+    ['verbs', 'Wichtige Verben', 'Önemli fiiller'],
+    ['adj', 'Eigenschaften', 'Sıfatlar'],
+    ['small', 'Kleine Wörter', 'Küçük kelimeler']
+  ],
+  dialogs: {},   // Alltagsdialoge, z. B. dialogs['de-a1-d01'] = { level, title, lines, questions }
+  addDialog: function (id, d) { d.id = id; this.dialogs[id] = d; },
 
   levelNames: {
     A1: { de: 'Anfänger', tr: 'Başlangıç' },
