@@ -153,7 +153,7 @@ K.addDialog('tr-a1-d05', {
 K.addDialog('tr-a1-d06', {
   level: 'A1', title: 'Auf dem Markt', sub: 'Pazarda',
   lines: [
-    { s: "Satıcı", g: "m", t: "Gel abla, gel! Domatesler çok taze!", n: "Kommen Sie, kommen Sie! Die Tomaten sind ganz frisch!" },
+    { s: "Satıcı", g: "m", t: "Gel abla, gel! Domatesler çok taze!", n: "Komm her, komm her! Die Tomaten sind ganz frisch!" },
     { s: "Müşteri", g: "f", t: "Domatesin kilosu kaç lira?", n: "Was kostet das Kilo Tomaten?" },
     { s: "Satıcı", g: "m", t: "Kilosu altmış lira.", n: "Sechzig Lira das Kilo." },
     { s: "Müşteri", g: "f", t: "Çok pahalı! Elli olmaz mı?", n: "Das ist aber teuer! Geht es nicht für fünfzig?" },
@@ -161,7 +161,7 @@ K.addDialog('tr-a1-d06', {
     { s: "Müşteri", g: "f", t: "Tamam, iki kilo ver. Salatalık da istiyorum.", n: "Okay, gib mir zwei Kilo. Und ich möchte noch Gurken." },
     { s: "Satıcı", g: "m", t: "Salatalık da var. Kaç tane?", n: "Gurken haben wir auch. Wie viele?" },
     { s: "Müşteri", g: "f", t: "Beş tane yeter.", n: "Fünf reichen." },
-    { s: "Satıcı", g: "m", t: "Hepsi yüz otuz lira. Afiyet olsun abla!", n: "Alles zusammen hundertdreißig Lira. Lassen Sie es sich schmecken!" },
+    { s: "Satıcı", g: "m", t: "Hepsi yüz otuz lira. Afiyet olsun abla!", n: "Alles zusammen hundertdreißig Lira. Lass es dir schmecken!" },
     { s: "Müşteri", g: "f", t: "Sağ ol, hayırlı işler!", n: "Danke, gute Geschäfte!" }
   ],
   questions: [
@@ -199,7 +199,7 @@ K.addDialog('tr-a1-d07', {
       why: { 1: "Er sagt „üç gündür“ – gün = Tag. Woche hieße „hafta“.", 2: "Gestern (dün) sagt er nicht – es sind schon drei Tage." },
       e: "„Üç gündür“ = seit drei Tagen. Die Endung **-dür/-dir** drückt hier „seit“ aus." },
     { id: "tr-a1-d07.q2", t: "mc", q: "Was bedeutet „Geçmiş olsun“?", o: ["Gute Besserung!", "Herzlich willkommen!", "Viel Erfolg!"], a: 0,
-      why: { 1: "Willkommen heißt „Hoş geldiniz“.", 2: "Viel Erfolg heißt „Başarılar“ oder „Kolay gelsin“ (bei der Arbeit)." },
+      why: { 1: "Willkommen heißt „Hoş geldiniz“.", 2: "Viel Erfolg heißt „Başarılar“. Zu jemandem, der gerade arbeitet, sagt man „Kolay gelsin“." },
       e: "„Geçmiş olsun“ – wörtlich „Möge es vorbei sein“ – sagt man Kranken, aber auch nach einem Unfall oder Ärger. Sogar die Ärztin sagt es zur Begrüßung." },
     { id: "tr-a1-d07.q3", t: "listen", say: "Başım ağrıyor.", q: "Was hörst du?", o: ["Başım ağrıyor.", "Karnım ağrıyor.", "Dişim ağrıyor."], a: 0,
       why: { 1: "„karın“ ist der Bauch. Gehört hast du „başım“ (mein Kopf).", 2: "„diş“ ist der Zahn. Gehört hast du „başım“ – mit a, nicht mit i." },

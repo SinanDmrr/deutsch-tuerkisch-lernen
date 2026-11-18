@@ -50,7 +50,11 @@ K.add('tr-a1-01', {
       e: "Türkisch hat **kein q, w, x** (und auch kein ä oder ß)." },
     { id: "tr-a1-01.8", t: "mc", q: "Wie spricht man das v in „ev“ (Haus) aus?", o: ["wie deutsches f", "wie deutsches w"], a: 1,
       why: { 0: "Im Deutschen ist v oft f (Vater) – im Türkischen nie." },
-      e: "Türkisches **v = w** → „ew“." }
+      e: "Türkisches **v = w** → „ew“." },
+    { id: "tr-a1-01.9", t: "speak", say: "Kışın sıcak çay içeriz.",
+      e: "„Im Winter trinken wir heißen Tee.“ Das **ı** in *kışın* und *sıcak* ist ein dumpfes i: Lippen breit, Zunge weiter hinten – etwa wie das e in *bitte*. Achte auf drei verschiedene Laute: **ş** = sch (*kışın* ≈ „kı-schın“), **c** = dsch (*sıcak* ≈ „sı-dschak“), **ç** = tsch (*çay* ≈ „tschai“, *içeriz* ≈ „i-tsche-ris“ mit stimmhaftem s). Typischer Fehler: ı wie ein helles i sprechen („kischin“) – dann klingt es fremd." },
+    { id: "tr-a1-01.10", t: "speak", say: "Dağda yağmur yağıyor.",
+      e: "„In den Bergen regnet es.“ Das **ğ** wird nicht gesprochen, es dehnt nur den Vokal davor: „daa-da jaa-mur jaa-ı-jor“. **y** = deutsches j. Typischer Fehler: ğ wie g oder ch aussprechen („dagda“, „jachmur“)." }
   ]
 });
 
@@ -83,9 +87,9 @@ K.add('tr-a1-02', {
     { id: "tr-a1-02.3", t: "mc", q: "Morgens um 8 im Büro:", o: ["İyi geceler!", "Günaydın!", "İyi akşamlar!"], a: 1,
       why: { 0: "Gute Nacht – nur vor dem Schlafen.", 2: "Guten Abend." },
       e: "**Günaydın** = Guten Morgen." },
-    { id: "tr-a1-02.4", t: "gap", q: "Benim ___ Ali. (Mein Name ist Ali.)", a: ["adım"],
-      wrong: { "adim": "Fast! Achte auf das **ı** ohne Punkt: adım.", "ad": "„ad“ = Name. „mein Name“ braucht das Possessivsuffix: **adım**.", "adı": "„adı“ = sein/ihr Name. Mein Name → **adım**." },
-      e: "ad (Name) + -ım (mein) = **adım**." },
+    { id: "tr-a1-02.4", t: "gap", q: "Benim ___ Ali. (Mein Name ist Ali.)", a: ["adım", "ismim"],
+      wrong: { "adim": "Fast! Achte auf das **ı** ohne Punkt: adım.", "ad": "„ad“ = Name. „mein Name“ braucht das Possessivsuffix: **adım**.", "adı": "„adı“ = sein/ihr Name. Mein Name → **adım**.", "isimim": "Bei *isim* fällt vor einer Vokalendung das zweite i weg: **ismim**." },
+      e: "ad (Name) + -ım (mein) = **adım**. Ebenso richtig: **ismim** (von *isim* = Name)." },
     { id: "tr-a1-02.5", t: "mc", q: "Höflich: „Wie geht es Ihnen?“", o: ["Nasılsın?", "Nasılsınız?", "Ne haber?"], a: 1,
       why: { 0: "Das ist die du-Form.", 2: "„Was geht?“ – sehr locker." },
       e: "Höflich/Plural: **Nasılsınız?**" },
@@ -95,7 +99,11 @@ K.add('tr-a1-02', {
       wrong: { "olduk": "„olduk“ = wir. Ich → **oldum**." },
       e: "**Memnun oldum** = Freut mich (wörtlich: „Ich bin erfreut geworden“)." },
     { id: "tr-a1-02.8", t: "order", q: "Bilde den Satz: „Wie ist Ihr Name?“", w: ["ne", "Sizin", "adınız"], a: ["Sizin adınız ne"],
-      e: "Im Türkischen steht das Fragewort oft am Ende: Sizin adınız **ne**?" }
+      e: "Im Türkischen steht das Fragewort oft am Ende: Sizin adınız **ne**?" },
+    { id: "tr-a1-02.9", t: "speak", say: "Günaydın, bugün nasılsınız?",
+      e: "„Guten Morgen, wie geht es Ihnen heute?“ Die Betonung liegt meist auf der letzten Silbe: *gü-nay-DIN*, *bu-GÜN*. Aber Fragewörter sind eine Ausnahme: **NA**-sıl-sı-nız (betont vorne). Alle drei ı in *nasılsınız* sind dumpf. Typischer Fehler: „nasilsiniz“ mit hellem i." },
+    { id: "tr-a1-02.10", t: "speak", say: "Hoşça kalın, yarın görüşürüz!",
+      e: "„Macht’s gut, bis morgen!“ (so sagt es, wer geht – zu mehreren oder höflich). *hoşça* ≈ „hosch-tscha“: erst **ş** (sch), dann **ç** (tsch). In *görüşürüz* bleiben die Lippen die ganze Zeit gerundet (ö, ü, ü, ü). Typischer Fehler: das s in „hoşça“ als einfaches s sprechen." }
   ]
 });
 
@@ -139,7 +147,11 @@ K.add('tr-a1-03', {
       e: "Entscheidend ist der **letzte** Vokal: kal**e**m → **kalemler**." },
     { id: "tr-a1-03.9", t: "mc", q: "Plural von „saat“ (Uhr/Stunde):", o: ["saatlar", "saatler"], a: 1,
       why: { 0: "Regulär wäre es -lar – aber saat ist eine **Ausnahme** (arabisches Lehnwort)." },
-      e: "Ausnahme: **saatler**." }
+      e: "Ausnahme: **saatler**." },
+    { id: "tr-a1-03.10", t: "speak", say: "Kitaplar ve defterler masada.",
+      e: "„Die Bücher und die Hefte liegen auf dem Tisch.“ Hör den Unterschied: kitap-**lar** (dunkles a) – defter-**ler** (offenes e, fast wie ä) – masa-**da**. Typischer Fehler deutscher Sprecher: das **r** am Wortende verschlucken wie in „Lehrer“ („deftela“). Im Türkischen wird jedes r deutlich gesprochen, mit der Zungenspitze." },
+    { id: "tr-a1-03.11", t: "speak", say: "Bebek kız mı, erkek mi?",
+      e: "„Ist das Baby ein Mädchen oder ein Junge?“ – eine ganz typische Frage. Die Fragepartikel folgt dem Vokal davor: k**ı**z → **mı**, erk**e**k → **mi**. mI ist **unbetont**, die Betonung liegt auf der Silbe davor: *KIZ mı, er-KEK mi*. Typischer Fehler: beide Male „mi“ sagen." }
   ]
 });
 
@@ -173,7 +185,11 @@ K.add('tr-a1-04', {
       e: "**bir ev**." },
     { id: "tr-a1-04.7", t: "gap", q: "masa → Plural: ___", a: ["masalar"],
       wrong: { "masaler": "Letzter Vokal **a** → -l**a**r." },
-      e: "Letzter Vokal a → **-lar**." }
+      e: "Letzter Vokal a → **-lar**." },
+    { id: "tr-a1-04.8", t: "speak", say: "Bahçede iki büyük ağaç var.",
+      e: "„Im Garten stehen zwei große Bäume.“ Nach *iki* steht **kein Plural**: iki ağaç (nicht „ağaçlar“). Aussprache: *bahçe* ≈ „bach-tsche“ (h hörbar), *ağaç* ≈ „aa-atsch“ – das ğ ist stumm. Typischer Fehler: ğ als g sprechen („agatsch“)." },
+    { id: "tr-a1-04.9", t: "speak", say: "Çocuklar parkta oynuyor.",
+      e: "„Die Kinder spielen im Park.“ *çocuk* hat zwei verschiedene Laute: **ç** = tsch und **c** = dsch → „tscho-dschuk-lar“. Hier steht ein Plural, weil keine Zahl davor kommt. Typischer Fehler: c wie k oder z sprechen („tschokuk“)." }
   ]
 });
 
@@ -217,7 +233,11 @@ K.add('tr-a1-05', {
       e: "3. Person Singular: meist **ohne Endung**: *O çok güzel.* (-dir klingt förmlich, ist aber auch richtig.)" },
     { id: "tr-a1-05.8", t: "gap", q: "Ben ___ . (hasta – Ich bin krank.)", a: ["hastayım"],
       wrong: { "hastaım": "Das Wort endet auf einen Vokal → Puffer-**y**: hasta**y**ım.", "hastayim": "Letzter Vokal **a** → -y**ı**m (ohne Punkt)." },
-      e: "hasta + y + ım = **hastayım**." }
+      e: "hasta + y + ım = **hastayım**." },
+    { id: "tr-a1-05.9", t: "speak", say: "Bugün çok yorgunum.",
+      e: "„Heute bin ich sehr müde.“ Die Personalendung (-um = ich bin) ist **unbetont**: *yor-GU-num*, nicht *yor-gu-NUM*. *çok* beginnt mit tsch, *yorgun* mit j. Typischer Fehler: die Endung stark betonen, weil man sie als neue Silbe hört." },
+    { id: "tr-a1-05.10", t: "speak", say: "Ben öğretmen değilim, öğrenciyim.",
+      e: "„Ich bin kein Lehrer, ich bin Student.“ Das **ğ** ist stumm: *öğretmen* ≈ „öö-ret-men“, *değilim* ≈ „de-i-lim“ (zwischen e und i klingt es wie ein leichtes j). Die Endungen -im/-yim bleiben unbetont: *de-Ğİ-lim*, *öğ-ren-Cİ-yim*. Typischer Fehler: „deg-ilim“ mit hartem g." }
   ]
 });
 
@@ -259,7 +279,11 @@ K.add('tr-a1-06', {
       e: "**Nereye** = wohin? (Dativ -e)" },
     { id: "tr-a1-06.8", t: "gap", q: "Bu kahve ___ ? (Ist das Kaffee?)", a: ["mi"],
       wrong: { "mı": "Letzter Vokal von kahv**e** ist e → **mi** (mit Punkt).", "mu": "Letzter Vokal e → **mi**." },
-      e: "kahv**e** → **mi**." }
+      e: "kahv**e** → **mi**." },
+    { id: "tr-a1-06.9", t: "speak", say: "Siz nerede oturuyorsunuz?",
+      e: "„Wo wohnen Sie?“ Fragewörter tragen die Betonung vorne: **NE**-re-de – eine Ausnahme von der Endbetonung. Das lange Verb in Silben sprechen: o-tu-ru-**YOR**-su-nuz. Typischer Fehler: *nerede* auf der letzten Silbe betonen („nere-DE“)." },
+    { id: "tr-a1-06.10", t: "speak", say: "Yorgun musun, aç mısın?",
+      e: "„Bist du müde oder hungrig?“ mI wird getrennt geschrieben, ist **unbetont** und folgt dem Vokal davor: yorg**u**n → **mu**sun, **a**ç → **mı**sın. Betonung: *yor-GUN mu-sun, AÇ mı-sın*. Typischer Fehler: erst ganz am Satzende mit der Stimme hochgehen wie im Deutschen – im Türkischen steigt der Ton schon auf der Silbe vor mI." }
   ]
 });
 
@@ -298,7 +322,11 @@ K.add('tr-a1-07', {
       e: "çocuk → **çocuğum** (k → ğ)." },
     { id: "tr-a1-07.8", t: "gap", q: "onun ___ (kedi – seine/ihre Katze)", a: ["kedisi"],
       wrong: { "kedii": "Nach Vokal kommt ein **s** dazu: kedi**si**.", "kedisı": "Letzter Vokal **i** → -s**i**." },
-      e: "Nach Vokal: **-sI** → **kedisi**." }
+      e: "Nach Vokal: **-sI** → **kedisi**." },
+    { id: "tr-a1-07.9", t: "speak", say: "Kitabım ve kalemim çantamda.",
+      e: "„Mein Buch und mein Stift sind in meiner Tasche.“ Sprich in *kitabım* ein deutliches **b** (kitap → kitabım) und ein dumpfes ı am Ende. *çantamda* beginnt mit **tsch**. Typischer Fehler: „kitapım“ – die Erweichung p → b wird beim Sprechen vergessen." },
+    { id: "tr-a1-07.10", t: "speak", say: "Senin çocuğun kaç yaşında?",
+      e: "„Wie alt ist dein Kind?“ In *çocuğun* ist das **ğ** stumm und verbindet nur die beiden u: „tscho-dschu-un“. *kaç* endet auf tsch, *yaşında* ≈ „ja-schın-da“. Typischer Fehler: ğ als g sprechen („tschodschugun“)." }
   ]
 });
 
@@ -332,7 +360,11 @@ K.add('tr-a1-08', {
       wrong: { "değil": "„gibt es nicht“ → **yok**, nicht değil." },
       e: "**yok**." },
     { id: "tr-a1-08.7", t: "order", q: "Bilde den Satz: „Ich habe zwei Kinder.“", w: ["var", "çocuğum", "İki"], a: ["İki çocuğum var"],
-      e: "Zahl + Nomen mit Possessiv (im Singular!) + var: *İki çocuğum var.*" }
+      e: "Zahl + Nomen mit Possessiv (im Singular!) + var: *İki çocuğum var.*" },
+    { id: "tr-a1-08.8", t: "speak", say: "Bugün hiç zamanım yok.",
+      e: "„Heute habe ich gar keine Zeit.“ Das türkische **z** ist ein weiches, summendes s wie in *Sonne* – kein „ts“ wie im deutschen *Zeit*! Also „sa-ma-nım“, nicht „tsa-ma-nım“. *hiç* ≈ „hitsch“ mit hörbarem h, *yok* ≈ „jok“." },
+    { id: "tr-a1-08.9", t: "speak", say: "Evde ekmek var mı?",
+      e: "„Ist zu Hause Brot da?“ *ev* ≈ „ew“ (v = w). mı ist unbetont: **VAR** mı. Sprich das **r** in *var* deutlich mit der Zungenspitze aus. Typischer Fehler: „wa mı“ – das r wie im Deutschen verschlucken." }
   ]
 });
 
@@ -372,7 +404,11 @@ K.add('tr-a1-09', {
       e: "**mutfakta**." },
     { id: "tr-a1-09.8", t: "mc", q: "Welche Frage passt zu „Ankara’ya gidiyorum.“?", o: ["Nereye gidiyorsun?", "Nerede gidiyorsun?", "Nereden gidiyorsun?"], a: 0,
       why: { 1: "Nerede = wo (Lokativ).", 2: "Nereden = woher." },
-      e: "-ya = Dativ → **Nereye?**" }
+      e: "-ya = Dativ → **Nereye?**" },
+    { id: "tr-a1-09.10", t: "speak", say: "Annem şimdi mutfakta.",
+      e: "„Meine Mutter ist gerade in der Küche.“ *mutfakta*: nach k wird -da zu **-ta**, das hört man auch. *şimdi* ist eine Ausnahme bei der Betonung: **ŞİM**-di (vorne). Das doppelte n in *annem* etwas länger halten: „an-nem“. Typischer Fehler: *şimdi* mit s statt sch." },
+    { id: "tr-a1-09.11", t: "speak", say: "Akşam işten eve dönüyorum.",
+      e: "„Abends komme ich von der Arbeit nach Hause.“ Zwei Fälle in einem Satz: iş-**ten** (woher, nach ş wird d → t), ev-**e** (wohin). *akşam* ≈ „ak-scham“, *dönüyorum* mit gerundeten Lippen bei ö und ü. Typischer Fehler: „işden“ – nach ş klingt die Endung mit **t**." }
   ]
 });
 
@@ -411,11 +447,15 @@ K.add('tr-a1-10', {
     { id: "tr-a1-10.7", t: "mc", q: "„Gehst du?“ (gitmek)", o: ["Gidiyor musun?", "Gitiyor musun?", "Gidiyorsun mu?"], a: 0,
       why: { 1: "Bei gitmek wird t → **d** vor Vokal.", 2: "Die Personalendung hängt an **mu**: gidiyor musun." },
       e: "**Gidiyor musun?**" },
-    { id: "tr-a1-10.8", t: "gap", q: "Onlar ___ . (çalışmak – Sie arbeiten.)", a: ["çalışıyorlar"],
-      wrong: { "çalışıyorlär": "Nach -yor kommt -l**a**r." },
-      e: "çalış + ıyor + lar = **çalışıyorlar**." },
+    { id: "tr-a1-10.8", t: "gap", q: "Onlar ___ . (çalışmak – Sie arbeiten.)", a: ["çalışıyorlar", "çalışıyor"],
+      wrong: { "çalışıyorler": "-yor ist unveränderlich (immer mit o) – deshalb danach immer -l**a**r: çalışıyorlar.", "çalışiyorlar": "Letzter Vokal **ı** in çalış → -**ı**yor (ohne Punkt): çalışıyorlar." },
+      e: "çalış + ıyor + lar = **çalışıyorlar**. Steht *onlar* schon da, darf -lar auch wegfallen: *Onlar çalışıyor.* ist ebenfalls richtig." },
     { id: "tr-a1-10.9", t: "order", q: "Bilde den Satz: „Ich lerne Türkisch.“", w: ["öğreniyorum", "Türkçe", "Ben"], a: ["Ben Türkçe öğreniyorum"],
-      e: "Subjekt – Objekt – **Verb am Ende**." }
+      e: "Subjekt – Objekt – **Verb am Ende**." },
+    { id: "tr-a1-10.10", t: "speak", say: "Şu anda ne yapıyorsun?",
+      e: "„Was machst du gerade?“ Die Silbe **-yor** trägt die Betonung: *ya-pı-YOR-sun*. Das ı in *yapıyorsun* ist dumpf (ohne Punkt). Typischer Fehler: „japijorsun“ mit hellem i – oder die Betonung auf den Anfang legen wie im Deutschen." },
+    { id: "tr-a1-10.11", t: "speak", say: "Türkçe öğreniyorum, çok zevkli.",
+      e: "„Ich lerne Türkisch, es macht viel Spaß.“ *Türkçe* ≈ „türk-tsche“, *öğreniyorum* ≈ „öö-re-ni-jo-rum“ (ğ stumm), *zevkli* ≈ „sew-kli“ mit weichem, summendem **z** und v wie w. Typischer Fehler: z als „ts“ sprechen („tsewkli“)." }
   ]
 });
 
@@ -450,7 +490,7 @@ K.add('tr-a1-11', {
       wrong: { "kirk": "Achte auf **ı** ohne Punkt: kırk." },
       e: "40 = **kırk**." },
     { id: "tr-a1-11.5", t: "mc", q: "3:30", o: ["Saat üç buçuk.", "Saat dört buçuk.", "Saat yarım dört."], a: 0,
-      why: { 1: "Das wäre 4:30 – die deutsche Falle „halb vier“!", 2: "So sagt man es nicht." },
+      why: { 1: "Das wäre 4:30 – die deutsche Falle „halb vier“!", 2: "„yarım“ steht nur allein (Saat yarım = 12:30) oder vor einem Nomen (yarım kilo). Nach einer Zahl heißt „einhalb“ immer **buçuk**: üç buçuk." },
       e: "3:30 = **üç buçuk** (drei-einhalb)." },
     { id: "tr-a1-11.6", t: "mc", q: "4:45", o: ["Saat beşe çeyrek var.", "Saat dörde çeyrek var.", "Saat dördü çeyrek geçiyor."], a: 0,
       why: { 1: "Das wäre 3:45.", 2: "Das wäre 4:15." },
@@ -460,7 +500,11 @@ K.add('tr-a1-11', {
       e: "1000 = **bin**." },
     { id: "tr-a1-11.8", t: "mc", q: "75", o: ["yetmiş beş", "yedi beş", "beş yetmiş"], a: 0,
       why: { 1: "70 = yetmiş, nicht yedi (7).", 2: "Erst Zehner, dann Einer." },
-      e: "**yetmiş beş**." }
+      e: "**yetmiş beş**." },
+    { id: "tr-a1-11.9", t: "speak", say: "Saat üç buçuk.", alt: ["Saat 3 buçuk", "Saat 3.30", "Saat 3:30", "Saat 15:30", "Saat 15.30"],
+      e: "„Es ist halb vier.“ (wörtlich: drei-einhalb) *buçuk* ≈ „bu-tschuk“, *üç* ≈ „ütsch“ mit kurzem ü. Typischer Fehler deutscher Muttersprachler: an „halb **vier**“ denken und „dört buçuk“ sagen – das wäre halb fünf!" },
+    { id: "tr-a1-11.10", t: "speak", say: "Bu elbise yüz elli lira.", alt: ["Bu elbise 150 lira", "Bu elbise 150 TL"],
+      e: "„Dieses Kleid kostet hundertfünfzig Lira.“ Zahlen von groß nach klein: yüz (100) + elli (50). Doppelkonsonanten werden im Türkischen **länger** gesprochen: *el-li* – das l etwas länger halten. Das z in *yüz* ist weich und summend. Typischer Fehler: „eli“ (= seine Hand) statt „elli“." }
   ]
 });
 
@@ -498,7 +542,11 @@ K.add('tr-a1-12', {
       e: "kapı + y + ı = **kapıyı**." },
     { id: "tr-a1-12.7", t: "mc", q: "„Ich esse (irgend)einen Apfel.“", o: ["Bir elma yiyorum.", "Bir elmayı yiyorum."], a: 0,
       why: { 1: "Für „irgendeinen Apfel“ keine Endung. „Bir elmayı“ hieße „einen bestimmten der Äpfel“." },
-      e: "Unbestimmt → **bir elma** ohne Endung." }
+      e: "Unbestimmt → **bir elma** ohne Endung." },
+    { id: "tr-a1-12.8", t: "speak", say: "Seni çok seviyorum.",
+      e: "„Ich liebe dich sehr.“ *seni* ist der Akkusativ von *sen* (dich) – nicht „sen seviyorum“. **v** = w: „se-wi-jo-rum“, Betonung auf **-yor**: *se-vi-YO-rum*. Typischer Fehler: das s am Anfang stimmhaft wie im deutschen „Sonne“ sprechen – das türkische **s** ist immer scharf (wie in *Haus*)." },
+    { id: "tr-a1-12.9", t: "speak", say: "Kapıyı açar mısın, lütfen?",
+      e: "„Machst du bitte die Tür auf?“ – eine typische höfliche Bitte (diese Verbform lernst du später). *kapıyı* = die Tür (bestimmt → Akkusativ, nach Vokal mit y): „ka-pı-jı“ mit drei dumpfen ı. *açar* beginnt mit **tsch**: „a-tschar“. Typischer Fehler: „kapiyi“ mit hellem i." }
   ]
 });
 
