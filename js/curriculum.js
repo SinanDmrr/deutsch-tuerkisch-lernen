@@ -56,17 +56,23 @@ window.KOPRU = {
           ['de-a1-11', 'Modalverben', 'Modal fiiller'],
           ['de-a1-12', 'Trennbare Verben', 'Ayrılabilen fiiller']
         ],
-        A2: [
-          ['de-a2-01', 'Dativ', 'Yönelme hâli (-e hâli)'],
-          ['de-a2-02', 'Wechselpräpositionen', 'Değişken edatlar (in, auf, an …)'],
-          ['de-a2-03', 'Perfekt', 'Geçmiş zaman (Perfekt)'],
-          ['de-a2-04', 'Präteritum: war & hatte', 'sein ve haben geçmiş'],
-          ['de-a2-05', 'Nebensätze: weil, dass, wenn', 'Yan cümleler'],
-          ['de-a2-06', 'Komparativ & Superlativ', 'Karşılaştırma'],
+        A2: [   // Reihenfolge = Lernreihenfolge (docs/a2-konzept.md); IDs sind fest und unabhängig von der Position
+          ['de-a2-03', 'Perfekt I: haben/sein, ge-…-t/-en', 'Geçmiş zaman I (Perfekt)'],
+          ['de-a2-11', 'Perfekt II: trennbare, untrennbare & -ieren-Verben', 'Geçmiş zaman II (ayrılabilen fiiller vb.)'],
+          ['de-a2-04', 'Präteritum: war, hatte, es gab, Modalverben', 'Hikâye geçmiş: war, hatte, konnte …'],
+          ['de-a2-10', 'Imperativ', 'Emir kipi'],
+          ['de-a2-01', 'Dativ: Artikel, Pronomen, Präpositionen', 'Yönelme hâli (Dativ)'],
+          ['de-a2-12', 'Verben mit Dativ & zwei Objekten', 'Dativ alan fiiller'],
+          ['de-a2-02', 'Wechselpräpositionen: wo? / wohin?', 'Değişken edatlar (in, auf, an …)'],
+          ['de-a2-13', 'Zeitangaben & Datum: am, um, im, seit, vor, ab', 'Zaman ifadeleri ve tarih'],
           ['de-a2-07', 'Reflexive Verben', 'Dönüşlü fiiller'],
+          ['de-a2-06', 'Komparativ & Superlativ', 'Karşılaştırma'],
+          ['de-a2-14', 'Fragen & Pronomen: welch-, was für ein, dies-, man, jemand', 'Soru sözcükleri ve zamirler'],
           ['de-a2-08', 'Adjektivdeklination', 'Sıfat çekimi'],
-          ['de-a2-09', 'Konjunktiv II (höflich)', 'Kibar rica: würde, könnte'],
-          ['de-a2-10', 'Imperativ', 'Emir kipi']
+          ['de-a2-15', 'Sätze verbinden: denn, deshalb, trotzdem, sondern', 'Cümle bağlama'],
+          ['de-a2-05', 'Nebensätze: weil, dass, wenn', 'Yan cümleler'],
+          ['de-a2-16', 'Indirekte Fragen: ob, wo, wann …', 'Dolaylı sorular'],
+          ['de-a2-09', 'Konjunktiv II: höflich bitten & Rat geben', 'Kibar rica ve tavsiye: hätte, könnte, sollte']
         ],
         B1: [
           ['de-b1-01', 'Präteritum', 'Hikâye geçmiş zaman'],
@@ -130,20 +136,27 @@ window.KOPRU = {
           ['tr-a1-11', 'Zahlen & Uhrzeit', 'Sayılar ve saat'],
           ['tr-a1-12', 'Akkusativ -(y)I', 'Belirtme hâli']
         ],
-        A2: [
+        A2: [   // Reihenfolge = Lernreihenfolge (docs/a2-konzept.md); IDs sind fest und unabhängig von der Position
           ['tr-a2-01', 'Vergangenheit -dI', 'Görülen geçmiş zaman'],
-          ['tr-a2-02', 'Futur -(y)AcAk', 'Gelecek zaman'],
-          ['tr-a2-03', 'Aorist -(I)r', 'Geniş zaman'],
+          ['tr-a2-11', '„war/hatte“: -(y)dI, vardı, yoktu', 'Ek fiilin geçmişi'],
           ['tr-a2-04', 'Genitiv & Possessiv-Konstruktion', 'İsim tamlaması'],
-          ['tr-a2-05', 'Können: -(y)Abil', 'Yeterlilik'],
-          ['tr-a2-06', 'Müssen: -mAlI, lazım, gerek', 'Gereklilik'],
-          ['tr-a2-07', 'Vergleich: daha, en', 'Karşılaştırma'],
-          ['tr-a2-08', 'Mit: ile / -(y)lA', 'Vasıta ve birliktelik'],
+          ['tr-a2-17', 'Possessiv + Fall & Verben mit festem Fall', 'İyelik + hâl ekleri'],
+          ['tr-a2-12', 'Vorher, nachher, seit: -mAdAn önce, -DIktAn sonra, beri; Datum', 'Zaman ifadeleri'],
+          ['tr-a2-02', 'Futur -(y)AcAk', 'Gelecek zaman'],
           ['tr-a2-09', 'Imperativ & Wunschform', 'Emir ve istek kipi'],
-          ['tr-a2-10', 'Konverb -(y)Ip', 'Zarf-fiil -ip']
+          ['tr-a2-03', 'Aorist -(I)r', 'Geniş zaman'],
+          ['tr-a2-13', 'Wollen, mögen, um zu: -mAk istemek, -mAyI sevmek, -mAk için', '-mAk ile kurulan yapılar'],
+          ['tr-a2-05', 'Können: -(y)Abil', 'Yeterlilik'],
+          ['tr-a2-06', 'Müssen: -mAlI, lazım, gerek, zorunda', 'Gereklilik'],
+          ['tr-a2-07', 'Vergleich: daha, en, gibi, kadar', 'Karşılaştırma'],
+          ['tr-a2-08', 'Mit: ile / -(y)lA', 'Vasıta ve birliktelik'],
+          ['tr-a2-16', 'Wortbildung: -lI, -sIz, -lIk, -CI', 'Yapım ekleri'],
+          ['tr-a2-14', 'Sätze verbinden: çünkü, bu yüzden, hem … hem', 'Bağlaçlar'],
+          ['tr-a2-10', 'Konverb -(y)Ip', 'Zarf-fiil -ip'],
+          ['tr-a2-15', 'Gehörtes & Erzähltes: -mIş (Grundlagen)', 'Duyulan geçmiş zaman (temel)']
         ],
         B1: [
-          ['tr-b1-01', 'Hörensagen -mIş', 'Duyulan geçmiş zaman'],
+          ['tr-b1-01', '-mIş vertieft (-mIştI, Überraschung)', 'Duyulan geçmiş zaman (ileri)'],
           ['tr-b1-02', 'Partizip -(y)An', 'Sıfat-fiil -en'],
           ['tr-b1-03', 'Partizipien -DIk & -(y)AcAk', 'Sıfat-fiil -dik / -ecek'],
           ['tr-b1-04', 'Konditional -sA', 'Şart kipi'],
