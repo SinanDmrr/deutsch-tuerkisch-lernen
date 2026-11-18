@@ -41,6 +41,12 @@ Object.values(K.courses).forEach(c => {
     (d.lines || []).forEach(l => set.add(plain(l.t)));
     (d.questions || []).forEach(q => addEx(q, set));
   });
+  Object.entries(K.texts || {}).forEach(([id, t]) => {   // Lesetexte: Absätze bzw. Anzeigen (ADR-12.2: body[*] / items[*].t)
+    if (!id.startsWith(c.id + '-')) return;
+    (t.body || []).forEach(p => set.add(plain(p)));
+    (t.items || []).forEach(it => set.add(plain(it.t)));
+    (t.questions || []).forEach(q => addEx(q, set));
+  });
   set.delete('');
   out[c.target] = [...set].sort();
 });

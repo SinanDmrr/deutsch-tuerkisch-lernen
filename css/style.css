@@ -280,6 +280,20 @@ a.topic-card:hover { border-color: var(--primary); transform: translateY(-1px); 
 .dialog.show-tr .dl-body .nat { display: block; }
 @media (max-width: 640px) { .dl-line { max-width: 100%; } }
 
+/* ---------- Lesetexte ---------- */
+.rt-title { margin: 0 0 6px; }
+.rt-par { display: flex; gap: 10px; align-items: flex-start; margin: 10px 0; }
+.rt-par .speak { flex: none; }
+.rt-t { margin: 0; line-height: 1.6; font-size: 1.05rem; }
+.rt-h { flex: none; font-weight: 800; color: var(--primary); min-width: 1.4em; }
+.rt-gloss { margin-top: 14px; padding: 10px 14px; background: var(--surface-2); border-radius: 12px; }
+.rt-gloss h4 { margin: 0 0 6px; font-size: .85rem; color: var(--muted); }
+.rt-gloss ul { margin: 0; padding-left: 18px; }
+.text-panel { margin-bottom: 12px; padding: 12px 14px; }
+.text-panel .tp-body { margin-top: 10px; max-height: 45vh; overflow-y: auto; }
+.text-panel .tp-body[hidden] { display: none; }
+@media (max-width: 640px) { .text-panel .tp-body { max-height: 40vh; } }
+
 /* ---------- Player ---------- */
 .dots { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
 .dot {

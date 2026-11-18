@@ -116,6 +116,19 @@ Object.entries(K.vocab || {}).forEach(([key, list]) => {
   });
 });
 
+// Lesetexte (ADR-12.2): Format prüft js/core/texts.js (rein, ohne DOM), Fragen wie alle Übungen
+const textsCtx = { window: {}, console }; vm.createContext(textsCtx);
+vm.runInContext(fs.readFileSync(path.join(root, 'js', 'core', 'texts.js'), 'utf8'), textsCtx, { filename: 'js/core/texts.js' });
+const TX = textsCtx.window.DT.texts;
+let nTxt = 0;
+Object.entries(K.texts || {}).forEach(([id, t]) => {
+  nTxt++; useId(id, 'text');
+  const r = TX.check(id, t);
+  r.errors.forEach(m => err('Lesetext:', m, id));
+  r.warnings.forEach(m => warn('Lesetext:', m, id));
+  (t.questions || []).forEach((q, i) => checkExercise(q, id + '?' + i));
+});
+
 let nDia = 0;
 Object.entries(K.dialogs || {}).forEach(([id, d]) => {
   nDia++; useId(id, 'dialog');
@@ -127,6 +140,6 @@ Object.entries(K.dialogs || {}).forEach(([id, d]) => {
 });
 
 console.log(`\nVersion: ${appVersion || '?'}${swVersion ? ' (sw.js ✓)' : ''} · Skripte: ${scripts.length}`);
-console.log(`Themen mit Inhalt: ${Object.keys(K.content).length} · Übungen: ${nEx} · Wörter: ${nVocab} · Dialoge: ${nDia}`);
+console.log(`Themen mit Inhalt: ${Object.keys(K.content).length} · Übungen: ${nEx} · Wörter: ${nVocab} · Dialoge: ${nDia} · Lesetexte: ${nTxt}`);
 console.log(`${errors} Fehler, ${warnings} Hinweise`);
 process.exit(errors ? 1 : 0);

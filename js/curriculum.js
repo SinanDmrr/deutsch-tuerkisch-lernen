@@ -25,6 +25,8 @@ window.KOPRU = {
   ],
   dialogs: {},   // Alltagsdialoge, z. B. dialogs['de-a1-d01'] = { level, title, lines, questions }
   addDialog: function (id, d) { d.id = id; this.dialogs[id] = d; },
+  texts: {},     // Lesetexte (ADR-12.2), z. B. texts['de-a2-r01'] = { level, kind:'read', genre, title, sub, body|items, gloss?, questions }
+  addText: function (id, d) { d.id = id; if (!d.kind) d.kind = 'read'; this.texts[id] = d; },
 
   levelNames: {
     A1: { de: 'Anfänger', tr: 'Başlangıç' },

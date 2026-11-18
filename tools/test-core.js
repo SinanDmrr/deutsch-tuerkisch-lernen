@@ -463,5 +463,27 @@ test('„Kenne ich schon“ zählt erst nach einer echten Abfrage als sicher (QA
   eq(srs.stats(p, 'de', ['k1']).sicher, 1, 'nach richtiger Wiederholung → sicher');
 });
 
+/* ================= texts (Lesetexte, ADR-12.2) ================= */
+test('texts: Prüfung von Lesetexten', () => {
+  const tx = DT.texts; ok(!!tx, 'DT.texts vorhanden');
+  const words = n => Array.from({ length: n }, (_, i) => 'wort' + i).join(' ');
+  const q = i => ({ id: 'de-a2-r01.q' + i, t: 'mc', q: '?', o: ['a', 'b'], a: 0, why: { 1: 'x' }, e: 'y' });
+  const good = { level: 'A2', kind: 'read', genre: 'hinweis', title: 'Hausordnung', sub: 'Kurallar', body: [words(40), words(40)], gloss: { wort3: 'x' }, questions: [q(1), q(2), q(3)] };
+  eq(tx.check('de-a2-r01', good), { errors: [], warnings: [] }, 'gültiger Text');
+  ok(tx.check('de-a2-d01', good).errors.length > 0, 'falsches ID-Muster');
+  ok(tx.check('de-a1-r01', good).errors.some(e => /level/.test(e)), 'level passt nicht zur ID');
+  ok(tx.check('de-a2-r01', Object.assign({}, good, { genre: 'x' })).errors.some(e => /genre/.test(e)), 'genre ungültig');
+  ok(tx.check('de-a2-r01', Object.assign({}, good, { items: [{ h: 'A', t: 'x' }] })).errors.some(e => /genau eines/.test(e)), 'body UND items');
+  ok(tx.check('de-a2-r01', Object.assign({}, good, { questions: [q(1)] })).errors.some(e => /3 gewertete/.test(e)), 'zu wenige Fragen');
+  ok(tx.check('de-a2-r01', Object.assign({}, good, { questions: [q(1), q(2), { id: 'de-a2-r01.q3', t: 'speak', say: 'x' }] })).errors.some(e => /nicht erlaubt/.test(e)), 'Typ speak nicht erlaubt');
+  ok(tx.check('de-a2-r01', Object.assign({}, good, { questions: [q(1), q(2), Object.assign(q(3), { id: 'de-a2-d01.q3' })] })).errors.some(e => /\.q/.test(e)), 'Fragen-ID-Präfix');
+  const it = Object.assign({}, good, { body: undefined, items: [{ h: 'A', t: words(35) }, { h: 'A', t: words(35) }] });
+  ok(tx.check('de-a2-r01', it).errors.some(e => /doppelt/.test(e)), 'items[*].h doppelt');
+  const short = tx.check('de-a2-r01', Object.assign({}, good, { body: ['kurz'], gloss: { fehlt: 'x' } }));
+  eq(short.errors, [], 'kurz ist nur Hinweis'); eq(short.warnings.length, 2, 'Länge + gloss-Hinweis');
+  eq(tx.paragraphs(it).map(p => p.h), ['A', 'A'], 'paragraphs für items');
+  eq(tx.wordCount({ body: ['Eins **zwei** drei'] }), 3, 'wordCount ohne Markdown');
+});
+
 console.log(`\nKern-Tests: ${passed} ok, ${failed} fehlgeschlagen`);
 process.exit(failed ? 1 : 0);

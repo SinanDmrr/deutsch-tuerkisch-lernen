@@ -9,7 +9,7 @@
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var DT = window.DT;
   var SCHEMA = DT.storage.SCHEMA;    // Version des Speicherformats (Migrationen nur in js/core/storage.js)
-  var APP_VERSION = '2026-11-18.20';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-18.21';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -286,6 +286,13 @@
     toQuestions: ['Zu den Fragen →', 'Sorulara geç →'],
     dialogsTitle: ['Alltagsdialoge', 'Günlük diyaloglar'],
     dialogTab: ['Dialog', 'Diyalog'],
+    textsTitle: ['Lesetexte', 'Okuma metinleri'],
+    textTab: ['Text', 'Metin'],
+    textTip: ['Tipp: Lies den Text in Ruhe, auch mehrmals. Mit 🔊 hörst du jeden Absatz. Die Fragen findest du danach – der Text bleibt dabei sichtbar.', 'İpucu: Metni acele etmeden, gerekirse birkaç kez oku. 🔊 ile her paragrafı dinleyebilirsin. Sorular hemen ardından gelir; metin soruları cevaplarken de görünür kalır.'],
+    glossTitle: ['Wörter zum Text', 'Metindeki kelimeler'],
+    textShow: ['Text anzeigen', 'Metni göster'],
+    textHide: ['Text ausblenden', 'Metni gizle'],
+    textPanel: ['Text', 'Metin'],
     play: ['Anhören', 'Dinle'],
     slow: ['Langsam', 'Yavaş'],
     listenQ: ['Was hörst du?', 'Ne duyuyorsun?'],
@@ -310,6 +317,11 @@
   Object.keys(K.dialogs || {}).forEach(function (id) {
     var d = K.dialogs[id];
     K.content[id] = { kind: 'dialog', dialog: d, exercises: d.questions || [] };
+  });
+  // Lesetexte (ADR-12.2) genauso: Fragen laufen über Fortschritt, Lücken und Wiederholung
+  Object.keys(K.texts || {}).forEach(function (id) {
+    var x = K.texts[id];
+    K.content[id] = { kind: 'read', text: x, exercises: x.questions || [] };
   });
   var EXI = {};
   Object.keys(K.content).forEach(function (tid) {
@@ -430,7 +442,7 @@
   function levelBuilding(lv) { return levelHas(lv) && !levelComplete(lv); }
   function buildingBadge(lv) {
     if (!levelBuilding(lv)) return '';
-    var l = levelTopics(lv).filter(function (x) { return x.kind !== 'dialog'; }), done = l.filter(function (x) { return x.avail; }).length;
+    var l = levelTopics(lv).filter(function (x) { return !x.kind; }), done = l.filter(function (x) { return x.avail; }).length;
     return ' <span class="badge warn" title="' + esc(t('buildingHint')) + '">🚧 ' + esc(t('building', { a: done, n: l.length })) + '</span>';
   }
   function splitLevels() {
@@ -710,6 +722,11 @@
         .forEach(function (id, i) {
           var d = K.dialogs[id];
           list.push({ id: id, level: lv, num: 'D' + (i + 1), title: cid === 'de' ? d.sub : d.title, sub: cid === 'de' ? d.title : d.sub, kind: 'dialog', data: K.content[id], avail: true });
+        });
+      Object.keys(K.texts || {}).filter(function (id) { return id.indexOf(cid + '-') === 0 && K.texts[id].level === lv; }).sort()
+        .forEach(function (id, i) {
+          var x = K.texts[id];
+          list.push({ id: id, level: lv, num: 'T' + (i + 1), title: cid === 'de' ? x.sub : x.title, sub: cid === 'de' ? x.title : x.sub, kind: 'text', data: K.content[id], avail: true });
         });
     });
     return list;
@@ -1090,8 +1107,9 @@
       var list = levelTopics(lv), s = sumStats(list);
       return '<section class="level-section" id="lv-' + lv + '"><div class="level-head"><span class="lvl lvl-' + lv + '">' + lv + '</span><h2>' + esc(levelName(lv)) + buildingBadge(lv) + '</h2>' +
         (s.n ? '<div class="bar"><span class="fill-' + lv + '" style="width:' + pct(s.c, s.n) + '%"></span>' + (skippedOpenCount(list) ? '<span class="skip" style="width:' + pct(skippedOpenCount(list), s.n) + '%"></span>' : '') + '</div><b>' + fmtPct(pct(s.c, s.n)) + '</b>' : '<span class="badge">' + esc(t('comingSoon')) + '</span>') +
-        '</div><div class="topic-grid">' + list.filter(function (x) { return x.kind !== 'dialog'; }).map(topicCard).join('') + '</div>' +
+        '</div><div class="topic-grid">' + list.filter(function (x) { return !x.kind; }).map(topicCard).join('') + '</div>' +
         (list.some(function (x) { return x.kind === 'dialog'; }) ? '<h3 class="sub-head">💬 ' + esc(t('dialogsTitle')) + '</h3><div class="topic-grid">' + list.filter(function (x) { return x.kind === 'dialog'; }).map(topicCard).join('') + '</div>' : '') +
+        (list.some(function (x) { return x.kind === 'text'; }) ? '<h3 class="sub-head">📄 ' + esc(t('textsTitle')) + '</h3><div class="topic-grid">' + list.filter(function (x) { return x.kind === 'text'; }).map(topicCard).join('') + '</div>' : '') +
         '</section>';
     };
     var html = sl.live.map(section).join('') + (sl.planned.length ? '<details class="planned-levels"' + (sl.planned.indexOf(focusLevel) >= 0 ? ' open' : '') + '><summary>' + esc(sl.label + ' · ' + t('plannedLevels')) + '</summary>' + sl.planned.map(section).join('') + '</details>' : '');
@@ -1129,8 +1147,35 @@
     }
     step();
   }
+  /* ---------- Lesetexte (ADR-12.2) ---------- */
+  function renderTextBody(x) {
+    var tgt = course().target, tp = DT.texts.paragraphs(x), out = '';
+    tp.forEach(function (p) {
+      out += '<div class="rt-par">' + speakBtn(p.t) + (p.h ? '<span class="rt-h">' + esc(p.h) + '</span>' : '') + '<p class="rt-t" lang="' + tgt + '">' + md(p.t) + '</p></div>';
+    });
+    var gk = x.gloss ? Object.keys(x.gloss) : [];
+    if (gk.length) out += '<div class="rt-gloss"><h4>' + esc(t('glossTitle')) + '</h4><ul>' + gk.map(function (w) {
+      return '<li><b lang="' + tgt + '">' + esc(w) + '</b> – ' + esc(x.gloss[w]) + '</li>'; }).join('') + '</ul></div>';
+    return out;
+  }
+  function renderText(tp) {
+    var x = tp.data.text, cid = courseId();
+    return '<div class="card readtext"><h2 class="rt-title" lang="' + course().target + '">' + esc(cid === 'de' ? x.title : x.sub) + '</h2>' +
+      '<p class="muted small">' + esc(t('textTip')) + '</p>' + renderTextBody(x) +
+      '<div class="btn-row" style="margin-top:18px"><a class="btn primary" href="#/topic/' + tp.id + '/exercises">' + esc(t('toQuestions')) + '</a></div></div>';
+  }
+  // Text-Panel über der Frage: Desktop offen, Handy zu; Zustand nur im Speicher
+  var textPanelOpen = null;
+  function textPanel(topicData) {
+    if (!topicData || topicData.kind !== 'read') return '';
+    var x = topicData.text, open = textPanelOpen === null ? !(window.matchMedia && window.matchMedia('(max-width: 640px)').matches) : textPanelOpen;
+    return '<div class="card text-panel"><button class="btn small" data-act="text-toggle" aria-expanded="' + open + '" aria-controls="text-panel-body">📄 ' +
+      esc(open ? t('textHide') : t('textShow')) + '</button><span class="muted small tp-title" lang="' + course().target + '"> ' + esc(courseId() === 'de' ? x.title : x.sub) + '</span>' +
+      '<div id="text-panel-body" class="tp-body"' + (open ? '' : ' hidden') + '>' + renderTextBody(x) + '</div></div>';
+  }
   function renderLesson(tp) {
     if (tp.data.kind === 'dialog') return renderDialog(tp);
+    if (tp.data.kind === 'read') return renderText(tp);
     var tgt = course().tts, out = '';
     (tp.data.lesson || []).forEach(function (b) {
       if (b.h) out += '<h3>' + md(b.h) + '</h3>';
@@ -1292,7 +1337,7 @@
         : '<button class="btn small" data-act="skip">' + esc(t('skip')) + '</button><button class="btn primary" data-act="check" id="check-btn"' + (canCheck(ex, c) ? '' : ' disabled') + '>' + esc(t('check')) + '</button>') +
       '</div>';
 
-    return dots + '<div class="card qcard">' + meta + (qtext ? '<div class="qtext">' + qtext + '</div>' : '') +
+    return dots + textPanel(item.topic && item.topic.data) + '<div class="card qcard">' + meta + (qtext ? '<div class="qtext">' + qtext + '</div>' : '') +
       (hint ? '<p class="qhint">' + esc(hint) + '</p>' : '') + body + '<div aria-live="polite">' + fb + '</div>' + actions + '</div>';
   }
   function canCheck(ex, c) {
@@ -1419,7 +1464,7 @@
     tab = tab || 'learn';
     var s = topicStats(tp), wN = wrongIds(tp.id).length, spN = tp.data.exercises.filter(function (e) { return e.t === 'speak'; }).length;
     var subtabs = [
-      ['learn', tp.kind === 'dialog' ? '💬 ' + t('dialogTab') : '📖 ' + t('explanation')],
+      ['learn', tp.kind === 'dialog' ? '💬 ' + t('dialogTab') : tp.kind === 'text' ? '📄 ' + t('textTab') : '📖 ' + t('explanation')],
       ['exercises', '✏️ ' + t('exercisesShort') + ' (' + s.c + '/' + s.n + (spN ? ' + ' + spN + ' 🎤' : '') + ')'],
       ['review', '🔁 ' + t('reviewShort') + (wN ? ' (' + wN + ')' : '')]
     ];
@@ -1647,7 +1692,7 @@
       if (!tp.avail) return;
       var s = topicStats(tp); ctx.answered += s.answered;
       if (tp.kind === 'dialog') ctx.dialogsAll++;
-      if (s.n && s.c === s.n) { if (tp.kind === 'dialog') ctx.dialogsDone++; else ctx.topicsDone++; }
+      if (s.n && s.c === s.n) { if (tp.kind === 'dialog') ctx.dialogsDone++; else if (!tp.kind) ctx.topicsDone++; }
     });
     Object.keys(pr).forEach(function (id) { if (EXI[id] && pr[id].f === 'w' && pr[id].s === 'c') ctx.fixed++; });
     var words = DT.vocab.wordsOf(K, cid, 'A1').map(function (w) { return w.id; });
@@ -1771,7 +1816,7 @@
    * Antworten werden NICHT in prog geschrieben (keine geschenkten Punkte, nichts landet in „Meine Lücken“).
    * Ergebnis: place[cid] und – nur wenn der Nutzer zustimmt – skip[cid][topicId]. */
   var place = null;
-  function placementTopics() { return levelTopics('A1').filter(function (x) { return x.avail && x.kind !== 'dialog'; }); }
+  function placementTopics() { return levelTopics('A1').filter(function (x) { return x.avail && !x.kind; }); }
   function placementPool(tp) {
     var all = tp.data.exercises, half = all.slice(Math.floor(all.length / 2)).map(function (e) { return e.id; });
     var ok = all.filter(function (e) { return e.t === 'mc' || e.t === 'gap' || (e.t === 'listen' && canPlay(e.say)); });
@@ -2149,6 +2194,11 @@
         if (smp) playUrl('audio/' + smp); else deviceSpeak(t('testSentence'), course().tts, {}, db.voiceGender || '');
       } break;
       case 'play-sample': playUrl(el.getAttribute('data-url')); break;
+      case 'text-toggle': {
+        var tpb = document.getElementById('text-panel-body'); if (!tpb) break;
+        textPanelOpen = tpb.hasAttribute('hidden'); if (textPanelOpen) tpb.removeAttribute('hidden'); else tpb.setAttribute('hidden', '');
+        el.setAttribute('aria-expanded', textPanelOpen); el.textContent = '📄 ' + t(textPanelOpen ? 'textHide' : 'textShow'); break;
+      }
       case 'dl-play': { var tpd = topicById(parseHash().a); if (tpd) playDialog(tpd, !!el.getAttribute('data-slow')); break; }
       case 'dl-tr': { dialogShowTr = !dialogShowTr; var box = document.querySelector('.dialog'); if (box) box.classList.toggle('show-tr', dialogShowTr); el.setAttribute('aria-pressed', dialogShowTr); break; }
       case 'play-say': speak(el.getAttribute('data-say'), course().tts, { gender: el.getAttribute('data-g') || '', rate: el.getAttribute('data-slow') ? 0.72 : 1 }); break;
