@@ -159,8 +159,8 @@ Quellen: [Goethe A2 Übersicht](https://www.goethe.de/ins/sg/de/kur/prf/gzsd2/in
 | 4 | tr-a2-17 | Possessiv + Fall & Verben mit festem Fall | İyelik + hâl ekleri, fiillerin istediği hâller | „arabasına, evimizde, kitabını“; „otobüse binmek, köpekten korkmak“ | **neu** |
 | 5 | tr-a2-12 | Vorher, nachher, seit: -mAdAn önce, -DIktAn sonra, beri, -DIr; Datum | Zaman ifadeleri | Abläufe und Dauer ausdrücken, Termine und Daten nennen | **neu** |
 | 6 | tr-a2-02 | Futur -(y)AcAk | Gelecek zaman | Pläne und Versprechen | vorhanden |
-| 7 | tr-a2-09 | Imperativ & Wunschform | Emir ve istek kipi | Bitten, Anweisungen, Vorschläge („gidelim mi?“) | vorgezogen |
-| 8 | tr-a2-03 | Aorist -(I)r | Geniş zaman | Gewohnheiten, Angebote und höfliche Bitten („… verir misiniz?“), Verneinung -mAz | vorhanden |
+| 7 | tr-a2-03 | Aorist -(I)r | Geniş zaman | Gewohnheiten, Angebote und höfliche Bitten („… verir misiniz?“), Verneinung -mAz | vorhanden; **18.11.2026 vor tr-a2-09 gestellt** (die höfliche Bitte „… misiniz?“ in tr-a2-09 setzt den Aorist voraus; Opus-Gegenlesen) |
+| 8 | tr-a2-09 | Imperativ & Wunschform | Emir ve istek kipi | Bitten, Anweisungen, Vorschläge („gidelim mi?“) | vorgezogen |
 | 9 | tr-a2-13 | Wollen, mögen, um zu: -mAk istemek, -mAyI sevmek, -mAk için | -mAk ile kurulan yapılar | Wünsche, Vorlieben und Zwecke ausdrücken | **neu** |
 | 10 | tr-a2-05 | Können: -(y)Abil | Yeterlilik | Fähigkeit, Erlaubnis, Möglichkeit; Verneinung -(y)AmA | vorhanden |
 | 11 | tr-a2-06 | Müssen: -mAlI, lazım, gerek, zorunda | Gereklilik | Pflicht, Rat und Notwendigkeit unterscheiden | erweitert |
