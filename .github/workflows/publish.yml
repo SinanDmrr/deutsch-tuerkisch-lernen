@@ -1,0 +1,123 @@
+name: Veröffentlichen (Prüfen → Audio → Seite)
+
+# Ein Ablauf für jede Änderung auf main:
+#   1. Inhalte und Kernlogik prüfen – Fehler → nichts wird veröffentlicht
+#   2. Audio für neue Texte mit Piper erzeugen und committen
+#   3. Erst DANN die Seite veröffentlichen → Inhalte und Aufnahmen gehen immer gemeinsam online
+#      (Voraussetzung: Settings → Pages → Source = „GitHub Actions“; sonst wird Schritt 3 übersprungen)
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    outputs:
+      deploy: ${{ steps.mode.outputs.deploy }}
+    steps:
+      # immer den NEUESTEN Stand von main (nicht den auslösenden Commit) – sonst erzeugen
+      # nacheinander laufende Durchgänge dieselben Aufnahmen doppelt und kollidieren beim Push
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Syntax prüfen
+        run: for f in js/*.js js/core/*.js js/content/*.js tools/*.js; do node --check "$f"; done
+
+      - name: Inhalte prüfen
+        run: node tools/validate.js
+
+      - name: Kernlogik testen
+        run: node tools/test-core.js
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Piper-Stimmen zwischenspeichern
+        uses: actions/cache@v4
+        with:
+          path: .piper-voices
+          key: piper-voices-${{ hashFiles('tools/tts-voices.json') }}
+
+      - name: ffmpeg und Piper installieren
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          pip install --quiet piper-tts
+
+      - name: Texte sammeln
+        run: node tools/extract-texts.js > "$RUNNER_TEMP/texts.json"
+
+      - name: Audio erzeugen (nur neue Texte)
+        run: python tools/gen_audio.py "$RUNNER_TEMP/texts.json"
+
+      - name: Fehlende Aufnahmen melden
+        run: node -e "var m=require('./audio/manifest.json'),n=Object.keys(m.errors||{}).length;if(n)console.log('::warning::'+n+' Texte ohne Aufnahme – siehe audio/manifest.json (errors)')"
+
+      - name: Audio committen
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for i in 1 2 3; do
+            git add audio
+            if git diff --cached --quiet; then echo "Keine neuen Audiodateien."; break; fi
+            git commit -q -m "Audio aktualisiert (Piper TTS)"
+            if git push -q origin HEAD:main; then echo "Audio gepusht."; break; fi
+            # Jemand war schneller: neuesten Stand holen und nur noch fehlende Aufnahmen erzeugen
+            echo "Push abgelehnt – neuer Versuch auf aktuellem Stand ($i/3)"
+            git fetch -q origin main && git reset -q --hard origin/main
+            node tools/extract-texts.js > "$RUNNER_TEMP/texts.json"
+            python tools/gen_audio.py "$RUNNER_TEMP/texts.json"
+            [ "$i" = 3 ] && { echo "::error::Audio konnte nicht gepusht werden"; exit 1; }
+          done
+
+      - name: Pages-Modus prüfen
+        id: mode
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          bt=$(gh api "repos/${{ github.repository }}/pages" --jq .build_type 2>/dev/null || echo none)
+          echo "Pages build_type: $bt"
+          if [ "$bt" = "workflow" ]; then echo "deploy=true" >> "$GITHUB_OUTPUT"; else
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Seite wird noch direkt aus dem Branch veröffentlicht. Für „erst Audio, dann Seite“: Settings → Pages → Source = GitHub Actions."
+          fi
+
+      - name: Seite zusammenstellen (nur Dateien aus dem Repo)
+        if: steps.mode.outputs.deploy == 'true'
+        run: |
+          mkdir -p _site
+          git ls-files -z | grep -zv '^\.github/' | xargs -0 cp --parents -t _site
+          touch _site/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        if: steps.mode.outputs.deploy == 'true'
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    if: needs.build.outputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -9,7 +9,7 @@
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var DT = window.DT;
   var SCHEMA = DT.storage.SCHEMA;    // Version des Speicherformats (Migrationen nur in js/core/storage.js)
-  var APP_VERSION = '2026-11-18.2';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-18.3';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -108,6 +108,7 @@
     clickAgain: ['→ zum Bestätigen nochmal klicken', '→ onaylamak için tekrar tıkla'],
     imported: ['Fortschritt importiert ✔', 'İlerleme içe aktarıldı ✔'],
     importFail: ['Datei konnte nicht gelesen werden.', 'Dosya okunamadı.'],
+    noRecording: ['Für diesen Satz gibt es noch keine Aufnahme – sie kommt mit dem nächsten Update.', 'Bu cümlenin ses kaydı henüz yok – bir sonraki güncellemeyle gelecek.'],
     importNewer: ['Diese Datei stammt aus einer neueren Version – bitte Seite neu laden (Strg+F5) und erneut importieren.', 'Bu dosya daha yeni bir sürümden – lütfen sayfayı yenile (Ctrl+F5) ve tekrar içe aktar.'],
     switched: ['Kurs gewechselt', 'Kurs değiştirildi'],
     listen: ['Anhören', 'Dinle'],
@@ -453,14 +454,14 @@
   }
   function deviceSpeak(text, lang, o, g, retried) {
     o = o || {};
-    if (!canSpeak) { if (!o.auto) showVoiceHelp(lang); return; }
+    if (!canSpeak) { if (!o.auto) noRecording(); return; }
     if (!voicesCache.length) loadVoices();
     var v = o.voiceName ? voicesFor(lang).filter(function (x) { return x.name === o.voiceName; })[0] : null;
     if (!v && g) v = sortedVoices(lang).filter(function (x) { return voiceGender(x) === g; })[0] || null;
     if (!v) v = bestVoice(lang);
     if (!v) {
       if (!voicesCache.length && !retried) { setTimeout(function () { loadVoices(); deviceSpeak(text, lang, o, g, true); }, 700); return; }
-      if (!o.auto) showVoiceHelp(lang); return;   // lieber gar nicht vorlesen als mit falscher (z. B. englischer) Stimme
+      if (!o.auto) noRecording(); return;   // lieber gar nicht vorlesen als mit falscher (z. B. englischer) Stimme
     }
     try {
       if (audioEl) { audioEl.onended = null; audioEl.pause(); }
@@ -497,13 +498,11 @@
     return '<p>' + (de ? 'Auf diesem Gerät ist keine <b>türkische</b> Vorlese-Stimme installiert. Damit die Aussprache stimmt, lese ich nicht mit einer fremden Stimme vor.'
       : 'Bu cihazda <b>Almanca</b> bir okuma sesi yüklü değil. Telaffuz yanlış olmasın diye yabancı bir sesle okumuyorum.') + '</p><p>' + steps[os] + '</p>';
   }
-  function showVoiceHelp() {
-    var old = document.getElementById('voice-help'); if (old) old.remove();
-    var el = document.createElement('div'); el.id = 'voice-help'; el.className = 'help-pop'; el.setAttribute('role', 'dialog');
-    el.innerHTML = '<div class="card"><h3>🔊 ' + esc(t('voiceMissing')) + '</h3>' + voiceHelpHtml() +
-      '<div class="btn-row"><a class="btn" href="#/settings">' + esc(t('settings')) + '</a><button class="btn primary" data-close>OK</button></div></div>';
-    el.addEventListener('click', function (e) { if (e.target === el || e.target.hasAttribute('data-close') || e.target.closest('a')) el.remove(); });
-    document.body.appendChild(el);
+  // Kein Fenster, das aus dem Lernfluss reißt: nur ein kurzer Hinweis, der von selbst verschwindet
+  var lastNoRec = 0;
+  function noRecording() {
+    if (Date.now() - lastNoRec < 5000) return;
+    lastNoRec = Date.now(); toast('🔊 ' + t('noRecording'));
   }
   function prettyVoice(key) {   // „tr_TR-fahrettin-medium“ → „Fahrettin“
     var n = (key.split('-')[1] || key).replace(/_/g, ' ');

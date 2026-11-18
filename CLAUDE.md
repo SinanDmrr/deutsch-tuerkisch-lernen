@@ -19,7 +19,8 @@ Lernplattform: **Deutsch für Türkischsprechende** (Kurs `de`, Erklärungen/Obe
 
 ## Git
 - Commits als `Sinan Demir <106678135+SinanDmrr@users.noreply.github.com>` direkt auf `main` (zählt für die Contributions des Besitzers).
-- `github-actions[bot]` committet Audio („Audio aktualisiert (Piper TTS)“) → **vor jedem Push `git pull --rebase origin main`**.
+- Veröffentlichung über `.github/workflows/publish.yml`: prüfen → Audio erzeugen → `github-actions[bot]` committet Audio („Audio aktualisiert (Piper TTS)“) → erst dann geht die Seite online (Pages-Quelle „GitHub Actions“). → **vor jedem Push `git pull --rebase origin main`**.
+- Nie ein Hilfe-Fenster zum Installieren von Stimmen zeigen – alle Texte bekommen Piper-Aufnahmen; fehlt eine, nur kurzer Hinweis.
 - Kleine, thematische Commits mit deutscher Beschreibung.
 
 ## Prüfen vor jedem Commit

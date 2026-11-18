@@ -33,7 +33,7 @@ Der Fortschritt liegt im Browser der Nutzer (`localStorage`, Schlüssel `dt-data
 
 ## Sprachausgabe (Piper TTS, Open Source)
 
-- Beispiele, Vokabeln und Lösungen (Lückentext/Satzbau) werden mit **Piper**-Stimmen vorgelesen, die **GitHub Actions** automatisch erzeugt (`.github/workflows/tts.yml`).
+- Beispiele, Vokabeln und Lösungen (Lückentext/Satzbau) werden mit **Piper**-Stimmen vorgelesen, die **GitHub Actions** automatisch erzeugt (`.github/workflows/publish.yml` – die Seite geht erst online, wenn alle Aufnahmen fertig sind).
 - Bei jedem Push mit geänderten Inhalten: `tools/extract-texts.js` sammelt die Texte → `tools/gen_audio.py` erzeugt nur **neue** MP3s → Commit „Audio aktualisiert (Piper TTS)“ durch `github-actions[bot]`.
 - Stimmen (weiblich/männlich je Sprache) und Hörproben: `tools/tts-voices.json`. Lizenz der Stimmen siehe jeweilige MODEL_CARD auf https://huggingface.co/rhasspy/piper-voices.
 - Fehlt eine Audiodatei (z. B. direkt nach einem Update, bevor die Action fertig ist), nutzt die Seite eine **passende Gerätestimme** – nie eine fremdsprachige.
