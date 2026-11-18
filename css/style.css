@@ -319,8 +319,9 @@ a.topic-card:hover { border-color: var(--primary); transform: translateY(-1px); 
 .audio-bar { display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 16px; }
 .audio-main { font-size: 1.05rem; padding: 12px 20px; }
 .dict-input { width: 100%; max-width: 560px; display: block; margin: 0; font-size: 1.15rem; padding: 10px 12px; }
-.charbar { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
-.charbar button { min-width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); cursor: pointer; font-weight: 700; }
+.charbar { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
+.charbar-label { width: 100%; font-size: .78rem; color: var(--muted); }
+.charbar button { min-width: 40px; height: 44px; padding: 0 4px; font-size: 1.05rem; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); cursor: pointer; font-weight: 700; }
 .charbar button:hover { border-color: var(--primary); }
 .order-target { min-height: 56px; border: 2px dashed var(--border); border-radius: 12px; padding: 9px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }
 .order-target.right { border-color: var(--ok); border-style: solid; background: var(--ok-soft); }
@@ -504,3 +505,14 @@ footer.foot { max-width: 1040px; margin: 0 auto; padding: 0 16px 40px; color: va
 .level-row.disabled { opacity: 1; }
 .icon-btn[aria-current="page"] { border-color: var(--primary); background: var(--primary-soft); }
 .save-banner.info { background: var(--tip-soft); color: var(--text); border-bottom-color: var(--tip); }
+
+/* Zurück-Button */
+.backrow { margin: 0 0 6px; }
+.back-btn { display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 8px 14px 8px 10px; margin-left: -10px; border-radius: 999px; font-weight: 650; text-decoration: none; color: var(--primary); }
+.back-btn:hover { background: var(--primary-soft); }
+/* Beim Tippen auf dem Handy: Reiterleiste ausblenden, damit sie über der Tastatur nichts verdeckt */
+@media (max-width: 640px) {
+  body.typing .tabs { display: none; }
+  body.typing main { padding-bottom: 40vh; }   /* Platz, damit das Feld über die Tastatur geschoben werden kann */
+  .gap-input { font-size: 16px; }              /* < 16 px zoomt iOS beim Antippen ungefragt hinein */
+}

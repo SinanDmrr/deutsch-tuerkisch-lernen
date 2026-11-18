@@ -9,7 +9,7 @@
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var DT = window.DT;
   var SCHEMA = DT.storage.SCHEMA;    // Version des Speicherformats (Migrationen nur in js/core/storage.js)
-  var APP_VERSION = '2026-11-18.16';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-18.18';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -24,6 +24,9 @@
     bannerRestored: ['Dein Speicherstand war beschädigt – wir haben deine letzte Sicherung geladen. Die beschädigte Kopie bleibt aufbewahrt.', 'Kayıtlı verin bozulmuştu – son yedeğini yükledik. Bozuk kopya saklanmaya devam ediyor.'],
     bannerCorrupt: ['Dein Speicherstand war beschädigt und es gab keine Sicherung. Eine Kopie bleibt aufbewahrt (dt-corrupt) – bitte melde dich über „Rechtliches“, dann helfen wir.', 'Kayıtlı verin bozulmuştu ve yedek yoktu. Bir kopyası saklanıyor (dt-corrupt) – lütfen “Yasal bilgiler” sayfasındaki bağlantıdan bize yaz, yardımcı olalım.'],
     micNoLang: ['Dein Browser erkennt diese Sprache leider nicht – sag den Satz einfach laut.', 'Tarayıcın bu dili maalesef tanımıyor – cümleyi sadece sesli söyle.'],
+    back: ['Zurück', 'Geri'],
+    charsLabel: ['Fehlt auf deiner Tastatur?', 'Klavyende yok mu?'],
+    charInsert: ['„{c}“ einfügen', '“{c}” ekle'],
     tabHome: ['Start', 'Ana sayfa'],
     tabWords: ['Wörter', 'Kelimeler'],
     tabGaps: ['Lücken', 'Eksikler'],
@@ -662,6 +665,11 @@
     recog.onend = function () { if (!got && !failed) onError('no-speech'); };
     try { if (curAudio) curAudio.pause(); if (canSpeak) speechSynthesis.cancel(); recog.start(); } catch (e) { onError('error'); }
   }
+  // Buchstaben, die auf vielen Tastaturen fehlen (z. B. ß/ä auf türkischen, ı/ş/ğ auf deutschen Tastaturen)
+  function charBar() {
+    return '<div class="charbar" role="group" aria-label="' + esc(t('charsLabel')) + '"><span class="charbar-label">' + esc(t('charsLabel')) + '</span>' +
+      course().chars.map(function (ch) { return '<button type="button" data-act="char" data-ch="' + esc(ch) + '" tabindex="-1" aria-label="' + esc(t('charInsert', { c: ch })) + '">' + esc(ch) + '</button>'; }).join('') + '</div>';
+  }
   function audioBar(say, secondary) {
     return '<div class="audio-bar"><button class="btn' + (secondary ? '' : ' primary') + ' audio-main" data-act="play-say" data-say="' + esc(say) + '">🔊 ' + esc(t('play')) + '</button>' +
       '<button class="btn" data-act="play-say" data-slow="1" data-say="' + esc(say) + '" title="' + esc(t('slow')) + '">🐢 ' + esc(t('slow')) + '</button></div>';
@@ -1227,14 +1235,14 @@
       qtext = md(ex.q || t('dictationQ'));
       var dcls = checked ? (res.ok ? ' right' : ' wrong') : '';
       body = audioBar(ex.say) + '<input class="gap-input dict-input' + dcls + '" id="gap-input" autocomplete="off" autocapitalize="off" spellcheck="false" lang="' + target + '" placeholder="' + esc(t('typeWhatYouHear')) + '" value="' + esc(c.input) + '"' + (checked ? ' disabled' : '') + '>';
-      if (!checked) body += '<div class="charbar">' + course().chars.map(function (ch) { return '<button data-act="char" data-ch="' + esc(ch) + '" tabindex="-1">' + esc(ch) + '</button>'; }).join('') + '</div>';
+      if (!checked) body += charBar();
     } else if (ex.t === 'gap') {
       var parts = ex.q.split(/_{3,}/);
       var inputCls = checked ? (res.ok ? ' right' : ' wrong') : '';
       var input = '<input class="gap-input' + inputCls + '" id="gap-input" autocomplete="off" autocapitalize="off" spellcheck="false" lang="' + target + '" placeholder="' + esc(t('typeHere')) + '" value="' + esc(c.input) + '"' + (checked ? ' disabled' : '') + ' size="' + Math.max(8, (ex.a[0] || '').length + 2) + '">';
       if (parts.length > 1) body = '<div class="gapline">' + md(parts[0]) + input + md(parts.slice(1).join('___')) + '</div>';
       else body = '<div class="gapline">' + md(ex.q) + '<br>' + input + '</div>';
-      if (!checked) body += '<div class="charbar">' + course().chars.map(function (ch) { return '<button data-act="char" data-ch="' + esc(ch) + '" tabindex="-1">' + esc(ch) + '</button>'; }).join('') + '</div>';
+      if (!checked) body += charBar();
     } else if (ex.t === 'order') {
       qtext = md(ex.q);
       hint = t('orderHint');
@@ -1920,6 +1928,17 @@
   }
 
   /* ================= Render ================= */
+  function parentRoute(r) {
+    if (r.page === 'topic') { var tp0 = topicById(r.a); return '#/lessons' + (tp0 ? '/' + tp0.level : ''); }
+    if (r.page === 'words') return r.b ? '#/words/' + r.a : '#/words';
+    if (r.page === 'review') return '#/words';
+    if (r.page === 'placement') return '#/lessons';
+    if (r.page === 'legal') return '#/settings';
+    return '#/dashboard';   // daily, certificate, …
+  }
+  function backButton(r) {
+    return '<div class="backrow"><a class="back-btn" href="' + parentRoute(r) + '">‹ ' + esc(t('back')) + '</a></div>';
+  }
   function render() {
     applyTheme();
     Object.keys(db.profiles || {}).forEach(function (id) { var pp = db.profiles[id]; if (pp && !K.courses[pp.course]) pp.course = 'de'; });
@@ -1956,6 +1975,7 @@
       case 'legal': inner = viewLegal(r.a === 'de' || r.a === 'tr' ? r.a : uiLang()); active = ''; break;
       default: inner = viewDashboard(); active = 'dashboard';
     }
+    if (['topic', 'words', 'review', 'daily', 'placement', 'certificate', 'legal'].indexOf(r.page) >= 0 && !(r.page === 'words' && !r.a)) inner = backButton(r) + inner;
     app.innerHTML = shell(active, inner);
     afterRender();
   }
@@ -1988,6 +2008,34 @@
     var nb = document.getElementById('next-btn');
     if (nb) nb.focus({ preventScroll: true });
   }
+
+  /* ================= Bildschirmtastatur (Handy) =================
+   * Chrome/Firefox (Android): viewport „interactive-widget=resizes-content“ verkleinert die Seite → wir blenden die
+   * feste Reiterleiste aus, damit sie nicht über der Tastatur das Feld verdeckt. Safari (iOS) kennt das nicht:
+   * dort verkleinert sich nur der sichtbare Bereich (visualViewport) – wir schieben das Feld selbst in die Mitte. */
+  function isTypingField(el) { return el && (el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && !/^(button|checkbox|radio|file|submit|range|color)$/i.test(el.type))); }
+  function keepFieldVisible() {
+    var el = document.activeElement; if (!isTypingField(el)) return;
+    var vv = window.visualViewport, top = vv ? vv.offsetTop : 0, h = vv ? vv.height : window.innerHeight;
+    var r = el.getBoundingClientRect(), header = document.querySelector('.topbar'), hh = header && getComputedStyle(header).position !== 'static' ? header.getBoundingClientRect().height : 0;
+    var visTop = top + hh + 12, visBottom = top + h - 16;
+    // Feld + Sonderzeichen-Leiste darunter sollen sichtbar sein
+    var bar = el.closest('.qcard') && el.closest('.qcard').querySelector('.charbar'), bottom = Math.max(r.bottom, bar ? Math.min(bar.getBoundingClientRect().bottom, r.bottom + 110) : 0);
+    if (r.top < visTop || bottom > visBottom) window.scrollBy({ top: (r.top - visTop) - Math.max(0, ((visBottom - visTop) - (bottom - r.top)) / 3), behavior: 'smooth' });
+  }
+  var kbTimer = null;
+  document.addEventListener('focusin', function (ev) {
+    if (!isTypingField(ev.target)) return;
+    clearTimeout(kbTimer); document.body.classList.add('typing');
+    setTimeout(keepFieldVisible, 320);   // nach dem Aufklappen der Tastatur
+  });
+  document.addEventListener('focusout', function (ev) {
+    if (!isTypingField(ev.target)) return;
+    kbTimer = setTimeout(function () { if (!isTypingField(document.activeElement)) document.body.classList.remove('typing'); }, 150);
+  });
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', function () { if (document.body.classList.contains('typing')) keepFieldVisible(); });
+  // Sonderzeichen antippen nimmt dem Feld nicht den Fokus (sonst klappt die Tastatur zu und die Seite springt)
+  document.addEventListener('pointerdown', function (ev) { if (ev.target.closest && ev.target.closest('.charbar button')) ev.preventDefault(); });
 
   /* ================= Events ================= */
   app.addEventListener('click', function (ev) {
