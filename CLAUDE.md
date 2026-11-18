@@ -15,7 +15,7 @@ Lernplattform: **Deutsch für Türkischsprechende** (Kurs `de`, Erklärungen/Obe
 - Jede Aufgabe, jedes Wort, jeder Dialog hat eine **feste ID**. IDs nie ändern, nie wiederverwenden. Neue Einträge → neue ID.
 - Texte verbessern, umsortieren, verschieben, löschen ist erlaubt – der Fortschritt hängt an der ID.
 - Änderungen am Speicherformat nur über einen neuen Schritt in `migrate()` (`js/app.js`); vorher wird automatisch `dt-backup` geschrieben.
-- Bei jedem Release `APP_VERSION` in `js/app.js` **und** alle `?v=` in `index.html` erhöhen.
+- Bei jedem Release `python3 tools/bump-version.py` (erhöht `APP_VERSION` in `js/app.js` **und** alle `?v=` in `index.html`).
 
 ## Git
 - Commits als `Sinan Demir <106678135+SinanDmrr@users.noreply.github.com>` direkt auf `main` (zählt für die Contributions des Besitzers).

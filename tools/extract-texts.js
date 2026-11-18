@@ -16,6 +16,10 @@ scripts.forEach(s => vm.runInContext(fs.readFileSync(path.join(root, s), 'utf8')
 
 const K = ctx.window.KOPRU;
 const plain = s => String(s || '').replace(/\*\*|\*/g, '').trim();   // identisch zu plain() in app.js
+function addEx(ex, set) {
+  if ((ex.t === 'gap' || ex.t === 'order' || ex.t === 'dictation') && ex.a && ex.a[0]) set.add(plain(ex.a[0]));
+  if (ex.say) set.add(plain(ex.say));
+}
 const out = {};
 Object.values(K.courses).forEach(c => {
   const set = new Set();
@@ -25,10 +29,18 @@ Object.values(K.courses).forEach(c => {
       (b.ex || []).forEach(e => set.add(plain(e[0])));
       (b.vocab || []).forEach(v => set.add(plain(v[0])));
     });
-    (d.exercises || []).forEach(ex => {
-      if ((ex.t === 'gap' || ex.t === 'order') && ex.a && ex.a[0]) set.add(plain(ex.a[0]));
-    });
+    (d.exercises || []).forEach(ex => addEx(ex, set));
   }));
+  const lv = c.target;  // Wortschatz & Dialoge: Schlüssel beginnen mit Kurs-ID (de-a1, tr-a1 …)
+  Object.entries(K.vocab || {}).forEach(([key, list]) => {
+    if (!key.startsWith(c.id + '-')) return;
+    list.forEach(v => { set.add(plain(v.t)); if (v.ex) set.add(plain(v.ex)); });
+  });
+  Object.entries(K.dialogs || {}).forEach(([id, d]) => {
+    if (!id.startsWith(c.id + '-')) return;
+    (d.lines || []).forEach(l => set.add(plain(l.t)));
+    (d.questions || []).forEach(q => addEx(q, set));
+  });
   set.delete('');
   out[c.target] = [...set].sort();
 });

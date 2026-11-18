@@ -277,6 +277,9 @@ a.topic-card:hover { border-color: var(--primary); transform: translateY(-1px); 
 .gap-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
 .gap-input.right { border-color: var(--ok); background: var(--ok-soft); }
 .gap-input.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.audio-bar { display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 16px; }
+.audio-main { font-size: 1.05rem; padding: 12px 20px; }
+.dict-input { width: 100%; max-width: 560px; display: block; margin: 0; font-size: 1.15rem; padding: 10px 12px; }
 .charbar { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
 .charbar button { min-width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); cursor: pointer; font-weight: 700; }
 .charbar button:hover { border-color: var(--primary); }

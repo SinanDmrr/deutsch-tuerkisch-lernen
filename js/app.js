@@ -8,7 +8,7 @@
   var BACKUP = 'dt-backup';          // Kopie vor jedem App-Update / jeder Migration
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var SCHEMA = 2;                    // Version des Speicherformats
-  var APP_VERSION = '2026-11-17.11';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-18.1';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -136,6 +136,12 @@
     voiceMissing: ['Keine türkische Stimme gefunden', 'Almanca ses bulunamadı'],
     noSpeech: ['Dieser Browser kann nicht vorlesen.', 'Bu tarayıcı sesli okuma desteklemiyor.'],
     test: ['Testen', 'Dene'],
+    play: ['Anhören', 'Dinle'],
+    slow: ['Langsam', 'Yavaş'],
+    listenQ: ['Was hörst du?', 'Ne duyuyorsun?'],
+    dictationQ: ['Hör zu und schreib, was du hörst.', 'Dinle ve duyduğunu yaz.'],
+    typeWhatYouHear: ['Was hörst du?', 'Duyduğunu yaz …'],
+    heard: ['Zu hören war', 'Okunan'],
     voiceAuto: ['Automatisch', 'Otomatik'],
     piperInfo: ['Beispiele, Vokabeln und Lösungen werden mit Open-Source-Stimmen (Piper) vorgelesen – auf jedem Gerät gleich:', 'Örnekler, kelimeler ve cevaplar açık kaynak seslerle (Piper) okunur – her cihazda aynı:'],
     piperMissing: ['Die Open-Source-Audiodateien werden gerade erzeugt oder sind nicht erreichbar – bis dahin wird die Gerätestimme genutzt.', 'Açık kaynak ses dosyaları şu an hazırlanıyor veya erişilemiyor – o zamana kadar cihaz sesi kullanılır.'],
@@ -320,18 +326,20 @@
       .catch(function () { /* offline oder lokal geöffnet → Gerätestimme */ });
   }
   function piperVoices(lang2) { return (AUDIO && AUDIO.voices && AUDIO.voices[lang2]) || {}; }
+  var slowNext = false;   // nächste Wiedergabe langsamer (🐢)
   function playUrl(url, onFail) {
     try {
       if (canSpeak) speechSynthesis.cancel();
       if (curAudio) curAudio.pause();
       curAudio = new Audio(url);
+      if (slowNext) { curAudio.playbackRate = 0.72; try { curAudio.preservesPitch = true; } catch (e) { /* alt */ } }
       var p = curAudio.play();
       if (p && p.catch) p.catch(function () { if (onFail) onFail(); });
     } catch (e) { if (onFail) onFail(); }
   }
   // Reihenfolge der Quellen je nach Wunsch: Automatisch → Piper ♀, Piper ♂, Gerät; ♀/♂ → Piper gewünscht, Gerät gewünscht, Rest
-  function speak(text, lang, voiceName, retried) {
-    var key = plain(text).trim(), lang2 = lang.slice(0, 2), g = db.voiceGender || '';
+  function speak(text, lang, voiceName, retried, forceGender) {
+    var key = plain(text).trim(), lang2 = lang.slice(0, 2), g = forceGender || db.voiceGender || '';
     if (!voiceName && AUDIO) {
       var pv = piperVoices(lang2), order = g === 'm' ? ['male', 'female'] : ['female', 'male'];
       var deviceHasG = g && sortedVoices(lang).some(function (v) { return voiceGender(v) === g; });
@@ -356,7 +364,7 @@
       if (curAudio) curAudio.pause();
       speechSynthesis.cancel();
       var u = new SpeechSynthesisUtterance(plain(text));
-      u.voice = v; u.lang = v.lang || lang; u.rate = 0.92;
+      u.voice = v; u.lang = v.lang || lang; u.rate = slowNext ? 0.65 : 0.92;
       speechSynthesis.speak(u);
     } catch (e) { /* ignore */ }
   }
@@ -428,6 +436,11 @@
       }).join('') + '</select><button class="btn" data-act="voice-test">▶ ' + esc(t('test')) + '</button></div>' +
       '<p class="muted small" style="margin-top:8px">' + esc(t('voiceTip')) + '</p>';
     return seg + piper + '<h3 style="margin:14px 0 4px;font-size:.95rem">' + esc(t('deviceVoice')) + '</h3>' + device;
+  }
+  function speakSlow(text, lang, g) { slowNext = true; speak(text, lang, null, false, g); setTimeout(function () { slowNext = false; }, 50); }
+  function audioBar(say) {
+    return '<div class="audio-bar"><button class="btn primary audio-main" data-act="play-say" data-say="' + esc(say) + '">🔊 ' + esc(t('play')) + '</button>' +
+      '<button class="btn" data-act="play-say" data-slow="1" data-say="' + esc(say) + '" title="' + esc(t('slow')) + '">🐢 ' + esc(t('slow')) + '</button></div>';
   }
   function speakBtn(text) {
     if (!canSpeak) return '';
@@ -777,15 +790,20 @@
 
     var body = '', qtext = '', hint = '';
     var target = course().target;
-    if (ex.t === 'mc') {
-      qtext = md(ex.q);
-      body = '<div class="options" role="radiogroup">' + ex.o.map(function (o, i) {
+    if (ex.t === 'mc' || ex.t === 'listen') {
+      qtext = md(ex.q || t('listenQ'));
+      body = (ex.t === 'listen' ? audioBar(ex.say) : '') + '<div class="options" role="radiogroup">' + ex.o.map(function (o, i) {
         var cls = '';
         if (checked) { if (i === ex.a) cls = ' right'; else if (i === c.sel) cls = ' wrong'; }
         else if (i === c.sel) cls = ' sel';
         return '<button class="opt' + cls + '" data-act="mc" data-i="' + i + '" role="radio" aria-checked="' + (i === c.sel) + '"' + (checked ? ' disabled' : '') + '>' +
           '<span class="key">' + 'ABCDEFG'[i] + '</span><span>' + md(o) + '</span></button>';
       }).join('') + '</div>';
+    } else if (ex.t === 'dictation') {
+      qtext = md(ex.q || t('dictationQ'));
+      var dcls = checked ? (res.ok ? ' right' : ' wrong') : '';
+      body = audioBar(ex.say) + '<input class="gap-input dict-input' + dcls + '" id="gap-input" autocomplete="off" autocapitalize="off" spellcheck="false" lang="' + target + '" placeholder="' + esc(t('typeWhatYouHear')) + '" value="' + esc(c.input) + '"' + (checked ? ' disabled' : '') + '>';
+      if (!checked) body += '<div class="charbar">' + course().chars.map(function (ch) { return '<button data-act="char" data-ch="' + esc(ch) + '" tabindex="-1">' + esc(ch) + '</button>'; }).join('') + '</div>';
     } else if (ex.t === 'gap') {
       var parts = ex.q.split(/_{3,}/);
       var inputCls = checked ? (res.ok ? ' right' : ' wrong') : '';
@@ -829,18 +847,18 @@
       (hint ? '<p class="qhint">' + esc(hint) + '</p>' : '') + body + '<div aria-live="polite">' + fb + '</div>' + actions + '</div>';
   }
   function canCheck(ex, c) {
-    if (ex.t === 'mc') return c.sel !== null;
-    if (ex.t === 'gap') return String(c.input).trim().length > 0;
+    if (ex.t === 'mc' || ex.t === 'listen') return c.sel !== null;
+    if (ex.t === 'gap' || ex.t === 'dictation') return String(c.input).trim().length > 0;
     if (ex.t === 'order') return c.picked.length > 0;
     if (ex.t === 'match') return c.choice.every(function (x) { return x; });
     return false;
   }
   function evaluate(ex, c) {
     var lang = course().target;
-    if (ex.t === 'mc') {
+    if (ex.t === 'mc' || ex.t === 'listen') {
       return { ok: c.sel === ex.a, given: ex.o[c.sel], correct: ex.o[ex.a], hint: ex.why && ex.why[c.sel] };
     }
-    if (ex.t === 'gap') {
+    if (ex.t === 'gap' || ex.t === 'dictation') {
       var val = c.input, nv = norm(val, lang, ex.cs);
       var ok = ex.a.some(function (a) { return norm(a, lang, ex.cs) === nv; });
       var hint = null;
@@ -867,7 +885,7 @@
   function feedbackHtml(ex, res) {
     var e = ex.e ? '<div class="fb-sec"><h4>' + esc(t('whyRight')) + '</h4><p>' + md(ex.e) + '</p></div>' : '';
     if (res.ok) {
-      return '<div class="fb ok"><div class="fb-title">' + esc(t('great')) + '</div>' + (ex.e ? '<p style="margin:0">' + md(ex.e) + '</p>' : '') + '</div>';
+      return '<div class="fb ok"><div class="fb-title">' + esc(t('great')) + '</div>' + (ex.say ? '<p style="margin:0 0 6px"><b lang="' + course().target + '">' + md(ex.say) + '</b> ' + speakBtn(ex.say) + '</p>' : '') + (ex.e ? '<p style="margin:0">' + md(ex.e) + '</p>' : '') + '</div>';
     }
     var correctHtml;
     if (res.match) {
@@ -878,9 +896,10 @@
       return '<div class="fb bad"><div class="fb-title">' + esc(t('notQuite')) + '</div>' + correctHtml + e + '</div>';
     }
     var why = res.hint || t('genericWrong');
-    return '<div class="fb bad"><div class="fb-title">' + esc(t('notQuite')) + '</div>' +
+    var heard = ex.say ? '<div class="fb-row"><span class="k">' + esc(t('heard')) + ':</span><b lang="' + course().target + '">' + md(ex.say) + '</b> ' + speakBtn(ex.say) + '</div>' : '';
+    return '<div class="fb bad"><div class="fb-title">' + esc(t('notQuite')) + '</div>' + heard +
       '<div class="fb-row"><span class="k">' + esc(t('yourAnswer')) + ':</span><s>' + md(res.given || '–') + '</s></div>' +
-      '<div class="fb-row"><span class="k">' + esc(t('rightAnswer')) + ':</span><b>' + md(res.correct) + '</b> ' + ((ex.t === 'gap' || ex.t === 'order') ? speakBtn(res.correct) : '') + '</div>' +
+      (ex.t === 'dictation' ? '' : '<div class="fb-row"><span class="k">' + esc(t('rightAnswer')) + ':</span><b>' + md(res.correct) + '</b> ' + ((ex.t === 'gap' || ex.t === 'order') ? speakBtn(res.correct) : '') + '</div>') +
       '<div class="fb-sec"><h4>' + esc(t('whyWrong')) + '</h4><p>' + md(why) + '</p></div>' + e + '</div>';
   }
   function renderSummary() {
@@ -1066,6 +1085,12 @@
     var y = window.scrollY; render(); window.scrollTo(0, y);
   }
   function afterRender() {
+    if (player && !player.done && !player.checked) {
+      var it = curEx();
+      if (it && it.ex.say && (it.ex.t === 'listen' || it.ex.t === 'dictation') && player.autoKey !== it.id) {
+        player.autoKey = it.id; setTimeout(function () { speak(it.ex.say, course().tts); }, 250);
+      }
+    }
     var gi = document.getElementById('gap-input');
     if (gi && !gi.disabled) { gi.focus({ preventScroll: true }); var v = gi.value; gi.value = ''; gi.value = v; }
     var nb = document.getElementById('next-btn');
@@ -1120,6 +1145,7 @@
         if (smp) playUrl('audio/' + smp); else deviceSpeak(t('testSentence'), course().tts);
       } break;
       case 'play-sample': playUrl(el.getAttribute('data-url')); break;
+      case 'play-say': if (el.getAttribute('data-slow')) speakSlow(el.getAttribute('data-say'), course().tts, el.getAttribute('data-g') || ''); else speak(el.getAttribute('data-say'), course().tts, null, false, el.getAttribute('data-g') || ''); break;
       case 'voice-test': { var sel = document.getElementById('voice-sel'); speak(t('testSentence'), course().tts, sel ? sel.value : null); break; }
       case 'reset-course': if (armed(el, t('confirmReset'))) { prof().prog[courseId()] = {}; save(); player = null; render(); } break;
     }
@@ -1146,7 +1172,7 @@
   document.addEventListener('keydown', function (ev) {
     if (!player || ev.target.tagName === 'INPUT' || ev.target.tagName === 'SELECT' || ev.altKey || ev.ctrlKey || ev.metaKey) return;
     var item = player.done ? null : curEx(); if (!item) return;
-    if (!player.checked && item.ex.t === 'mc' && /^[1-7a-gA-G]$/.test(ev.key)) {
+    if (!player.checked && (item.ex.t === 'mc' || item.ex.t === 'listen') && /^[1-7a-gA-G]$/.test(ev.key)) {
       var i = /\d/.test(ev.key) ? +ev.key - 1 : 'abcdefg'.indexOf(ev.key.toLowerCase());
       if (i < item.ex.o.length) { player.cur.sel = i; rerenderPlayerOnly(); }
     }
