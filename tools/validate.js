@@ -60,6 +60,11 @@ Object.values(K.courses).forEach(c => Object.entries(c.levels).forEach(([lv, l])
   if (topicIds.has(id)) err('Thema doppelt', id); topicIds.add(id);
   prefix(id, c.id + '-' + lv.toLowerCase() + '-', 'Thema');
 })));
+// ADR-11: als „complete“ freigegebene Niveaus müssen für jedes Thema Inhalt haben (sonst Zertifikat/Einstufung falsch)
+Object.values(K.courses).forEach(c => (c.complete || []).forEach(lv => {
+  if (!c.levels[lv]) return err(`complete: Niveau ${lv} gibt es im Kurs ${c.id} nicht`);
+  c.levels[lv].forEach(([id]) => { const d = K.content[id]; if (!d || !d.exercises || !d.exercises.length) err(`complete: ${c.id} ${lv} ist freigegeben, aber Thema ohne Inhalt`, id); });
+}));
 
 function checkExercise(e, where) {
   useId(e.id, where);

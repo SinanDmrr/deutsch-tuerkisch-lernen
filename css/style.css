@@ -516,3 +516,5 @@ footer.foot { max-width: 1040px; margin: 0 auto; padding: 0 16px 40px; color: va
   body.typing main { padding-bottom: 40vh; }   /* Platz, damit das Feld über die Tastatur geschoben werden kann */
   .gap-input { font-size: 16px; }              /* < 16 px zoomt iOS beim Antippen ungefragt hinein */
 }
+.badge.warn { background: var(--warn-soft); color: #8a4500; }
+[data-theme="dark"] .badge.warn { color: #ffc078; }

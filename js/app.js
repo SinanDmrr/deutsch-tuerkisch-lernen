@@ -9,7 +9,7 @@
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var DT = window.DT;
   var SCHEMA = DT.storage.SCHEMA;    // Version des Speicherformats (Migrationen nur in js/core/storage.js)
-  var APP_VERSION = '2026-11-18.18';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-18.20';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -25,6 +25,9 @@
     bannerCorrupt: ['Dein Speicherstand war beschädigt und es gab keine Sicherung. Eine Kopie bleibt aufbewahrt (dt-corrupt) – bitte melde dich über „Rechtliches“, dann helfen wir.', 'Kayıtlı verin bozulmuştu ve yedek yoktu. Bir kopyası saklanıyor (dt-corrupt) – lütfen “Yasal bilgiler” sayfasındaki bağlantıdan bize yaz, yardımcı olalım.'],
     micNoLang: ['Dein Browser erkennt diese Sprache leider nicht – sag den Satz einfach laut.', 'Tarayıcın bu dili maalesef tanımıyor – cümleyi sadece sesli söyle.'],
     back: ['Zurück', 'Geri'],
+    certBuilding: ['{lv} ist noch im Aufbau – das Zertifikat gibt es, sobald alle Themen da sind. Dein Fortschritt zählt schon jetzt mit.', '{lv} henüz hazırlanıyor – tüm konular tamamlanınca sertifikayı alabilirsin. İlerlemen şimdiden sayılıyor.'],
+    building: ['im Aufbau · {a}/{n} Themen', 'hazırlanıyor · {a}/{n} konu'],
+    buildingHint: ['Neue Themen kommen nach und nach dazu. Dein Fortschritt bleibt erhalten; die Prozente beziehen sich auf die Themen, die es schon gibt.', 'Yeni konular adım adım ekleniyor. İlerlemen korunur; yüzdeler şu an mevcut olan konulara göre hesaplanır.'],
     charsLabel: ['Fehlt auf deiner Tastatur?', 'Klavyende yok mu?'],
     charInsert: ['„{c}“ einfügen', '“{c}” ekle'],
     tabHome: ['Start', 'Ana sayfa'],
@@ -376,7 +379,9 @@
   // Mehrere Tabs: Änderungen aus einem anderen Tab übernehmen statt sie zu überschreiben
   window.addEventListener('storage', function (e) {
     if (e.key !== STORE || !e.newValue) return;
-    try { var d = JSON.parse(e.newValue); if (d && d.profiles && (d.v || 1) <= SCHEMA) { d = DT.storage.migrate(d, DT.time.dayNum(), DT.time.dayKey()).data; db = d; if (!db.profiles[db.active]) db.active = Object.keys(db.profiles)[0] || null; render(); } } catch (err) { /* ignore */ }
+    try { var d = JSON.parse(e.newValue);
+      if (d && d.profiles && (d.v || 1) > SCHEMA) { newerData = true; render(); return; }   // ADR-11/13: alter Tab darf neue Daten nie überschreiben
+      if (d && d.profiles && (d.v || 1) <= SCHEMA) { d = DT.storage.migrate(d, DT.time.dayNum(), DT.time.dayKey()).data; db = d; if (!db.profiles[db.active]) db.active = Object.keys(db.profiles)[0] || null; render(); } } catch (err) { /* ignore */ }
   });
   function askPersist() {
     try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) { /* ignore */ }
@@ -420,6 +425,14 @@
   // Prozentangabe in der Schreibweise der Oberflächensprache: „42 %“ (de) bzw. „%42“ (tr)
   function fmtPct(n) { return uiLang() === 'tr' ? '%' + n : n + '\u00a0%'; }
   function levelHas(lv) { return sumStats(levelTopics(lv)).n > 0; }
+  // ADR-11: Status je Niveau – complete (im Lehrplan freigegeben), building (hat schon Inhalt), planned (sonst)
+  function levelComplete(lv) { return (course().complete || []).indexOf(lv) >= 0; }
+  function levelBuilding(lv) { return levelHas(lv) && !levelComplete(lv); }
+  function buildingBadge(lv) {
+    if (!levelBuilding(lv)) return '';
+    var l = levelTopics(lv).filter(function (x) { return x.kind !== 'dialog'; }), done = l.filter(function (x) { return x.avail; }).length;
+    return ' <span class="badge warn" title="' + esc(t('buildingHint')) + '">🚧 ' + esc(t('building', { a: done, n: l.length })) + '</span>';
+  }
   function splitLevels() {
     var live = LEVELS.filter(levelHas), planned = LEVELS.filter(function (lv) { return !levelHas(lv); });
     return { live: live, planned: planned, label: planned.length ? planned[0] + (planned.length > 1 ? '–' + planned[planned.length - 1] : '') : '' };
@@ -1006,7 +1019,7 @@
     var has = s.n > 0, p = pct(s.c, s.n), sk = skippedOpenCount(list);
     return '<a class="level-row' + (has ? '' : ' disabled') + '" href="#/lessons/' + lv + '" style="color:inherit;text-decoration:none">' +
       '<span class="lvl lvl-' + lv + '">' + lv + '</span>' +
-      '<div><div class="lr-title"><span>' + esc(levelName(lv)) + '</span><span class="muted small">' +
+      '<div><div class="lr-title"><span>' + esc(levelName(lv)) + buildingBadge(lv) + '</span><span class="muted small">' +
         (has ? s.c + ' / ' + s.n + ' ' + esc(t('tasks')) + (sk ? ' · ' + esc(t('skippedPct', { p: pct(sk, s.n) })) : '') : esc(t('comingSoon'))) + '</span></div>' +
         '<div class="bar"><span class="fill-' + lv + '" style="width:' + p + '%"></span>' + (sk ? '<span class="skip" style="width:' + pct(sk, s.n) + '%"></span>' : '') + '</div></div>' +
       '<span class="pct">' + (has ? fmtPct(p) : '–') + '</span></a>';
@@ -1075,7 +1088,7 @@
     var sl = splitLevels();
     var section = function (lv) {
       var list = levelTopics(lv), s = sumStats(list);
-      return '<section class="level-section" id="lv-' + lv + '"><div class="level-head"><span class="lvl lvl-' + lv + '">' + lv + '</span><h2>' + esc(levelName(lv)) + '</h2>' +
+      return '<section class="level-section" id="lv-' + lv + '"><div class="level-head"><span class="lvl lvl-' + lv + '">' + lv + '</span><h2>' + esc(levelName(lv)) + buildingBadge(lv) + '</h2>' +
         (s.n ? '<div class="bar"><span class="fill-' + lv + '" style="width:' + pct(s.c, s.n) + '%"></span>' + (skippedOpenCount(list) ? '<span class="skip" style="width:' + pct(skippedOpenCount(list), s.n) + '%"></span>' : '') + '</div><b>' + fmtPct(pct(s.c, s.n)) + '</b>' : '<span class="badge">' + esc(t('comingSoon')) + '</span>') +
         '</div><div class="topic-grid">' + list.filter(function (x) { return x.kind !== 'dialog'; }).map(topicCard).join('') + '</div>' +
         (list.some(function (x) { return x.kind === 'dialog'; }) ? '<h3 class="sub-head">💬 ' + esc(t('dialogsTitle')) + '</h3><div class="topic-grid">' + list.filter(function (x) { return x.kind === 'dialog'; }).map(topicCard).join('') + '</div>' : '') +
@@ -1572,7 +1585,7 @@
           '<div class="ov-bar"><div class="bar"><span class="ok" style="width:' + pct(x.c, x.n) + '%"></span><span class="bad" style="width:' + pct(x.w, x.n) + '%"></span></div></div>' +
           '<span class="num ok">' + fmtPct(pct(x.c, x.n)) + '</span><span class="num bad">' + fmtPct(pct(x.w, x.n)) + '</span><span class="num">' + fmtPct(pct(x.o, x.n)) + '</span></div>';
       }).join('');
-      return '<div class="card section"><div class="level-head"><span class="lvl lvl-' + lv + '">' + lv + '</span><h2>' + esc(levelName(lv)) + '</h2>' +
+      return '<div class="card section"><div class="level-head"><span class="lvl lvl-' + lv + '">' + lv + '</span><h2>' + esc(levelName(lv)) + buildingBadge(lv) + '</h2>' +
         (s.n ? '<span class="muted small">' + esc(t('total')) + ': <b style="color:var(--ok)">' + fmtPct(pct(s.c, s.n)) + ' ' + esc(t('correct')) + '</b> · <b style="color:var(--bad)">' + fmtPct(pct(s.w, s.n)) + ' ' + esc(t('wrong')) + '</b> · ' + fmtPct(pct(s.o, s.n)) + ' ' + esc(t('open')) + '</span>' : '<span class="badge">' + esc(t('comingSoon')) + '</span>') + '</div>' +
         '<div class="ov-row head"><span>' + esc(t('topic')) + '</span><span class="ov-bar"></span><span class="num">✓</span><span class="num">✗</span><span class="num">○</span></div>' + rows + '</div>';
     };
@@ -1712,7 +1725,7 @@
   }
   function viewCertificate(lv) {
     lv = LEVELS.indexOf(lv) >= 0 ? lv : 'A1';
-    if (!levelHas(lv)) return '<div class="crumbs"><a href="#/dashboard">' + esc(t('dashboard')) + '</a></div><h1>🎓 ' + esc(t('certTitle', { lv: lv })) + '</h1><div class="card empty"><p>' + esc(t('comingSoon')) + '</p></div>';
+    if (!levelComplete(lv)) return '<h1>🎓 ' + esc(t('certTitle', { lv: lv })) + '</h1><div class="card empty"><p>' + esc(levelHas(lv) ? t('certBuilding', { lv: lv }) : t('comingSoon')) + '</p></div>';
     var cs = certStatus(lv), p = prof(), cid = courseId(), de = cid === 'de';
     var head = '<div class="crumbs"><a href="#/dashboard">' + esc(t('dashboard')) + '</a></div><h1>🎓 ' + esc(t('certTitle', { lv: lv })) + '</h1>';
     if (!cs.ok) return head + '<div class="card empty"><p>' + esc(t('certNotYet')) + '</p><p class="muted small">' + esc(t('certEx', { p: cs.exPct }) + ' · ' + t('certWords', { p: cs.wPct })) + '</p><a class="btn primary" href="#/dashboard">' + esc(t('continueLearning')) + ' →</a></div>';
@@ -2168,7 +2181,7 @@
     if (ev.key === 'Enter' && ev.target.id === 'ob-name') { ev.preventDefault(); var b = app.querySelector('[data-act="ob-start"]'); if (b) b.click(); }
   });
   document.addEventListener('keydown', function (ev) {
-    if (!player || ev.target.tagName === 'INPUT' || ev.target.tagName === 'SELECT' || ev.altKey || ev.ctrlKey || ev.metaKey) return;
+    if (!player || ev.target.tagName === 'INPUT' || ev.target.tagName === 'SELECT' || ev.target.tagName === 'TEXTAREA' || ev.target.isContentEditable || ev.altKey || ev.ctrlKey || ev.metaKey) return;
     var item = player.done ? null : curEx(); if (!item) return;
     if (!player.checked && (item.ex.t === 'mc' || item.ex.t === 'listen') && /^[1-7a-gA-G]$/.test(ev.key)) {
       var pos = /\d/.test(ev.key) ? +ev.key - 1 : 'abcdefg'.indexOf(ev.key.toLowerCase());
