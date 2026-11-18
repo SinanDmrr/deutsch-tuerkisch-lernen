@@ -9,7 +9,7 @@
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var DT = window.DT;
   var SCHEMA = DT.storage.SCHEMA;    // Version des Speicherformats (Migrationen nur in js/core/storage.js)
-  var APP_VERSION = '2026-11-18.14';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-18.15';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -921,7 +921,8 @@
         '<span class="flag">' + flag(cid) + '</span><b>' + esc(cid === 'de' ? 'Almanca öğrenmek istiyorum' : 'Ich möchte Türkisch lernen') + '</b>' +
         '<span class="muted">' + esc(c.sublabel) + ' · A1 → C2</span></button>';
     }).join('');
-    return '<main><div class="onboard">' + LOGO +
+    return (storageBroken ? '<div class="save-banner" role="alert">⚠️ Der gespeicherte Lernstand war beschädigt und es gab keine Sicherung. Eine Kopie bleibt aufbewahrt (dt-corrupt). · Kayıtlı ilerleme bozulmuştu ve yedek yoktu. Bir kopyası saklanıyor (dt-corrupt).</div>' : '') +
+      '<main><div class="onboard">' + LOGO +
       '<h1>Deutsch ⇄ Türkçe</h1><p class="muted">Willkommen! · Hoş geldin!</p>' +
       '<div class="course-cards">' + cards + '</div>' +
       '<div class="field"><label for="ob-name">Name / İsim <span class="muted">(optional / isteğe bağlı)</span></label>' +
@@ -1921,6 +1922,7 @@
   /* ================= Render ================= */
   function render() {
     applyTheme();
+    Object.keys(db.profiles || {}).forEach(function (id) { var pp = db.profiles[id]; if (pp && !K.courses[pp.course]) pp.course = 'de'; });
     if (!db.active || !db.profiles[db.active]) {
       var ids = Object.keys(db.profiles);
       if (ids.length) { db.active = ids[0]; save(); }
