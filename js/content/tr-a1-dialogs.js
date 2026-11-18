@@ -37,7 +37,7 @@ K.addDialog('tr-a1-d01', {
 K.addDialog('tr-a1-d02', {
   level: 'A1', title: 'Beim Bäcker', sub: 'Fırında',
   lines: [
-    { s: "Fırıncı", g: "m", t: "Günaydın! Buyurun, ne istersiniz?", n: "Guten Morgen! Bitte, was möchten Sie?" },
+    { s: "Fırıncı", g: "m", t: "Günaydın! Buyurun, ne istersiniz?", n: "Guten Morgen! Was darf’s sein?" },
     { s: "Müşteri", g: "f", t: "Günaydın. İki ekmek, lütfen. Ekmekler taze mi?", n: "Guten Morgen. Zwei Brote, bitte. Ist das Brot frisch?" },
     { s: "Fırıncı", g: "m", t: "Tabii, daha yeni çıktı, sıcacık!", n: "Natürlich, gerade aus dem Ofen, noch ganz warm!" },
     { s: "Müşteri", g: "f", t: "Çok güzel. Simit de var mı?", n: "Sehr schön. Gibt es auch Simit?" },
@@ -53,7 +53,7 @@ K.addDialog('tr-a1-d02', {
       e: "**iki ekmek** = zwei Brote, **üç tane** (simit) = drei Stück. Nach Zahlen steht kein Plural: iki ekmek, nicht „iki ekmekler“." },
     { id: "tr-a1-d02.q2", t: "mc", q: "Was bedeutet „Kolay gelsin!“?", o: ["Guten Appetit!", "Frohes Schaffen! (Gutes Gelingen bei der Arbeit)", "Kommen Sie bald wieder!"], a: 1,
       why: { 0: "„Guten Appetit“ heißt „Afiyet olsun“.", 2: "Das wäre z. B. „Yine bekleriz“ – und das sagt eher der Verkäufer." },
-      e: "„Kolay gelsin“ (wörtlich „Möge es leicht gehen“) sagt man zu jemandem, der gerade arbeitet – Verkäufern, Handwerkern, Kollegen. Eine sehr typische, freundliche Floskel." },
+      e: "„Kolay gelsin“ (wörtlich „Möge es leicht gehen“) sagt man zu jemandem, der gerade arbeitet – Verkäufern, Handwerkern, Kollegen. Eine sehr typische, freundliche Floskel. Im Deutschen gibt es dafür keine feste Entsprechung – „Frohes Schaffen“ kommt dem am nächsten, klingt aber eher scherzhaft." },
     { id: "tr-a1-d02.q3", t: "listen", say: "Üç tane, lütfen.", q: "Was hörst du?", o: ["Üç tane, lütfen.", "İki tane, lütfen.", "Üç tabak, lütfen."], a: 0,
       why: { 1: "„iki“ heißt zwei. Gehört hast du „üç“ (drei) – achte auf das ü am Anfang.", 2: "„tabak“ heißt Teller. Gemeint ist „tane“ (Stück)." },
       e: "**tane** = Stück. Beim Einkaufen sagt man Zahl + tane: bir tane, üç tane." },
@@ -66,16 +66,16 @@ K.addDialog('tr-a1-d02', {
 K.addDialog('tr-a1-d03', {
   level: 'A1', title: 'Im Restaurant bestellen', sub: 'Lokantada',
   lines: [
-    { s: "Garson", g: "m", t: "Hoş geldiniz! Kaç kişisiniz?", n: "Willkommen! Wie viele Personen sind Sie?" },
+    { s: "Garson", g: "m", t: "Hoş geldiniz! Kaç kişisiniz?", n: "Herzlich willkommen! Für wie viele Personen?" },
     { s: "Lena", g: "f", t: "Hoş bulduk. İki kişiyiz.", n: "Danke. Wir sind zu zweit." },
     { s: "Garson", g: "m", t: "Şu masaya buyurun. Menü burada.", n: "Bitte, an diesen Tisch. Hier ist die Speisekarte." },
     { s: "Lena", g: "f", t: "Teşekkürler. Günün çorbası ne?", n: "Danke. Was ist die Tagessuppe?" },
-    { s: "Garson", g: "m", t: "Mercimek çorbası. Ana yemek olarak da tavuk şiş öneririm.", n: "Linsensuppe. Als Hauptgericht empfehle ich Hähnchenspieß." },
+    { s: "Garson", g: "m", t: "Mercimek çorbası. Ana yemek olarak da tavuk şiş öneririm.", n: "Linsensuppe. Als Hauptgericht empfehle ich den Hähnchenspieß." },
     { s: "Lena", g: "f", t: "Tamam, iki mercimek çorbası ve bir tavuk şiş alalım.", n: "Gut, dann nehmen wir zwei Linsensuppen und einen Hähnchenspieß." },
     { s: "Garson", g: "m", t: "İçecek olarak ne alırsınız?", n: "Was möchten Sie trinken?" },
     { s: "Lena", g: "f", t: "Bir ayran ve bir şişe su, lütfen.", n: "Einen Ayran und eine Flasche Wasser, bitte." },
     { s: "Garson", g: "m", t: "Hemen geliyor. Afiyet olsun!", n: "Kommt sofort. Guten Appetit!" },
-    { s: "Lena", g: "f", t: "Pardon, hesabı alabilir miyiz?", n: "Entschuldigung, können wir bitte zahlen?" }
+    { s: "Lena", g: "f", t: "Pardon, hesabı alabilir miyiz? Her şey çok lezzetliydi.", n: "Entschuldigung, können wir bitte zahlen? Es war alles sehr lecker." }
   ],
   questions: [
     { id: "tr-a1-d03.q1", t: "mc", q: "Wie viele Personen sind am Tisch?", o: ["eine", "zwei", "drei"], a: 1,
@@ -130,8 +130,8 @@ K.addDialog('tr-a1-d05', {
     { s: "Şoför", g: "m", t: "Otuz beş lira.", n: "Fünfunddreißig Lira." },
     { s: "Yolcu", g: "f", t: "Affedersiniz, parayı şoföre uzatır mısınız?", n: "Entschuldigung, könnten Sie das Geld zum Fahrer nach vorne reichen?" },
     { s: "Yolcu 2", g: "m", t: "Tabii, verin.", n: "Klar, geben Sie her." },
-    { s: "Yolcu", g: "f", t: "Teşekkürler. Müsait bir yerde inebilir miyim?", n: "Danke. Kann ich bei der nächsten Gelegenheit aussteigen?" },
-    { s: "Şoför", g: "m", t: "Tabii, köprüden sonra duruyorum. Para üstünüz de burada.", n: "Natürlich, nach der Brücke halte ich. Ihr Wechselgeld ist auch hier." },
+    { s: "Yolcu", g: "f", t: "Teşekkürler. Müsait bir yerde inebilir miyim?", n: "Danke. Kann ich an einer passenden Stelle aussteigen?" },
+    { s: "Şoför", g: "m", t: "Tabii, köprüden sonra duruyorum. Para üstünüz de burada.", n: "Natürlich, nach der Brücke halte ich. Und hier ist Ihr Wechselgeld." },
     { s: "Yolcu", g: "f", t: "Sağ olun, iyi günler!", n: "Danke, schönen Tag noch!" }
   ],
   questions: [
@@ -189,7 +189,7 @@ K.addDialog('tr-a1-d07', {
     { s: "Hasta", g: "m", t: "Evet, biraz öksürüyorum. Boğazım da ağrıyor.", n: "Ja, ich huste ein bisschen. Mein Hals tut auch weh." },
     { s: "Doktor", g: "f", t: "Ağzınızı açın, lütfen. Evet, grip olmuşsunuz.", n: "Machen Sie bitte den Mund auf. Ja, Sie haben eine Grippe." },
     { s: "Hasta", g: "m", t: "İlaç gerekli mi?", n: "Brauche ich Medikamente?" },
-    { s: "Doktor", g: "f", t: "Size bir şurup yazıyorum. Günde üç kez için.", n: "Ich verschreibe Ihnen einen Saft. Nehmen Sie ihn dreimal täglich." },
+    { s: "Doktor", g: "f", t: "Size bir şurup yazıyorum. Günde üç kez için.", n: "Ich verschreibe Ihnen einen Hustensaft. Nehmen Sie ihn dreimal täglich." },
     { s: "Hasta", g: "m", t: "İşe gidebilir miyim?", n: "Kann ich zur Arbeit gehen?" },
     { s: "Doktor", g: "f", t: "Hayır, iki gün evde dinlenin. Bol su için.", n: "Nein, ruhen Sie sich zwei Tage zu Hause aus. Trinken Sie viel Wasser." },
     { s: "Hasta", g: "m", t: "Çok teşekkür ederim.", n: "Vielen Dank." }
