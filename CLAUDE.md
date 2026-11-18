@@ -50,7 +50,7 @@ Lernplattform: **Deutsch für Türkischsprechende** (Kurs `de`, Erklärungen/Obe
 - `match`: `{ id, t:"match", q, p:[[links, rechts], …], e }`
 - `listen`: `{ id, t:"listen", say:"Zieltext (wird vorgelesen)", q, o:[…], a, why, e }` – hören und wählen
 - `dictation`: `{ id, t:"dictation", say:"Zieltext", a:[Schreibweisen], wrong, e }` – hören und schreiben
-- `speak`: `{ id, t:"speak", say:"Satz zum Nachsprechen", e }` – Spracherkennung, wo verfügbar
+- `speak`: `{ id, t:"speak", say:"Satz zum Nachsprechen", alt:[gleichwertige Schreibweisen]?, e }` – Spracherkennung, wo verfügbar; ungewerteter Bonus (zählt nicht in Prozente). Keine Ziffern/Eigennamen in `say`.
 
 Wortschatz (`K.addVocab("de-a1", [...])`): `{ id:"de-a1.w001", t:"Zielwort (DE-Nomen mit Artikel)", pl:"Plural (nur DE-Nomen)", pos:"n|v|adj|adv|phr|x", n:"Übersetzung", ex:"eigener Beispielsatz", exn:"Übersetzung", topic:"Wortfeld-ID aus K.wordfields", note:"optional: typischer Fehler/Hinweis in der Erklärsprache" }`
 

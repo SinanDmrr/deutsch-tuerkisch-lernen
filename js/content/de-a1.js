@@ -4,6 +4,7 @@
  *  gap   { q:'… ___ …', a:[richtige Antworten], wrong:{'falsche Antwort':'warum'}, cs:true (Groß/klein beachten), e }
  *  order { q, w:[Wörter], a:[richtige Sätze], e }
  *  match { q, p:[[links, rechts], …], e }
+ *  speak { say:'Satz zum Nachsprechen (3–8 Wörter, keine Ziffern/Eigennamen)', alt:[optionale Schreibweisen], e:'Aussprache-Tipp' }
  * Jede Aufgabe hat eine feste ID (id: "thema.nummer"). Daran hängt der Lernfortschritt der Nutzer.
  * REGELN FÜR UPDATES (damit niemand Fortschritt verliert):
  *  - Eine vergebene ID NIE ändern und NIE für eine andere Aufgabe wiederverwenden.
@@ -15,14 +16,15 @@
 
 K.add('de-a1-01', {
   lesson: [
-    { p: "Almanca, Latin alfabesini kullanır: 26 harf + **ä, ö, ü** ve **ß**. Türkçeden en büyük farkı, bazı harf gruplarının birlikte farklı okunmasıdır. Almancada **ç, ş, ğ, ı** harfleri yoktur – bu sesler harf kombinasyonlarıyla yazılır." },
+    { p: "Almanca, Latin alfabesini kullanır: 26 harf + **ä, ö, ü** ve **ß**. Türkçeden en büyük farkı, bazı harf gruplarının birlikte farklı okunmasıdır. Almancada **ç, ş, ğ, ı** harfleri yoktur: ç ve ş sesleri harf gruplarıyla yazılır (**tsch**, **sch**), ğ sesi ise Almancada hiç yoktur." },
     { table: { head: ["Yazılış", "Okunuş (Türkçe)", "Örnek"], rows: [
       ["ei / ai", "ay", "mein (mayn), Mai"],
       ["ie", "uzun i", "Liebe (liibe)"],
       ["eu / äu", "oy", "heute (hoyte), Häuser"],
       ["sch", "ş", "Schule (şule)"],
       ["tsch", "ç", "Deutsch (doyç)"],
-      ["ch", "hırıltılı h", "ich, Buch"],
+      ["ch (e, i, ä, ö, ü, ei, eu, l, n, r’den sonra)", "yumuşak h – dil damağa yaklaşır (“ç” değil!)", "ich, Milch, Küche"],
+      ["ch (a, o, u, au’dan sonra)", "gırtlaktan gelen hırıltılı h", "Buch, acht, auch"],
       ["z", "ts", "Zeit (tsayt)"],
       ["v", "genelde f", "Vater (faater)"],
       ["w", "v", "Wasser (vasser)"],
@@ -39,7 +41,7 @@ K.add('de-a1-01', {
   ],
   exercises: [
     { id: "de-a1-01.1", t: "mc", q: "“Wein” (şarap) nasıl okunur?", o: ["veyn", "vayn", "vin", "feyn"], a: 1,
-      why: { 0: "“ei” Almancada “ey” değil, **“ay”** okunur.", 2: "Uzun “i” sesi “ie” ile yazılır (Wien = viin). Burada “ei” var.", 3: "“W” Almancada “v” okunur, “f” değil. “f” sesi çoğu zaman “v” harfiyle yazılır (Vater)." },
+      why: { 0: "“ei” Almancada “ey” değil, **“ay”** okunur.", 2: "Uzun “i” sesi “ie” ile yazılır (Wien = viin). Burada “ei” var.", 3: "“W” Almancada “v” okunur, “f” değil. Tersine, “f” sesi bazen “v” harfiyle yazılır (Vater) – ama “w” asla f okunmaz." },
       e: "**ei = ay**, **w = v** → “vayn”." },
     { id: "de-a1-01.2", t: "mc", q: "“Schule” (okul) kelimesindeki “sch” hangi sese denk gelir?", o: ["s", "ş", "ç", "sk"], a: 1,
       why: { 0: "“sch” üç harf birlikte tek bir ses verir: ş.", 2: "“ç” sesi Almancada “tsch” yazılır (Deutsch).", 3: "Harf harf okunmaz; “sch” birlikte “ş” olur." },
@@ -64,7 +66,11 @@ K.add('de-a1-01', {
       e: "Kelime/hece başında **sp = şp**, **st = şt**: Sport (şport), Straße (ştrase), verstehen (ferştehen)." },
     { id: "de-a1-01.9", t: "gap", q: "“ß” yerine (ör. İsviçre’de) hangi iki harf yazılır? Stra___e", a: ["ss"],
       wrong: { "s": "Tek “s” yetmez – “ß” keskin, uzun bir s sesidir ve **ss** ile değiştirilir.", "sz": "Adı “Eszett” olsa da yerine **ss** yazılır." },
-      e: "**ß = ss** → Strasse. Almanya’da “ß” uzun sesliden sonra (Straße), “ss” kısa sesliden sonra kullanılır (Wasser)." }
+      e: "**ß = ss** → Strasse. Almanya’da “ß” uzun sesliden ve ei/au gibi çift seslilerden sonra (Straße, heißen), “ss” ise kısa sesliden sonra kullanılır (Wasser)." },
+    { id: "de-a1-01.10", t: "speak", say: "Zwei Zitronen und viel Zucker, bitte.",
+      e: "Almanca **z** her zaman **ts** okunur: “tsvay, tsitroonen, tsukker”. Türkçedeki gibi yumuşak “z” dersen Almanlar başka bir kelime duyar. **viel** = “fiil”: v burada f, ie uzun i. Vurgu: Zi-**TRO**-nen." },
+    { id: "de-a1-01.11", t: "speak", say: "Ich mache das noch heute.",
+      e: "Bu cümlede iki farklı **ch** var: **ich**’te dil damağa yaklaşır, yumuşak bir “h” çıkar – “iç” ya da “ik” deme! **mache** ve **noch**’ta ise ch gırtlaktan, hırıltılı gelir (a/o’dan sonra). **heute** = “hoyte” (eu = oy)." }
   ]
 });
 
@@ -113,7 +119,11 @@ K.add('de-a1-02', {
       e: "Akşam selamlaşma: **Guten Abend!**" },
     { id: "de-a1-02.8", t: "gap", cs: true, q: "Mein ___ ist Ayşe. (adım)", a: ["Name"],
       wrong: { "name": "Neredeyse! Almancada isimler **büyük harfle** yazılır: **Name**.", "Namen": "“Namen” çoğul/çekimli hâl. Burada: **Name**." },
-      e: "**Mein Name ist …** = Benim adım … (Name büyük harfle, çünkü isim.)" }
+      e: "**Mein Name ist …** = Benim adım … (Name büyük harfle, çünkü isim.)" },
+    { id: "de-a1-02.9", t: "speak", say: "Guten Abend, wie geht es Ihnen?",
+      e: "**geht** ve **Ihnen**’deki h okunmaz, sadece sesliyi uzatır: “geet”, “iinen”. **Guten**’daki u uzundur: “guuten”. **wie** = “vii” (w = v, ie = uzun i). Kibar bir soru olduğu için sesin sonda hafifçe yükselebilir." },
+    { id: "de-a1-02.10", t: "speak", say: "Freut mich, Sie kennenzulernen.",
+      e: "**Freut** = “froyt” (eu = oy). **mich**’teki ch yumuşaktır, “miç” değil. **Sie** = “zii”: kelime başında sesliden önce s, z okunur. Uzun kelimeyi parçalara böl: ken-nen-**tsu**-ler-nen (z = ts); vurgu ilk hecede: **KEN**-nen-zu-ler-nen." }
   ]
 });
 
@@ -130,16 +140,16 @@ K.add('de-a1-03', {
     { ex: [["Ich bin Student.", "Ben öğrenciyim."], ["Bist du müde?", "Yorgun musun?"], ["Wir sind aus Ankara.", "Biz Ankaralıyız."], ["Sie ist Ärztin.", "O doktordur. (kadın)"]] }
   ],
   exercises: [
-    { id: "de-a1-03.1", t: "gap", q: "Ich ___ Student.", a: ["bin"],
+    { id: "de-a1-03.1", t: "gap", q: "Ich ___ Student. (sein)", a: ["bin"],
       wrong: { "ist": "“ist” üçüncü tekil şahıs (er/sie/es) içindir. ich → **bin**.", "bist": "“bist” du içindir. ich → **bin**.", "sind": "“sind” wir/sie/Sie içindir. ich → **bin**." },
       e: "**ich bin** – ben …-im." },
-    { id: "de-a1-03.2", t: "gap", q: "Du ___ sehr nett.", a: ["bist"],
+    { id: "de-a1-03.2", t: "gap", q: "Du ___ sehr nett. (sein)", a: ["bist"],
       wrong: { "bin": "“bin” ich içindir. du → **bist**.", "ist": "“ist” er/sie/es içindir. du → **bist**." },
       e: "**du bist** – sen …-sin." },
-    { id: "de-a1-03.3", t: "gap", q: "Wir ___ aus Ankara.", a: ["sind"],
-      wrong: { "seid": "“seid” ihr (siz) içindir. wir → **sind**." },
+    { id: "de-a1-03.3", t: "gap", q: "Wir ___ aus Ankara. (sein)", a: ["sind"],
+      wrong: { "seid": "“seid” ihr (siz) içindir. wir → **sind**.", "kommen": "“Wir kommen aus Ankara” de doğru bir cümle, ama burada **sein** fiili isteniyor → **sind**." },
       e: "**wir sind** – biz …-iz." },
-    { id: "de-a1-03.4", t: "gap", q: "Ihr ___ heute aber fleißig!", a: ["seid"],
+    { id: "de-a1-03.4", t: "gap", q: "Ihr ___ heute aber fleißig! (sein)", a: ["seid"],
       wrong: { "sind": "“sind” wir/sie/Sie içindir. **ihr** (siz, samimi) → **seid**.", "seit": "Dikkat: “seit” (-den beri) bir edattır. “sein” fiili: ihr **seid** (d ile)." },
       e: "**ihr seid** – siz (arkadaş grubu) …-siniz." },
     { id: "de-a1-03.5", t: "mc", q: "Er ___ Lehrer.", o: ["bin", "bist", "ist", "sind"], a: 2,
@@ -152,7 +162,11 @@ K.add('de-a1-03', {
       why: { 0: "Resmi “Sie” ile fiil **sind** olur, “ist” değil.", 2: "“onlar” ile fiil **sind** olurdu." },
       e: "Fiil **ist** → tekil 3. şahıs → **sie = o (kadın)**. Cümle başında olduğu için büyük yazılmış." },
     { id: "de-a1-03.8", t: "order", q: "Cümleyi kur: “Ben yorgun değilim.”", w: ["nicht", "Ich", "müde", "bin"], a: ["Ich bin nicht müde"],
-      e: "Özne + **bin** + nicht + sıfat → *Ich bin nicht müde.*" }
+      e: "Özne + **bin** + nicht + sıfat → *Ich bin nicht müde.*" },
+    { id: "de-a1-03.9", t: "speak", say: "Wir sind heute sehr müde.",
+      e: "**sind**: baştaki s sesliden önce “z”, sondaki d ise “t” okunur → “zint”. Almancada kelime sonundaki b, d, g sertleşir (p, t, k). **müde**: ü uzun, sondaki e yutulmaz ama kısa ve belirsizdir: “müüde”. **sehr** = “zeea”, r neredeyse duyulmaz." },
+    { id: "de-a1-03.10", t: "speak", say: "Bist du auch Student?",
+      e: "**Student**: kelime başındaki st = **şt** → “ştudent”, vurgu son hecede: ştu-**DENT**. **auch**: au’dan sonra ch gırtlaktan gelir, “auh”. Evet/hayır sorusu olduğu için ses sonda yükselir – Türkçedeki “mi” ekinin yerini tonlama tutar." }
   ]
 });
 
@@ -180,10 +194,10 @@ K.add('de-a1-04', {
       why: { 0: "-ung ile biten isimler eril değil, **dişildir**.", 2: "-ung ile biten isimler nötr değil, **dişildir**." },
       e: "**-ung** → her zaman **die**: die Zeitung, die Wohnung." },
     { id: "de-a1-04.2", t: "mc", q: "___ Mädchen (kız çocuğu)", o: ["der", "die", "das"], a: 2,
-      why: { 0: "Eril değil.", 1: "Mantıken dişil gibi görünüyor ama dilbilgisi kuralı farklı: -chen → das!" },
+      why: { 0: "Kelimenin sonundaki **-chen** küçültme ekidir ve artikeli her zaman belirler: der olamaz → **das**.", 1: "Mantıken dişil gibi görünüyor ama dilbilgisi kuralı farklı: -chen → das!" },
       e: "**-chen** ile biten her isim **das** alır – doğal cinsiyet önemli değil." },
     { id: "de-a1-04.3", t: "mc", q: "___ Montag (pazartesi)", o: ["der", "die", "das"], a: 0,
-      why: { 1: "Günler dişil değildir.", 2: "Günler nötr değildir." },
+      why: { 1: "Haftanın bütün günleri (Montag … Sonntag) **der** alır, die değil.", 2: "Haftanın bütün günleri **der** alır; das olmaz – “Tag” (gün) kelimesi de eril: der Tag." },
       e: "Günler, aylar ve mevsimler **der** alır." },
     { id: "de-a1-04.4", t: "mc", q: "___ Freiheit (özgürlük)", o: ["der", "die", "das"], a: 1,
       why: { 0: "-heit ile biten isimler dişildir.", 2: "-heit ile biten isimler dişildir." },
@@ -198,7 +212,11 @@ K.add('de-a1-04', {
       why: { 0: "Çoğulda “der” kullanılmaz.", 2: "“das Kind” tekildir; çoğulu “**die** Kinder”." },
       e: "Çoğulda artikel **her zaman die**." },
     { id: "de-a1-04.8", t: "match", q: "Eşleştir:", p: [["der Vater", "baba"], ["die Mutter", "anne"], ["das Kind", "çocuk"], ["das Haus", "ev"], ["die Stadt", "şehir"]],
-      e: "Artikelleri kelimeyle birlikte öğren!" }
+      e: "Artikelleri kelimeyle birlikte öğren!" },
+    { id: "de-a1-04.9", t: "speak", say: "Das Mädchen liest ein Buch.",
+      e: "**Mädchen**: ä uzun açık e, ch yumuşak → “meedhen”; “meçen” deme. **liest**: ie uzun i → “liist”. **Buch**: u’dan sonra ch gırtlaktan → “buuh”. Artikeli yutma: **das** kısa ama net söylenir, çünkü cinsiyeti o gösterir." },
+    { id: "de-a1-04.10", t: "speak", say: "Die Zeitung liegt auf dem Tisch.",
+      e: "**Zeitung** = “tsaytuŋ”: z = ts, ei = ay; sondaki **-ung**’da g ayrı okunmaz, n ile birlikte genizden çıkar. **liegt**: kelime sonundaki g, k gibi okunur → “liikt”. **Tisch** = “tiş”." }
   ]
 });
 
@@ -246,7 +264,11 @@ K.add('de-a1-05', {
       e: "arbeiten: kök “arbeit-” -t ile bittiği için: ihr arbeit**e**t." },
     { id: "de-a1-05.9", t: "mc", q: "“Ich lese ein Buch.” Türkçeye nasıl çevrilir?", o: ["Sadece “Bir kitap okuyorum.”", "Sadece “Bir kitap okurum.”", "Bağlama göre ikisi de olabilir", "“Bir kitap okudum.”"], a: 2,
       why: { 0: "Almanca Präsens hem -yor hem -r anlamına gelir.", 1: "Almanca Präsens hem -yor hem -r anlamına gelir.", 3: "Bu geçmiş zaman olurdu (Ich habe … gelesen)." },
-      e: "Almancada ayrı bir “şimdiki zaman” yoktur. **Präsens** = şimdiki + geniş zaman (+ yakın gelecek)." }
+      e: "Almancada ayrı bir “şimdiki zaman” yoktur. **Präsens** = şimdiki + geniş zaman (+ yakın gelecek)." },
+    { id: "de-a1-05.10", t: "speak", say: "Er fährt jeden Tag nach Hause.",
+      e: "**fährt**: ä uzun açık e, r neredeyse duyulmaz → “feeat”. **Tag**: sondaki g, k gibi okunur → “taak”. **nach**: a’dan sonra ch gırtlaktan → “naah”. **Hause**: au = “au”, s sesliden önce z → “hauze”." },
+    { id: "de-a1-05.11", t: "speak", say: "Sprichst du schon gut Deutsch?",
+      e: "**sprichst** = “şprihst”: sp = şp, ch yumuşak. Türkçe konuşanlar ünsüz yığınlarına “ı” ekler (“şıprihist”) – ekleme, ünsüzleri arka arkaya söyle. **schon** = “şoon”. **Deutsch** = “doyç”." }
   ]
 });
 
@@ -289,7 +311,11 @@ K.add('de-a1-06', {
       e: "Yaş sorarken: **Wie alt** bist du?" },
     { id: "de-a1-06.8", t: "mc", q: "___ lernst du Deutsch? – Weil ich in Deutschland arbeite.", o: ["Wann", "Warum", "Was", "Wohin"], a: 1,
       why: { 0: "Wann = ne zaman.", 2: "Was = ne.", 3: "Wohin = nereye." },
-      e: "“Weil …” (çünkü) cevabı → soru: **Warum?** (Neden?)" }
+      e: "“Weil …” (çünkü) cevabı → soru: **Warum?** (Neden?)" },
+    { id: "de-a1-06.9", t: "speak", say: "Wo wohnst du jetzt?",
+      e: "**Wo** = “voo”, **wohnst** = “voonst” (w = v, h okunmaz, o uzun). **jetzt** = “yetst” (j = y). W-sorularında ses sonda **düşer**; evet/hayır sorusundaki gibi yükselmez." },
+    { id: "de-a1-06.10", t: "speak", say: "Morgen gehe ich ins Kino.",
+      e: "Fiil 2. sırada: Morgen – **gehe** – ich. **gehe** = “gee-e” (h okunmaz). **Kino** = “kiino”, i uzun. **Morgen**’deki r hafif, sondaki -en kısa: “morgın”e yakın. “gehe ich” birbirine bağlı, duraksamadan söylenir." }
   ]
 });
 
@@ -320,9 +346,9 @@ K.add('de-a1-07', {
       why: { 0: "“den” sadece eril isimler içindir. Milch dişil.", 2: "“der” dişil Akkusativ değildir." },
       e: "Dişil isimler Akkusativ’de **değişmez**: die → die." },
     { id: "de-a1-07.4", t: "mc", q: "Wir sehen ___ Kind. (das Kind)", o: ["den", "das", "dem"], a: 1,
-      why: { 0: "“den” eril içindir.", 2: "“dem” Dativ’dir (A2 konusu)." },
+      why: { 0: "“den” sadece eril isimler içindir; Kind nötr.", 2: "“dem” Dativ’dir (mit dem Bus gibi). “sehen” Akkusativ ister → nötrde **das**." },
       e: "Nötr isimler Akkusativ’de değişmez: das → das." },
-    { id: "de-a1-07.5", t: "gap", q: "Ich liebe ___ . (seni)", a: ["dich"],
+    { id: "de-a1-07.5", t: "gap", q: "Ich liebe ___. (seni)", a: ["dich"],
       wrong: { "du": "“du” özne hâlidir. Nesne (seni) → **dich**.", "dir": "“dir” Dativ’dir (sana). “lieben” Akkusativ ister → **dich**." },
       e: "du → Akkusativ **dich** (seni)." },
     { id: "de-a1-07.6", t: "mc", q: "Kennst du den Lehrer? – Ja, ich kenne ___.", o: ["er", "ihn", "ihm"], a: 1,
@@ -333,7 +359,11 @@ K.add('de-a1-07', {
       e: "haben + Akkusativ: *Ich habe **einen** Bruder.*" },
     { id: "de-a1-07.8", t: "gap", q: "Hier gibt es ___ Supermarkt. (bir – der Supermarkt)", a: ["einen"],
       wrong: { "ein": "“es gibt” her zaman Akkusativ ister → eril: **einen**." },
-      e: "**es gibt** + Akkusativ: *Es gibt einen Supermarkt.*" }
+      e: "**es gibt** + Akkusativ: *Es gibt einen Supermarkt.*" },
+    { id: "de-a1-07.9", t: "speak", say: "Ich kaufe heute einen Kühlschrank.",
+      e: "**einen**: sondaki -en kısa ve belirsiz okunur (“aynın”e yakın) ama **n** mutlaka duyulmalı – Akkusativ’i bu n’den anlarız! **Kühlschrank** = “küül-şrank”: ü uzun, h okunmaz, sch = ş. Birleşik kelimede vurgu ilk parçadadır: **KÜHL**-schrank." },
+    { id: "de-a1-07.10", t: "speak", say: "Kennst du ihn schon lange?",
+      e: "**ihn** = “iin”: h okunmaz, i uzun. Sondaki **n**’yi net söyle; dudaklarını kapatırsan **ihm** (Dativ, “ona”) duyulur. **Kennst**: ünsüzler arka arkaya – araya “ı” ekleme (“kennıst” değil). **lange**: ng tek bir genizden ses, g ayrıca okunmaz → “laŋe”." }
   ]
 });
 
@@ -363,15 +393,19 @@ K.add('de-a1-08', {
     { id: "de-a1-08.4", t: "mc", q: "Das Essen ist ___ gut.", o: ["nicht", "kein", "keine"], a: 0,
       why: { 1: "Sıfat (gut) olumsuz yapılıyor → nicht.", 2: "Sıfat → nicht." },
       e: "Sıfat → **nicht**." },
-    { id: "de-a1-08.5", t: "gap", q: "Er hat ___ Kinder.", a: ["keine"],
+    { id: "de-a1-08.5", t: "gap", q: "Er hat ___ Kinder. (Hiç çocuğu yok.)", a: ["keine"],
       wrong: { "kein": "Çoğulda **keine** kullanılır.", "nicht": "“Kinder” artikelsiz bir isim → **keine**.", "keinen": "“keinen” sadece eril tekil Akkusativ içindir. Çoğul → **keine**." },
       e: "Çoğul → **keine**." },
-    { id: "de-a1-08.6", t: "gap", q: "Ich trinke ___ Kaffee. (der Kaffee – Akkusativ)", a: ["keinen"],
+    { id: "de-a1-08.6", t: "gap", q: "Ich trinke ___ Kaffee. (Kahve içmem. – der Kaffee)", a: ["keinen"],
       wrong: { "kein": "Kaffee eril ve burada nesne (Akkusativ) → **keinen**.", "keine": "Kaffee eril → **keinen**.", "nicht": "Artikelsiz isim → **kein-**; eril Akkusativ → **keinen**." },
       e: "Eril + Akkusativ: einen → **keinen**." },
     { id: "de-a1-08.7", t: "mc", q: "Ist das dein Auto? – Nein, das ist ___ mein Auto.", o: ["kein", "nicht", "keine"], a: 1,
       why: { 0: "“mein” bir iyelik kelimesidir; önünde “kein” kullanılmaz.", 2: "İyelik kelimesi var → **nicht**." },
-      e: "İyelik (mein, dein …) veya belirli artikel varsa → **nicht**." }
+      e: "İyelik (mein, dein …) veya belirli artikel varsa → **nicht**." },
+    { id: "de-a1-08.8", t: "speak", say: "Ich habe heute keine Zeit.",
+      e: "**keine** = “kayne” (ei = ay), **Zeit** = “tsayt” (z = ts). İki kelimede de “ey” deme, ağzını açıp **ay** de. Olumsuzluğu gösteren **keine** cümlede vurgulanır." },
+    { id: "de-a1-08.9", t: "speak", say: "Nein, das ist nicht richtig.",
+      e: "**nicht** = “niht”: ch yumuşak, “niçt” değil. **richtig**: iki ch de yumuşak; sondaki **-ig** standart telaffuzda “-ih” okunur → “rihtih” (Güney Almanya’da “rihtik” de duyarsın). **Nein** = “nayn”." }
   ]
 });
 
@@ -417,7 +451,11 @@ K.add('de-a1-09', {
       e: "10:15 = **Viertel nach zehn**." },
     { id: "de-a1-09.8", t: "gap", q: "17 = ___", a: ["siebzehn"],
       wrong: { "siebenzehn": "17’de “en” düşer: **siebzehn**.", "siebzig": "Bu 70. 17 = **siebzehn**." },
-      e: "17 = **siebzehn** (sieben → sieb)." }
+      e: "17 = **siebzehn** (sieben → sieb)." },
+    { id: "de-a1-09.9", t: "speak", say: "Der Kurs beginnt um halb acht.", alt: ["Der Kurs beginnt um halb 8."],
+      e: "Anlamı unutma: **halb acht = 7:30**, 8:30 değil! **acht** = “aht”: a’dan sonra ch gırtlaktan gelir. **beginnt**: vurgu ikinci hecede → be-**GINNT**. **halb**: sondaki b, p gibi okunur → “halp”." },
+    { id: "de-a1-09.10", t: "speak", say: "Wir treffen uns um Viertel vor neun.", alt: ["Wir treffen uns um Viertel vor 9."],
+      e: "**Viertel** = “firtıl”: v = f ve **i kısa** (oysa vier = “fiir”, i uzun). **neun** = “noyn” (eu = oy). **Viertel vor neun** = 8:45, yani dokuza çeyrek var." }
   ]
 });
 
@@ -425,7 +463,7 @@ K.add('de-a1-10', {
   lesson: [
     { p: "Türkçede iyelik ekle yapılır (*ev-im*). Almancada ismin önüne bir kelime gelir: **mein** Haus (evim)." },
     { table: { head: ["Kişi", "Türkçe", "eril / nötr", "dişil / çoğul"], rows: [
-      ["ich", "benim", "mein", "meine"], ["du", "senin", "dein", "deine"], ["er / es", "onun (erkek)", "sein", "seine"],
+      ["ich", "benim", "mein", "meine"], ["du", "senin", "dein", "deine"], ["er / es", "onun (erkek / nötr)", "sein", "seine"],
       ["sie", "onun (kadın)", "ihr", "ihre"], ["wir", "bizim", "unser", "unsere"], ["ihr", "sizin", "euer", "eure"],
       ["sie", "onların", "ihr", "ihre"], ["Sie", "Sizin (resmi)", "Ihr", "Ihre"]
     ] } },
@@ -454,7 +492,11 @@ K.add('de-a1-10', {
       e: "ihr (siz, samimi) → **euer** (eril)." },
     { id: "de-a1-10.7", t: "mc", q: "Herr Schmidt, ist das ___ Auto? (Sizin – resmi)", o: ["dein", "Ihr", "ihr"], a: 1,
       why: { 0: "“dein” samimidir (senin).", 2: "Küçük “ihr” = onun (kadın) / onların." },
-      e: "Resmi “Sizin” → büyük **Ihr**." }
+      e: "Resmi “Sizin” → büyük **Ihr**." },
+    { id: "de-a1-10.8", t: "speak", say: "Ist das deine Tasche oder meine?",
+      e: "**deine** = “dayne”, **meine** = “mayne” (ei = ay). Sondaki **-e**’yi yutma: dişil isimde (die Tasche) iyelik kelimesinin sonunu o gösterir. **Tasche** = “taşe”. **oder**’in sonundaki r “a” gibi okunur → “ooda”." },
+    { id: "de-a1-10.9", t: "speak", say: "Unser Sohn spielt gern Fußball.",
+      e: "**unser**: sondaki -er “a”ya döner → “unza”; r’yi Türkçedeki gibi yuvarlama. **Sohn** = “zoon” (s sesliden önce z, h okunmaz, o uzun). **spielt** = “şpiilt”. **Fußball** = “fuusbal”: ß = ss, u uzun." }
   ]
 });
 
@@ -494,7 +536,11 @@ K.add('de-a1-11', {
       e: "wir **wollen** (mastar gibi)." },
     { id: "de-a1-11.7", t: "mc", q: "“Du musst nicht kommen.” ne demek?", o: ["Gelmek zorunda değilsin.", "Gelmemelisin / Gelmen yasak.", "Gelemezsin."], a: 0,
       why: { 1: "Yasak için “Du darfst nicht kommen” denir.", 2: "“Gelemezsin” = Du kannst nicht kommen." },
-      e: "**nicht müssen** = zorunda olmamak." }
+      e: "**nicht müssen** = zorunda olmamak." },
+    { id: "de-a1-11.8", t: "speak", say: "Darf ich hier kurz parken?",
+      e: "**Darf** ve **parken**’de a’dan sonraki r çok hafiftir, neredeyse uzun bir a gibi: “daaf”, “paaken”. Türkçedeki gibi r’yi titretme. **ich** = “ih” (yumuşak ch). Kibar izin sorusu: modal fiil başta, ses sonda yükselir." },
+    { id: "de-a1-11.9", t: "speak", say: "Wir müssen jetzt leider gehen.",
+      e: "**müssen**: ü kısa, ss sert s. Dikkat: tekilde **u** (ich muss), çoğulda **ü** (wir müssen) – “wir mussen” deme. **jetzt** = “yetst”. **leider** = “layda” (ei = ay, sondaki -er “a” gibi). Mastar **gehen** sonda." }
   ]
 });
 
@@ -528,7 +574,11 @@ K.add('de-a1-12', {
       why: { 1: "Ön ek ayrılmalı ve sona gitmeli.", 2: "Çekimli fiil 2. sırada, ön ek sonda." },
       e: "Er **sieht** jeden Abend **fern**." },
     { id: "de-a1-12.6", t: "order", q: "Cümleyi kur: “Sen de geliyor musun?”", w: ["mit", "Kommst", "du"], a: ["Kommst du mit"],
-      e: "Evet/hayır sorusu: fiil başta (**Kommst**), ön ek sonda (**mit**)." }
+      e: "Evet/hayır sorusu: fiil başta (**Kommst**), ön ek sonda (**mit**)." },
+    { id: "de-a1-12.7", t: "speak", say: "Wann stehst du morgen auf?",
+      e: "Ayrılabilen fiillerde vurgu **ön ekte**dir: **AUF**stehen. Cümlede de sondaki **auf** vurgulu ve net söylenir. **stehst** = “şteest”: st = şt, h okunmaz. **Wann** = “van”, a kısa." },
+    { id: "de-a1-12.8", t: "speak", say: "Ich rufe dich heute Abend an.",
+      e: "Sondaki **an**’ı yutma ve vurgula – o olmadan anlam değişir: “Ich rufe dich” = sana sesleniyorum / seni çağırıyorum. **rufe** = “ruufe”, u uzun. **Abend** = “aabınt”: sondaki d, t gibi okunur. **dich** = “dih”, “diç” değil." }
   ]
 });
 

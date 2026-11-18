@@ -9,7 +9,7 @@
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var DT = window.DT;
   var SCHEMA = DT.storage.SCHEMA;    // Version des Speicherformats (Migrationen nur in js/core/storage.js)
-  var APP_VERSION = '2026-11-18.9';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-18.10';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -1236,8 +1236,9 @@
     }
     if (ex.t === 'speak') {
       if (c.selfOk) return { ok: true, given: '', correct: ex.say };
-      var target = norm(ex.say, lang), best = 0;
-      (c.heardAlts || []).forEach(function (h) { best = Math.max(best, levRatio(norm(h, lang), target)); });
+      // Ziel und gleichwertige Schreibweisen (alt, z. B. „halb 8“ statt „halb acht“) – die beste Übereinstimmung zählt
+      var targets = [ex.say].concat(ex.alt || []).map(function (x) { return norm(x, lang); }), best = 0;
+      (c.heardAlts || []).forEach(function (h) { var nh = norm(h, lang); targets.forEach(function (tg) { best = Math.max(best, levRatio(nh, tg)); }); });
       return { ok: best >= 0.8, given: c.heard, correct: ex.say, hint: best >= 0.6 ? t('speakAlmost') : t('speakRetry') };
     }
     if (ex.t === 'order') {

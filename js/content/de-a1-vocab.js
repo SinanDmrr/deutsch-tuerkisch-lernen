@@ -18,7 +18,7 @@ K.addVocab('de-a1', [
   { id: "de-a1.w009", t: "danke", pos: "x", n: "teşekkürler, sağ ol", ex: "Danke für die Hilfe!", exn: "Yardımın için teşekkürler!", topic: "greet", note: "Daha kibar: „Vielen Dank!“ ya da „Danke schön!“" },
   { id: "de-a1.w010", t: "Entschuldigung!", pos: "phr", n: "affedersiniz, pardon", ex: "Entschuldigung, wo ist die Toilette?", exn: "Affedersiniz, tuvalet nerede?", topic: "greet", note: "Birine bir şey sormadan önce de, özür dilerken de kullanılır." },
   { id: "de-a1.w011", t: "Wie geht's?", pos: "phr", n: "nasılsın?", ex: "Hallo Lea, wie geht's?", exn: "Selam Lea, nasılsın?", topic: "greet", note: "Resmî hâli: „Wie geht es Ihnen?“ – Cevap: „Gut, danke. Und Ihnen?“" },
-  { id: "de-a1.w012", t: "Es tut mir leid.", pos: "phr", n: "üzgünüm; kusura bakma", ex: "Es tut mir leid, ich bin zu spät.", exn: "Kusura bakma, geç kaldım.", topic: "greet", note: "Kötü bir haber duyunca „geçmiş olsun / çok üzüldüm“ anlamında da kullanılır." },
+  { id: "de-a1.w012", t: "Es tut mir leid.", pos: "phr", n: "üzgünüm; kusura bakma", ex: "Es tut mir leid, ich komme zu spät.", exn: "Kusura bakma, geç kaldım.", topic: "greet", note: "Kötü bir haber duyunca „geçmiş olsun / çok üzüldüm“ anlamında da kullanılır." },
   { id: "de-a1.w013", t: "Wie bitte?", pos: "phr", n: "efendim? pardon, anlamadım", ex: "Wie bitte? Ich habe Sie nicht verstanden.", exn: "Efendim? Sizi anlayamadım.", topic: "greet", note: "Bir şeyi duymadığında ya da anlamadığında kibarca böyle sorarsın. Sadece „Was?“ demek kaba kaçabilir." },
   { id: "de-a1.w014", t: "Freut mich!", pos: "phr", n: "memnun oldum", ex: "Ich bin Murat. – Freut mich!", exn: "Ben Murat. – Memnun oldum!", topic: "greet" },
   { id: "de-a1.w015", t: "ja", pos: "x", n: "evet", ex: "Ja, das stimmt.", exn: "Evet, doğru.", topic: "greet", note: "„j“ Almancada „y“ okunur: ja = ya." },
@@ -105,7 +105,7 @@ K.addVocab('de-a1', [
   { id: "de-a1.w092", t: "der Abend", pl: "die Abende", pos: "n", n: "akşam", ex: "Am Abend sehe ich fern.", exn: "Akşamları televizyon izlerim.", topic: "numbers" },
   { id: "de-a1.w093", t: "die Zeit", pl: "die Zeiten", pos: "n", n: "zaman, vakit", ex: "Hast du heute Zeit?", exn: "Bugün vaktin var mı?", topic: "numbers", note: "„z“ = ts, „ei“ = ay: Zeit = tsayt." },
   { id: "de-a1.w094", t: "halb", pos: "x", n: "buçuk (bir sonraki saate yarım var)", ex: "Wir treffen uns um halb vier.", exn: "Üç buçukta buluşuyoruz.", topic: "numbers", note: "Dikkat! „halb vier“ = 3:30, 4:30 değil. Almanca bir sonraki saate bakar: dörde yarım saat var." },
-  { id: "de-a1.w095", t: "das Viertel", pl: "die Viertel", pos: "n", n: "çeyrek", ex: "Es ist Viertel nach acht.", exn: "Saat sekizi çeyrek geçiyor.", topic: "numbers", note: "Viertel nach = çeyrek geçiyor, Viertel vor = çeyrek var. Okunuşu: fiirtel." },
+  { id: "de-a1.w095", t: "das Viertel", pl: "die Viertel", pos: "n", n: "çeyrek", ex: "Es ist Viertel nach acht.", exn: "Saat sekizi çeyrek geçiyor.", topic: "numbers", note: "Viertel nach = çeyrek geçiyor, Viertel vor = çeyrek var. Okunuşu: firtıl – i kısa (oysa vier = fiir, i uzun)." },
 
   /* ---------- food: Essen & Trinken ---------- */
   { id: "de-a1.w096", t: "das Brot", pl: "die Brote", pos: "n", n: "ekmek", ex: "Das Brot ist noch warm.", exn: "Ekmek hâlâ sıcak.", topic: "food" },
@@ -113,7 +113,7 @@ K.addVocab('de-a1', [
   { id: "de-a1.w098", t: "das Wasser", pos: "n", n: "su", ex: "Ein Glas Wasser, bitte.", exn: "Bir bardak su lütfen.", topic: "food", note: "„W“ = v: Wasser = vasser. Maden suyu: das Mineralwasser." },
   { id: "de-a1.w099", t: "der Kaffee", pos: "n", n: "kahve", ex: "Trinkst du Kaffee mit Milch?", exn: "Kahveyi sütlü mü içiyorsun?", topic: "food", note: "Siparişte genelde çoğul eki almaz: Zwei Kaffee, bitte." },
   { id: "de-a1.w100", t: "der Tee", pos: "n", n: "çay", ex: "Möchtest du einen Tee?", exn: "Çay ister misin?", topic: "food", note: "Almanya'da „Tee“ denince çoğu zaman bitki ya da meyve çayı anlaşılır. Bizim bildiğimiz çay için „schwarzer Tee“ de." },
-  { id: "de-a1.w101", t: "die Milch", pos: "n", n: "süt", ex: "Die Milch ist im Kühlschrank.", exn: "Süt buzdolabında.", topic: "food", note: "„ch“ burada „ç“ değil, dişlerin arasından çıkan yumuşak bir „h“dir (ich-sesi): milhh." },
+  { id: "de-a1.w101", t: "die Milch", pos: "n", n: "süt", ex: "Die Milch ist im Kühlschrank.", exn: "Süt buzdolabında.", topic: "food", note: "„ch“ burada „ç“ değil; dil damağa yaklaşarak çıkan yumuşak bir „h“dir (ich-sesi): milh." },
   { id: "de-a1.w102", t: "der Saft", pl: "die Säfte", pos: "n", n: "meyve suyu", ex: "Einen Apfelsaft für mich, bitte.", exn: "Bana bir elma suyu lütfen.", topic: "food" },
   { id: "de-a1.w103", t: "der Apfel", pl: "die Äpfel", pos: "n", n: "elma", ex: "Der Apfel ist süß.", exn: "Elma tatlı.", topic: "food", note: "Çoğulda a → ä olur: die Äpfel." },
   { id: "de-a1.w104", t: "die Banane", pl: "die Bananen", pos: "n", n: "muz", ex: "Die Bananen sind noch grün.", exn: "Muzlar daha yeşil.", topic: "food" },
@@ -241,7 +241,7 @@ K.addVocab('de-a1', [
   /* ---------- body: Körper & Gesundheit ---------- */
   { id: "de-a1.w217", t: "der Kopf", pl: "die Köpfe", pos: "n", n: "baş, kafa", ex: "Mein Kopf tut weh.", exn: "Başım ağrıyor.", topic: "body", note: "Ağrıyı söylemenin kolay yolu: … tut weh (tekil), … tun weh (çoğul)." },
   { id: "de-a1.w218", t: "das Auge", pl: "die Augen", pos: "n", n: "göz", ex: "Sie hat braune Augen.", exn: "Gözleri kahverengi.", topic: "body" },
-  { id: "de-a1.w219", t: "das Ohr", pl: "die Ohren", pos: "n", n: "kulak", ex: "Hast du Ohrenschmerzen?", exn: "Kulağın mı ağrıyor?", topic: "body" },
+  { id: "de-a1.w219", t: "das Ohr", pl: "die Ohren", pos: "n", n: "kulak", ex: "Hast du Ohrenschmerzen?", exn: "Kulağın ağrıyor mu?", topic: "body" },
   { id: "de-a1.w220", t: "die Nase", pl: "die Nasen", pos: "n", n: "burun", ex: "Meine Nase läuft.", exn: "Burnum akıyor.", topic: "body" },
   { id: "de-a1.w221", t: "der Mund", pl: "die Münder", pos: "n", n: "ağız", ex: "Machen Sie bitte den Mund auf.", exn: "Ağzınızı açın lütfen.", topic: "body" },
   { id: "de-a1.w222", t: "der Zahn", pl: "die Zähne", pos: "n", n: "diş", ex: "Ich putze zweimal am Tag die Zähne.", exn: "Günde iki kez dişlerimi fırçalarım.", topic: "body", note: "Diş hekimi: der Zahnarzt / die Zahnärztin." },
@@ -356,7 +356,7 @@ K.addVocab('de-a1', [
   { id: "de-a1.w325", t: "blau", pos: "adj", n: "mavi", ex: "Der Himmel ist blau.", exn: "Gökyüzü mavi.", topic: "adj", note: "Günlük dilde „blau sein“ ayrıca „sarhoş olmak“ demektir." },
   { id: "de-a1.w326", t: "grün", pos: "adj", n: "yeşil", ex: "Im Frühling ist alles grün.", exn: "İlkbaharda her yer yemyeşil.", topic: "adj" },
   { id: "de-a1.w327", t: "weiß", pos: "adj", n: "beyaz", ex: "Die Wände sind weiß.", exn: "Duvarlar beyaz.", topic: "adj", note: "Dikkat: „ich weiß“ (biliyorum) aynı yazılır ama başka bir kelimedir." },
-  { id: "de-a1.w328", t: "schwarz", pos: "adj", n: "siyah", ex: "Ich trinke den Kaffee schwarz.", exn: "Kahveyi sütsüz içiyorum.", topic: "adj", note: "Kahve için „schwarz“ = sütsüz ve şekersiz, sade." },
+  { id: "de-a1.w328", t: "schwarz", pos: "adj", n: "siyah", ex: "Ich trinke den Kaffee schwarz.", exn: "Kahveyi sütsüz içiyorum.", topic: "adj", note: "Kahve için „schwarz“ = sütsüz (genelde şekersiz de). Şekerli istersen: schwarz mit Zucker." },
 
   /* ---------- small: Kleine Wörter ---------- */
   { id: "de-a1.w329", t: "wer", pos: "x", n: "kim", ex: "Wer ist das?", exn: "Bu kim?", topic: "small", note: "Dikkat: „wer“ = kim, „wo“ = nerede. İngilizcedeki „where“ ile karıştırma." },

@@ -23,7 +23,7 @@ K.addDialog('de-a1-d01', {
       e: "Kerem: „Ich komme aus der Türkei, aus Bursa.“ Ülke adlarının çoğu artikelsizdir (aus Polen), ama „die Türkei“ artikel alır: aus der Türkei." },
     { id: "de-a1-d01.q2", t: "mc", q: "Lena ne zamandır Almanya'da?", o: ["Seit drei Wochen", "Seit sechs Monaten", "Seit sechs Jahren"], a: 1,
       why: { 0: "Üç hafta Kerem'in süresi.", 2: "Lena „Monaten“ (ay) diyor, „Jahren“ (yıl) değil." },
-      e: "„Seit sechs Monaten“ = altı aydır. „seit“ ile Türkçedeki „-dır/-dir“ süresini anlatırsın." },
+      e: "„Seit sechs Monaten“ = altı aydır. „seit“ ile Türkçedeki „-dır/-dir“ süresini anlatırsın. „seit“ Dativ ister; bu yüzden çoğul isim sonuna -n alır: die Monate → seit sechs Monate**n**." },
     { id: "de-a1-d01.q3", t: "listen", say: "Ich heiße Kerem.", q: "Ne duydun?", o: ["Ich heiße Kerem.", "Ich hieß Kerem.", "Ich weiß, Kerem."], a: 0,
       why: { 1: "„hieß“ geçmiş zamandır (adım … idi) ve „hiis“ diye okunur; duyduğun „hayse“ idi.", 2: "„weiß“ (biliyorum) „vays“ diye okunur, „h“ ile başlamaz." },
       e: "„Ich heiße …“ = Benim adım … – kendini tanıtmanın en yaygın yolu." },
@@ -161,7 +161,7 @@ K.addDialog('de-a1-d06', {
     { s: "Derya", g: "f", t: "Genau. Ist die Wohnung noch frei?", n: "Aynen öyle. Daire hâlâ boş mu?" },
     { s: "Herr Schröder", g: "m", t: "Ja. Sie hat 55 Quadratmeter und einen Balkon.", n: "Evet. 55 metrekare ve balkonlu." },
     { s: "Derya", g: "f", t: "Wie hoch ist die Miete?", n: "Kira ne kadar?" },
-    { s: "Herr Schröder", g: "m", t: "650 Euro warm.", n: "Isınma ve aidat dahil 650 avro." },
+    { s: "Herr Schröder", g: "m", t: "650 Euro warm.", n: "Isınma ve yan giderler dahil 650 avro." },
     { s: "Derya", g: "f", t: "Kann ich die Wohnung ansehen?", n: "Daireyi görebilir miyim?" },
     { s: "Herr Schröder", g: "m", t: "Ja, gern. Am Samstag um zehn Uhr?", n: "Tabii. Cumartesi saat onda olur mu?" },
     { s: "Derya", g: "f", t: "Sehr gut, dann bis Samstag!", n: "Çok iyi, o zaman cumartesi görüşürüz!" }
