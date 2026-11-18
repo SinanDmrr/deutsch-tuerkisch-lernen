@@ -9,7 +9,7 @@
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var DT = window.DT;
   var SCHEMA = DT.storage.SCHEMA;    // Version des Speicherformats (Migrationen nur in js/core/storage.js)
-  var APP_VERSION = '2026-11-18.15';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-18.16';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -921,7 +921,7 @@
         '<span class="flag">' + flag(cid) + '</span><b>' + esc(cid === 'de' ? 'Almanca öğrenmek istiyorum' : 'Ich möchte Türkisch lernen') + '</b>' +
         '<span class="muted">' + esc(c.sublabel) + ' · A1 → C2</span></button>';
     }).join('');
-    return (storageBroken ? '<div class="save-banner" role="alert">⚠️ Der gespeicherte Lernstand war beschädigt und es gab keine Sicherung. Eine Kopie bleibt aufbewahrt (dt-corrupt). · Kayıtlı ilerleme bozulmuştu ve yedek yoktu. Bir kopyası saklanıyor (dt-corrupt).</div>' : '') +
+    return (storageBroken ? '<div class="save-banner" role="alert">⚠️ Der gespeicherte Lernstand war beschädigt und es gab keine Sicherung. Eine Kopie bleibt aufbewahrt (dt-corrupt). · Kayıtlı ilerleme bozulmuştu ve yedek yoktu. Bir kopyası saklanıyor (dt-corrupt). <button class="btn small" data-act="export-corrupt">⬇ Kopie herunterladen · Kopyayı indir</button></div>' : '') +
       '<main><div class="onboard">' + LOGO +
       '<h1>Deutsch ⇄ Türkçe</h1><p class="muted">Willkommen! · Hoş geldin!</p>' +
       '<div class="course-cards">' + cards + '</div>' +
@@ -2066,6 +2066,11 @@
         for (var k2 = 0; k2 < q2.length; k2++) { var e2 = EXI[q2[k2]]; if (e2 && isCountable(e2.ex) && !pr2[q2[k2]]) { first2 = k2; break; } }
         player.done = false; player.idx = first2 < 0 ? 0 : first2; player.cur = null; player.checked = false; player.result = null; rerenderPlayerOnly();
       } break;
+      case 'export-corrupt': {
+        var rawC = rawGet('dt-corrupt') || ''; if (!rawC) break;
+        var aC = document.createElement('a'); aC.href = URL.createObjectURL(new Blob([rawC], { type: 'text/plain' })); aC.download = 'lernstand-beschaedigt-bozuk-kayit.txt';
+        document.body.appendChild(aC); aC.click(); setTimeout(function () { URL.revokeObjectURL(aC.href); aC.remove(); }, 500); break;
+      }
       case 'dismiss-restored': restoredFromBackup = false; render(); break;
       case 'skip-main': ev.preventDefault(); var mn = document.getElementById('main'); if (mn) { mn.setAttribute('tabindex', '-1'); mn.focus(); } break;
       case 'restart-review': ev.preventDefault(); player = null; go(el.getAttribute('href')); break;
