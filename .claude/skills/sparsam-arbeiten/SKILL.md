@@ -15,7 +15,23 @@ Wer eine Datei ganz liest, verbraucht schnell mehr als die eigentliche Arbeit.
 | `deutsch-lehrer`, `tuerkisch-lehrer` | sonnet | viel Text nach festem Format; Qualität sichert das Gegenlesen über Kreuz |
 | `entwickler`, `qa-tester`, `ux-ui-designer` | sonnet | Umsetzung und Prüfung nach klaren Vorgaben |
 
-Haupt-Chat: Routinearbeit (Pakete einbinden, Tests, Commits) geht auch mit Sonnet – das Modell wählt der Nutzer im Chat.
+Haupt-Chat: läuft meist auf **Sonnet** (wählt der Nutzer). Er steuert, prüft und committet. Wo Qualität entscheidet, gibt er die Arbeit an einen Agenten mit **`model: "opus"`** im Agent-Aufruf ab (überschreibt das Frontmatter).
+
+### Wann Opus (Pflicht, auch wenn der Haupt-Chat Sonnet ist)
+| Aufgabe | Wie |
+|---|---|
+| **Gegenlesen** neuer Inhalte (Muttersprachlichkeit, Fachfehler, falsch gewertete richtige Antworten) | jeweils andere Lehrkraft mit `model:"opus"` – Schreiben auf Sonnet, Prüfen auf Opus |
+| Neues **Niveau planen** / Lehrplan, Didaktik-Recherche, **Abnahme** eines Niveaus | `didaktik-produkt` (opus) |
+| **Speicherformat, Migration, Schema-Wechsel**, alles was Nutzerfortschritt gefährden kann | `architekt` (opus) plant; Umsetzung `entwickler` mit `model:"opus"` |
+| Fehler, die nach **2 Versuchen** auf Sonnet nicht gelöst sind | gleiche Rolle erneut mit `model:"opus"` |
+| Rechtliches/Lizenzen (neue Stimme, neue Fremdressource) | Recherche mit `model:"opus"` |
+
+### Sonnet reicht
+Inhalte nach festem Format schreiben, Features nach fertigem Plan, Bugfixes mit klarer Ursache, Browser-Tests, UX-Reviews, Commits, Statusberichte.
+
+### Haupt-Chat auf Sonnet – Selbstkontrolle
+- Agentenberichte nicht blind übernehmen: Validator, `test-core`, Browser-Smoke-Test selbst laufen lassen.
+- Unsicher, ob eine Entscheidung wichtig ist? → lieber Opus-Agent fragen (kurzer Auftrag, kurze Antwort) als raten.
 
 ## Lesen
 - **Nie ganze große Dateien lesen.** Erst die Stelle finden, dann nur den Bereich lesen:

@@ -57,7 +57,7 @@ Wortschatz (`K.addVocab("de-a1", [...])`): `{ id:"de-a1.w001", t:"Zielwort (DE-N
 Dialoge (`K.addDialog(id, {...})`): `{ level, title, sub, lines:[{ s:"Sprechername", g:"f|m", t:"Zielsprache", n:"Übersetzung" }], questions:[Übungen wie oben] }`
 
 ## Ressourcen sparen
-Skill `.claude/skills/sparsam-arbeiten/SKILL.md` befolgen: große Dateien (`js/app.js`, Inhalte, Doku) nie ganz lesen, sondern per `grep -n` die Stelle suchen und nur den Bereich lesen; lange Ausgaben mit `tail`/`head` kürzen; Berichte kurz halten. Modell pro Rolle steht im Frontmatter der Agenten (Recherche/Planung: opus, Umsetzung/Inhalte/Tests: sonnet).
+Skill `.claude/skills/sparsam-arbeiten/SKILL.md` befolgen: große Dateien (`js/app.js`, Inhalte, Doku) nie ganz lesen, sondern per `grep -n` die Stelle suchen und nur den Bereich lesen; lange Ausgaben mit `tail`/`head` kürzen; Berichte kurz halten. Modell pro Rolle steht im Frontmatter der Agenten (Recherche/Planung: opus, Umsetzung/Inhalte/Tests: sonnet). **Auch wenn der Haupt-Chat auf Sonnet läuft:** Gegenlesen von Inhalten, Niveau-Planung/Abnahme, Speicherformat/Migrationen und hartnäckige Fehler gehen an einen Agenten mit `model: "opus"` (Tabelle „Wann Opus“ im Skill).
 
 ## Team (`.claude/agents/`)
 `architekt`, `entwickler`, `ux-ui-designer`, `qa-tester`, `deutsch-lehrer`, `tuerkisch-lehrer`, `didaktik-produkt` – jede Rolle hat eigene Checklisten und passende Skills.
