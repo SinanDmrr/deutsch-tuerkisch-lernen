@@ -324,6 +324,14 @@ const AUDIO  = 'dt-audio-v1';              // versionslos: Dateinamen = Hash des
 - `bump-version.py` ersetzt auch `VERSION` in `sw.js`; der Validator prüft: alle `?v=` in `index.html` == `APP_VERSION` == `sw.js`-`VERSION`.
 - **Tages-Erinnerung (.ics):** `buildIcs({ hh, mm, lang, url })` erzeugt `VCALENDAR` mit `CRLF`, `UID:dt-reminder-<pid>@sinandmrr.github.io`, `DTSTART` als **schwebende Ortszeit** (ohne `TZID`/`Z`), `RRULE:FREQ=DAILY`, `VALARM` (`TRIGGER:PT0M`), Titel/Text in der Oberflächensprache, Link zur App. Download als Blob `text/calendar`. Hinweis: Zeit ändern = altes Ereignis im Kalender löschen.
 
+### Umsetzung (18.11.2026) – Abweichungen/Ergänzungen
+- Vorab geladene Dateien (`manifest.webmanifest`, Icons ohne `?v=`): network-first, offline aus dem Cache.
+- `audio/manifest.json` liegt in `dt-audio-v1` (ohne `?v=` gespeichert) und übersteht damit Updates zusammen mit den MP3s; die 2 500er-Grenze zählt nur MP3s.
+- Nach jeder Navigation werden zusätzlich **nachweislich ältere** `dt-assets-*`-Caches gelöscht (Versionsvergleich JJJJ-MM-TT.n numerisch) – verhindert, dass ein abgelöster Worker seinen alten Cache wieder anlegt.
+- `?nosw`: Navigation geht am Worker vorbei; `js/pwa.js` meldet ab, löscht `dt-assets-*`, lädt ohne `?nosw` neu und merkt sich das per `sessionStorage['dt-nosw']` bis der Tab geschlossen wird.
+- Notschalter `docs/sw-notschalter.js` löscht nur `dt-assets-*` (Audio bleibt).
+- **Kein `"id": "./"` im Manifest** – Chrome löst das gegen den Origin auf (Kollision mit anderen Repos auf sinandmrr.github.io).
+
 ### Alternativen
 | Option | Pro | Contra |
 |---|---|---|
