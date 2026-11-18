@@ -136,6 +136,17 @@
     voiceMissing: ['Keine türkische Stimme gefunden', 'Almanca ses bulunamadı'],
     noSpeech: ['Dieser Browser kann nicht vorlesen.', 'Bu tarayıcı sesli okuma desteklemiyor.'],
     test: ['Testen', 'Dene'],
+    speakQ: ['Sprich den Satz laut nach.', 'Cümleyi yüksek sesle tekrarla.'],
+    speakNow: ['Jetzt sprechen', 'Şimdi konuş'],
+    listening: ['Ich höre zu …', 'Dinliyorum …'],
+    recognized: ['Erkannt', 'Algılanan'],
+    micDenied: ['Mikrofon nicht erlaubt – bitte im Browser freigeben.', 'Mikrofona izin verilmedi – lütfen tarayıcıdan izin ver.'],
+    micNoSpeech: ['Nichts gehört – versuch es noch einmal, etwas lauter.', 'Bir şey duyamadım – biraz daha yüksek sesle tekrar dene.'],
+    noMic: ['Dein Browser kann keine Sprache erkennen (z. B. Firefox). Sprich den Satz trotzdem laut nach und bestätige.', 'Tarayıcın konuşmayı algılayamıyor (ör. Firefox). Cümleyi yine de yüksek sesle söyle ve onayla.'],
+    saidAloud: ['Ich habe es laut gesagt', 'Yüksek sesle söyledim'],
+    speakAlmost: ['Fast! Hör dir die Aussprache noch einmal an und sprich langsam und deutlich.', 'Neredeyse! Telaffuzu bir kez daha dinle, yavaş ve net konuş.'],
+    speakRetry: ['Das wurde noch nicht erkannt. Hör zuerst zu (🐢 hilft) und versuche es noch einmal.', 'Henüz algılanmadı. Önce dinle (🐢 yardımcı olur) ve tekrar dene.'],
+    tryAgain: ['Nochmal sprechen', 'Tekrar konuş'],
     playDialog: ['Ganzen Dialog anhören', 'Tüm diyaloğu dinle'],
     translation: ['Übersetzung', 'Çeviri'],
     dialogTip: ['Tipp: Erst anhören und mitlesen, dann die Übersetzung einblenden. Mit 🔊 hörst du jede Zeile einzeln.', 'İpucu: Önce dinleyip takip et, sonra çeviriyi aç. 🔊 ile her satırı ayrı dinleyebilirsin.'],
@@ -453,6 +464,36 @@
       }).join('') + '</select><button class="btn" data-act="voice-test">▶ ' + esc(t('test')) + '</button></div>' +
       '<p class="muted small" style="margin-top:8px">' + esc(t('voiceTip')) + '</p>';
     return seg + piper + '<h3 style="margin:14px 0 4px;font-size:.95rem">' + esc(t('deviceVoice')) + '</h3>' + device;
+  }
+  /* ---------- Sprechen: Spracherkennung (Chrome, Edge, Safari) ---------- */
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+  var recog = null;
+  function levRatio(a, b) {
+    if (a === b) return 1;
+    var m = a.length, n = b.length, prev = [], cur, i, j;
+    if (!m || !n) return 0;
+    for (j = 0; j <= n; j++) prev[j] = j;
+    for (i = 1; i <= m; i++) {
+      cur = [i];
+      for (j = 1; j <= n; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      prev = cur;
+    }
+    return 1 - prev[n] / Math.max(m, n);
+  }
+  function startListening(onText, onError) {
+    if (!SR) { onError('unsupported'); return; }
+    try { if (recog) recog.abort(); } catch (e) { /* ignore */ }
+    recog = new SR();
+    recog.lang = course().tts; recog.interimResults = false; recog.maxAlternatives = 3;
+    var got = false;
+    recog.onresult = function (e) {
+      got = true;
+      var alts = []; for (var i = 0; i < e.results[0].length; i++) alts.push(e.results[0][i].transcript);
+      onText(alts);
+    };
+    recog.onerror = function (e) { if (!got) onError(e.error || 'error'); };
+    recog.onend = function () { if (!got) onError('no-speech'); };
+    try { if (curAudio) curAudio.pause(); if (canSpeak) speechSynthesis.cancel(); recog.start(); } catch (e) { onError('error'); }
   }
   function speakSlow(text, lang, g) { slowNext = true; speak(text, lang, null, false, g); setTimeout(function () { slowNext = false; }, 50); }
   function audioBar(say) {
@@ -854,6 +895,18 @@
         return '<button class="opt' + cls + '" data-act="mc" data-i="' + i + '" role="radio" aria-checked="' + (i === c.sel) + '"' + (checked ? ' disabled' : '') + '>' +
           '<span class="key">' + 'ABCDEFG'[i] + '</span><span>' + md(o) + '</span></button>';
       }).join('') + '</div>';
+    } else if (ex.t === 'speak') {
+      qtext = md(ex.q || t('speakQ'));
+      var scls = checked ? (res.ok ? ' right' : ' wrong') : '';
+      body = '<div class="say-box' + scls + '" lang="' + target + '">' + md(ex.say) + '</div>' + audioBar(ex.say);
+      if (SR) {
+        body += '<button class="btn mic-btn' + (c.listening ? ' on' : '') + '" data-act="mic"' + (checked ? ' disabled' : '') + '>🎤 ' + esc(c.listening ? t('listening') : t('speakNow')) + '</button>' +
+          (c.heard && !checked ? '<p class="small" style="margin-top:10px">' + esc(t('recognized')) + ': <b>' + esc(c.heard) + '</b></p>' : '') +
+          (c.micError ? '<p class="small" style="color:var(--bad);margin-top:10px">' + esc(t(c.micError === 'not-allowed' ? 'micDenied' : 'micNoSpeech')) + '</p>' : '');
+      } else {
+        body += '<p class="muted small">' + esc(t('noMic')) + '</p>' +
+          (checked ? '' : '<button class="btn" data-act="self-ok">✓ ' + esc(t('saidAloud')) + '</button>');
+      }
     } else if (ex.t === 'dictation') {
       qtext = md(ex.q || t('dictationQ'));
       var dcls = checked ? (res.ok ? ' right' : ' wrong') : '';
@@ -904,6 +957,7 @@
   function canCheck(ex, c) {
     if (ex.t === 'mc' || ex.t === 'listen') return c.sel !== null;
     if (ex.t === 'gap' || ex.t === 'dictation') return String(c.input).trim().length > 0;
+    if (ex.t === 'speak') return !!c.heardAlts || !!c.selfOk;
     if (ex.t === 'order') return c.picked.length > 0;
     if (ex.t === 'match') return c.choice.every(function (x) { return x; });
     return false;
@@ -924,6 +978,12 @@
         if (!hint && ex.a.some(function (a) { return fold(norm(a, lang)) === fold(nvl); })) hint = t('specialChars');
       }
       return { ok: ok, given: val, correct: ex.a[0], hint: hint };
+    }
+    if (ex.t === 'speak') {
+      if (c.selfOk) return { ok: true, given: '', correct: ex.say };
+      var target = norm(ex.say, lang), best = 0;
+      (c.heardAlts || []).forEach(function (h) { best = Math.max(best, levRatio(norm(h, lang), target)); });
+      return { ok: best >= 0.8, given: c.heard, correct: ex.say, hint: best >= 0.6 ? t('speakAlmost') : t('speakRetry') };
     }
     if (ex.t === 'order') {
       var sent = c.picked.map(function (i) { return ex.w[i]; }).join(' ');
@@ -951,6 +1011,13 @@
       return '<div class="fb bad"><div class="fb-title">' + esc(t('notQuite')) + '</div>' + correctHtml + e + '</div>';
     }
     var why = res.hint || t('genericWrong');
+    if (ex.t === 'speak') {
+      return '<div class="fb bad"><div class="fb-title">' + esc(t('notQuite')) + '</div>' +
+        '<div class="fb-row"><span class="k">' + esc(t('recognized')) + ':</span><s>' + esc(res.given || '–') + '</s></div>' +
+        '<div class="fb-row"><span class="k">' + esc(t('rightAnswer')) + ':</span><b>' + md(ex.say) + '</b> ' + speakBtn(ex.say) + '</div>' +
+        '<div class="fb-sec"><p>' + esc(why) + '</p></div>' + e +
+        '<div class="btn-row" style="margin-top:10px"><button class="btn" data-act="retry">🎤 ' + esc(t('tryAgain')) + '</button></div></div>';
+    }
     var heard = ex.say ? '<div class="fb-row"><span class="k">' + esc(t('heard')) + ':</span><b lang="' + course().target + '">' + md(ex.say) + '</b> ' + speakBtn(ex.say) + '</div>' : '';
     return '<div class="fb bad"><div class="fb-title">' + esc(t('notQuite')) + '</div>' + heard +
       '<div class="fb-row"><span class="k">' + esc(t('yourAnswer')) + ':</span><s>' + md(res.given || '–') + '</s></div>' +
@@ -1181,6 +1248,13 @@
       case 'pick': if (player && !player.checked) { player.cur.picked.push(+el.getAttribute('data-w')); rerenderPlayerOnly(); } break;
       case 'unpick': if (player && !player.checked) { player.cur.picked.splice(+el.getAttribute('data-k'), 1); rerenderPlayerOnly(); } break;
       case 'check': doCheck(); break;
+      case 'mic': if (player && !player.checked) {
+        var pc = player.cur; pc.listening = true; pc.micError = null; rerenderPlayerOnly();
+        startListening(function (alts) { pc.listening = false; pc.heardAlts = alts; pc.heard = alts[0]; doCheck(); },
+          function (err) { pc.listening = false; pc.micError = err; rerenderPlayerOnly(); });
+      } break;
+      case 'self-ok': if (player && !player.checked) { player.cur.selfOk = true; doCheck(); } break;
+      case 'retry': if (player) { player.cur = null; player.checked = false; player.result = null; rerenderPlayerOnly(); } break;
       case 'next': doNext(); break;
       case 'skip': if (player) { player.idx++; player.cur = null; player.checked = false; if (player.idx >= player.queue.length) player.done = true; rerenderPlayerOnly(); } break;
       case 'jump': if (player) { player.idx = +el.getAttribute('data-i'); player.cur = null; player.checked = false; player.done = false; rerenderPlayerOnly(); } break;

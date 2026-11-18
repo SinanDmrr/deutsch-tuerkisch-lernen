@@ -292,6 +292,10 @@ a.topic-card:hover { border-color: var(--primary); transform: translateY(-1px); 
 .gap-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
 .gap-input.right { border-color: var(--ok); background: var(--ok-soft); }
 .gap-input.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.say-box { font-size: 1.35rem; font-weight: 700; padding: 14px 16px; background: var(--surface-2); border-radius: 12px; margin-bottom: 12px; border: 2px solid transparent; }
+.say-box.right { border-color: var(--ok); } .say-box.wrong { border-color: var(--bad); }
+.mic-btn { font-size: 1.05rem; padding: 12px 20px; }
+.mic-btn.on { background: var(--bad); color: #fff; border-color: var(--bad); animation: m-breathe 1s ease-in-out infinite; }
 .audio-bar { display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 16px; }
 .audio-main { font-size: 1.05rem; padding: 12px 20px; }
 .dict-input { width: 100%; max-width: 560px; display: block; margin: 0; font-size: 1.15rem; padding: 10px 12px; }
