@@ -245,6 +245,21 @@ a.topic-card:hover { border-color: var(--primary); transform: translateY(-1px); 
 .speak { border: 0; background: var(--surface); width: 32px; height: 32px; border-radius: 999px; cursor: pointer; flex: none; display: inline-grid; place-items: center; font-size: .9rem; }
 .speak:hover { background: var(--primary-soft); }
 
+/* ---------- Dialoge ---------- */
+.sub-head { margin: 18px 0 10px; font-size: 1rem; color: var(--muted); }
+.dl-lines { display: flex; flex-direction: column; gap: 10px; }
+.dl-line { display: flex; gap: 10px; align-items: flex-start; max-width: 85%; }
+.dl-line.g-m { align-self: flex-end; flex-direction: row-reverse; text-align: right; }
+.dl-body { background: var(--surface-2); padding: 9px 13px; border-radius: 14px; border: 2px solid transparent; transition: border-color .2s; }
+.dl-line.g-f .dl-body { border-top-left-radius: 4px; }
+.dl-line.g-m .dl-body { border-top-right-radius: 4px; background: var(--primary-soft); }
+.dl-line.playing .dl-body { border-color: var(--primary); }
+.dl-who { display: block; font-size: .75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.dl-body .tgt { font-weight: 600; font-size: 1.05rem; }
+.dl-body .nat { display: none; color: var(--muted); font-size: .9rem; }
+.dialog.show-tr .dl-body .nat { display: block; }
+@media (max-width: 640px) { .dl-line { max-width: 100%; } }
+
 /* ---------- Player ---------- */
 .dots { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
 .dot {

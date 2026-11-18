@@ -136,6 +136,12 @@
     voiceMissing: ['Keine türkische Stimme gefunden', 'Almanca ses bulunamadı'],
     noSpeech: ['Dieser Browser kann nicht vorlesen.', 'Bu tarayıcı sesli okuma desteklemiyor.'],
     test: ['Testen', 'Dene'],
+    playDialog: ['Ganzen Dialog anhören', 'Tüm diyaloğu dinle'],
+    translation: ['Übersetzung', 'Çeviri'],
+    dialogTip: ['Tipp: Erst anhören und mitlesen, dann die Übersetzung einblenden. Mit 🔊 hörst du jede Zeile einzeln.', 'İpucu: Önce dinleyip takip et, sonra çeviriyi aç. 🔊 ile her satırı ayrı dinleyebilirsin.'],
+    toQuestions: ['Zu den Fragen →', 'Sorulara geç →'],
+    dialogsTitle: ['Alltagsdialoge', 'Günlük diyaloglar'],
+    dialogTab: ['Dialog', 'Diyalog'],
     play: ['Anhören', 'Dinle'],
     slow: ['Langsam', 'Yavaş'],
     listenQ: ['Was hörst du?', 'Ne duyuyorsun?'],
@@ -156,6 +162,11 @@
 
   /* ================= Speicher ================= */
   /* ---------- Aufgaben-Index: feste ID → Thema/Aufgabe ---------- */
+  // Alltagsdialoge werden wie Themen behandelt (eigene Statistik, Fehlerwiederholung, Überblick)
+  Object.keys(K.dialogs || {}).forEach(function (id) {
+    var d = K.dialogs[id];
+    K.content[id] = { kind: 'dialog', dialog: d, exercises: d.questions || [] };
+  });
   var EXI = {};
   Object.keys(K.content).forEach(function (tid) {
     (K.content[tid].exercises || []).forEach(function (ex, i) {
@@ -327,18 +338,21 @@
   }
   function piperVoices(lang2) { return (AUDIO && AUDIO.voices && AUDIO.voices[lang2]) || {}; }
   var slowNext = false;   // nächste Wiedergabe langsamer (🐢)
-  function playUrl(url, onFail) {
+  var seqToken = 0;   // jede neue Wiedergabe beendet eine laufende Dialog-Kette
+  function playUrl(url, onFail, onEnd) {
     try {
       if (canSpeak) speechSynthesis.cancel();
       if (curAudio) curAudio.pause();
       curAudio = new Audio(url);
       if (slowNext) { curAudio.playbackRate = 0.72; try { curAudio.preservesPitch = true; } catch (e) { /* alt */ } }
+      if (onEnd) curAudio.onended = onEnd;
       var p = curAudio.play();
       if (p && p.catch) p.catch(function () { if (onFail) onFail(); });
     } catch (e) { if (onFail) onFail(); }
   }
   // Reihenfolge der Quellen je nach Wunsch: Automatisch → Piper ♀, Piper ♂, Gerät; ♀/♂ → Piper gewünscht, Gerät gewünscht, Rest
-  function speak(text, lang, voiceName, retried, forceGender) {
+  function speak(text, lang, voiceName, retried, forceGender, onEnd) {
+    if (!onEnd) seqToken++;
     var key = plain(text).trim(), lang2 = lang.slice(0, 2), g = forceGender || db.voiceGender || '';
     if (!voiceName && AUDIO) {
       var pv = piperVoices(lang2), order = g === 'm' ? ['male', 'female'] : ['female', 'male'];
@@ -347,17 +361,19 @@
         var vk = pv[order[i]];
         if (i > 0 && deviceHasG) break;  // gewünschtes Geschlecht lieber von der Gerätestimme als falsches Geschlecht
         var fid = vk && AUDIO.files && AUDIO.files[vk] && AUDIO.files[vk][key];
-        if (fid) { playUrl('audio/' + vk + '/' + fid + '.mp3', function () { deviceSpeak(text, lang, null, retried); }); return; }
+        if (fid) { playUrl('audio/' + vk + '/' + fid + '.mp3', function () { deviceSpeak(text, lang, null, retried, onEnd, g); }, onEnd); return; }
       }
     }
-    deviceSpeak(text, lang, voiceName, retried);
+    deviceSpeak(text, lang, voiceName, retried, onEnd, g);
   }
-  function deviceSpeak(text, lang, voiceName, retried) {
+  function deviceSpeak(text, lang, voiceName, retried, onEnd, g) {
     if (!canSpeak) { showVoiceHelp(lang); return; }
     if (!voicesCache.length) loadVoices();
-    var v = voiceName ? voicesFor(lang).filter(function (x) { return x.name === voiceName; })[0] : bestVoice(lang);
+    var v = voiceName ? voicesFor(lang).filter(function (x) { return x.name === voiceName; })[0] : null;
+    if (!v && g) v = sortedVoices(lang).filter(function (x) { return voiceGender(x) === g; })[0] || null;
+    if (!v) v = bestVoice(lang);
     if (!v) {
-      if (!voicesCache.length && !retried) { setTimeout(function () { loadVoices(); deviceSpeak(text, lang, voiceName, true); }, 700); return; }
+      if (!voicesCache.length && !retried) { setTimeout(function () { loadVoices(); deviceSpeak(text, lang, voiceName, true, onEnd, g); }, 700); return; }
       showVoiceHelp(lang); return;   // lieber gar nicht vorlesen als mit falscher (z. B. englischer) Stimme
     }
     try {
@@ -365,6 +381,7 @@
       speechSynthesis.cancel();
       var u = new SpeechSynthesisUtterance(plain(text));
       u.voice = v; u.lang = v.lang || lang; u.rate = slowNext ? 0.65 : 0.92;
+      if (onEnd) u.onend = onEnd;
       speechSynthesis.speak(u);
     } catch (e) { /* ignore */ }
   }
@@ -461,6 +478,11 @@
         var data = K.content[row[0]];
         list.push({ id: row[0], level: lv, num: i + 1, title: row[1], sub: row[2], data: data, avail: !!(data && data.exercises && data.exercises.length) });
       });
+      Object.keys(K.dialogs || {}).filter(function (id) { return id.indexOf(cid + '-') === 0 && K.dialogs[id].level === lv; }).sort()
+        .forEach(function (id, i) {
+          var d = K.dialogs[id];
+          list.push({ id: id, level: lv, num: 'D' + (i + 1), title: d.title, sub: d.sub, kind: 'dialog', data: K.content[id], avail: true });
+        });
     });
     return list;
   }
@@ -724,14 +746,47 @@
       var list = levelTopics(lv), s = sumStats(list);
       return '<section class="level-section" id="lv-' + lv + '"><div class="level-head"><span class="lvl lvl-' + lv + '">' + lv + '</span><h2>' + esc(levelName(lv)) + '</h2>' +
         (s.n ? '<div class="bar"><span class="fill-' + lv + '" style="width:' + pct(s.c, s.n) + '%"></span></div><b>' + pct(s.c, s.n) + '%</b>' : '<span class="badge">' + esc(t('comingSoon')) + '</span>') +
-        '</div><div class="topic-grid">' + list.map(topicCard).join('') + '</div></section>';
+        '</div><div class="topic-grid">' + list.filter(function (x) { return x.kind !== 'dialog'; }).map(topicCard).join('') + '</div>' +
+        (list.some(function (x) { return x.kind === 'dialog'; }) ? '<h3 class="sub-head">💬 ' + esc(t('dialogsTitle')) + '</h3><div class="topic-grid">' + list.filter(function (x) { return x.kind === 'dialog'; }).map(topicCard).join('') + '</div>' : '') +
+        '</section>';
     }).join('');
     setTimeout(function () { if (focusLevel) { var el = document.getElementById('lv-' + focusLevel); if (el) el.scrollIntoView({ block: 'start' }); } }, 0);
     return '<h1>' + esc(t('lessons')) + '</h1><p class="muted">' + flag(courseId()) + ' ' + esc(course().label) + ' · ' + esc(course().sublabel) + '</p>' + html;
   }
 
   /* ================= Thema: Erklärung ================= */
+  function renderDialog(tp) {
+    var d = tp.data.dialog, tgt = course().target;
+    var lines = d.lines.map(function (l, i) {
+      return '<div class="dl-line g-' + (l.g || 'x') + '" data-line="' + i + '">' +
+        '<button class="speak" data-act="play-say" data-say="' + esc(plain(l.t)) + '" data-g="' + (l.g || '') + '" aria-label="' + esc(t('listen')) + '">🔊</button>' +
+        '<div class="dl-body"><span class="dl-who" lang="' + tgt + '">' + esc(l.s) + '</span><div class="tgt" lang="' + tgt + '">' + md(l.t) + '</div><div class="nat">' + md(l.n) + '</div></div></div>';
+    }).join('');
+    return '<div class="card dialog' + (dialogShowTr ? ' show-tr' : '') + '">' +
+      '<div class="btn-row" style="margin-bottom:14px"><button class="btn primary" data-act="dl-play">▶ ' + esc(t('playDialog')) + '</button>' +
+      '<button class="btn" data-act="dl-play" data-slow="1">🐢 ' + esc(t('slow')) + '</button>' +
+      '<button class="btn" data-act="dl-tr" aria-pressed="' + dialogShowTr + '">🌐 ' + esc(t('translation')) + '</button></div>' +
+      '<p class="muted small">' + esc(t('dialogTip')) + '</p>' +
+      '<div class="dl-lines">' + lines + '</div>' +
+      '<div class="btn-row" style="margin-top:18px"><a class="btn primary" href="#/topic/' + tp.id + '/exercises">' + esc(t('toQuestions')) + '</a></div></div>';
+  }
+  var dialogShowTr = false;
+  function playDialog(tp, slow) {
+    var d = tp.data.dialog, my = ++seqToken, i = 0;
+    function step() {
+      if (my !== seqToken) return;
+      document.querySelectorAll('.dl-line.playing').forEach(function (x) { x.classList.remove('playing'); });
+      if (i >= d.lines.length) return;
+      var el = document.querySelector('.dl-line[data-line="' + i + '"]'); if (el) el.classList.add('playing');
+      var l = d.lines[i++];
+      slowNext = !!slow;
+      speak(l.t, course().tts, null, false, l.g || '', function () { setTimeout(step, 350); });
+      setTimeout(function () { slowNext = false; }, 50);
+    }
+    step();
+  }
   function renderLesson(tp) {
+    if (tp.data.kind === 'dialog') return renderDialog(tp);
     var tgt = course().tts, out = '';
     (tp.data.lesson || []).forEach(function (b) {
       if (b.h) out += '<h3>' + md(b.h) + '</h3>';
@@ -935,7 +990,7 @@
     tab = tab || 'learn';
     var s = topicStats(tp), wN = wrongIds(tp.id).length;
     var subtabs = [
-      ['learn', '📖 ' + t('explanation')],
+      ['learn', tp.kind === 'dialog' ? '💬 ' + t('dialogTab') : '📖 ' + t('explanation')],
       ['exercises', '✏️ ' + t('exercises') + ' (' + s.c + '/' + s.n + ')'],
       ['review', '🔁 ' + t('review') + (wN ? ' (' + wN + ')' : '')]
     ];
@@ -1145,6 +1200,8 @@
         if (smp) playUrl('audio/' + smp); else deviceSpeak(t('testSentence'), course().tts);
       } break;
       case 'play-sample': playUrl(el.getAttribute('data-url')); break;
+      case 'dl-play': { var tpd = topicById(parseHash().a); if (tpd) playDialog(tpd, !!el.getAttribute('data-slow')); break; }
+      case 'dl-tr': { dialogShowTr = !dialogShowTr; var box = document.querySelector('.dialog'); if (box) box.classList.toggle('show-tr', dialogShowTr); el.setAttribute('aria-pressed', dialogShowTr); break; }
       case 'play-say': if (el.getAttribute('data-slow')) speakSlow(el.getAttribute('data-say'), course().tts, el.getAttribute('data-g') || ''); else speak(el.getAttribute('data-say'), course().tts, null, false, el.getAttribute('data-g') || ''); break;
       case 'voice-test': { var sel = document.getElementById('voice-sel'); speak(t('testSentence'), course().tts, sel ? sel.value : null); break; }
       case 'reset-course': if (armed(el, t('confirmReset'))) { prof().prog[courseId()] = {}; save(); player = null; render(); } break;
