@@ -9,7 +9,7 @@
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var DT = window.DT;
   var SCHEMA = DT.storage.SCHEMA;    // Version des Speicherformats (Migrationen nur in js/core/storage.js)
-  var APP_VERSION = '2026-11-18.5';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-18.6';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -1480,7 +1480,7 @@
   var VOICE_FALLBACK = {   // nur bis das erste manifest mit „licenses“ da ist
     'de_DE-kerstin-low': { license: 'CC0', dataset: 'https://github.com/rhasspy/dataset-voice-kerstin', card: 'https://huggingface.co/rhasspy/piper-voices/blob/v1.0.0/de/de_DE/kerstin/low/MODEL_CARD' },
     'de_DE-thorsten-high': { license: 'CC0', dataset: 'https://github.com/thorstenMueller/Thorsten-Voice', card: 'https://huggingface.co/rhasspy/piper-voices/blob/v1.0.0/de/de_DE/thorsten/high/MODEL_CARD' },
-    'tr_TR-fahrettin-medium': { license: 'CC0', dataset: 'https://github.com/NabuCasa/voice-datasets', card: 'https://huggingface.co/rhasspy/piper-voices/tree/v1.0.0/tr/tr_TR/fahrettin/medium' },
+    'tr_TR-fahrettin-medium': { license: 'CC0', dataset: 'https://github.com/NabuCasa/voice-datasets', card: 'https://huggingface.co/rhasspy/piper-voices/blob/v1.0.0/tr/tr_TR/fahrettin/medium/MODEL_CARD' },
     'tr_TR-fettah-medium': { license: 'CC0', dataset: 'https://github.com/NabuCasa/voice-datasets', card: 'https://huggingface.co/rhasspy/piper-voices/blob/6fb8245d6d27fef8988272e0c8e9f5018da1bbbf/tr/tr_TR/fettah/medium/MODEL_CARD' }
   };
   function datasetOwner(url) {

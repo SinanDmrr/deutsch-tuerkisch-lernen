@@ -28,7 +28,7 @@ Es wurden keine Texte, Übungen oder Grafiken aus anderen Apps, Kursen oder Büc
 |---|---|---|---|---|
 | kerstin (low) | Deutsch ♀ | [rhasspy/dataset-voice-kerstin](https://github.com/rhasspy/dataset-voice-kerstin) | CC0 | [MODEL_CARD](https://huggingface.co/rhasspy/piper-voices/blob/v1.0.0/de/de_DE/kerstin/low/MODEL_CARD) |
 | thorsten (high) | Deutsch ♂ | [Thorsten-Voice](https://github.com/thorstenMueller/Thorsten-Voice) von Thorsten Müller | CC0 | [MODEL_CARD](https://huggingface.co/rhasspy/piper-voices/blob/v1.0.0/de/de_DE/thorsten/high/MODEL_CARD) |
-| fahrettin (medium) | Türkisch ♂ | [Nabu Casa / OHF Voice Datasets](https://github.com/OHF-Voice/voice-datasets) | CC0 | MODEL_CARD im Repo rhasspy/piper-voices (`tr/tr_TR/fahrettin/medium`) |
+| fahrettin (medium) | Türkisch ♂ | [Nabu Casa / OHF Voice Datasets](https://github.com/OHF-Voice/voice-datasets) | CC0 | [MODEL_CARD](https://huggingface.co/rhasspy/piper-voices/blob/v1.0.0/tr/tr_TR/fahrettin/medium/MODEL_CARD) |
 | fettah (medium, nur Hörprobe) | Türkisch | [Nabu Casa / OHF Voice Datasets](https://github.com/OHF-Voice/voice-datasets) | CC0 | [MODEL_CARD](https://huggingface.co/rhasspy/piper-voices/blob/6fb8245d6d27fef8988272e0c8e9f5018da1bbbf/tr/tr_TR/fettah/medium/MODEL_CARD) |
 
 CC0 verlangt keine Namensnennung – wir nennen die Sprecherinnen, Sprecher und Projekte trotzdem, weil sie die Arbeit gemacht haben.
