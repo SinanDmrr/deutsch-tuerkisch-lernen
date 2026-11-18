@@ -25,9 +25,11 @@ function test(name, fn) {
   try { fn(); } catch (e) { failed++; console.log(`  ✗ [${name}] Ausnahme: ${e && e.stack || e}`); }
 }
 const copy = x => JSON.parse(JSON.stringify(x));
+const asyncTests = [];   // Tests mit Promise (Übertragungscode); laufen am Ende nacheinander
+function atest(name, fn) { asyncTests.push([name, fn]); }
 
 /* ---------- Kern-Dateien laden (ohne document/localStorage – Zugriff beim Laden würde hier scheitern) ---------- */
-const ctx = { window: {}, console };
+const ctx = { window: {}, console, btoa, atob, TextEncoder, TextDecoder, Blob, CompressionStream, DecompressionStream };
 vm.createContext(ctx);
 const coreDir = path.join(root, 'js', 'core');
 const first = ['config.js', 'util.js', 'time.js'];
@@ -485,5 +487,106 @@ test('texts: Prüfung von Lesetexten', () => {
   eq(tx.wordCount({ body: ['Eins **zwei** drei'] }), 3, 'wordCount ohne Markdown');
 });
 
-console.log(`\nKern-Tests: ${passed} ok, ${failed} fehlgeschlagen`);
-process.exit(failed ? 1 : 0);
+/* ================= storage: Übertragungscode (Link/Text) ================= */
+const b64u = buf => Buffer.from(buf).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+atest('storage: Übertragungscode → Roundtrip, ohne Namen, URL-sicher', async () => {
+  const src = storage.migrate(V2, T).data.profiles.k4l5m6;
+  const code = await storage.packTransfer(src, '2026-11-18.1', Date.UTC(2026, 10, 18, 12));
+  ok(/^dt1\.[A-Za-z0-9_-]+$/.test(code), 'Präfix dt1 + nur URL-sichere Zeichen');
+  console.log(`      (Info) Übertragungscode für Beispielprofil: ${code.length} Zeichen`);
+  ok(code.length < 4000, 'Beispielcode unter 4000 Zeichen');
+  const u = await storage.unpackTransfer(code);
+  ok(u.ok && u.data.profile && !('name' in u.data.profile), 'entpackt, ohne Name');
+  ok(src.name === 'Leyla', 'Quellprofil bleibt unverändert');
+  const fresh = storage.migrateProfile({ id: 'neu', name: 'Neu', course: 'de', prog: { de: {}, tr: {} } }, 2, T);
+  const r = storage.importData(fresh, u.data, T, TODAY_KEY);
+  ok(r.ok, 'Import ok');
+  ['prog', 'srs', 'daily', 'last', 'skip', 'badges', 'place'].forEach(f => eq(r.profile[f], src[f], 'gleich: ' + f));
+  eq([r.profile.id, r.profile.name], ['neu', 'Neu'], 'Name/ID des Zielprofils bleiben');
+  const again = storage.importData(r.profile, (await storage.unpackTransfer(code)).data, T, TODAY_KEY);
+  eq(again.profile, r.profile, 'zweiter Import ändert nichts');
+});
+atest('storage: Übertragungscode – Link, Zeilenumbrüche, URL-Kodierung', async () => {
+  const src = storage.migrate(V2, T).data.profiles.k4l5m6;
+  const code = await storage.packTransfer(src, 'x', 1);
+  const base = (await storage.unpackTransfer(code)).data;
+  for (const form of [
+    'https://sinandmrr.github.io/deutsch-tuerkisch-lernen/#/transfer/' + code,
+    '  ' + code.slice(0, 20) + '\n' + code.slice(20) + '  ',
+    'Hier mein Stand: https://x.de/#/transfer/' + code + ' viel Spaß',
+    'https://x.de/#/transfer/' + encodeURIComponent(code)
+  ]) { const u = await storage.unpackTransfer(form); ok(u.ok, 'Form erkannt'); eq(u.data, base, 'gleicher Inhalt'); }
+});
+atest('storage: Übertragungscode – kaputte Eingaben', async () => {
+  for (const bad of ['', '   ', 'hallo', 'dt2.abc', 'dt1.', 'dt1.!!!', 'dt1.' + b64u('kein deflate'), 'dt0.' + b64u('kein json'),
+    'dt0.' + b64u('[1,2]'), 'dt1.' + 'A'.repeat(700000), null, undefined])
+    eq(await storage.unpackTransfer(bad), { ok: false, error: 'format' }, 'format: ' + String(bad).slice(0, 20));
+});
+atest('storage: Übertragungscode – unkomprimierte Variante dt0 (Browser ohne CompressionStream)', async () => {
+  const src = storage.migrate(V2, T).data.profiles.k4l5m6;
+  const file = storage.exportData(src, 'x', 1);
+  const u = await storage.unpackTransfer('dt0.' + b64u(JSON.stringify(file)));
+  ok(u.ok, 'dt0 entpackt'); eq(storage.importData(src, u.data, T, TODAY_KEY).profile, src, 'Import = unverändert (gleicher Stand)');
+});
+atest('storage: Übertragungscode – Zip-Bombe und __proto__ werden abgewehrt', async () => {
+  const bomb = 'dt1.' + b64u(require('zlib').deflateSync(Buffer.alloc(20 * 1024 * 1024)));
+  ok(bomb.length < 100000, 'Bombe ist klein verpackt (' + bomb.length + ' Zeichen)');
+  eq(await storage.unpackTransfer(bomb), { ok: false, error: 'format' }, 'über 8 MB entpackt → abgelehnt');
+  const evil = '{"app":"deutsch-tuerkce","v":2,"schema":3,"profile":{"prog":{"de":{}},"__proto__":{"polluted":1},"x":{"__proto__":{"polluted":2}}}}';
+  const u = await storage.unpackTransfer('dt0.' + b64u(evil));
+  ok(u.ok && !Object.prototype.hasOwnProperty.call(u.data.profile, '__proto__') && !('polluted' in u.data.profile), '__proto__ entfernt');
+  const cur = storage.migrate(V2, T).data.profiles.k4l5m6;
+  const r = storage.importData(cur, u.data, T, TODAY_KEY);
+  ok(r.ok && !('polluted' in r.profile) && !('polluted' in {}), 'nichts verbogen');
+});
+test('storage: Import stutzt fremde Daten zurecht (Typen, Kurse, Zukunft, __proto__)', () => {
+  const cur = storage.migrate(V2, T).data.profiles.k4l5m6;
+  const FUT = Date.UTC(2099, 0, 1), id0 = Object.keys(cur.prog.de)[0];
+  const evil = {
+    app: 'deutsch-tuerkce', v: 2, schema: 3,
+    profile: JSON.parse(`{"prog":{"de":{"${id0}":{"f":"c","s":"c","n":1,"t":${FUT}},"x.1":5,"x.2":null,"x.3":{"s":"c","t":"abc"}},"xx":{"a.1":{"t":1}},"__proto__":{"polluted":1}},
+      "srs":{"de":{"a":null,"b":"abc","c":[1,5],"d":[1,${T + 9999},${T + 9999},0,1],"ok":[1,${T},${T - 1},2,1]},"fr":{"z":[1,1,1]}},
+      "place":{"de":{"t":${FUT},"level":"C2"},"tr":"kaputt"},"badges":{"b1":{"t":${FUT}},"b2":"text","b3":${FUT}},
+      "last":{"de":${FUT},"tr":"x"},"daily":{"goal":99999,"log":{"2099-01-01":[500,10,1],"2026-11-18":[1e9,10,"a"],"kein-datum":[1]}}}`)
+  };
+  const r = storage.importData(cur, JSON.stringify(evil), T, TODAY_KEY);
+  ok(r.ok, 'Import ok');
+  const p = r.profile, maxMs = (T + 2) * 86400000;
+  ok(!('polluted' in p) && !('polluted' in p.prog) && !('polluted' in {}), 'kein __proto__ (Datei-Import)');
+  ok(!('xx' in p.prog) && !('fr' in p.srs), 'unbekannte Kurse verworfen');
+  ok(p.prog.de[id0].t <= maxMs, 'prog.t in der Zukunft begrenzt');
+  ok(!('x.1' in p.prog.de) && !('x.2' in p.prog.de), 'prog-Einträge mit falschem Typ verworfen');
+  ok(p.prog.de['x.3'] && !('t' in p.prog.de['x.3']), 'ungültiges t entfernt');
+  ok(!('a' in p.srs.de) && !('b' in p.srs.de) && !('c' in p.srs.de), 'srs-Einträge mit falschem Typ verworfen');
+  ok(p.srs.de.d[2] <= T + 1 && p.srs.de.d[1] <= T + 3650, 'srs last/due begrenzt');
+  ok(p.srs.de.ok[2] === T - 1 || p.srs.de.ok[2] >= T - 1, 'normaler srs-Eintrag bleibt');
+  ok(p.place.de.t <= maxMs && !('tr' in p.place && typeof p.place.tr === 'string'), 'place begrenzt/geprüft');
+  ok(p.badges.b1.t <= maxMs && p.badges.b3 <= maxMs && !('b2' in p.badges), 'badges begrenzt/geprüft');
+  ok(p.last.de <= maxMs && !(typeof p.last.tr === 'string'), 'last begrenzt/geprüft');
+  ok(!('2099-01-01' in p.daily.log) && !('kein-datum' in p.daily.log), 'Tage in der Zukunft/ohne Datum verworfen');
+  ok(p.daily.log['2026-11-18'][0] <= 10000 && p.daily.log['2026-11-18'][2] === 0, 'log-Werte begrenzt');
+  ok(p.daily.goal !== 99999, 'unsinniges Tagesziel verworfen');
+});
+test('storage: eigener gültiger Stand bleibt beim Import unverändert (Sanitizer ist harmlos)', () => {
+  const src = storage.migrate(V2, T).data.profiles.k4l5m6;
+  const r = storage.importData(src, storage.exportData(src, 'x', 1), T, TODAY_KEY);
+  eq(r.profile, src, 'Selbst-Import = identisch');
+});
+test('storage: transferCode erkennt Link mit Satzzeichen dahinter', () => {
+  eq(storage.transferCode('(siehe https://x.de/#/transfer/dt1.AbC-_9).'), 'dt1.AbC-_9', 'Klammer+Punkt');
+  eq(storage.transferCode('dt1.AbC\n-_9 '), 'dt1.AbC-_9', 'Umbruch im Code');
+});
+atest('storage: Übertragungscode von neuerer App wird abgelehnt (wie Datei)', async () => {
+  const code = 'dt0.' + b64u(JSON.stringify({ v: 2, schema: 4, profile: { prog: {} } }));
+  const u = await storage.unpackTransfer(code);
+  eq(storage.importData(storage.migrate(V2, T).data.profiles.k4l5m6, u.data, T, TODAY_KEY), { ok: false, error: 'newer' }, 'Schema 4 → newer');
+});
+
+(async () => {
+  for (const [name, fn] of asyncTests) {
+    current = name;
+    try { await fn(); } catch (e) { failed++; console.log(`  ✗ [${name}] Ausnahme: ${e && e.stack || e}`); }
+  }
+  console.log(`\nKern-Tests: ${passed} ok, ${failed} fehlgeschlagen`);
+  process.exit(failed ? 1 : 0);
+})();

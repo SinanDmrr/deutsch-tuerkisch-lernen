@@ -15,7 +15,7 @@
   var EXPORT_APP = 'deutsch-tuerkce';
   var LOG_GOAL = 10;                                      // Ziel für aus Zeitstempeln rekonstruierte Tage
 
-  function clone(x) { return x === undefined ? undefined : JSON.parse(JSON.stringify(x)); }
+  function clone(x) { return x === undefined ? undefined : JSON.parse(JSON.stringify(x), function (k, v) { return k === '__proto__' ? undefined : v; }); }
   function obj(x) { return x && typeof x === 'object' && !Array.isArray(x); }
   function each(o, fn) { if (obj(o)) Object.keys(o).forEach(function (k) { fn(k, o[k]); }); }
   function todayNum(today, todayKey) {
@@ -159,6 +159,60 @@
     };
   }
 
+  /** Fremde Daten (Datei/Link) auf das erwartete Format zurechtstutzen, bevor sie zusammengeführt werden:
+   *  nur Kurse de/tr, Einträge mit richtigem Typ, Zeitstempel höchstens ~1 Tag in der Zukunft (sonst würde ein
+   *  falscher Zeitstempel bei jedem späteren Abgleich „gewinnen“). Was nicht passt, wird verworfen. VERÄNDERT inc. */
+  function sanitizeIncoming(inc, today) {
+    if (!obj(inc)) return inc;
+    var maxMs = (today + 2) * 86400000, num = function (x) { return typeof x === 'number' && isFinite(x); };
+    var cap = function (x) { return x > maxMs ? maxMs : x; };
+    function courses(m, fn) {
+      if (!obj(m)) return {};
+      var out = {};
+      COURSES.forEach(function (c) { if (c in m) { var v = fn(m[c]); if (v !== undefined) out[c] = v; } });
+      return out;
+    }
+    function entries(m, fn) {
+      if (!obj(m)) return undefined;
+      var out = {};
+      each(m, function (id, v) { var r = fn(v); if (r !== undefined) out[id] = r; });
+      return out;
+    }
+    inc.prog = courses(inc.prog, function (m) {
+      return entries(m, function (r) { if (!obj(r)) return undefined; if ('t' in r) { if (num(r.t)) r.t = cap(r.t); else delete r.t; } return r; });
+    });
+    if ('srs' in inc) inc.srs = courses(inc.srs, function (m) {
+      return entries(m, function (r) {
+        if (!Array.isArray(r) || r.length < 3 || !num(r[0]) || !num(r[1]) || !num(r[2])) return undefined;
+        r[2] = Math.min(r[2], today + 1); r[1] = Math.min(r[1], today + 3650);
+        return r;
+      });
+    });
+    if ('skip' in inc) inc.skip = courses(inc.skip, function (m) {
+      return entries(m, function (r) { return num(r) ? cap(r) : (obj(r) ? (num(r.t) ? (r.t = cap(r.t), r) : r) : undefined); });
+    });
+    if ('place' in inc) inc.place = courses(inc.place, function (r) { if (!obj(r)) return undefined; if ('t' in r) { if (num(r.t)) r.t = cap(r.t); else delete r.t; } return r; });
+    if ('badges' in inc) inc.badges = entries(inc.badges, function (r) {
+      if (num(r)) return cap(r);
+      if (obj(r)) { if ('t' in r) { if (num(r.t)) r.t = cap(r.t); else delete r.t; } return r; }
+      return r === true ? r : undefined;
+    }) || {};
+    if ('last' in inc) inc.last = courses(inc.last, function (x) { return num(x) ? cap(x) : undefined; });
+    if ('daily' in inc) {
+      if (!obj(inc.daily)) delete inc.daily;
+      else {
+        var d = inc.daily, log = {};
+        each(d.log, function (k, v) {
+          if (!/^\d{4}-\d{2}-\d{2}$/.test(k) || DT.time.parseKey(k) > today + 1 || !Array.isArray(v)) return;
+          log[k] = v.slice(0, 3).map(function (x) { return num(x) ? Math.max(0, Math.min(x, 10000)) : 0; });
+        });
+        d.log = log;
+        if ('goal' in d && !(num(d.goal) && d.goal >= 1 && d.goal <= 1000)) delete d.goal;
+      }
+    }
+    return inc;
+  }
+
   /** Exportdatei (v1 oder v2, als Text oder Objekt) in das Profil cur übernehmen. Rein.
    *  Rückgabe: { ok: true, profile: <neues Profil>, from: 1|2 } oder { ok: false, error: 'format'|'newer' }.
    *  v1 (nur prog, evtl. noch mit „thema#i“) und v2 (ganzes Profil) werden erst migriert, dann zusammengeführt. */
@@ -176,7 +230,76 @@
     }
     // cur auf Schema 3 sicherstellen (idempotent; ändert ein bereits migriertes Profil nicht)
     var base = migrateProfile(clone(cur) || {}, 2, t);
-    return { ok: true, profile: mergeProfile(base, inc), from: fileV };
+    return { ok: true, profile: mergeProfile(base, sanitizeIncoming(inc, t)), from: fileV };
+  }
+
+  /* ---------- Übertragungscode (Link/Text statt Datei) ----------
+   *  Gleicher Inhalt wie die Exportdatei (Format v2), aber ohne Namen, deflate-komprimiert und als URL-sicherer Text:
+   *  „dt1.<base64url>“ (komprimiert) bzw. „dt0.<base64url>“ (unkomprimiert, falls der Browser kein CompressionStream hat).
+   *  Der Code steht im Link hinter dem # (wird vom Browser nie an einen Server gesendet). Eingelesen wird er über
+   *  importData – also gilt dieselbe Zusammenführung (pro Eintrag der neuere Stand) wie bei der Datei. */
+  var TR_ZIP = 'dt1.', TR_PLAIN = 'dt0.', TR_MAX_CODE = 400000, TR_MAX_RAW = 2 * 1024 * 1024;   // localStorage hat nur ~5 MB: Sicherung + neuer Stand müssen hineinpassen
+  function b64urlEncode(bytes) {
+    var s = '';
+    for (var i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+  function b64urlDecode(str) {
+    var b = str.replace(/-/g, '+').replace(/_/g, '/');
+    while (b.length % 4) b += '=';
+    var s = atob(b), out = new Uint8Array(s.length);
+    for (var i = 0; i < s.length; i++) out[i] = s.charCodeAt(i);
+    return out;
+  }
+  /** Bytes durch einen (De-)Compression-Stream schicken; bricht ab, wenn mehr als limit Bytes herauskommen. */
+  function streamBytes(bytes, stream, limit) {
+    var reader = new Blob([bytes]).stream().pipeThrough(stream).getReader(), chunks = [], n = 0;
+    return (function pump() {
+      return reader.read().then(function (r) {
+        if (r.done) {
+          var out = new Uint8Array(n), o = 0;
+          chunks.forEach(function (c) { out.set(c, o); o += c.length; });
+          return out;
+        }
+        n += r.value.length;
+        if (limit && n > limit) { reader.cancel(); throw new Error('size'); }
+        chunks.push(r.value);
+        return pump();
+      });
+    })();
+  }
+  /** Profil → Übertragungscode (Promise<string>). Der Name wird bewusst nicht mitgegeben. */
+  function packTransfer(profile, appVersion, now) {
+    var p = clone(profile) || {};
+    delete p.name;
+    var bytes = new TextEncoder().encode(JSON.stringify(exportData(p, appVersion, now)));
+    if (typeof CompressionStream === 'undefined') return Promise.resolve(TR_PLAIN + b64urlEncode(bytes));
+    return streamBytes(bytes, new CompressionStream('deflate'), TR_MAX_RAW).then(function (z) { return TR_ZIP + b64urlEncode(z); });
+  }
+  /** Link oder Code (mit Leerzeichen/Zeilenumbrüchen, Satzzeichen hinter dem Link) → reiner Code. */
+  function transferCode(input) {
+    var s = String(input == null ? '' : input).trim(), m = s.match(/#\/transfer\/(\S+)/), core;
+    if (m) { s = m[1]; try { s = decodeURIComponent(s); } catch (e) { /* bleibt */ } core = s.match(/dt[01]\.[A-Za-z0-9_-]+/); }
+    else { s = s.replace(/\s+/g, ''); try { s = decodeURIComponent(s); } catch (e) { /* bleibt */ } core = s.match(/^dt[01]\.[A-Za-z0-9_-]+/); }
+    return core ? core[0] : s;
+  }
+  /** Link/Code → { ok: true, data: <Exportobjekt> } oder { ok: false, error: 'format'|'unsupported' }.
+   *  Danach wie eine Datei mit importData(cur, data, …) übernehmen. */
+  function unpackTransfer(input) {
+    var code = transferCode(input), plain = code.indexOf(TR_PLAIN) === 0, bad = { ok: false, error: 'format' };
+    if ((!plain && code.indexOf(TR_ZIP) !== 0) || code.length > TR_MAX_CODE) return Promise.resolve(bad);
+    var bytes;
+    try { bytes = b64urlDecode(code.slice(4)); } catch (e) { return Promise.resolve(bad); }
+    var parse = function (u8) {
+      try {
+        // „__proto__“-Schlüssel verwerfen: ein fremder Link darf keine Prototypen verbiegen
+        var d = JSON.parse(new TextDecoder().decode(u8), function (k, v) { return k === '__proto__' ? undefined : v; });
+        return obj(d) ? { ok: true, data: d } : bad;
+      } catch (e) { return bad; }
+    };
+    if (plain) return Promise.resolve(parse(bytes));
+    if (typeof DecompressionStream === 'undefined') return Promise.resolve({ ok: false, error: 'unsupported' });
+    return streamBytes(bytes, new DecompressionStream('deflate'), TR_MAX_RAW).then(parse, function () { return bad; });
   }
 
   /* ---------- Schreiben mit Fehlererkennung ---------- */
@@ -205,6 +328,9 @@
     mergeProfile: mergeProfile,
     exportData: exportData,
     importData: importData,
+    packTransfer: packTransfer,
+    unpackTransfer: unpackTransfer,
+    transferCode: transferCode,
     trySet: trySet,
     save: save
   };
