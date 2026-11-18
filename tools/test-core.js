@@ -455,5 +455,13 @@ test('storage: save – Quota-Simulation', () => {
   ok(d2.v === 3, 'v mindestens SCHEMA');
 });
 
+test('„Kenne ich schon“ zählt erst nach einer echten Abfrage als sicher (QA M3)', () => {
+  const p = {}, T = 20000;
+  srs.introduce(p, 'de', 'k1', T, true);
+  eq(srs.stats(p, 'de', ['k1']), { neu: 0, lernend: 1, sicher: 0, gefestigt: 0 }, 'nur markiert → lernend');
+  srs.answer(p, 'de', 'k1', true, T + 7, 'word');
+  eq(srs.stats(p, 'de', ['k1']).sicher, 1, 'nach richtiger Wiederholung → sicher');
+});
+
 console.log(`\nKern-Tests: ${passed} ok, ${failed} fehlgeschlagen`);
 process.exit(failed ? 1 : 0);

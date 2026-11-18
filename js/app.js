@@ -9,7 +9,7 @@
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var DT = window.DT;
   var SCHEMA = DT.storage.SCHEMA;    // Version des Speicherformats (Migrationen nur in js/core/storage.js)
-  var APP_VERSION = '2026-11-18.13';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-18.14';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -21,6 +21,9 @@
     overview: ['Gesamtüberblick', 'Genel bakış'],
     settings: ['Einstellungen', 'Ayarlar'],
     hello: ['Hallo', 'Merhaba'],
+    bannerRestored: ['Dein Speicherstand war beschädigt – wir haben deine letzte Sicherung geladen. Die beschädigte Kopie bleibt aufbewahrt.', 'Kayıtlı verin bozulmuştu – son yedeğini yükledik. Bozuk kopya saklanmaya devam ediyor.'],
+    bannerCorrupt: ['Dein Speicherstand war beschädigt und es gab keine Sicherung. Eine Kopie bleibt aufbewahrt (dt-corrupt) – bitte melde dich über „Rechtliches“, dann helfen wir.', 'Kayıtlı verin bozulmuştu ve yedek yoktu. Bir kopyası saklanıyor (dt-corrupt) – lütfen “Yasal bilgiler” sayfasındaki bağlantıdan bize yaz, yardımcı olalım.'],
+    micNoLang: ['Dein Browser erkennt diese Sprache leider nicht – sag den Satz einfach laut.', 'Tarayıcın bu dili maalesef tanımıyor – cümleyi sadece sesli söyle.'],
     tabHome: ['Start', 'Ana sayfa'],
     tabWords: ['Wörter', 'Kelimeler'],
     tabGaps: ['Lücken', 'Eksikler'],
@@ -316,15 +319,22 @@
    * Einträge zu Aufgaben, die es (noch) nicht gibt, bleiben erhalten und werden nur nicht gezählt. */
   function rawGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function rawSet(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } }
-  var storageBroken = false, readOnly = false, newerData = false, saveFailed = false;
+  var storageBroken = false, readOnly = false, newerData = false, saveFailed = false, restoredFromBackup = false;
   var db = load();
   function emptyDb() { return { v: SCHEMA, app: APP_VERSION, theme: 'system', active: null, profiles: {} }; }
   function load() {
     var raw = rawGet(STORE), d = null, migrated = false;
     if (raw) {
       try { d = JSON.parse(raw); } catch (e) {
-        // Beschädigte Daten nicht überschreiben, sondern beiseitelegen
-        rawSet('dt-corrupt-' + Date.now(), raw); storageBroken = true;
+        // Beschädigte Daten nie überschreiben, sondern EINMAL beiseitelegen (gleicher Inhalt → keine weitere Kopie)
+        var known = rawGet('dt-corrupt');
+        if (known !== raw) { if (known) rawSet('dt-corrupt-' + Date.now(), known); rawSet('dt-corrupt', raw); }
+        storageBroken = true;
+        // Letzte gültige Sicherung verwenden, wenn vorhanden
+        var bk = null;
+        try { bk = JSON.parse(rawGet(BACKUP) || 'null'); } catch (e2) { bk = null; }
+        if (!bk || !bk.profiles) { try { bk = JSON.parse(rawGet(DT.storage.KEYS.backupS2) || 'null'); } catch (e3) { bk = null; } }
+        if (bk && bk.profiles) { d = bk; restoredFromBackup = true; storageBroken = false; raw = null; }
       }
     }
     if (!d) {
@@ -363,14 +373,18 @@
   // Mehrere Tabs: Änderungen aus einem anderen Tab übernehmen statt sie zu überschreiben
   window.addEventListener('storage', function (e) {
     if (e.key !== STORE || !e.newValue) return;
-    try { var d = JSON.parse(e.newValue); if (d && d.profiles && (d.v || 1) <= SCHEMA) { db = d; if (!db.profiles[db.active]) db.active = Object.keys(db.profiles)[0] || null; render(); } } catch (err) { /* ignore */ }
+    try { var d = JSON.parse(e.newValue); if (d && d.profiles && (d.v || 1) <= SCHEMA) { d = DT.storage.migrate(d, DT.time.dayNum(), DT.time.dayKey()).data; db = d; if (!db.profiles[db.active]) db.active = Object.keys(db.profiles)[0] || null; render(); } } catch (err) { /* ignore */ }
   });
   function askPersist() {
     try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) { /* ignore */ }
   }
   function prof() { return db.profiles[db.active]; }
   function courseId() { return prof().course; }
-  function course() { return K.courses[courseId()]; }
+  function course() {
+    var p = prof();
+    if (p && !K.courses[p.course]) p.course = 'de';   // unbekannter Kurs (z. B. aus einer fremden Datei) → sicherer Standard
+    return K.courses[courseId()];
+  }
   function uiLang() { return course().ui; }
   function prog() {
     var p = prof();
@@ -643,8 +657,9 @@
       var alts = []; for (var i = 0; i < e.results[0].length; i++) alts.push(e.results[0][i].transcript);
       onText(alts);
     };
-    recog.onerror = function (e) { if (!got) onError(e.error || 'error'); };
-    recog.onend = function () { if (!got) onError('no-speech'); };
+    var failed = false;
+    recog.onerror = function (e) { if (!got) { failed = true; onError(e.error || 'error'); } };
+    recog.onend = function () { if (!got && !failed) onError('no-speech'); };
     try { if (curAudio) curAudio.pause(); if (canSpeak) speechSynthesis.cancel(); recog.start(); } catch (e) { onError('error'); }
   }
   function audioBar(say, secondary) {
@@ -849,7 +864,7 @@
   /* ================= Router ================= */
   function parseHash() {
     var h = (location.hash || '').replace(/^#\/?/, '');
-    var parts = h.split('/').filter(Boolean).map(decodeURIComponent);
+    var parts = h.split('/').filter(Boolean).map(function (x) { try { return decodeURIComponent(x); } catch (e) { return x; } });
     return { page: parts[0] || 'dashboard', a: parts[1], b: parts[2] };
   }
   function go(hash) { if (location.hash === hash) render(); else location.hash = hash; }
@@ -889,6 +904,8 @@
             '<span class="t-long">' + esc(x[2]) + '</span><span class="t-short">' + esc(x[3]) + '</span>' + (x[4] ? ' <span class="badge primary">' + x[4] + '</span>' : '') + '</a>';
         }).join('') + '</nav>' +
       '</div></header>' +
+      (restoredFromBackup ? '<div class="save-banner info" role="status">🛟 ' + esc(t('bannerRestored')) + ' <button class="btn small" data-act="dismiss-restored">OK</button></div>' : '') +
+      (storageBroken ? '<div class="save-banner" role="alert">⚠️ ' + esc(t('bannerCorrupt')) + '</div>' : '') +
       ((saveFailed || readOnly || newerData) ? '<div id="save-banner" class="save-banner" role="alert">⚠️ ' + esc(t(newerData ? 'bannerNewer' : (readOnly ? 'bannerReadOnly' : 'bannerSaveFail'))) +
         (newerData ? ' <button class="btn small" onclick="location.reload()">' + esc(t('reload')) + '</button>' : ' <button class="btn small" data-act="export">' + esc(t('exportBtn')) + '</button>') + '</div>' : '') +
       '<main id="main">' + inner + '</main>' +
@@ -1130,6 +1147,7 @@
   function curEx() { return resolveItem(player.queue[player.idx]); }
   function initCur(ex) {
     var c = { sel: null, input: '', picked: [], choice: [] };
+    if ((ex.t === 'mc' || ex.t === 'listen') && ex.o) c.order = shuffleNotIdentity(ex.o.map(function (_, i) { return i; }));
     if (ex.t === 'order') c.pool = shuffleNotIdentity(ex.w.map(function (_, i) { return i; }));
     if (ex.t === 'match') { c.right = shuffle(ex.p.map(function (x) { return x[1]; })); c.choice = ex.p.map(function () { return ''; }); }
     return c;
@@ -1176,12 +1194,14 @@
     var target = course().target;
     if (ex.t === 'mc' || ex.t === 'listen') {
       qtext = md(ex.q || t('listenQ'));
-      body = (ex.t === 'listen' ? audioBar(ex.say) : '') + '<div class="options" role="radiogroup">' + ex.o.map(function (o, i) {
+      var order = c.order || ex.o.map(function (_, i) { return i; });
+      body = (ex.t === 'listen' ? audioBar(ex.say) : '') + '<div class="options" role="radiogroup">' + order.map(function (i, pos) {
+        var o = ex.o[i];
         var cls = '';
         if (checked) { if (i === ex.a) cls = ' right'; else if (i === c.sel) cls = ' wrong'; }
         else if (i === c.sel) cls = ' sel';
         return '<button class="opt' + cls + '" data-act="mc" data-i="' + i + '" role="radio" aria-checked="' + (i === c.sel) + '"' + (checked ? ' disabled' : '') + '>' +
-          '<span class="key' + (cls === ' right' ? ' ok' : cls === ' wrong' ? ' bad' : '') + '" aria-hidden="true">' + (cls === ' right' ? '✓' : cls === ' wrong' ? '✗' : 'ABCDEFG'[i]) + '</span><span>' + md(o) +
+          '<span class="key' + (cls === ' right' ? ' ok' : cls === ' wrong' ? ' bad' : '') + '" aria-hidden="true">' + (cls === ' right' ? '✓' : cls === ' wrong' ? '✗' : 'ABCDEFG'[pos]) + '</span><span>' + md(o) +
           (cls === ' right' ? '<span class="sr-only"> – ' + esc(t('srRight')) + '</span>' : cls === ' wrong' ? '<span class="sr-only"> – ' + esc(t('srYours')) + '</span>' : '') + '</span></button>';
       }).join('') + '</div>';
     } else if (ex.t === 'speak') {
@@ -1196,7 +1216,8 @@
       } else if (SR) {
         body += '<button class="btn primary mic-btn' + (c.listening ? ' on' : '') + '" data-act="mic"' + (checked ? ' disabled' : '') + '>🎤 ' + esc(c.listening ? t('listening') : t('speakNow')) + '</button>' +
           (c.heard && !checked ? '<p class="small" style="margin-top:10px">' + esc(t('recognized')) + ': <b>' + esc(c.heard) + '</b></p>' : '') +
-          (c.micError ? '<p class="small" style="color:var(--bad);margin-top:10px">' + esc(t(c.micError === 'not-allowed' ? 'micDenied' : 'micNoSpeech')) + '</p>' : '');
+          (c.micError ? '<p class="small" style="color:var(--bad);margin-top:10px">' + esc(t(c.micError === 'not-allowed' || c.micError === 'service-not-allowed' ? 'micDenied' : (c.micError === 'language-not-supported' ? 'micNoLang' : 'micNoSpeech'))) + '</p>' +
+            (checked ? '' : '<button class="btn" data-act="self-ok" style="margin-top:8px">✓ ' + esc(t('saidAloud')) + '</button>') : '');
       } else {
         body += '<p class="muted small">' + esc(t('noMic')) + '</p>' +
           (checked ? '' : '<button class="btn" data-act="self-ok">✓ ' + esc(t('saidAloud')) + '</button>');
@@ -1347,8 +1368,9 @@
       var s = topicStats(tp); n = s.n; c = s.c; open = s.w; unanswered = s.o;
       title = unanswered ? t('stillOpenTitle', { n: unanswered }) : t('summaryTitle');
     } else {
-      n = player.queue.length;
-      c = player.queue.filter(function (id) { return player.session[id] === true; }).length;
+      var uq = player.queue.filter(function (id, i) { return player.queue.indexOf(id) === i; });
+      n = uq.length;
+      c = uq.filter(function (id) { return player.session[id] === true && !player.requeued[id]; }).length;
       open = player.topicId ? wrongIds(player.topicId).length : wrongIds().length;
       title = t('reviewDoneTitle');
     }
@@ -1500,8 +1522,9 @@
             '<a class="btn small" href="#/topic/' + tid + '/review">' + esc(t('practiceTopic')) + ' (' + groups[tid].length + ')</a></div>' +
             groups[tid].map(function (id) {
               var it = exById(id), r = p[id]; if (!it) return ''; var ex = it.ex;
-              var q = ex.t === 'match' ? ex.q + ' ' + ex.p.map(function (x) { return x[0]; }).join(', ') : ex.q;
-              var sol = ex.t === 'mc' ? ex.o[ex.a] : (ex.t === 'match' ? ex.p.map(function (x) { return x[0] + ' = ' + x[1]; }).join(' · ') : ex.a[0]);
+              var q = ex.t === 'match' ? ex.q + ' ' + ex.p.map(function (x) { return x[0]; }).join(', ')
+                : (ex.t === 'dictation' ? (ex.q || t('dictationQ')) + ' „' + ex.say + '“' : (ex.t === 'listen' ? (ex.q || t('listenQ')) + ' 🔊 „' + ex.say + '“' : ex.q));
+              var sol = (ex.t === 'mc' || ex.t === 'listen') ? ex.o[ex.a] : (ex.t === 'match' ? ex.p.map(function (x) { return x[0] + ' = ' + x[1]; }).join(' · ') : ex.a[0]);
               return '<div class="gap-item"><span class="gi-q">' + md(q) + '</span><span class="badge bad">' + (r.w || 1) + esc(t('times')) + '</span>' +
                 '<div class="gi-meta"><span>' + esc(t('lastWrong')) + ': <s>' + md(r.a || '–') + '</s></span><span>' + esc(t('solution')) + ': <b>' + md(sol) + '</b></span></div></div>';
             }).join('') + '</div>';
@@ -1679,7 +1702,8 @@
     g.fillStyle = '#6b7280'; g.font = 'italic 26px ' + F; g.fillText(d.note1, W / 2, 1095); g.fillText(d.note2, W / 2, 1132);
   }
   function viewCertificate(lv) {
-    lv = lv || 'A1';
+    lv = LEVELS.indexOf(lv) >= 0 ? lv : 'A1';
+    if (!levelHas(lv)) return '<div class="crumbs"><a href="#/dashboard">' + esc(t('dashboard')) + '</a></div><h1>🎓 ' + esc(t('certTitle', { lv: lv })) + '</h1><div class="card empty"><p>' + esc(t('comingSoon')) + '</p></div>';
     var cs = certStatus(lv), p = prof(), cid = courseId(), de = cid === 'de';
     var head = '<div class="crumbs"><a href="#/dashboard">' + esc(t('dashboard')) + '</a></div><h1>🎓 ' + esc(t('certTitle', { lv: lv })) + '</h1>';
     if (!cs.ok) return head + '<div class="card empty"><p>' + esc(t('certNotYet')) + '</p><p class="muted small">' + esc(t('certEx', { p: cs.exPct }) + ' · ' + t('certWords', { p: cs.wPct })) + '</p><a class="btn primary" href="#/dashboard">' + esc(t('continueLearning')) + ' →</a></div>';
@@ -1919,7 +1943,7 @@
       case 'lessons': inner = viewLessons(r.a); break;
       case 'topic': inner = viewTopic(r.a, r.b); active = 'lessons'; break;
       case 'gaps': inner = viewGaps(); break;
-      case 'words': inner = !r.a ? viewWords() : (r.b ? viewWordSession(r.a, r.b) : viewField(r.a)); break;
+      case 'words': inner = (!r.a || !(K.wordfields || []).some(function (f) { return f[0] === r.a; })) ? viewWords() : (r.b === 'learn' || r.b === 'practice' ? viewWordSession(r.a, r.b) : viewField(r.a)); break;
       case 'review': inner = viewReview(); active = 'words'; break;
       case 'daily': inner = viewDaily(); active = 'dashboard'; break;
       case 'practice': inner = viewPractice(); active = 'gaps'; break;
@@ -1974,7 +1998,8 @@
       case 'ob-choose': obName = (document.getElementById('ob-name') || {}).value || ''; obChoice = el.getAttribute('data-c'); app.innerHTML = viewOnboarding(); break;
       case 'ob-start': {
         var nm = (document.getElementById('ob-name') || {}).value || '';
-        createProfile(nm, obChoice); location.hash = '#/dashboard'; render(); break;
+        var want = location.hash && !/^#\/?(legal)?(\/|$)/.test(location.hash) ? location.hash : '#/dashboard';
+        createProfile(nm, obChoice); location.hash = want; render(); break;
       }
       case 'toggle-theme': db.theme = currentThemeIsDark() ? 'light' : 'dark'; save(); render(); break;
       case 'set-theme': db.theme = el.getAttribute('data-v'); save(); render(); break;
@@ -2010,7 +2035,8 @@
         var pa = ensureProfile(prof()), pc = courseId(), now = Date.now();
         pa.place[pc] = { t: now, level: 'A1', mastered: place ? place.mastered.slice() : [], asked: place ? place.asked : 0 };
         pa.skip[pc] = pa.skip[pc] || {};
-        if (!el.getAttribute('data-none')) document.querySelectorAll('input[name="skip"]').forEach(function (cb) {
+        if (el.getAttribute('data-none')) Object.keys(pa.skip[pc]).forEach(function (k) { if (pa.skip[pc][k] && pa.skip[pc][k].by === 'placement') delete pa.skip[pc][k]; });
+        else document.querySelectorAll('input[name="skip"]').forEach(function (cb) {
           if (cb.checked) { if (!pa.skip[pc][cb.value]) pa.skip[pc][cb.value] = { t: now, by: 'placement' }; }
           else delete pa.skip[pc][cb.value];
         });
@@ -2029,7 +2055,8 @@
       case 'self-ok': if (player && !player.checked) { player.cur.selfOk = true; doCheck(); } break;
       case 'retry': if (player) { player.cur = null; player.checked = false; player.result = null; rerenderPlayerOnly(); } break;
       case 'next': doNext(); break;
-      case 'skip': if (player) { player.idx++; player.cur = null; player.checked = false; if (player.idx >= player.queue.length) player.done = true; rerenderPlayerOnly(); } break;
+      case 'skip': if (player && player.mode === 'placement' && place) { placementAnswer(false); doNext(); break; }
+        if (player) { player.idx++; player.cur = null; player.checked = false; if (player.idx >= player.queue.length) player.done = true; rerenderPlayerOnly(); } break;
       case 'jump': if (player) { player.idx = +el.getAttribute('data-i'); player.cur = null; player.checked = false; player.done = false; rerenderPlayerOnly(); } break;
       case 'redo-all': if (player && player.topicId) { var tid = player.topicId; player = null; newPlayer(tid + ':all', 'all', topicById(tid).data.exercises.map(function (_, i) { return exId(tid, i); }), tid); player.idx = 0; rerenderPlayerOnly(); } break;
       case 'redo-open': if (player && player.topicId) {
@@ -2037,6 +2064,7 @@
         for (var k2 = 0; k2 < q2.length; k2++) { var e2 = EXI[q2[k2]]; if (e2 && isCountable(e2.ex) && !pr2[q2[k2]]) { first2 = k2; break; } }
         player.done = false; player.idx = first2 < 0 ? 0 : first2; player.cur = null; player.checked = false; player.result = null; rerenderPlayerOnly();
       } break;
+      case 'dismiss-restored': restoredFromBackup = false; render(); break;
       case 'skip-main': ev.preventDefault(); var mn = document.getElementById('main'); if (mn) { mn.setAttribute('tabindex', '-1'); mn.focus(); } break;
       case 'restart-review': ev.preventDefault(); player = null; go(el.getAttribute('href')); break;
       case 'switch-profile': db.active = el.getAttribute('data-id'); save(); player = null; render(); break;
@@ -2057,7 +2085,11 @@
       case 'dl-tr': { dialogShowTr = !dialogShowTr; var box = document.querySelector('.dialog'); if (box) box.classList.toggle('show-tr', dialogShowTr); el.setAttribute('aria-pressed', dialogShowTr); break; }
       case 'play-say': speak(el.getAttribute('data-say'), course().tts, { gender: el.getAttribute('data-g') || '', rate: el.getAttribute('data-slow') ? 0.72 : 1 }); break;
       case 'voice-test': { var sel = document.getElementById('voice-sel'); speak(t('testSentence'), course().tts, { voiceName: sel ? sel.value : null }); break; }
-      case 'reset-course': if (armed(el, t('confirmReset'))) { backupNow(); prof().prog[courseId()] = {}; save(); player = null; render(); } break;
+      case 'reset-course': if (armed(el, t('confirmReset'))) {
+        backupNow(); var pr3 = ensureProfile(prof()), cr = courseId();
+        pr3.prog[cr] = {}; if (pr3.srs) pr3.srs[cr] = {}; if (pr3.skip) pr3.skip[cr] = {}; if (pr3.place) delete pr3.place[cr];
+        save(); player = null; render();
+      } break;
     }
   });
   app.addEventListener('input', function (ev) {
@@ -2084,8 +2116,9 @@
     if (!player || ev.target.tagName === 'INPUT' || ev.target.tagName === 'SELECT' || ev.altKey || ev.ctrlKey || ev.metaKey) return;
     var item = player.done ? null : curEx(); if (!item) return;
     if (!player.checked && (item.ex.t === 'mc' || item.ex.t === 'listen') && /^[1-7a-gA-G]$/.test(ev.key)) {
-      var i = /\d/.test(ev.key) ? +ev.key - 1 : 'abcdefg'.indexOf(ev.key.toLowerCase());
-      if (i < item.ex.o.length) { player.cur.sel = i; rerenderPlayerOnly(); }
+      var pos = /\d/.test(ev.key) ? +ev.key - 1 : 'abcdefg'.indexOf(ev.key.toLowerCase());
+      var ord = player.cur.order || item.ex.o.map(function (_, k) { return k; });
+      if (pos < ord.length) { player.cur.sel = ord[pos]; rerenderPlayerOnly(); }
     }
   });
   app.addEventListener('submit', function (ev) {

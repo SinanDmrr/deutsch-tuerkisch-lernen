@@ -107,14 +107,14 @@
   }
 
   /** Zählung für Fortschrittsbalken. ids optional (Standard: alle Einträge des Kurses).
-   *  neu = kein Eintrag oder Fach 0 · lernend = Fach 1–2 · sicher = Fach ≥ 3 · gefestigt = Fach ≥ 5 (Teil von sicher).
+   *  neu = kein Eintrag oder Fach 0 · lernend = Fach 1–2 (oder ≥ 3 ohne eine einzige Abfrage) · sicher = Fach ≥ 3 und mind. 1 Abfrage · gefestigt = Fach ≥ 5 (Teil von sicher).
    *  neu + lernend + sicher = Anzahl ids. */
   function stats(p, cid, ids) {
     var b = bucket(p, cid, false) || {}, r = { neu: 0, lernend: 0, sicher: 0, gefestigt: 0 };
     (ids || Object.keys(b)).forEach(function (id) {
       var e = b[id], box = e ? e[B] : 0;
       if (box <= 0) r.neu++;
-      else if (box <= 2) r.lernend++;
+      else if (box <= 2 || !e[REPS]) r.lernend++;   // „Kenne ich schon“ ohne echte Abfrage zählt erst nach der ersten richtigen Wiederholung als sicher
       else { r.sicher++; if (box >= 5) r.gefestigt++; }
     });
     return r;
