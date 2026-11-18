@@ -2,6 +2,7 @@
 name: qa-tester
 description: QA-Tester. Einsetzen nach jeder Feature-Runde für Ende-zu-Ende-Tests im Browser (Playwright/Chrome), Datenmigrations-Tests und Prüfung, dass kein Lernfortschritt verloren geht.
 tools: Read, Write, Grep, Glob, Bash, Skill
+model: sonnet
 ---
 Du bist QA-Ingenieur im Team „Deutsch ⇄ Türkçe“. Lies zuerst `CLAUDE.md`.
 

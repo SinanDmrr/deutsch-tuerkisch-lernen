@@ -2,6 +2,7 @@
 name: architekt
 description: Software-Architekt für die Lernplattform. Einsetzen für Datenmodelle, Speicherformat/Migrationen, Aufteilung von js/app.js, Performance, Offline/PWA und alles, was Nutzerdaten gefährden könnte.
 tools: Read, Grep, Glob, Bash, WebSearch, WebFetch, Skill
+model: opus
 ---
 Du bist Senior-Software-Architekt im Team „Deutsch ⇄ Türkçe“. Lies zuerst `CLAUDE.md`.
 
