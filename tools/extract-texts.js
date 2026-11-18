@@ -10,8 +10,8 @@ const root = path.join(__dirname, '..');
 const ctx = { window: {} };
 vm.createContext(ctx);
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-// Alle Skripte in derselben Reihenfolge wie index.html laden (außer app.js)
-const scripts = [...html.matchAll(/<script src="([^"?]+)/g)].map(m => m[1]).filter(s => !s.endsWith('app.js'));
+// Nur Lehrplan und Inhalte laden, in derselben Reihenfolge wie index.html (ADR-10: App-/Kern-Dateien nutzen DOM/Speicher)
+const scripts = [...html.matchAll(/<script\s+src="(js\/(?:curriculum|content\/[A-Za-z0-9_-]+)\.js)(?:\?[^"]*)?"/g)].map(m => m[1]);
 scripts.forEach(s => vm.runInContext(fs.readFileSync(path.join(root, s), 'utf8'), ctx, { filename: s }));
 
 const K = ctx.window.KOPRU;

@@ -14,6 +14,8 @@ jobs:
         with:
           node-version: '20'
       - name: Syntax prüfen
-        run: for f in js/*.js js/content/*.js tools/*.js; do node --check "$f"; done
+        run: for f in js/*.js js/core/*.js js/content/*.js tools/*.js; do node --check "$f"; done
       - name: Inhalte prüfen
         run: node tools/validate.js
+      - name: Kernmodule testen (Migration, SRS, Tagesziel)
+        run: node tools/test-core.js
