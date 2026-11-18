@@ -9,7 +9,7 @@
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var DT = window.DT;
   var SCHEMA = DT.storage.SCHEMA;    // Version des Speicherformats (Migrationen nur in js/core/storage.js)
-  var APP_VERSION = '2026-11-18.21';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-18.22';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -137,6 +137,40 @@
     confirmDelete: ['Profil „{n}“ wirklich löschen?', '“{n}” profili silinsin mi?'],
     clickAgain: ['→ zum Bestätigen nochmal klicken', '→ onaylamak için tekrar tıkla'],
     imported: ['Fortschritt importiert ✔', 'İlerleme içe aktarıldı ✔'],
+    transferTitle: ['Auf ein anderes Gerät übertragen', 'Başka bir cihaza aktar'],
+    transferIntro: ['Dein Fortschritt liegt nur in diesem Browser. Mit einem Übertragungslink holst du ihn auf dein anderes Gerät – ohne Konto und ohne Server. Beim Einlesen wird zusammengeführt: pro Aufgabe gilt der neuere Stand, nichts wird gelöscht.', 'İlerlemen yalnızca bu tarayıcıda kayıtlıdır. Aktarım bağlantısıyla onu hesap ve sunucu olmadan diğer cihazına taşıyabilirsin. İçe aktarırken veriler birleştirilir: her görev için daha yeni olan durum geçerli olur, hiçbir şey silinmez.'],
+    guideToPc: ['📱 → 💻 Vom Handy auf PC / Laptop', '📱 → 💻 Telefondan bilgisayara'],
+    guideToPhone: ['💻 → 📱 Vom PC / Laptop auf Handy', '💻 → 📱 Bilgisayardan telefona'],
+    guidePc1: ['Am Handy: Tippe unten auf „🔗 Übertragungslink erstellen“.', 'Telefonda: Aşağıdaki “🔗 Aktarım bağlantısı oluştur” düğmesine dokun.'],
+    guidePc2: ['Tippe auf „📤 Teilen“ und schicke den Link an dich selbst – zum Beispiel per WhatsApp (Chat mit „Du“), Telegram („Gespeicherte Nachrichten“) oder E-Mail an dich.', '“📤 Paylaş”a dokun ve bağlantıyı kendine gönder – örneğin WhatsApp (“Siz” sohbeti), Telegram (“Kayıtlı Mesajlar”) ya da kendi e-posta adresine.'],
+    guidePc3: ['Am PC / Laptop: Öffne dieselbe Nachricht (WhatsApp Web, Telegram Web oder dein E-Mail-Postfach im Browser) und klicke auf den Link.', 'Bilgisayarda: Aynı mesajı aç (WhatsApp Web, Telegram Web ya da tarayıcıdaki e-posta kutun) ve bağlantıya tıkla.'],
+    guidePc4: ['Die Seite öffnet sich und zeigt, was gefunden wurde. Klicke auf „Zusammenführen“ – fertig.', 'Sayfa açılır ve nelerin bulunduğunu gösterir. “Birleştir”e tıkla – bu kadar.'],
+    guideLap1: ['Am PC / Laptop: Klicke unten auf „🔗 Übertragungslink erstellen“.', 'Bilgisayarda: Aşağıdaki “🔗 Aktarım bağlantısı oluştur” düğmesine tıkla.'],
+    guideLap2: ['Klicke auf „📋 Link kopieren“ oder „✉️ Per E-Mail an mich“. Füge den Link in einen Chat mit dir selbst ein (WhatsApp Web: Chat mit „Du“, Telegram: „Gespeicherte Nachrichten“).', '“📋 Bağlantıyı kopyala” ya da “✉️ Kendime e-postayla gönder”e tıkla. Bağlantıyı kendinle olan bir sohbete yapıştır (WhatsApp Web’de “Siz” sohbeti, Telegram’da “Kayıtlı Mesajlar”).'],
+    guideLap3: ['Am Handy: Öffne die Nachricht und tippe auf den Link.', 'Telefonda: Mesajı aç ve bağlantıya dokun.'],
+    guideLap4: ['Tippe auf „Zusammenführen“ – fertig.', '“Birleştir”e dokun – bu kadar.'],
+    guideNote: ['Wichtig: Der Fortschritt gehört zum Browser. Öffnet sich der Link in einem anderen Browser als sonst (z. B. Samsung Internet statt Chrome), landet der Stand dort. Kopiere den Link dann und füge ihn in deinem gewohnten Browser bei „Link oder Code einfügen“ ein.', 'Önemli: İlerleme tarayıcıya bağlıdır. Bağlantı her zaman kullandığından farklı bir tarayıcıda açılırsa (örneğin Chrome yerine Samsung Internet), durum orada kaydedilir. O zaman bağlantıyı kopyala ve alışık olduğun tarayıcıda “Bağlantıyı ya da kodu yapıştır” alanına yapıştır.'],
+    guideFile: ['Alternative ohne Link: „⬇️ Exportieren“ → Datei per LocalSend, AirDrop, Quick Share, Kabel oder E-Mail aufs andere Gerät → dort „⬆️ Importieren“.', 'Bağlantı olmadan: “⬇️ Dışa aktar” → dosyayı LocalSend, AirDrop, Quick Share, kablo ya da e-postayla diğer cihaza gönder → orada “⬆️ İçe aktar”.'],
+    transferMake: ['🔗 Übertragungslink erstellen', '🔗 Aktarım bağlantısı oluştur'],
+    transferShare: ['📤 Teilen', '📤 Paylaş'],
+    transferCopy: ['📋 Link kopieren', '📋 Bağlantıyı kopyala'],
+    transferMail: ['✉️ Per E-Mail an mich', '✉️ Kendime e-postayla gönder'],
+    transferCopied: ['Link kopiert ✔', 'Bağlantı kopyalandı ✔'],
+    transferMailLong: ['Der Link ist für eine E-Mail-Vorschau zu lang – nutze „Teilen“ oder „Link kopieren“.', 'Bağlantı e-posta için fazla uzun – “Paylaş” ya da “Bağlantıyı kopyala”yı kullan.'],
+    transferMailSubject: ['Mein Lernstand – Deutsch ⇄ Türkçe', 'İlerlemem – Deutsch ⇄ Türkçe'],
+    transferMailBody: ['Link zum Übertragen meines Lernstands (nur für mich):', 'İlerlememi aktarmak için bağlantı (sadece benim için):'],
+    transferPrivacy: ['Der Link enthält deinen Lernstand, aber keinen Namen. Er steht hinter dem „#“ und wird deshalb nie an diese Seite oder an GitHub gesendet. Nur dein Chat- bzw. E-Mail-Dienst sieht ihn beim Verschicken. Schicke ihn nur dir selbst – wer ihn hat, kann deinen Lernstand sehen.', 'Bağlantı öğrenme durumunu içerir, ama adını içermez. “#” işaretinden sonra gelir, bu yüzden bu siteye ya da GitHub’a hiç gönderilmez. Sadece kullandığın sohbet ya da e-posta hizmeti, göndermen sırasında onu görür. Yalnızca kendine gönder – bağlantıya sahip olan herkes öğrenme durumunu görebilir.'],
+    transferPaste: ['Link oder Code einfügen', 'Bağlantıyı ya da kodu yapıştır'],
+    transferPastePh: ['Hier den Link oder Code einfügen …', 'Bağlantıyı ya da kodu buraya yapıştır …'],
+    transferCheck: ['Prüfen', 'Kontrol et'],
+    transferFound: ['Fortschritt von einem anderen Gerät gefunden: {n} Einträge, davon {c} neu oder aktueller als hier (Stand {d}).', 'Başka bir cihazdan ilerleme bulundu: {n} kayıt, bunların {c} tanesi burada yok ya da buradakinden daha yeni ({d} tarihli).'],
+    transferOther: ['Außerdem werden Serie, Abzeichen oder Einstufung abgeglichen.', 'Ayrıca seri, rozetler ya da seviye tespiti de eşitlenir.'],
+    transferNothing: ['Dein Stand hier ist bereits gleich oder neuer – es würde nichts geändert.', 'Buradaki durumun zaten aynı ya da daha yeni – hiçbir şey değişmeyecek.'],
+    transferSafe: ['Vor dem Zusammenführen wird automatisch eine Sicherung angelegt. Dein Stand hier wird nicht gelöscht.', 'Birleştirmeden önce otomatik yedek alınır. Buradaki durumun silinmez.'],
+    transferMerge: ['Zusammenführen', 'Birleştir'],
+    transferCancel: ['Abbrechen', 'Vazgeç'],
+    transferUnsupported: ['Dieser Browser kann den Link nicht entpacken – bitte aktualisiere ihn oder nutze Export/Import.', 'Bu tarayıcı bağlantıdaki verileri okuyamıyor – lütfen güncelle ya da dışa/içe aktarmayı kullan.'],
+    transferFail: ['Link oder Code nicht erkannt. Kopiere ihn bitte vollständig.', 'Bağlantı ya da kod tanınmadı. Lütfen bağlantının tamamını kopyala.'],
     importFail: ['Datei konnte nicht gelesen werden.', 'Dosya okunamadı.'],
     noRecording: ['Für diesen Satz gibt es noch keine Aufnahme – sie kommt mit dem nächsten Update.', 'Bu cümlenin ses kaydı henüz yok – bir sonraki güncellemeyle gelecek.'],
     importNewer: ['Diese Datei stammt aus einer neueren Version – bitte Seite neu laden (Strg+F5) und erneut importieren.', 'Bu dosya daha yeni bir sürümden – lütfen sayfayı yenile (Ctrl+F5) ve tekrar içe aktar.'],
@@ -1657,7 +1691,7 @@
         (isA ? '' : '<button class="btn small" data-act="switch-profile" data-id="' + id + '">' + esc(t('switchTo')) + '</button>') +
         (Object.keys(db.profiles).length > 1 ? '<button class="btn small danger" data-act="delete-profile" data-id="' + id + '">' + esc(t('del')) + '</button>' : '') + '</div></div>';
     }).join('');
-    return '<h1>⚙️ ' + esc(t('settings')) + '</h1>' +
+    return '<h1>⚙️ ' + esc(t('settings')) + '</h1>' + transferPendingHtml() +
       '<div class="card section"><h2>' + esc(t('theme')) + '</h2>' + themeSeg + '</div>' +
       '<div class="card section"><h2>' + esc(t('course')) + '</h2>' + courseSeg + '</div>' +
       '<div class="card section"><h2>🎯 ' + esc(t('dailyGoal')) + '</h2><p class="muted small">' + esc(t('dailyGoalIntro')) + '</p><div class="seg">' + [5, 10, 20].map(function (g) {
@@ -1667,6 +1701,7 @@
       '<div class="card section"><h2>' + esc(t('profiles')) + '</h2><p class="muted small">' + esc(t('profilesIntro')) + '</p>' + profiles +
         '<form class="inline-form" data-form="new-profile"><input class="input" name="name" maxlength="30" placeholder="' + esc(t('namePh')) + '" required><button class="btn" type="submit">+ ' + esc(t('newProfile')) + '</button></form></div>' +
       '<div class="card section"><h2>🔊 ' + esc(t('voiceTitle')) + '</h2>' + voiceSettingsHtml() + '</div>' +
+      transferCardHtml() +
       '<div class="card section"><h2>' + esc(t('data')) + '</h2><p class="muted small">' + esc(t('storageNote')) + '</p><div class="btn-row">' +
         '<button class="btn" data-act="export">' + esc(t('exportBtn')) + '</button>' +
         '<label class="btn" style="cursor:pointer">' + esc(t('importBtn')) + '<input type="file" accept="application/json,.json" data-act="import" hidden></label>' +
@@ -2014,6 +2049,11 @@
         document.documentElement.lang = 'de'; app.innerHTML = viewOnboarding(); return;
       }
     }
+    if (parseHash().page === 'transfer') {   // Link vom anderen Gerät: Code sofort aus der Adresszeile nehmen, dann prüfen lassen
+      var tcode = parseHash().a || '';
+      try { history.replaceState(null, '', transferBase() + '#/settings'); } catch (e) { location.hash = '#/settings'; }
+      receiveTransfer(tcode).then(function (found) { if (found && parseHash().page === 'settings') { render(); window.scrollTo(0, 0); } });
+    }
     var r = parseHash(), active = r.page, inner;
     // Player zurücksetzen, wenn man die Übungsansicht verlässt
     var inPlayer = (r.page === 'topic' && (r.b === 'exercises' || r.b === 'review')) || r.page === 'practice' || r.page === 'review' || r.page === 'daily' || (r.page === 'words' && r.b) || r.page === 'placement';
@@ -2106,7 +2146,7 @@
       case 'ob-choose': obName = (document.getElementById('ob-name') || {}).value || ''; obChoice = el.getAttribute('data-c'); app.innerHTML = viewOnboarding(); break;
       case 'ob-start': {
         var nm = (document.getElementById('ob-name') || {}).value || '';
-        var want = location.hash && !/^#\/?(legal)?(\/|$)/.test(location.hash) ? location.hash : '#/dashboard';
+        var want = /^#?\/?(legal(\/.*)?)?$/.test(location.hash) ? '#/dashboard' : location.hash;   // leere Adresse/Rechtliches → Start; sonst (z. B. Übertragungslink) dorthin
         createProfile(nm, obChoice); location.hash = want; render(); break;
       }
       case 'toggle-theme': db.theme = currentThemeIsDark() ? 'light' : 'dark'; save(); render(); break;
@@ -2187,6 +2227,12 @@
         break;
       }
       case 'export': doExport(); break;
+      case 'transfer-make': makeTransfer(); break;
+      case 'transfer-copy': copyTransfer(); break;
+      case 'transfer-share': shareTransfer(); break;
+      case 'transfer-check': checkPastedTransfer(); break;
+      case 'transfer-merge': applyTransfer(); break;
+      case 'transfer-cancel': pendingTransfer = null; render(); break;
       case 'voice-gender': if (!el.disabled) {
         db.voiceGender = el.getAttribute('data-v'); db.voices = db.voices || {}; delete db.voices[course().tts]; save(); render();
         var pvx = piperVoices(course().target), gk = db.voiceGender === 'm' ? pvx.male : (pvx.female || (db.voiceGender ? null : pvx.male));
@@ -2295,6 +2341,12 @@
     a.href = URL.createObjectURL(blob); a.download = 'fortschritt-ilerleme-' + (p.name || 'profil').replace(/[^\wäöüßçğışı-]+/gi, '_') + '.json';
     document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
   }
+  /** Ergebnis von importData übernehmen: erst Sicherung, dann zusammengeführtes Profil speichern. */
+  function commitImport(r) {
+    backupNow();
+    db.profiles[db.active] = ensureProfile(r.profile);
+    save(); player = null; toast(t('imported')); render();
+  }
   function doImport(file) {
     if (!file) return;
     var rd = new FileReader();
@@ -2302,12 +2354,111 @@
       try {
         var r = DT.storage.importData(prof(), rd.result, today(), todayKey());
         if (!r.ok) { toast(t(r.error === 'newer' ? 'importNewer' : 'importFail')); return; }
-        backupNow();
-        db.profiles[db.active] = ensureProfile(r.profile);
-        save(); player = null; toast(t('imported')); render();
+        commitImport(r);
       } catch (e) { toast(t('importFail')); }
     };
     rd.readAsText(file);
+  }
+
+  /* ---------- Übertragung per Link/Code (ohne Konto, ohne Server) ---------- */
+  var pendingTransfer = null;   // { data, n, d } – gefundener Stand wartet auf „Zusammenführen“
+  function countEntries(profile) {
+    var n = 0;
+    ['prog', 'srs'].forEach(function (f) {
+      var m = profile && profile[f];
+      if (m && typeof m === 'object') Object.keys(m).forEach(function (c) { n += (m[c] && typeof m[c] === 'object') ? Object.keys(m[c]).length : 1; });
+    });
+    return n;
+  }
+  function countChanged(cur, merged) {   // wie viele Einträge würden neu oder aktueller
+    var n = 0;
+    ['prog', 'srs'].forEach(function (f) {
+      var A = (cur && cur[f]) || {}, B = (merged && merged[f]) || {};
+      Object.keys(B).forEach(function (c) {
+        var bm = B[c] || {}, am = A[c] || {};
+        Object.keys(bm).forEach(function (id) { if (JSON.stringify(bm[id]) !== JSON.stringify(am[id])) n++; });
+      });
+    });
+    return n;
+  }
+  function otherChanged(cur, merged) {   // Serie, Abzeichen, Einstufung, Überspringen, zuletzt-benutzt
+    return ['daily', 'badges', 'place', 'skip', 'last'].some(function (f) { return JSON.stringify((cur && cur[f]) || null) !== JSON.stringify((merged && merged[f]) || null); });
+  }
+  function receiveTransfer(input) {
+    return DT.storage.unpackTransfer(input).then(function (u) {
+      if (!u.ok) { toast(t(u.error === 'unsupported' ? 'transferUnsupported' : 'transferFail')); return false; }
+      var r = DT.storage.importData(prof(), u.data, today(), todayKey());
+      if (!r.ok) { toast(t(r.error === 'newer' ? 'importNewer' : 'importFail')); return false; }
+      var d = '—';
+      try { var dt = new Date(u.data.exported); if (u.data.exported && !isNaN(dt)) d = dt.toLocaleDateString(uiLang() === 'de' ? 'de-DE' : 'tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' }); } catch (e) { /* bleibt — */ }
+      pendingTransfer = { data: u.data, n: countEntries(u.data.profile), d: d, pid: db.active };
+      return true;
+    }).catch(function () { toast(t('transferFail')); return false; });
+  }
+  function transferPendingHtml() {
+    if (!pendingTransfer) return '';
+    if (pendingTransfer.pid !== db.active) { pendingTransfer = null; return ''; }   // Profil gewechselt → nichts in ein anderes Profil schreiben
+    var r = DT.storage.importData(prof(), pendingTransfer.data, today(), todayKey());
+    if (!r.ok) { pendingTransfer = null; return ''; }
+    var c = countChanged(prof(), r.profile), other = otherChanged(prof(), r.profile), any = c > 0 || other;
+    return '<div class="card section" id="transfer-pending" role="region" aria-live="polite"><h2>🔄 ' + esc(t('transferTitle')) + '</h2>' +
+      '<p>' + esc(t('transferFound', { n: pendingTransfer.n, c: c, d: pendingTransfer.d })) + '</p>' +
+      (other ? '<p class="muted small">' + esc(t('transferOther')) + '</p>' : '') +
+      (any ? '' : '<p class="muted small">' + esc(t('transferNothing')) + '</p>') +
+      '<p class="muted small">' + esc(t('transferSafe')) + '</p><div class="btn-row">' +
+      '<button class="btn primary" data-act="transfer-merge"' + (any ? '' : ' disabled') + '>' + esc(t('transferMerge')) + '</button>' +
+      '<button class="btn" data-act="transfer-cancel">' + esc(t('transferCancel')) + '</button></div></div>';
+  }
+  function transferCardHtml() {
+    function steps(pre) { var o = '<ol class="guide-steps">'; for (var i = 1; i <= 4; i++) o += '<li>' + esc(t(pre + i)) + '</li>'; return o + '</ol>'; }
+    return '<div class="card section" id="transfer-card"><h2>🔄 ' + esc(t('transferTitle')) + '</h2><p class="muted small">' + esc(t('transferIntro')) + '</p>' +
+      '<details class="guide"><summary class="btn">' + esc(t('guideToPc')) + '</summary>' + steps('guidePc') + '</details>' +
+      '<details class="guide"><summary class="btn">' + esc(t('guideToPhone')) + '</summary>' + steps('guideLap') + '</details>' +
+      '<p class="muted small">' + esc(t('guideNote')) + '</p><p class="muted small">' + esc(t('guideFile')) + '</p>' +
+      '<div class="btn-row"><button class="btn primary" data-act="transfer-make">' + esc(t('transferMake')) + '</button></div>' +
+      '<div id="transfer-out" aria-live="polite"></div>' +
+      '<h3>' + esc(t('transferPaste')) + '</h3>' +
+      '<textarea class="input" id="transfer-in" rows="3" spellcheck="false" autocomplete="off" aria-label="' + esc(t('transferPaste')) + '" placeholder="' + esc(t('transferPastePh')) + '"></textarea>' +
+      '<div class="btn-row"><button class="btn" data-act="transfer-check">' + esc(t('transferCheck')) + '</button></div>' +
+      '<p class="muted small">' + esc(t('transferPrivacy')) + '</p></div>';
+  }
+  function transferBase() { return location.href.replace(/#.*$/, ''); }
+  function makeTransfer() {
+    var out = document.getElementById('transfer-out');
+    DT.storage.packTransfer(prof(), APP_VERSION).then(function (code) {
+      var link = transferBase() + '#/transfer/' + code, body = t('transferMailBody') + '\n\n' + link;
+      var mail = 'mailto:?subject=' + encodeURIComponent(t('transferMailSubject')) + '&body=' + encodeURIComponent(body);
+      if (!out || !out.isConnected) return;
+      out.innerHTML = '<textarea class="input" id="transfer-link" rows="3" readonly aria-label="' + esc(t('transferMake')) + '"></textarea><div class="btn-row">' +
+        (typeof navigator.share === 'function' ? '<button class="btn" data-act="transfer-share">' + esc(t('transferShare')) + '</button>' : '') +
+        '<button class="btn" data-act="transfer-copy">' + esc(t('transferCopy')) + '</button>' +
+        (mail.length <= 1900 ? '<a class="btn" href="' + esc(mail) + '">' + esc(t('transferMail')) + '</a>' : '') + '</div>' +
+        (mail.length <= 1900 ? '' : '<p class="muted small">' + esc(t('transferMailLong')) + '</p>');
+      var ta = out.querySelector('#transfer-link'); ta.value = link; ta.setAttribute('data-body', body);
+    }, function () { toast(t('importFail')); });
+  }
+  function transferLinkBox() { return document.getElementById('transfer-link'); }
+  function copyTransfer() {
+    var box = transferLinkBox(); if (!box) return;
+    var done = function () { toast(t('transferCopied')); };
+    var fallback = function () { box.focus(); box.select(); try { if (document.execCommand('copy')) done(); } catch (e) { /* Nutzer kopiert von Hand */ } };
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(box.value).then(done, fallback); else fallback();
+  }
+  function shareTransfer() {
+    var box = transferLinkBox(); if (!box || typeof navigator.share !== 'function') return;
+    navigator.share({ title: t('transferMailSubject'), text: box.getAttribute('data-body') || box.value }).catch(function () { /* abgebrochen */ });
+  }
+  function checkPastedTransfer() {
+    var inp = document.getElementById('transfer-in');
+    receiveTransfer(inp ? inp.value : '').then(function (found) { if (found) { render(); window.scrollTo(0, 0); } });
+  }
+  function applyTransfer() {
+    if (!pendingTransfer) return;
+    if (pendingTransfer.pid !== db.active) { pendingTransfer = null; render(); return; }
+    var r = DT.storage.importData(prof(), pendingTransfer.data, today(), todayKey());
+    pendingTransfer = null;
+    if (!r.ok) { toast(t(r.error === 'newer' ? 'importNewer' : 'importFail')); render(); return; }
+    commitImport(r);
   }
 
   loadAudioManifest();
