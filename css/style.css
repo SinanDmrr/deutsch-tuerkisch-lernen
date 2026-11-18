@@ -394,6 +394,7 @@ a.topic-card:hover { border-color: var(--primary); transform: translateY(-1px); 
   position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); background: var(--text); color: var(--bg);
   padding: 10px 16px; border-radius: 10px; font-weight: 600; z-index: 50; box-shadow: var(--shadow); animation: pop .2s ease;
 }
+footer.foot a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 footer.foot { max-width: 1040px; margin: 0 auto; padding: 0 16px 40px; color: var(--muted); font-size: .82rem; text-align: center; }
 
 @media (max-width: 640px) {
@@ -411,3 +412,13 @@ footer.foot { max-width: 1040px; margin: 0 auto; padding: 0 16px 40px; color: va
   .fb-row .k { min-width: 0; }
 }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+/* Tabellen auf schmalen Bildschirmen als Karten (Seite „Rechtliches“) */
+@media (max-width: 640px) {
+  table.stack thead { display: none; }
+  table.stack, table.stack tbody, table.stack tr, table.stack td { display: block; width: 100%; }
+  table.stack tr { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  table.stack tr:last-child { border-bottom: 0; }
+  table.stack td { padding: 3px 0; border: 0; }
+  table.stack td[data-l]::before { content: attr(data-l) ": "; font-weight: 650; color: var(--muted); font-size: .8rem; }
+}

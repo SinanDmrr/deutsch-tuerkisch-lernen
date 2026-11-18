@@ -11,8 +11,9 @@ zu veröffentlichen, zu verbreiten, in andere Produkte zu übernehmen oder komme
 
 Erlaubt ist die private Nutzung der Lernplattform über die oben genannte Webseite.
 
-Ausgenommen sind Bestandteile Dritter mit eigener Lizenz, insbesondere die mit Piper TTS erzeugten
-Sprachstimmen/-modelle (siehe tools/tts-voices.json und die jeweiligen Modell-Lizenzen).
+Ausgenommen sind Bestandteile Dritter mit eigener Lizenz, insbesondere die Sprachausgabe (Piper TTS und
+die Piper-Stimmen). Was wir von wem unter welcher Lizenz nutzen, steht in CREDITS.md und auf der Seite
+„Rechtliches“ der Webseite.
 
 ENGLISH
 This repository and the learning platform "Deutsch ⇄ Türkçe" – including source code, curriculum,
@@ -20,5 +21,5 @@ explanations, exercises, word lists, example sentences, dialogues, texts, graphi
 the design – are protected by copyright. Public visibility of the code does NOT grant any licence. Copying,
 modifying, publishing, distributing, incorporating into other products or commercial use, in whole or in part,
 is not permitted without prior written consent of the copyright holder. Personal use of the learning platform
-via the website above is permitted. Third-party components with their own licences (e.g. Piper TTS voice
-models) are excluded.
+via the website above is permitted. Third-party components with their own licences (e.g. Piper TTS and its voice
+models) are excluded – see CREDITS.md for sources and licences.

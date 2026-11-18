@@ -1,11 +1,9 @@
 {
-  "_info": "Piper-Stimmen (https://huggingface.co/rhasspy/piper-voices). Pro Sprache und Geschlecht wird die erste verfügbare Stimme der Liste genommen. 'samples' = Stimmen, von denen nur eine Hörprobe erzeugt wird.",
+  "_info": "Piper-Stimmen (https://huggingface.co/rhasspy/piper-voices). Pro Sprache und Geschlecht wird die erste verfügbare Stimme der Liste genommen, deren Datensatz-Lizenz erlaubt ist (siehe tools/gen_audio.py: ALLOWED). 'samples' = Stimmen, von denen nur eine Hörprobe erzeugt wird. Lizenzen werden bei jedem Durchlauf aus der offiziellen MODEL_CARD gelesen und in audio/manifest.json (licenses) gespeichert.",
   "voices": {
     "de": {
       "female": [
-        "de_DE-kerstin-low",
-        "de_DE-ramona-low",
-        "de_DE-eva_k-x_low"
+        "de_DE-kerstin-low"
       ],
       "male": [
         "de_DE-thorsten-high",
@@ -15,8 +13,7 @@
     "tr": {
       "male": [
         "tr_TR-fahrettin-medium",
-        "tr_TR-fettah-medium",
-        "tr_TR-dfki-medium"
+        "tr_TR-fettah-medium"
       ],
       "female": []
     }
@@ -24,13 +21,9 @@
   "samples": {
     "de": [
       "de_DE-kerstin-low",
-      "de_DE-ramona-low",
-      "de_DE-eva_k-x_low",
-      "de_DE-thorsten-high",
-      "de_DE-karlsson-low"
+      "de_DE-thorsten-high"
     ],
     "tr": [
-      "tr_TR-dfki-medium",
       "tr_TR-fahrettin-medium",
       "tr_TR-fettah-medium"
     ]
@@ -39,5 +32,6 @@
     "de": "Guten Tag! Ich lerne jeden Tag ein bisschen Deutsch.",
     "tr": "Merhaba! Her gün biraz Türkçe öğreniyorum. Şeker yok."
   },
-  "_genders": "Per Tonhöhe geprüft: kerstin/ramona/eva_k weiblich (~170–190 Hz), thorsten/karlsson männlich (~120 Hz), tr dfki männlich (~105 Hz). Piper hat (Stand Nov. 2026) nur männliche türkische Stimmen (dfki, fahrettin, fettah)."
+  "_genders": "Per Tonhöhe geprüft: kerstin weiblich, thorsten männlich, fahrettin männlich, fettah ~195 Hz (Hörprobe). Piper hat (Stand Nov. 2026) keine weibliche türkische Stimme mit freier Lizenz.",
+  "_removed": "18.11.2026 entfernt: tr_TR-dfki-medium (Datensatz CC BY-NC-SA 4.0 = nicht kommerziell), de_DE-ramona-low/eva_k-x_low/karlsson-low (M-AILABS-Lizenz, nicht benötigt)."
 }

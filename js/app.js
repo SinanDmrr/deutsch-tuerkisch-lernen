@@ -9,7 +9,7 @@
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var DT = window.DT;
   var SCHEMA = DT.storage.SCHEMA;    // Version des Speicherformats (Migrationen nur in js/core/storage.js)
-  var APP_VERSION = '2026-11-18.4';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-18.5';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -118,6 +118,9 @@
     doneBadge: ['fertig', 'bitti'],
     mistakesBadge: ['Fehler', 'hata'],
     rights: ['Alle Rechte vorbehalten', 'Tüm hakları saklıdır'],
+    legal: ['Rechtliches & Datenschutz', 'Yasal bilgiler ve gizlilik'],
+    legalIntro: ['Urheberrecht, verwendete Open-Source-Bestandteile mit Lizenzen und was mit deinen Daten passiert.', 'Telif hakkı, kullandığımız açık kaynak bileşenler ve lisansları, verilerine ne olduğu.'],
+    legalOpen: ['Öffnen', 'Aç'],
     footer: ['Türkisch lernen · Dein Fortschritt bleibt in deinem Browser', 'Almanca Öğren · İlerlemen tarayıcında kalır'],
     fromAllTopics: ['Fehler aus allen Themen', 'Tüm konulardan hatalar'],
     mixedPractice: ['Fehlertraining', 'Hata çalışması'],
@@ -396,7 +399,7 @@
     if (!window.fetch) return;
     fetch('audio/manifest.json?v=' + APP_VERSION, { cache: 'no-cache' })
       .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (j) { AUDIO = j; if (db.active && parseHash().page === 'settings') render(); })
+      .then(function (j) { AUDIO = j; if (db.active && ['settings', 'legal'].indexOf(parseHash().page) >= 0) render(); })
       .catch(function () { /* offline oder lokal geöffnet → Gerätestimme */ });
   }
   function piperVoices(lang2) { return (AUDIO && AUDIO.voices && AUDIO.voices[lang2]) || {}; }
@@ -808,7 +811,7 @@
       ((saveFailed || readOnly || newerData) ? '<div id="save-banner" class="save-banner" role="alert">⚠️ ' + esc(t(newerData ? 'bannerNewer' : (readOnly ? 'bannerReadOnly' : 'bannerSaveFail'))) +
         (newerData ? ' <button class="btn small" onclick="location.reload()">' + esc(t('reload')) + '</button>' : ' <button class="btn small" data-act="export">' + esc(t('exportBtn')) + '</button>') + '</div>' : '') +
       '<main id="main">' + inner + '</main>' +
-      '<footer class="foot">' + esc(t('footer')) + '<br><span>© 2026 Sinan Demir · ' + esc(t('rights')) + '</span></footer>';
+      '<footer class="foot">' + esc(t('footer')) + '<br><span>© 2026 Sinan Demir · ' + esc(t('rights')) + ' · <a href="#/legal">' + esc(t('legal')) + '</a></span></footer>';
   }
 
   /* ================= Onboarding ================= */
@@ -827,6 +830,7 @@
       '<input id="ob-name" class="input" maxlength="30" autocomplete="nickname" value="' + esc(obName) + '"></div>' +
       '<button class="btn primary" data-act="ob-start">Los geht’s · Başlayalım →</button>' +
       '<p class="muted small" style="margin-top:18px">Dein Fortschritt bleibt in diesem Browser. · İlerlemen bu tarayıcıda saklanır.</p>' +
+      '<p class="muted small"><a href="#/legal/de">Rechtliches & Datenschutz</a> · <a href="#/legal/tr">Yasal bilgiler ve gizlilik</a><br>© 2026 Sinan Demir</p>' +
       '</div></main>';
   }
   function createProfile(name, cid) {
@@ -1463,7 +1467,118 @@
       '<div class="card section"><h2>' + esc(t('data')) + '</h2><p class="muted small">' + esc(t('storageNote')) + '</p><div class="btn-row">' +
         '<button class="btn" data-act="export">' + esc(t('exportBtn')) + '</button>' +
         '<label class="btn" style="cursor:pointer">' + esc(t('importBtn')) + '<input type="file" accept="application/json,.json" data-act="import" hidden></label>' +
-        '<button class="btn danger" data-act="reset-course">' + esc(t('resetCourse')) + '</button></div></div>';
+        '<button class="btn danger" data-act="reset-course">' + esc(t('resetCourse')) + '</button></div></div>' +
+      '<div class="card section"><h2>⚖️ ' + esc(t('legal')) + '</h2><p class="muted small">' + esc(t('legalIntro')) + '</p><a class="btn" href="#/legal">' + esc(t('legalOpen')) + '</a></div>';
+  }
+
+  /* ================= Rechtliches, Lizenzen & Datenschutz =================
+   * Quelle der Angaben: eigene Recherche (Stand siehe LEGAL_DATE) + CREDITS.md im Repo.
+   * Stimmen-Lizenzen kommen live aus audio/manifest.json (licenses), das die Audio-Erzeugung
+   * bei jedem Durchlauf aus der offiziellen MODEL_CARD jeder Stimme liest. */
+  var LEGAL_DATE = '2026-11-18';
+  var REPO = 'https://github.com/SinanDmrr/deutsch-tuerkisch-lernen';
+  var VOICE_FALLBACK = {   // nur bis das erste manifest mit „licenses“ da ist
+    'de_DE-kerstin-low': { license: 'CC0', dataset: 'https://github.com/rhasspy/dataset-voice-kerstin', card: 'https://huggingface.co/rhasspy/piper-voices/blob/v1.0.0/de/de_DE/kerstin/low/MODEL_CARD' },
+    'de_DE-thorsten-high': { license: 'CC0', dataset: 'https://github.com/thorstenMueller/Thorsten-Voice', card: 'https://huggingface.co/rhasspy/piper-voices/blob/v1.0.0/de/de_DE/thorsten/high/MODEL_CARD' },
+    'tr_TR-fahrettin-medium': { license: 'CC0', dataset: 'https://github.com/NabuCasa/voice-datasets', card: 'https://huggingface.co/rhasspy/piper-voices/tree/v1.0.0/tr/tr_TR/fahrettin/medium' },
+    'tr_TR-fettah-medium': { license: 'CC0', dataset: 'https://github.com/NabuCasa/voice-datasets', card: 'https://huggingface.co/rhasspy/piper-voices/blob/6fb8245d6d27fef8988272e0c8e9f5018da1bbbf/tr/tr_TR/fettah/medium/MODEL_CARD' }
+  };
+  function datasetOwner(url) {
+    if (/thorsten/i.test(url)) return 'Thorsten Müller · Thorsten-Voice';
+    if (/kerstin/i.test(url)) return 'Rhasspy · Kerstin';
+    if (/nabucasa|ohf-voice/i.test(url)) return 'Nabu Casa / Open Home Foundation';
+    return url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+  }
+  function ext(url, label) { return '<a href="' + esc(url) + '" target="_blank" rel="noopener">' + esc(label || url) + '</a>'; }
+  function viewLegal(lang) {
+    var de = (lang || uiLang()) === 'de';
+    function L(a, b) { return de ? a : b; }
+    var lic = (AUDIO && AUDIO.licenses && Object.keys(AUDIO.licenses).length) ? AUDIO.licenses : VOICE_FALLBACK;
+    var live = lic !== VOICE_FALLBACK;
+    var langName = { de_DE: L('Deutsch', 'Almanca'), tr_TR: L('Türkisch', 'Türkçe') };
+    var voiceRows = Object.keys(lic).sort().map(function (k) {
+      var v = lic[k], parts = k.split('-'), name = prettyVoice(k);
+      var isSample = AUDIO && AUDIO.voices && !Object.keys(AUDIO.voices).some(function (l) { return Object.keys(AUDIO.voices[l]).some(function (g) { return AUDIO.voices[l][g] === k; }); });
+      return '<tr><td><b>' + esc(name) + '</b> <span class="muted small">(' + esc(parts[2] || '') + ')</span>' + (isSample ? '<div class="muted small">' + esc(L('nur Hörprobe', 'yalnızca ses örneği')) + '</div>' : '') + '</td>' +
+        '<td data-l="' + esc(L('Sprache', 'Dil')) + '">' + esc(langName[parts[0]] || parts[0]) + '</td>' +
+        '<td data-l="' + esc(L('Aufnahmen von', 'Kayıtlar')) + '">' + (v.dataset ? ext(v.dataset, datasetOwner(v.dataset)) : '–') + '</td>' +
+        '<td data-l="' + esc(L('Lizenz', 'Lisans')) + '"><span class="badge ok">' + esc(v.license || '?') + '</span></td>' +
+        '<td data-l="' + esc(L('Nachweis', 'Kaynak')) + '">' + (v.card ? ext(v.card, 'MODEL_CARD') : '–') + (v.checked ? '<div class="muted small">' + esc(L('geprüft ', 'kontrol: ') + v.checked) + '</div>' : '') + '</td></tr>';
+    }).join('');
+    var tools = [
+      ['Piper', 'https://github.com/OHF-Voice/piper1-gpl', L('Michael Hansen / Rhasspy, heute Open Home Foundation', 'Michael Hansen / Rhasspy, bugün Open Home Foundation'), L('GPL-3.0-or-later (früher MIT)', 'GPL-3.0-or-later (önceden MIT)'),
+        L('Erzeugt auf den GitHub-Servern die Aufnahmen (MP3). Die Software wird nicht mit dieser Seite ausgeliefert. Laut ', 'Ses kayıtlarını (MP3) GitHub sunucularında üretir. Yazılımın kendisi bu siteyle birlikte dağıtılmaz. ') +
+        ext('https://www.gnu.org/licenses/gpl-faq.html#GPLOutput', L('GNU-FAQ', 'GNU SSS')) + L(' fällt die Ausgabe eines GPL-Programms grundsätzlich nicht unter die GPL.', '’ye göre bir GPL programının ürettiği çıktı kural olarak GPL kapsamına girmez.')],
+      ['eSpeak NG', 'https://github.com/espeak-ng/espeak-ng', L('eSpeak-NG-Projekt', 'eSpeak NG projesi'), 'GPL-3.0', L('Aussprache-Regeln innerhalb von Piper – nur zum Erzeugen, nicht ausgeliefert.', 'Piper içindeki telaffuz kuralları – yalnızca üretim için, dağıtılmaz.')],
+      [L('Piper-Stimmmodelle', 'Piper ses modelleri'), 'https://huggingface.co/rhasspy/piper-voices', 'Michael Hansen / Rhasspy', L('MIT + Lizenz des jeweiligen Datensatzes (unten)', 'MIT + ilgili veri setinin lisansı (aşağıda)'),
+        L('Werden nur auf den GitHub-Servern geladen. Ausgeliefert werden nur die damit erzeugten Aufnahmen.', 'Yalnızca GitHub sunucularında yüklenir. Siteye sadece bunlarla üretilen kayıtlar konur.')],
+      ['FFmpeg', 'https://ffmpeg.org/legal.html', L('FFmpeg-Projekt', 'FFmpeg projesi'), 'LGPL-2.1+ / GPL', L('Wandelt auf den GitHub-Servern WAV in MP3 um – nicht ausgeliefert.', 'GitHub sunucularında WAV’ı MP3’e çevirir – dağıtılmaz.')]
+    ].map(function (r) {
+      return '<tr><td><b>' + ext(r[1], r[0]) + '</b><div class="muted small">' + esc(r[2]) + '</div></td><td data-l="' + esc(L('Lizenz', 'Lisans')) + '"><span class="badge">' + esc(r[3]) + '</span></td><td data-l="' + esc(L('Nutzung', 'Kullanım')) + '">' + r[4] + '</td></tr>';
+    }).join('');
+    function li(a) { return '<li>' + a + '</li>'; }
+    return '<h1>⚖️ ' + esc(L('Rechtliches, Lizenzen & Datenschutz', 'Yasal bilgiler, lisanslar ve gizlilik')) + '</h1>' +
+      '<p class="muted">' + esc(L('Kurz und ehrlich: was von uns ist, was wir von anderen nutzen – und was mit deinen Daten passiert.', 'Kısaca ve açıkça: neyin bize ait olduğu, başkalarından neyi kullandığımız ve verilerine ne olduğu.')) + '</p>' +
+
+      '<div class="card lesson section"><h2>' + esc(L('Auf einen Blick', 'Bir bakışta')) + '</h2><ul>' +
+        li(esc(L('Keine Werbung, kein Tracking, keine Cookies, kein Konto.', 'Reklam yok, takip yok, çerez yok, hesap yok.'))) +
+        li(esc(L('Dein Fortschritt bleibt nur in deinem Browser auf deinem Gerät.', 'İlerlemen yalnızca kendi cihazındaki tarayıcıda kalır.'))) +
+        li(esc(L('Alle Lerninhalte sind selbst erstellt – nichts ist aus anderen Apps oder Büchern kopiert.', 'Tüm öğrenme içeriklerini kendimiz hazırladık – başka uygulamalardan ya da kitaplardan hiçbir şey kopyalanmadı.'))) +
+        li(esc(L('Alles Fremde ist Open Source bzw. frei lizenziert und unten mit Quelle und Lizenz genannt.', 'Başkasına ait her şey açık kaynak ya da serbest lisanslı; aşağıda kaynağı ve lisansıyla birlikte belirtildi.'))) +
+      '</ul></div>' +
+
+      '<div class="card lesson section"><h2>© ' + esc(L('Urheberrecht', 'Telif hakkı')) + '</h2><p>' +
+        esc(L('Lehrplan, Erklärungen, Übungen, Wortlisten, Beispielsätze, Dialoge, Grafiken, das Maskottchen Lingo, Design und Code sind selbst erstellt: © 2026 Sinan Demir, alle Rechte vorbehalten. Der Code ist öffentlich einsehbar, damit die Seite über GitHub Pages laufen kann – das ist keine Erlaubnis, ihn oder die Inhalte zu übernehmen.',
+          'Müfredat, açıklamalar, alıştırmalar, kelime listeleri, örnek cümleler, diyaloglar, görseller, maskotumuz Lingo, tasarım ve kod bize aittir: © 2026 Sinan Demir, tüm hakları saklıdır. Site GitHub Pages üzerinde çalışabilsin diye kod herkese açık; bu, kodun ya da içeriklerin alınıp kullanılabileceği anlamına gelmez.')) +
+        ' ' + ext(REPO + '/blob/main/LICENSE', 'LICENSE') + '</p></div>' +
+
+      '<div class="card lesson section"><h2>🙏 ' + esc(L('Danke an – verwendete Open-Source-Bestandteile', 'Teşekkürler – kullandığımız açık kaynak bileşenler')) + '</h2>' +
+        '<p>' + esc(L('Die natürlichen Stimmen verdanken wir diesen Projekten und den Menschen, die ihre Stimme frei zur Verfügung gestellt haben.', 'Doğal seslerimizi bu projelere ve seslerini herkesin kullanımına açan insanlara borçluyuz.')) + '</p>' +
+        '<div class="tbl-wrap"><table class="stack"><thead><tr><th>' + esc(L('Bestandteil', 'Bileşen')) + '</th><th>' + esc(L('Lizenz', 'Lisans')) + '</th><th>' + esc(L('Wie wir es nutzen', 'Nasıl kullanıyoruz')) + '</th></tr></thead><tbody>' + tools + '</tbody></table></div>' +
+        '<h3>' + esc(L('Genutzte Stimmen', 'Kullanılan sesler')) + '</h3>' +
+        '<div class="tbl-wrap"><table class="stack"><thead><tr><th>' + esc(L('Stimme', 'Ses')) + '</th><th>' + esc(L('Sprache', 'Dil')) + '</th><th>' + esc(L('Aufnahmen von', 'Kayıtlar')) + '</th><th>' + esc(L('Lizenz', 'Lisans')) + '</th><th>' + esc(L('Nachweis', 'Kaynak')) + '</th></tr></thead><tbody>' + voiceRows + '</tbody></table></div>' +
+        '<div class="callout tip">' + esc(L('Die Lizenzen werden bei jeder Erzeugung der Aufnahmen automatisch aus der offiziellen Modellkarte jeder Stimme gelesen. Stimmen ohne freie Lizenz (z. B. „nur nicht kommerziell“) werden automatisch nicht verwendet. CC0 verlangt keine Namensnennung – wir nennen die Projekte trotzdem, weil sie die Arbeit gemacht haben.',
+          'Lisanslar, kayıtlar her üretildiğinde her sesin resmî model kartından otomatik olarak okunur. Serbest lisansı olmayan sesler (ör. “yalnızca ticari olmayan kullanım”) otomatik olarak kullanılmaz. CC0 isim belirtmeyi zorunlu kılmaz – yine de emeği onların olduğu için projeleri anıyoruz.')) +
+          (live ? '' : ' ' + esc(L('(Automatische Prüfung läuft gerade – bis dahin Stand der Recherche.)', '(Otomatik kontrol şu an yapılıyor – o zamana kadar araştırma sonucu gösteriliyor.)'))) + '</div>' +
+        '<p class="small"><b>' + esc(L('Bewusst nicht genutzt:', 'Bilerek kullanmadıklarımız:')) + '</b> ' +
+          esc(L('die türkische Stimme „dfki“ (Datensatz nur für nicht kommerzielle Zwecke, CC BY-NC-SA 4.0) sowie drei deutsche Stimmen mit eigener Datensatz-Lizenz (M-AILABS), die wir nicht brauchen.',
+            'Türkçe “dfki” sesi (veri seti yalnızca ticari olmayan kullanım için, CC BY-NC-SA 4.0) ve kendi veri seti lisansı olan (M-AILABS), ihtiyaç duymadığımız üç Almanca ses.')) + '</p>' +
+        '<p class="small"><b>' + esc(L('Offener Punkt, ehrlich gesagt:', 'Açık bir nokta, dürüst olmak gerekirse:')) + '</b> ' +
+          esc(L('Laut Modellkarten wurden die Stimmen aus einer englischen Grundstimme weitertrainiert. Für deren Datensatz gilt eine Forschungslizenz; ob sie für weitertrainierte Stimmen gilt, ist in der Community umstritten. Für diese kostenlose, werbefreie Lernseite halten wir die Nutzung für vertretbar. Vor einer kommerziellen Nutzung prüfen wir das neu.',
+            'Model kartlarına göre sesler, İngilizce bir temel sesten yola çıkılarak eğitildi. O temel sesin veri seti bir araştırma lisansına tabi; bunun türetilmiş sesler için de geçerli olup olmadığı toplulukta tartışmalı. Ücretsiz ve reklamsız bu öğrenme sitesi için kullanımı makul görüyoruz. Ticari bir kullanımdan önce bunu yeniden inceleyeceğiz.')) +
+          ' ' + ext('https://github.com/rhasspy/piper/discussions/271', L('Diskussion', 'Tartışma')) + '</p>' +
+      '</div>' +
+
+      '<div class="card lesson section"><h2>💡 ' + esc(L('Ideen & Methoden, auf denen das Lernen aufbaut', 'Öğrenme yöntemimizin dayandığı fikirler')) + '</h2><p>' + esc(L('Die Umsetzung ist eigen, die Ideen stammen von anderen:', 'Uygulama bize ait, fikirler başkalarından:')) + '</p><ul>' +
+        li(esc(L('Lernkartei mit Fächern – Sebastian Leitner („So lernt man lernen“, 1972)', 'Bölmeli kelime kartları – Sebastian Leitner („So lernt man lernen“, 1972)'))) +
+        li(esc(L('Verteiltes Wiederholen und Vergessenskurve – Hermann Ebbinghaus („Über das Gedächtnis“, 1885) und die Forschung danach', 'Aralıklı tekrar ve unutma eğrisi – Hermann Ebbinghaus („Über das Gedächtnis“, 1885) ve sonraki araştırmalar'))) +
+        li(esc(L('Niveaustufen A1–C2 – Gemeinsamer Europäischer Referenzrahmen für Sprachen (GER) des Europarats', 'A1–C2 seviyeleri – Avrupa Konseyi’nin Diller için Avrupa Ortak Başvuru Metni (AOBM/CEFR)'))) +
+        li(esc(L('Tagesziel, Serie und Hörübungen kennt man aus vielen Lern-Apps – übernommen ist nur die Idee, keine Texte, Grafiken oder Designs.', 'Günlük hedef, seri ve dinleme alıştırmaları birçok öğrenme uygulamasından tanıdık – sadece fikir alındı; metin, görsel ya da tasarım alınmadı.'))) +
+      '</ul></div>' +
+
+      '<div class="card lesson section" id="privacy"><h2>🔒 ' + esc(L('Datenschutz', 'Gizlilik')) + '</h2>' +
+        '<p><b>' + esc(L('Verantwortlich:', 'Sorumlu:')) + '</b> Sinan Demir · ' + esc(L('Kontakt über', 'İletişim:')) + ' ' + ext(REPO + '/issues', 'GitHub') + '</p>' +
+        '<h3>' + esc(L('Was auf deinem Gerät gespeichert wird', 'Cihazında neler saklanır')) + '</h3><p>' +
+          esc(L('Profilname, gewählter Kurs, deine Antworten und dein Fortschritt, der Wiederholungsplan, das Tagesziel und deine Einstellungen – im lokalen Speicher deines Browsers (localStorage, Einträge beginnen mit „dt-“). Diese Daten verlassen dein Gerät nicht; wir haben keinen Server, der sie empfängt. Löschen kannst du sie in den Einstellungen oder über die Browser-Einstellungen („Websitedaten löschen“). Eine Export-Datei entsteht nur, wenn du sie selbst herunterlädst.',
+            'Profil adın, seçtiğin kurs, cevapların ve ilerlemen, tekrar planın, günlük hedefin ve ayarların – tarayıcının yerel belleğinde (localStorage, “dt-” ile başlayan kayıtlar). Bu veriler cihazından çıkmaz; bunları alan bir sunucumuz yok. Ayarlar’dan ya da tarayıcı ayarlarından (“site verilerini sil”) silebilirsin. Dışa aktarma dosyası yalnızca sen indirirsen oluşur.')) + '</p>' +
+        '<h3>' + esc(L('Hosting', 'Barındırma')) + '</h3><p>' +
+          esc(L('Die Seite liegt bei GitHub Pages (GitHub, Inc., USA). Laut GitHub wird beim Aufruf die IP-Adresse aus Sicherheitsgründen protokolliert. Darauf haben wir keinen Einfluss und keinen Zugriff.',
+            'Site GitHub Pages’te (GitHub, Inc., ABD) barındırılıyor. GitHub’a göre siteye girildiğinde IP adresi güvenlik amacıyla kaydedilir. Bunun üzerinde bir etkimiz ya da erişimimiz yok.')) +
+          ' ' + ext('https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages#data-collection', L('GitHub-Dokumentation', 'GitHub belgeleri')) + ' · ' +
+          ext('https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement', L('Datenschutzerklärung von GitHub', 'GitHub gizlilik bildirimi')) + '</p>' +
+        '<h3>' + esc(L('Sprachausgabe & Mikrofon', 'Sesli okuma ve mikrofon')) + '</h3><p>' +
+          esc(L('Die Aufnahmen kommen als Dateien von derselben Seite. Fehlt eine Aufnahme, liest dein Gerät lokal mit seiner eigenen Stimme vor. Das Mikrofon wird nur benutzt, wenn du in der freiwilligen Übung „Sprechen“ darauf tippst und es erlaubst: Die Erkennung übernimmt dein Browser – je nach Browser wird die Aufnahme dafür an dessen Anbieter geschickt (z. B. Chrome an Google). Wir selbst empfangen und speichern keine Aufnahmen.',
+            'Kayıtlar aynı siteden dosya olarak gelir. Bir kayıt eksikse cihazın kendi sesiyle, yerel olarak okur. Mikrofon yalnızca isteğe bağlı “Konuşma” alıştırmasında üzerine dokunup izin verirsen kullanılır: Tanıma işini tarayıcın yapar – tarayıcıya göre kayıt bunun için sağlayıcısına gönderilir (ör. Chrome’da Google’a). Biz hiçbir kayıt almıyor ve saklamıyoruz.')) + '</p>' +
+        '<h3>' + esc(L('Was es hier nicht gibt', 'Burada olmayanlar')) + '</h3><p>' +
+          esc(L('Keine Cookies, keine Analyse- oder Tracking-Dienste, keine Werbung, keine Anmeldung, keine externen Schriftarten oder Skripte von fremden Servern.',
+            'Çerez yok, analiz ya da takip hizmeti yok, reklam yok, üyelik yok, başka sunuculardan yazı tipi ya da betik yüklenmiyor.')) + '</p>' +
+        '<h3>' + esc(L('Deine Rechte', 'Hakların')) + '</h3><p>' +
+          esc(L('Da wir selbst nichts auf Servern speichern, kannst du alle Daten jederzeit selbst einsehen (Export) und löschen. Für die Daten bei GitHub gilt deren Datenschutzerklärung. Du hast außerdem das Recht, dich bei einer Datenschutz-Aufsichtsbehörde zu beschweren.',
+            'Biz sunucuda hiçbir şey saklamadığımız için tüm verilerini istediğin zaman kendin görebilir (dışa aktarma) ve silebilirsin. GitHub’daki veriler için onların gizlilik bildirimi geçerlidir. Ayrıca bir veri koruma denetim makamına şikâyette bulunma hakkın var.')) + '</p>' +
+      '</div>' +
+
+      '<p class="muted small">' + esc(L('Stand: ', 'Güncelleme: ') + LEGAL_DATE + ' · ' + L('Sorgfältig recherchiert, aber keine Rechtsberatung. Fehler entdeckt? Schreib uns über GitHub.', 'Özenle araştırıldı ama hukuki danışmanlık değildir. Bir hata mı gördün? GitHub üzerinden yaz.')) +
+        ' · ' + ext(REPO + '/blob/main/CREDITS.md', L('Alle Nachweise (CREDITS.md)', 'Tüm kaynaklar (CREDITS.md)')) + '</p>';
   }
 
   /* ================= Render ================= */
@@ -1472,7 +1587,16 @@
     if (!db.active || !db.profiles[db.active]) {
       var ids = Object.keys(db.profiles);
       if (ids.length) { db.active = ids[0]; save(); }
-      else { document.documentElement.lang = 'de'; document.title = 'Deutsch ⇄ Türkçe'; app.innerHTML = viewOnboarding(); return; }
+      else {
+        document.title = 'Deutsch ⇄ Türkçe';
+        var lr = parseHash();
+        if (lr.page === 'legal') {   // vor dem Start lesbar, ohne Profil
+          var ll = lr.a === 'tr' ? 'tr' : 'de'; document.documentElement.lang = ll;
+          app.innerHTML = '<main id="main"><p><a href="#/">← Deutsch ⇄ Türkçe</a> · <a href="#/legal/' + (ll === 'de' ? 'tr">Türkçe' : 'de">Deutsch') + '</a></p>' + viewLegal(ll) + '</main>';
+          return;
+        }
+        document.documentElement.lang = 'de'; app.innerHTML = viewOnboarding(); return;
+      }
     }
     var r = parseHash(), active = r.page, inner;
     // Player zurücksetzen, wenn man die Übungsansicht verlässt
@@ -1488,6 +1612,7 @@
       case 'practice': inner = viewPractice(); active = 'gaps'; break;
       case 'overview': inner = viewOverview(); break;
       case 'settings': inner = viewSettings(); break;
+      case 'legal': inner = viewLegal(r.a === 'de' || r.a === 'tr' ? r.a : uiLang()); active = ''; break;
       default: inner = viewDashboard(); active = 'dashboard';
     }
     app.innerHTML = shell(active, inner);

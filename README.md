@@ -41,5 +41,5 @@ Der Fortschritt liegt im Browser der Nutzer (`localStorage`, Schlüssel `dt-data
 
 ## Urheberrecht
 
-© 2026 Sinan Demir – **Alle Rechte vorbehalten.** Der Code ist öffentlich einsehbar, damit die Seite über GitHub Pages laufen kann – das ist **keine** Erlaubnis zur Nutzung. Kopieren, Übernehmen oder Weiterverwenden von Code oder Inhalten (Übungen, Erklärungen, Wortlisten, Dialoge, Grafiken, Maskottchen) ist ohne schriftliche Zustimmung nicht gestattet. Details: [LICENSE](LICENSE).
+© 2026 Sinan Demir – **Alle Rechte vorbehalten.** Der Code ist öffentlich einsehbar, damit die Seite über GitHub Pages laufen kann – das ist **keine** Erlaubnis zur Nutzung. Kopieren, Übernehmen oder Weiterverwenden von Code oder Inhalten (Übungen, Erklärungen, Wortlisten, Dialoge, Grafiken, Maskottchen) ist ohne schriftliche Zustimmung nicht gestattet. Details: [LICENSE](LICENSE). Fremde Bestandteile (Piper-Sprachausgabe, Stimmen, Werkzeuge) mit Quelle und Lizenz: [CREDITS.md](CREDITS.md) – dieselben Angaben stehen auf der Seite „Rechtliches“ der Webseite.
 

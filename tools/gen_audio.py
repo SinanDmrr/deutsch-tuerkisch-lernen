@@ -5,7 +5,7 @@ Aufruf: python tools/gen_audio.py texts.json
 - Dateien, die kein Text mehr braucht, werden gelöscht.
 - Schreibt audio/manifest.json, das die Webseite liest.
 """
-import hashlib, json, os, subprocess, sys, tempfile, urllib.request, wave
+import datetime, hashlib, json, os, re, subprocess, sys, tempfile, urllib.request, wave
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -35,6 +35,45 @@ def download(key, ext, target):
 
 
 ERRORS = {}
+
+# ---------- Lizenzen: jede Stimme wird nur genutzt, wenn die Lizenz ihres Datensatzes es erlaubt ----------
+# Quelle ist immer die offizielle MODEL_CARD der Stimme. Erlaubt: gemeinfrei/CC0 und CC BY (mit Namensnennung,
+# die die Seite „Rechtliches“ automatisch anzeigt). Alles mit NC (nicht kommerziell), ND oder unbekannt wird abgelehnt.
+ALLOWED = ('cc0', 'public domain', 'publicdomain', 'cc-by 4.0', 'cc by 4.0', 'cc-by-4.0', 'licenses/by/4.0')
+LICENSES = {}
+
+
+def card_url(key, rev):
+    region, name, quality = key.split('-', 2)
+    return f"https://huggingface.co/rhasspy/piper-voices/blob/{rev}/{region.split('_')[0]}/{region}/{name}/{quality}/MODEL_CARD"
+
+
+def fetch_license(key):
+    if key in LICENSES:
+        return LICENSES[key]
+    info = {'ok': False, 'license': None, 'dataset': None, 'base': None, 'card': None}
+    for rev in REVISIONS:
+        try:
+            with urllib.request.urlopen(voice_url(key, rev).rsplit('/', 1)[0] + '/MODEL_CARD', timeout=30) as r:
+                text = r.read().decode('utf-8', 'replace')
+        except Exception:
+            continue
+        m = re.search(r'^\*\s*License:\s*(.+)$', text, re.M)
+        d = re.search(r'^\*\s*URL:\s*(\S+)', text, re.M)
+        b = re.search(r'^Finetuned from (.+?)\.?$', text, re.M)
+        info.update(license=m and m.group(1).strip(), dataset=d and d.group(1).strip(),
+                    base=b and b.group(1).strip(), card=card_url(key, rev),
+                    checked=datetime.date.today().isoformat())
+        break
+    lic = (info['license'] or '').lower()
+    words = set(re.split(r'[^a-z]+', lic))
+    info['ok'] = bool(lic) and not ({'nc', 'nd', 'noncommercial'} & words) and 'by-nc' not in lic \
+        and any(a in lic for a in ALLOWED)
+    if not info['ok']:
+        print(f'  ! Stimme {key} abgelehnt – Lizenz: {info["license"]!r}', flush=True)
+        ERRORS[key] = f'Lizenz nicht freigegeben: {info["license"]!r}'
+    LICENSES[key] = info
+    return info
 
 
 def fetch_voice(key):
@@ -75,12 +114,12 @@ def file_id(text):
 def main():
     texts = json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))
     cfg = json.loads((ROOT / 'tools' / 'tts-voices.json').read_text(encoding='utf-8'))
-    manifest = {'voices': {}, 'files': {}, 'samples': {}, 'errors': ERRORS}
+    manifest = {'voices': {}, 'files': {}, 'samples': {}, 'licenses': {}, 'errors': ERRORS}
     loaded = {}
 
     def get(key):
         if key not in loaded:
-            loaded[key] = fetch_voice(key)
+            loaded[key] = fetch_voice(key) if fetch_license(key)['ok'] else None
         return loaded[key]
 
     used_dirs = set()
@@ -120,6 +159,14 @@ def main():
                 synth_mp3(v, cfg['sampleText'][lang], target)
             manifest['samples'].setdefault(lang, {})[key] = f'samples/{key}.mp3'
     used_dirs.add('samples')
+    keep_samples = {f'{k}.mp3' for d in manifest['samples'].values() for k in d}
+    for f in (AUDIO / 'samples').glob('*.mp3') if (AUDIO / 'samples').exists() else []:
+        if f.name not in keep_samples:
+            f.unlink()
+
+    # Lizenznachweise aller tatsächlich genutzten Stimmen (die Seite „Rechtliches“ zeigt sie an)
+    used = {k for d in manifest['voices'].values() for k in d.values()} | {k for d in manifest['samples'].values() for k in d}
+    manifest['licenses'] = {k: {x: v for x, v in LICENSES[k].items() if x != 'ok'} for k in sorted(used) if k in LICENSES}
 
     # Ordner von Stimmen löschen, die nicht mehr genutzt werden
     for d in AUDIO.iterdir() if AUDIO.exists() else []:
