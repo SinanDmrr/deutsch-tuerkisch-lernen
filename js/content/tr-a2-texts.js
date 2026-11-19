@@ -1,7 +1,7 @@
 /* Türkisch A2 – Lesetexte für Deutschsprechende (Erklärungen auf Deutsch)
  * Format: K.addText('tr-a2-rNN', { level, kind:'read', scene, genre, title (TR), sub (DE), body, gloss, questions }).
  * Fragen-IDs '<textId>.qN' sind fest und werden nie geändert oder wiederverwendet.
- * Paket 3: tr-a2-r01 (hastane), tr-a2-r02 (bayram). Paket 4: tr-a2-r03 (otel), tr-a2-r04 (ev). Paket 5: tr-a2-r05 (kargo), tr-a2-r06 (ofis).
+ * Paket 3: tr-a2-r01 (hastane), tr-a2-r02 (bayram). Paket 4: tr-a2-r03 (otel), tr-a2-r04 (ev). Paket 5: tr-a2-r05 (kargo), tr-a2-r06 (ofis). Paket 6: tr-a2-r07 bis r12 (Lesetexte), tr-a2-h01 bis h10 (Hörtexte).
  */
 (function (K) {
 
@@ -15,7 +15,7 @@ K.addText('tr-a2-r01', {
     "Geçmiş olsun!",
     "Güneş Eczanesi"
   ],
-  gloss: { "kez": "Mal", "uykulu": "schläfrig", "kullanmayın": "fahren / benutzen", "dinlenin": "ruhen Sie sich aus", "yatın": "gehen Sie ins Bett", "tekrar": "wieder", "sadece": "nur", "öğle": "Mittag" },
+  gloss: { "kez": "Mal", "uykulu": "schläfrig", "kullanmayın": "fahren / benutzen", "dinlenin": "ruhen Sie sich aus", "yatın": "gehen Sie ins Bett", "tekrar": "wieder", "sadece": "nur", "öğle": "Mittag", "alın": "nehmen Sie", "almayın": "nehmen Sie nicht", "erken": "früh", "gidin": "gehen Sie", "içmeyin": "trinken Sie nicht", "işe": "zur Arbeit", "yiyin": "essen Sie" },
   questions: [
     { id: "tr-a2-r01.q1", t: "mc", q: "Wie soll Frau Ayşe die weiße Tablette nehmen?", o: ["Einmal am Tag, abends", "Dreimal am Tag nach dem Essen", "Dreimal am Tag vor dem Essen", "Nur bei Schmerzen"], a: 1,
       why: { 0: "Nur die **gelbe** (*sarı*) Tablette nimmt sie abends: *Sarı ilacı sadece akşam alın.*", 2: "*yemekten sonra* heißt „nach dem Essen“, nicht „vor“.", 3: "Davon steht nichts im Text. Die Tablette nimmt sie **regelmäßig**: *günde üç kez*." },
@@ -44,7 +44,7 @@ K.addText('tr-a2-r02', {
     "Hep birlikte güzel bir bayram geçiririz. Cevabını bekliyorum. Akşam telefonda konuşalım. Bayramın kutlu olsun!",
     "Sevgiler, Elif"
   ],
-  gloss: { "sofra": "gedeckter Tisch", "kuzenleriyle": "mit ihren Cousins/Cousinen", "Bayramın kutlu olsun": "Frohes Fest", "baklava": "Baklava (Blätterteiggebäck)", "babaannem": "meine Oma (väterlicherseits)", "buluşalım": "lass uns treffen", "getirin": "bringt mit", "tatlı": "Nachtisch", "hazırlıyor": "bereitet vor", "hep": "alle / zusammen" },
+  gloss: { "sofra": "gedeckter Tisch", "kuzenleriyle": "mit ihren Cousins/Cousinen", "Bayramın kutlu olsun": "Frohes Fest", "baklava": "Baklava (Blätterteiggebäck)", "babaannem": "meine Oma (väterlicherseits)", "buluşalım": "lass uns treffen", "getirin": "bringt mit", "tatlı": "Nachtisch", "hazırlıyor": "bereitet vor", "hep": "alle / zusammen", "alıyorum": "ich kaufe", "erken": "früh", "gidelim": "lass uns gehen", "öğle": "Mittag" },
   questions: [
     { id: "tr-a2-r02.q1", t: "mc", q: "Wo trifft man sich am Sonntagmorgen um neun Uhr?", o: ["Bei Selin zu Hause", "Beim Opa", "Im Restaurant", "Bei Elif zu Hause"], a: 1,
       why: { 0: "Selin ist die **Empfängerin** der Nachricht und wird eingeladen. Elif ist die Absenderin.", 2: "Von einem Restaurant steht nichts im Text.", 3: "Zu ihr geht man erst **danach**: *sonra hep birlikte bize gidelim*." },
@@ -181,6 +181,417 @@ K.addText('tr-a2-r06', {
     { id: "tr-a2-r06.q5", t: "mc", q: "Sprachmittlung: Murats Kollegin Anna versteht kein Türkisch und fragt dich, was Frau Yıldız ihm schreibt. Was sagst du ihr?", o: ["Am Montag um zehn Uhr ist ein Meeting im zweiten Stock. Murat soll den Verkaufsbericht heute bis zum Abend schicken, weil Frau Yıldız morgen wegen eines Arztbesuchs nicht im Büro ist. Außerdem soll er die Präsentation vorbereiten und am Montagmorgen mitbringen. Bei Fragen soll er heute Nachmittag anrufen.", "Das Meeting ist morgen um zehn Uhr im Erdgeschoss. Murat soll den Bericht am Montag schicken und die Präsentation absagen. Fragen soll er am Wochenende stellen.", "Frau Yıldız ist krank und sagt das Meeting am Montag ab. Murat soll den Bericht nicht mehr schicken und sie auch nicht anrufen.", "Das Meeting ist am Montag um zehn Uhr. Murat soll nur die Präsentation vorbereiten; der Bericht ist nicht nötig. Er soll sie am Freitag besuchen."], a: 0,
       why: { 1: "Das Meeting ist am **Montag** im **zweiten Stock**; der Bericht wird **heute** erwartet, und die Präsentation wird nicht abgesagt.", 2: "Frau Yıldız sagt das Meeting **nicht** ab; sie geht nur morgen zum Arzt. Murat soll den Bericht **doch** schicken.", 3: "Sowohl Bericht **als auch** Präsentation werden gebraucht (*hem rapor hem de sunum*), und von einem Besuch am Freitag steht nichts im Text." },
       e: "Du gibst die Hauptpunkte weiter: Termin und Ort, die Bitte um den Bericht und die Frist, den Grund, die Präsentation und das Angebot zum Telefonat." }
+  ]
+});
+
+K.addText('tr-a2-r07', {
+  level: 'A2', kind: 'read', scene: 'reise', genre: 'programm',
+  title: "Cumartesi gezisi", sub: "Ein Ausflugsprogramm",
+  body: [
+    "Cumartesi gezisi: Bursa",
+    "Sabah yedi buçukta otogarın önünde buluşuyoruz. Otobüs sekizde kalkıyor, Bursa’ya on bire doğru varıyoruz.",
+    "İlk olarak Ulu Camii’ni geziyoruz. Sonra çarşıda serbest zamanınız var: isterseniz alışveriş yapabilir, isterseniz çay içebilirsiniz. Öğle yemeğini saat birde bir lokantada yiyoruz. Yemek fiyata dâhil, içecekler dâhil değil.",
+    "Öğleden sonra teleferikle dağa çıkıyoruz. Orada hava soğuk olabilir, kalın bir ceket getirin. Akşam altıda otobüse biniyoruz ve gece on bir gibi İstanbul’a dönüyoruz.",
+    "Fiyat kişi başı iki bin lira. Çocuklar yarı fiyat. Kayıt için cuma gününe kadar ofisimizi arayın."
+  ],
+  gloss: { "Bursa": "Stadt Bursa", "İlk": "erste(r)", "içebilirsiniz": "Sie können trinken", "orada": "dort", "teleferikle": "mit der Seilbahn", "yiyoruz": "wir essen", "önünde": "vor", "öğle": "Mittag", "öğleden": "nachmittags", "buluşuyoruz": "wir treffen uns", "doğru": "gegen", "varıyoruz": "wir kommen an", "çarşı": "Basar / Marktviertel", "serbest": "frei", "lokanta": "Restaurant", "içecekler": "Getränke", "dâhil": "inbegriffen", "teleferik": "Seilbahn", "kalın": "dick, warm", "biniyoruz": "wir steigen ein", "dönüyoruz": "wir kehren zurück", "kişi başı": "pro Person", "yarı": "halb", "kayıt": "Anmeldung", "geziyoruz": "wir besichtigen", "ofis": "Büro" },
+  questions: [
+    { id: "tr-a2-r07.q1", t: "mc", q: "Wann fährt der Bus ab?", o: ["Um halb acht", "Um acht", "Um elf", "Um achtzehn Uhr"], a: 1,
+      why: { 0: "Um **halb acht** treffen sich die Gäste (*yedi buçukta buluşuyoruz*); abgefahren wird später.", 2: "Gegen elf kommt der Bus in Bursa **an** (*on bire doğru varıyoruz*).", 3: "Um sechs Uhr abends steigen alle für die **Rückfahrt** ein." },
+      e: "*Otobüs sekizde kalkıyor.* = „Der Bus fährt um acht ab.“ Uhrzeit = Zahl + Lokativ **-dA**; *buçuk* = „halb nach“: *yedi buçuk* = halb acht." },
+    { id: "tr-a2-r07.q2", t: "gap", q: "Sabah yedi buçukta otogarın önünde ___ . (buluşmak – wir treffen uns)", a: ["buluşuyoruz"],
+      wrong: { "buluşuyorum": "*-um* heißt „ich“. Das Programm spricht von **wir**: -**uz**.", "buluşalım": "*buluşalım* ist ein Vorschlag („lass uns treffen“). Ein Programm nennt feste Pläne: Präsens *-(I)yor*.", "buluşmak": "Infinitiv – ein Satz im Türkischen braucht am Ende ein konjugiertes Verb." },
+      e: "Stamm *buluş-* + **-uyor** (Präsens, nach u/ı/o/ö/ü-Harmonie) + **-uz** (wir): buluş-**uyor**-**uz**." },
+    { id: "tr-a2-r07.q3", t: "match", q: "Ordne die Zeit dem Programmpunkt zu:", p: [["Sabah yedi buçukta", "Treffen am Busbahnhof"], ["Saat birde", "Mittagessen"], ["Öğleden sonra", "Fahrt mit der Seilbahn"], ["Akşam altıda", "Rückfahrt mit dem Bus"]],
+      e: "*Saat birde* = „um ein Uhr“, *öğleden sonra* = „nachmittags“, *akşam altıda* = „abends um sechs“." },
+    { id: "tr-a2-r07.q4", t: "mc", q: "Was ist im Preis NICHT enthalten?", o: ["Das Mittagessen", "Die Getränke", "Die Busfahrt", "Der Eintritt in die Moschee"], a: 1,
+      why: { 0: "Das Essen ist im Preis: *Yemek fiyata dâhil*.", 2: "Der Text nennt nur die Getränke als nicht inbegriffen (*dâhil değil*).", 3: "Der Text nennt nur die Getränke als nicht inbegriffen (*dâhil değil*)." },
+      e: "*İçecekler dâhil değil.* = „Getränke sind nicht inbegriffen.“ *dâhil* = inbegriffen, *değil* verneint." },
+    { id: "tr-a2-r07.q5", t: "mc", q: "Sprachmittlung: Dein Freund Paul versteht kein Türkisch. Er fragt, was er mitbringen soll und was der Ausflug kostet. Was sagst du ihm?", o: ["Eine warme Jacke, weil es auf dem Berg kalt sein kann. Der Preis ist 2.000 Lira pro Person, Kinder zahlen die Hälfte.", "Nichts, es wird warm. Der Preis ist 2.000 Lira für die ganze Familie.", "Eine Badehose. Der Preis ist 150 Lira, Getränke sind inklusive.", "Einen Regenschirm. Der Ausflug ist kostenlos, man muss sich nur bis Freitag anmelden."], a: 0,
+      why: { 1: "Es kann auf dem Berg **kalt** sein (*kalın bir ceket getirin*), und der Preis gilt **pro Person**.", 2: "Von Schwimmen steht nichts im Text; Getränke sind **nicht** inbegriffen.", 3: "Der Ausflug kostet 2.000 Lira pro Person. Die Anmeldung (bis Freitag) ist nur ein weiterer Punkt." },
+      e: "Du gibst das Wichtige weiter: warme Kleidung und den Preis (*kişi başı*, Kinder *yarı fiyat*)." }
+  ]
+});
+
+K.addText('tr-a2-r08', {
+  level: 'A2', kind: 'read', scene: 'saglik', genre: 'artikel',
+  title: "Sabah yürüyüşü", sub: "Ein Artikel über Spaziergänge am Morgen",
+  body: [
+    "Sabah yürüyüşü neden iyi?",
+    "Her sabah yarım saat yürümek sağlık için çok iyidir. Yürüyüşten sonra kendinizi daha enerjik hissedersiniz, akşam da daha rahat uyursunuz. Çok para harcamazsınız, çünkü sadece rahat bir ayakkabı yeterlidir.",
+    "Nasıl başlamalı? Önce yavaş yürüyün, her hafta on dakika ekleyin. Arkadaşınızla ya da köpeğinizle yürürseniz daha eğlenceli olur. Hava yağmurluysa alışveriş merkezinde de yürüyebilirsiniz.",
+    "Yürürken telefonunuza bakmayın, çevrenizi izleyin. Yanınıza su alın. En önemlisi: Her gün aynı saatte çıkın. Böylece yürüyüş çok kısa sürede bir alışkanlık hâline gelir."
+  ],
+  gloss: { "enerjik": "voller Energie", "hissedersiniz": "Sie fühlen sich", "rahat": "bequem / entspannt", "uyursunuz": "Sie schlafen", "harcamazsınız": "Sie geben nicht aus", "yeterlidir": "ist genug", "ekleyin": "fügen Sie hinzu", "eğlenceli": "unterhaltsam", "yağmurluysa": "wenn es regnerisch ist", "alışveriş merkezi": "Einkaufszentrum", "çevre": "Umgebung", "izleyin": "beobachten Sie", "alışkanlık": "Gewohnheit", "hâline gelir": "wird zu", "böylece": "so, dadurch", "kısa sürede": "in kurzer Zeit", "yavaş": "langsam", "başlamalı": "soll man anfangen", "sağlık": "Gesundheit" },
+  questions: [
+    { id: "tr-a2-r08.q1", t: "mc", q: "Was braucht man laut Text für den Morgenspaziergang?", o: ["Teure Sportkleidung", "Bequeme Schuhe", "Ein Fitnessstudio", "Einen Trainer"], a: 1,
+      why: { 0: "Gerade das ist nicht nötig: Man gibt **nicht viel Geld** aus (*çok para harcamazsınız*).", 2: "Draußen oder im Einkaufszentrum genügt es zu gehen; ein Studio wird nicht erwähnt.", 3: "Von einem Trainer steht nichts im Text." },
+      e: "*Sadece rahat bir ayakkabı yeterlidir.* = „Nur bequeme Schuhe genügen.“ *sadece* = nur, *yeterli* = ausreichend." },
+    { id: "tr-a2-r08.q2", t: "gap", q: "Önce yavaş ___ . (yürümek – Aufforderung, Sie)", a: ["yürüyün", "yürüyünüz"],
+      wrong: { "yürü": "Das ist die du-Form. Der Artikel spricht die Leser mit „Sie“ an → **-yIn**.", "yürümeyin": "Das ist das **Verbot** („gehen Sie nicht“). Gemeint ist der Befehl ohne -mA-.", "yürüyen": "*-yAn* ist ein Partizip („der Gehende“), kein Befehl." },
+      e: "Befehl (Sie): Stamm auf Vokal + **y** + **-In**: yürü-**y**-**ün** (Vokalharmonie ü → ün)." },
+    { id: "tr-a2-r08.q3", t: "match", q: "Ordne den Rat aus dem Text der Bedeutung zu:", p: [["Yanınıza su alın.", "Nehmen Sie Wasser mit."], ["Telefonunuza bakmayın.", "Schauen Sie nicht aufs Handy."], ["Her gün aynı saatte çıkın.", "Gehen Sie täglich zur selben Zeit los."], ["Önce yavaş yürüyün.", "Gehen Sie zuerst langsam."]],
+      e: "Alle Ratschläge sind Befehle an „Sie“. Die verneinte Form hat **-mA-**: *bakmayın*." },
+    { id: "tr-a2-r08.q4", t: "mc", q: "Was kann man tun, wenn das Wetter schlecht ist?", o: ["Zu Hause bleiben und nicht gehen", "Im Einkaufszentrum spazieren", "Im Regen laufen", "Mit dem Bus zum Park fahren"], a: 1,
+      why: { 0: "Der Text gibt eine **Alternative** an; man muss nicht zu Hause bleiben.", 2: "Bei Regen rät der Text zum Einkaufszentrum.", 3: "Vom Bus steht nichts im Text." },
+      e: "*Hava yağmurluysa alışveriş merkezinde de yürüyebilirsiniz.* = „Wenn es regnerisch ist, können Sie auch im Einkaufszentrum laufen.“" }
+  ]
+});
+
+K.addText('tr-a2-r09', {
+  level: 'A2', kind: 'read', scene: 'alisveris', genre: 'anzeige',
+  title: "Satılık bisiklet", sub: "Eine Kleinanzeige",
+  body: [
+    "Satılık bisiklet",
+    "Mavi bir dağ bisikleti satıyorum. İki yıl önce yeni aldım ama çok az kullandım. Vitesleri sorunsuz çalışıyor, lastikler yeni. Kask ve kilit de var, ikisini de bisikletle birlikte veriyorum.",
+    "Fiyatı on beş bin lira, ama pazarlık payı var. Yenisi otuz bin lira, yani bu çok uygun. Almanya’ya taşınıyorum, bu yüzden hızlı satmak istiyorum.",
+    "Bisikleti Kadıköy’de görebilirsiniz. Hafta içi akşam yediden sonra, hafta sonu bütün gün evdeyim. Lütfen telefonla aramayın, sadece mesaj yazın. Numaram ilanın altında."
+  ],
+  gloss: { "ilanın": "der Anzeige", "içi": "innerhalb", "lastikler": "Reifen", "vitesleri": "seine Gänge", "dağ bisikleti": "Mountainbike", "vites": "Gang, Schaltung", "sorunsuz": "ohne Probleme", "lastik": "Reifen", "kask": "Helm", "kilit": "Schloss", "pazarlık payı": "Verhandlungsspielraum", "uygun": "günstig", "taşınıyorum": "ich ziehe um", "ilan": "Anzeige", "hızlı": "schnell", "bütün gün": "den ganzen Tag", "kullandım": "ich habe benutzt", "satıyorum": "ich verkaufe" },
+  questions: [
+    { id: "tr-a2-r09.q1", t: "mc", q: "Was kostet das Fahrrad?", o: ["Fünfzehntausend Lira", "Dreißigtausend Lira", "Zweitausend Lira", "Fünfzehnhundert Lira"], a: 0,
+      why: { 1: "30.000 Lira kostet ein **neues** Fahrrad (*yenisi otuz bin lira*).", 2: "*İki* kommt nur bei „vor zwei Jahren“ vor.", 3: "*Bin* = tausend: 15.000 heißt *on beş bin*, nicht 1.500." },
+      e: "*Fiyatı on beş bin lira.* = „Der Preis ist 15.000 Lira.“ *pazarlık payı var* = ein Verhandeln ist möglich." },
+    { id: "tr-a2-r09.q2", t: "gap", q: "Bisikleti iki yıl önce yeni ___ . (almak – ich habe gekauft)", a: ["aldım"],
+      wrong: { "aldı": "*-ı* heißt „er/sie/es“. Der Verkäufer spricht von sich: **-m** (ich).", "alıyorum": "Das ist Präsens („ich kaufe gerade“). *iki yıl önce* verlangt die Vergangenheit.", "alırım": "Aorist („ich kaufe (immer)“) – für ein einmaliges Ereignis in der Vergangenheit nimmst du *-dI*." },
+      e: "Vergangenheit: Stamm + **-dI** + Personenendung: al-**dı**-**m** („ich habe gekauft“)." },
+    { id: "tr-a2-r09.q3", t: "mc", q: "Warum verkauft die Person das Fahrrad schnell?", o: ["Es ist kaputt.", "Sie zieht nach Deutschland um.", "Sie braucht Geld für ein Auto.", "Es ist ihr zu klein."], a: 1,
+      why: { 0: "Im Gegenteil: Gänge laufen **ohne Probleme**, die Reifen sind neu.", 2: "Von einem Auto steht nichts im Text.", 3: "Von der Größe ist keine Rede." },
+      e: "*Almanya’ya taşınıyorum, bu yüzden hızlı satmak istiyorum.* = „Ich ziehe nach Deutschland um, deshalb will ich schnell verkaufen.“" },
+    { id: "tr-a2-r09.q4", t: "match", q: "Ordne zu:", p: [["Kask ve kilit", "werden mitgegeben"], ["Lastikler", "sind neu"], ["Akşam yediden sonra", "ist die Person zu Hause (werktags)"], ["Telefonla aramayın", "nur Nachrichten schreiben"]],
+      e: "*Hafta içi* = werktags; *-dAn sonra* = nach; *-mAyIn* = Verbot (Sie)." },
+    { id: "tr-a2-r09.q5", t: "mc", q: "Wie soll man die Person kontaktieren?", o: ["Anrufen", "Eine Nachricht schreiben", "Persönlich ohne Termin kommen", "Eine E-Mail an den Händler senden"], a: 1,
+      why: { 0: "Das ist ausdrücklich **verboten**: *telefonla aramayın*.", 2: "Man soll zuerst schreiben; Hausbesuche ohne Absprache sind nicht erwähnt.", 3: "Von E-Mail oder Händler steht nichts im Text." },
+      e: "*Lütfen telefonla aramayın, sadece mesaj yazın.* = „Bitte nicht anrufen, nur eine Nachricht schreiben.“" }
+  ]
+});
+
+K.addText('tr-a2-r10', {
+  level: 'A2', kind: 'read', scene: 'tatil', genre: 'nachricht',
+  title: "Tatilden selam", sub: "Eine Nachricht aus dem Urlaub",
+  body: [
+    "Selam Deniz,",
+    "Nasılsın? Biz Antalya’ya geldik, hava çok güzel! Otelimiz denize yakın, kahvaltıdan sonra hemen plaja gidiyoruz. Dün tekneyle küçük bir ada gezisi yaptık. Çocuklar çok eğlendi, akşam yorgunluktan hemen uyudular.",
+    "Yemekler harika ama biraz pahalı. Bugün öğleden sonra yağmur yağıyor, o yüzden otelde dinleniyoruz. Yarın eski şehri gezeceğiz, sonra alışveriş yapacağız.",
+    "Sizi çok özledik. Gelecek hafta pazartesi dönüyoruz, salı günü seni ararım. Kedimize baktın, çok teşekkür ederim!",
+    "Sevgiler, Merve"
+  ],
+  gloss: { "plaj": "Strand", "tekne": "Boot", "ada": "Insel", "gezi": "Ausflug", "eğlendi": "hatten Spaß", "yorgunluktan": "vor Müdigkeit", "yorgun": "müde", "uyudular": "sie haben geschlafen", "harika": "wunderbar", "pahalı": "teuer", "yağmur yağıyor": "es regnet", "dinleniyoruz": "wir ruhen uns aus", "gezeceğiz": "wir werden besichtigen", "özledik": "wir haben vermisst", "dönüyoruz": "wir kommen zurück", "Selam": "Hallo", "kedimize": "unsere Katze", "baktın": "du hast aufgepasst", "ararım": "ich rufe an" },
+  questions: [
+    { id: "tr-a2-r10.q1", t: "mc", q: "Warum bleiben Merve und ihre Familie heute im Hotel?", o: ["Weil es regnet.", "Weil die Kinder krank sind.", "Weil das Essen zu teuer ist.", "Weil der Strand geschlossen ist."], a: 0,
+      why: { 1: "Die Kinder waren gestern **müde**, nicht krank.", 2: "Das Essen ist teuer, aber das ist nicht der Grund fürs Bleiben.", 3: "Vom Strand ist keine Rede." },
+      e: "*Bugün öğleden sonra yağmur yağıyor, o yüzden otelde dinleniyoruz.* = „Heute Nachmittag regnet es, deshalb ruhen wir uns im Hotel aus.“" },
+    { id: "tr-a2-r10.q2", t: "gap", q: "Dün tekneyle küçük bir ada gezisi ___ . (yapmak – wir haben gemacht)", a: ["yaptık"],
+      wrong: { "yaparız": "Aorist/Gewohnheit. *Dün* („gestern“) verlangt die Vergangenheit.", "yapacağız": "Futur („wir werden machen“). Der Ausflug war schon.", "yaptım": "*-m* = ich. Merve schreibt von der ganzen Familie: **-k** (wir)." },
+      e: "Vergangenheit: *yap-* + **-tI** (nach p stimmlos t) + **-k**: yap-**tı**-**k**." },
+    { id: "tr-a2-r10.q3", t: "match", q: "Wann passiert was?", p: [["Dün", "kleiner Ausflug mit dem Boot"], ["Bugün öğleden sonra", "Regen, Ausruhen im Hotel"], ["Yarın", "Altstadt und Einkaufen"], ["Salı günü", "Merve ruft Deniz an"]],
+      e: "Vergangenheit *-dI* (dün), Präsens (bugün), Futur *-(y)AcAk* (yarın: *gezeceğiz*)." },
+    { id: "tr-a2-r10.q4", t: "mc", q: "Wofür bedankt sich Merve bei Deniz?", o: ["Dafür, dass er/sie auf die Katze aufgepasst hat", "Für eine Einladung", "Für ein Geschenk", "Für die Hotelbuchung"], a: 0,
+      why: { 1: "Von einer Einladung steht nichts im Text.", 2: "Ein Geschenk wird nicht erwähnt.", 3: "Von der Hotelbuchung ist im Dank keine Rede." },
+      e: "*Kedimize baktın, çok teşekkür ederim.* = „Du hast dich um unsere Katze gekümmert, vielen Dank.“" }
+  ]
+});
+
+K.addText('tr-a2-r11', {
+  level: 'A2', kind: 'read', scene: 'kutuphane', genre: 'hinweis',
+  title: "Kütüphane kuralları", sub: "Regeln in der Bibliothek",
+  body: [
+    "Kütüphane kuralları",
+    "Kütüphanemiz hafta içi sabah dokuzdan akşam yediye kadar açıktır. Cumartesi günleri sabah dokuzdan öğleden sonra ikiye kadar açıktır, pazar günleri kapalıdır.",
+    "Her üye aynı anda en fazla beş kitap alabilir. Kitapları on beş gün ödünç alabilirsiniz. Süre bitince kitabı geri getirin ya da internetten uzatın. Geç getirirseniz her gün için bir lira ödersiniz.",
+    "Okuma salonunda sessiz olun. Telefonla konuşmayın, telefonunuzu sessize alın. Yiyecek getirmeyin, ama su içebilirsiniz. Kitapların sayfalarını katlamayın, kalemle yazmayın.",
+    "Sorularınız için danışmaya gelin. İyi okumalar dileriz!"
+  ],
+  gloss: { "alabilir": "kann nehmen", "danışmaya": "zur Auskunft", "dileriz": "wir wünschen", "içebilirsiniz": "Sie können trinken", "olun": "seien Sie", "sayfalarını": "die Seiten", "öğleden": "nachmittags", "içi": "innerhalb", "üye": "Mitglied", "ödünç alabilirsiniz": "Sie können ausleihen", "aynı anda": "gleichzeitig", "en fazla": "höchstens", "süre": "Frist", "uzatın": "verlängern Sie", "sessiz": "leise", "sessize alın": "stellen Sie stumm", "yiyecek": "Essen", "sayfa": "Seite", "katlamayın": "falten Sie nicht", "kalem": "Stift", "danışma": "Auskunft", "okuma salonu": "Lesesaal", "kapalıdır": "ist geschlossen", "açıktır": "ist geöffnet", "ödersiniz": "Sie zahlen" },
+  questions: [
+    { id: "tr-a2-r11.q1", t: "mc", q: "Wie viele Bücher darf ein Mitglied gleichzeitig ausleihen?", o: ["Höchstens fünf", "Mindestens fünf", "Fünfzehn", "Nur eins"], a: 0,
+      why: { 1: "*en fazla* heißt „höchstens“, nicht „mindestens“.", 2: "Fünfzehn **Tage** ist die Leihfrist (*on beş gün*), nicht die Anzahl.", 3: "Es dürfen mehrere Bücher sein." },
+      e: "*Her üye aynı anda en fazla beş kitap alabilir.* = „Jedes Mitglied kann höchstens fünf Bücher gleichzeitig ausleihen.“" },
+    { id: "tr-a2-r11.q2", t: "gap", q: "Okuma salonunda telefonla ___ . (konuşmak – Verbot, Sie)", a: ["konuşmayın", "konuşmayınız"],
+      wrong: { "konuşma": "Das ist die du-Form des Verbots. Das Schild nutzt „Sie“ → **-yIn**.", "konuşun": "*konuşun* wäre die Aufforderung („sprechen Sie“) – ohne die Verneinung -mA-.", "konuşmak": "Infinitiv – drückt kein Verbot aus." },
+      e: "Verbot (Sie): Stamm + **-mA** + **-yIn**: konuş-**ma**-**yın**." },
+    { id: "tr-a2-r11.q3", t: "mc", q: "Was passiert, wenn man ein Buch zu spät zurückgibt?", o: ["Man zahlt pro Tag eine Lira.", "Man bekommt eine Verwarnung.", "Man darf nie wieder ausleihen.", "Nichts"], a: 0,
+      why: { 1: "Von einer Verwarnung steht nichts im Text; es gibt eine Gebühr.", 2: "So eine Strafe wird nicht genannt.", 3: "Es gibt eine Gebühr: *her gün için bir lira*." },
+      e: "*Geç getirirseniz her gün için bir lira ödersiniz.* = „Wenn Sie es zu spät bringen, zahlen Sie für jeden Tag eine Lira.“" },
+    { id: "tr-a2-r11.q4", t: "match", q: "Ordne zu:", p: [["Pazar günleri", "kapalıdır."], ["Cumartesi günleri", "öğleden sonra ikiye kadar açıktır."], ["Yiyecek", "getirmeyin."], ["Su", "içebilirsiniz."]],
+      e: "**-DIr** (-dır/-dir/-dur/-dür/-tır/-tir …) macht Aussagen auf Schildern und in Bekanntmachungen förmlich und allgemeingültig: açık-**tır**, kapalı-**dır**." },
+    { id: "tr-a2-r11.q5", t: "mc", q: "Sprachmittlung: Dein Freund Tom möchte Bücher ausleihen. Was sagst du ihm?", o: ["Bis zu fünf Bücher für 15 Tage; man kann online verlängern. Im Lesesaal leise sein, nichts essen, Wasser ist erlaubt. Sonntags geschlossen.", "Beliebig viele Bücher für einen Monat. Essen ist im Lesesaal erlaubt. Die Bibliothek ist täglich geöffnet.", "Nur ein Buch pro Woche, Wasser ist verboten. Die Bibliothek ist am Samstag geschlossen.", "Fünf Bücher für 50 Tage. Telefonieren im Lesesaal ist erlaubt, Markierungen mit Stift sind erwünscht."], a: 0,
+      why: { 1: "Es gibt eine **Höchstzahl** (fünf) und eine Leihfrist von 15 Tagen; Essen ist verboten, sonntags ist geschlossen.", 2: "Man darf bis zu **fünf** Bücher mitnehmen, und Wasser ist erlaubt; samstags ist bis 14 Uhr geöffnet.", 3: "Die Frist beträgt 15 Tage; Telefonieren und Schreiben im Buch sind verboten." },
+      e: "Du gibst die Hauptpunkte weiter: Anzahl, Frist, Verlängerung, Verhalten im Lesesaal, Öffnungszeiten." }
+  ]
+});
+
+K.addText('tr-a2-r12', {
+  level: 'A2', kind: 'read', scene: 'spor', genre: 'formular',
+  title: "Üyelik formu", sub: "Ein ausgefülltes Anmeldeformular",
+  body: [
+    "Spor salonu üyelik formu",
+    "Adı soyadı: Can Aydın",
+    "Üyelik türü: Aylık, haftada üç gün, sabah saatleri.",
+    "Hedefim: Kilo vermek ve daha sağlıklı olmak. Haftada üç gün spor yapmak istiyorum. Daha önce hiç spor salonuna gitmedim, bu yüzden bir antrenör istiyorum.",
+    "Sağlık durumu: Sırtım ağrıyor, bu yüzden ağır şeyler kaldıramıyorum. Alerjim yok, düzenli ilaç da kullanmıyorum.",
+    "Ödeme: Her ay kredi kartıyla. Aylık ücret iki bin lira.",
+    "Başlangıç tarihi: Gelecek pazartesi.",
+    "Not: İlk ay deneme olsun, beğenmezsem iptal etmek istiyorum."
+  ],
+  gloss: { "aylık": "monatlich", "adı": "Vorname", "hedefim": "mein Ziel", "İlk": "erste(r)", "soyadı": "Nachname", "tarihi": "Datum", "türü": "Art", "şeyler": "Dinge", "üyelik": "Mitgliedschaft", "tür": "Art, Typ", "hedef": "Ziel", "kilo vermek": "abnehmen", "sağlıklı": "gesund", "antrenör": "Trainer", "sağlık durumu": "Gesundheitszustand", "sırt": "Rücken", "ağrıyor": "tut weh", "kaldıramıyorum": "ich kann nicht heben", "alerji": "Allergie", "düzenli": "regelmäßig", "ilaç": "Medikament", "ödeme": "Zahlung", "ücret": "Gebühr", "başlangıç": "Beginn", "tarih": "Datum", "deneme": "Probe", "beğenmezsem": "wenn es mir nicht gefällt", "iptal": "Kündigung", "kredi kartı": "Kreditkarte", "ağır": "schwer" },
+  questions: [
+    { id: "tr-a2-r12.q1", t: "mc", q: "Wie oft pro Woche möchte Can trainieren?", o: ["Einmal", "Dreimal", "Fünfmal", "Jeden Tag"], a: 1,
+      why: { 0: "Einmal wäre *haftada bir gün*; Can nennt **drei** Tage.", 2: "Fünf Tage kommen im Text nicht vor.", 3: "*Her gün* steht nicht im Formular." },
+      e: "*Haftada üç gün spor yapmak istiyorum.* = „Ich möchte drei Tage pro Woche Sport machen.“" },
+    { id: "tr-a2-r12.q2", t: "gap", q: "Haftada üç gün spor ___ istiyorum. (yapmak – Infinitiv)", a: ["yapmak", "yapmayı"],
+      wrong: { "yapıyorum": "Nur *istemek* wird konjugiert (*istiyorum*).", "yap": "Ohne **-mAk** ist es kein Infinitiv." },
+      e: "**Infinitiv + istemek**: *yapmak istiyorum* („ich möchte machen“). *-mAk istemek* ist üblicher, *-mAyI istemek* (*yapmayı istiyorum*) geht auch." },
+    { id: "tr-a2-r12.q3", t: "mc", q: "Warum möchte Can einen Trainer?", o: ["Er war noch nie in einem Fitnessstudio.", "Er hat Rückenschmerzen und kann nicht trainieren.", "Er möchte Profisportler werden.", "Er hat eine Allergie."], a: 0,
+      why: { 1: "Die Rückenschmerzen erklären nur, warum er nicht schwer heben kann; der Grund für den Trainer ist etwas anderes.", 2: "Davon steht nichts im Text.", 3: "Im Gegenteil: *Alerjim yok.*" },
+      e: "*Daha önce hiç spor salonuna gitmedim, bu yüzden bir antrenör istiyorum.* = „Ich war noch nie im Studio, deshalb möchte ich einen Trainer.“" },
+    { id: "tr-a2-r12.q4", t: "match", q: "Ordne den Satz aus dem Formular zu:", p: [["Alerjim yok.", "Ich habe keine Allergie."], ["Sırtım ağrıyor.", "Mein Rücken tut weh."], ["Ödeme kredi kartıyla.", "Bezahlung per Kreditkarte."], ["Gelecek pazartesi.", "Nächsten Montag."]],
+      e: "*yok* = es gibt nicht / habe nicht; *-ım/-im* = mein (Besitz): *sırtım*, *alerjim*." },
+    { id: "tr-a2-r12.q5", t: "mc", q: "Sprachmittlung: Cans Vater versteht kein Türkisch. Was sagst du ihm über das Formular?", o: ["Can meldet sich für einen Monat an, dreimal pro Woche morgens. Er möchte abnehmen, wünscht einen Trainer und hat Rückenprobleme. Er zahlt 2.000 Lira pro Monat mit Karte, beginnt nächsten Montag und möchte im ersten Monat testen.", "Can meldet sich für ein Jahr an, täglich abends, und zahlt bar 50 Lira.", "Can hat eine Allergie und nimmt täglich Medikamente. Er will den Vertrag nicht testen.", "Can möchte ab sofort jeden Tag trainieren und zahlt nichts im ersten Jahr."], a: 0,
+      why: { 1: "Die Mitgliedschaft ist **monatlich**, morgens, und die Zahlung läuft per **Kreditkarte**.", 2: "Er hat keine Allergie (*Alerjim yok*) und nimmt keine Medikamente; der erste Monat ist eine Probezeit.", 3: "Er beginnt nächsten Montag, trainiert dreimal pro Woche und zahlt monatlich 2.000 Lira." },
+      e: "Du gibst die Kerndaten weiter: Dauer, Häufigkeit, Ziel, Gesundheit, Preis, Zahlung, Beginn, Probemonat." }
+  ]
+});
+
+/* Hörtexte (kind 'listen', IDs …-hNN): Sprecher s, g; Übersetzung n = Deutsch. Fragen-IDs '<textId>.qN' fest. */
+
+K.addText('tr-a2-h01', {
+  level: 'A2', kind: 'listen', scene: 'otogar', genre: 'durchsage',
+  title: "Otogarda anons", sub: "Durchsage am Busbahnhof", plays: 2,
+  lines: [
+    { s: 'Anons', g: 'f', t: "Sayın yolcularımız, dikkat lütfen. Ankara’ya giden otobüs yirmi dakika gecikmeli. Yeni kalkış saati üç buçuk. Yolcularımız lütfen altı numaralı peronda beklesin. Çanta ve bavullarınızı yanınızdan ayırmayın. Gecikme için özür dileriz.", n: "Sehr geehrte Fahrgäste, bitte aufgepasst. Der Bus nach Ankara hat zwanzig Minuten Verspätung. Die neue Abfahrtszeit ist halb vier. Unsere Fahrgäste warten bitte an Bussteig sechs. Lassen Sie Taschen und Koffer nicht unbeaufsichtigt. Wir bitten um Entschuldigung für die Verspätung." }
+  ],
+  gloss: { "gecikmeli": "mit Verspätung", "kalkış": "Abfahrt", "peron": "Bussteig", "bavul": "Koffer", "ayırmayın": "trennen Sie nicht", "özür dileriz": "wir bitten um Entschuldigung" },
+  questions: [
+    { id: "tr-a2-h01.q1", t: "mc", q: "Wie viel Verspätung hat der Bus?", o: ["Zehn Minuten", "Zwanzig Minuten", "Dreißig Minuten"], a: 1,
+      why: { 0: "Es heißt *yirmi* (20), nicht *on* (10).", 2: "*Üç buçuk* (halb vier) ist die neue **Uhrzeit**, nicht die Verspätung." },
+      e: "*yirmi dakika gecikmeli* = „zwanzig Minuten verspätet“. Achte auf *on* (10) und *yirmi* (20)." },
+    { id: "tr-a2-h01.q2", t: "gap", q: "Yeni kalkış saati üç ___ . (halb vier)", a: ["buçuk", "otuz"],
+      wrong: { "yarım": "*yarım* = „halb“ als Menge (*yarım ekmek*). Bei Uhrzeiten sagt man *buçuk*.", "buçukta": "*-ta* = „um“. Hier steht der Satz mit *saati* ohne „um“." },
+      e: "*üç buçuk* = „drei Uhr dreißig“ (halb vier). *buçuk* steht **nach** der Stundenzahl; auch *üç otuz* ist als Uhrzeit möglich, in der Durchsage hörst du aber *buçuk*." },
+    { id: "tr-a2-h01.q3", t: "listen", say: "Yolcularımız lütfen altı numaralı peronda beklesin.", q: "Hör zu. Wo sollen die Fahrgäste warten?", o: ["Am Bussteig sechs", "Am Ausgang", "Im Café"], a: 0,
+      why: { 1: "Von einem Ausgang ist keine Rede.", 2: "Davon ist keine Rede." },
+      e: "*altı numaralı peron* = „Bussteig Nummer sechs“; *beklesin* = „sollen warten“." },
+    { id: "tr-a2-h01.q4", t: "mc", q: "Was sollen die Fahrgäste mit ihrem Gepäck tun?", o: ["Es nicht allein lassen", "Es abgeben", "Es zum Bus tragen"], a: 0,
+      why: { 1: "Von einer Gepäckabgabe wird nichts gesagt.", 2: "Davon ist keine Rede." },
+      e: "*Çanta ve bavullarınızı yanınızdan ayırmayın.* = „Trennen Sie Ihre Taschen und Koffer nicht von sich.“" }
+  ]
+});
+
+K.addText('tr-a2-h02', {
+  level: 'A2', kind: 'listen', scene: 'hastane', genre: 'anrufbeantworter',
+  title: "Muayenehane mesajı", sub: "Anrufbeantworter einer Arztpraxis", plays: 2,
+  lines: [
+    { s: 'Sekreter', g: 'f', t: "Merhaba, burası Doktor Kaya’nın kliniği. Şu anda telefona bakamıyoruz. Kliniğimiz hafta içi sabah dokuzdan akşam beşe kadar açık. Randevu için lütfen bir mesaj bırakın, adınızı ve telefon numaranızı söyleyin. Acil durumda yüz on iki numarayı arayın. Teşekkür ederiz, iyi günler.", n: "Hallo, hier ist die Praxis von Doktor Kaya. Im Moment können wir nicht ans Telefon gehen. Unsere Praxis ist werktags von neun Uhr morgens bis fünf Uhr abends geöffnet. Bitte hinterlassen Sie für einen Termin eine Nachricht, nennen Sie Ihren Namen und Ihre Telefonnummer. Im Notfall rufen Sie die 112 an. Vielen Dank, einen schönen Tag." }
+  ],
+  gloss: { "adınızı": "Ihren Namen", "anda": "Moment", "burası": "hier", "ederiz": "wir danken", "içi": "innerhalb", "kliniği": "Praxis/Klinik", "Kliniğimiz": "unsere Praxis", "randevu": "Termin", "bırakın": "hinterlassen Sie", "acil durum": "Notfall", "numara": "Nummer", "bakamıyoruz": "wir können nicht (ans Telefon) gehen" },
+  questions: [
+    { id: "tr-a2-h02.q1", t: "cloze", q: "Ergänze die Öffnungszeiten.", text: "Kliniğimiz hafta içi sabah {1} akşam {2} kadar açık.", gaps: { 1: { a: ["dokuzdan"], o: ["dokuzdan", "dokuzda", "dokuza"], wrong: { "dokuzda": "*-dA* heißt „um/bei“. Für „ab/von … an“ brauchst du den Ablativ **-dAn**.", "dokuza": "*-A* ist der Dativ (Richtung); „von“ verlangt *-dAn*." } }, 2: { a: ["beşe"], o: ["beşe", "beşte", "beşten"], wrong: { "beşte": "*-tA* = „um“. Vor *kadar* („bis“) steht der Dativ.", "beşten": "*-dAn* heißt „von … an“; „bis“ verlangt vor *kadar* den Dativ." } } },
+      e: "**… -dAn … -(y)A kadar** = „von … bis …“: *dokuzdan beşe kadar*." },
+    { id: "tr-a2-h02.q2", t: "mc", q: "Was soll man hinterlassen, wenn man einen Termin möchte?", o: ["Namen und Telefonnummer", "Nur den Namen", "Eine E-Mail-Adresse"], a: 0,
+      why: { 1: "Es werden **zwei** Angaben verlangt: Name **und** Telefonnummer.", 2: "Von einer E-Mail-Adresse ist keine Rede." },
+      e: "*adınızı ve telefon numaranızı söyleyin* = „nennen Sie Ihren Namen und Ihre Telefonnummer“." },
+    { id: "tr-a2-h02.q3", t: "match", q: "Ordne zu:", p: [["Randevu için", "eine Nachricht hinterlassen"], ["Acil durumda", "die 112 anrufen"], ["Hafta içi", "von neun bis siebzehn Uhr"]],
+      e: "*için* = für / um zu; *-dA* in *durumda* = „im Fall“." }
+  ]
+});
+
+K.addText('tr-a2-h03', {
+  level: 'A2', kind: 'listen', scene: 'hava', genre: 'radio',
+  title: "Hava durumu", sub: "Der Wetterbericht im Radio", plays: 2,
+  lines: [
+    { s: 'Spiker', g: 'm', t: "Günaydın sevgili dinleyiciler, hava durumuna geçiyoruz. Bugün İstanbul’da hava parçalı bulutlu, sıcaklık on sekiz derece. Öğleden sonra yağmur başlayacak ve akşama kadar sürecek. Yarın hava daha güzel: güneşli ve yirmi derece. Hafta sonu ise hava yeniden soğuyor, sıcaklık on dereceye düşecek. Yanınıza şemsiye almayı unutmayın!", n: "Guten Morgen, liebe Hörerinnen und Hörer, wir kommen zum Wetter. Heute ist es in Istanbul teilweise bewölkt, die Temperatur beträgt achtzehn Grad. Am Nachmittag beginnt Regen und dauert bis zum Abend. Morgen wird das Wetter schöner: sonnig und zwanzig Grad. Am Wochenende wird es dagegen wieder kalt, die Temperatur sinkt auf zehn Grad. Vergessen Sie nicht, einen Regenschirm mitzunehmen!" }
+  ],
+  gloss: { "almayı": "mitzunehmen", "dereceye": "auf … Grad", "soğuyor": "es wird kalt", "öğleden": "nachmittags", "parçalı bulutlu": "teilweise bewölkt", "sıcaklık": "Temperatur", "derece": "Grad", "sürecek": "wird dauern", "güneşli": "sonnig", "düşecek": "wird sinken", "şemsiye": "Regenschirm", "unutmayın": "vergessen Sie nicht", "dinleyiciler": "Hörer" },
+  questions: [
+    { id: "tr-a2-h03.q1", t: "mc", q: "Wie warm ist es heute in Istanbul?", o: ["Achtzehn Grad", "Zwanzig Grad", "Zehn Grad"], a: 0,
+      why: { 1: "Zwanzig Grad werden **morgen** erwartet.", 2: "Zehn Grad sind für das **Wochenende** angesagt." },
+      e: "*Bugün … sıcaklık on sekiz derece.* *Yarın … yirmi derece.* *Hafta sonu … on derece.*" },
+    { id: "tr-a2-h03.q2", t: "gap", q: "Öğleden sonra yağmur ___ . (başlamak – Futur)", a: ["başlayacak"],
+      wrong: { "başlıyor": "Präsens. Der Regen kommt erst am Nachmittag: Futur *-(y)AcAk*.", "başladı": "Vergangenheit – der Regen hat noch nicht begonnen.", "başlar": "Aorist drückt Allgemeines aus; für eine Vorhersage nimmst du das Futur." },
+      e: "*başla-* + **y** + **-acak**: başla-**y**-**acak** („wird beginnen“)." },
+    { id: "tr-a2-h03.q3", t: "match", q: "Ordne die Zeit dem Wetter zu:", p: [["Bugün", "teilweise bewölkt"], ["Öğleden sonra", "Regen"], ["Yarın", "sonnig"], ["Hafta sonu", "wieder kalt"]],
+      e: "*bugün* = heute, *yarın* = morgen, *hafta sonu* = Wochenende." },
+    { id: "tr-a2-h03.q4", t: "mc", q: "Was rät der Sprecher?", o: ["Einen Regenschirm mitnehmen", "Zu Hause bleiben", "Eine Sonnenbrille tragen"], a: 0,
+      why: { 1: "Davon ist keine Rede.", 2: "Sonne gibt es erst **morgen**, und eine Brille wird nicht erwähnt." },
+      e: "*Yanınıza şemsiye almayı unutmayın!* = „Vergessen Sie nicht, einen Regenschirm mitzunehmen!“" }
+  ]
+});
+
+K.addText('tr-a2-h04', {
+  level: 'A2', kind: 'listen', scene: 'kafe', genre: 'gespraech',
+  title: "Kafede", sub: "Im Café", plays: 2,
+  lines: [
+    { s: 'Garson', g: 'm', t: "Hoş geldiniz, buyurun. Ne alırsınız?", n: "Willkommen, bitte schön. Was nehmen Sie?" },
+    { s: 'Selin', g: 'f', t: "İki çay ve bir dilim kek istiyorum. Kekler bugün taze mi?", n: "Ich möchte zwei Tee und ein Stück Kuchen. Sind die Kuchen heute frisch?" },
+    { s: 'Garson', g: 'm', t: "Evet, sabah yaptık. Çikolatalı kek ve limonlu kek var.", n: "Ja, wir haben sie heute früh gemacht. Es gibt Schokoladenkuchen und Zitronenkuchen." },
+    { s: 'Selin', g: 'f', t: "Limonlu kek alayım. Toplam ne kadar?", n: "Ich nehme den Zitronenkuchen. Wie viel macht es zusammen?" },
+    { s: 'Garson', g: 'm', t: "İki çay kırk lira, kek altmış lira, toplam yüz lira.", n: "Zwei Tee vierzig Lira, Kuchen sechzig Lira, zusammen hundert Lira." },
+    { s: 'Selin', g: 'f', t: "Kartla ödeyebilir miyim?", n: "Kann ich mit Karte zahlen?" },
+    { s: 'Garson', g: 'm', t: "Maalesef, sadece nakit alıyoruz.", n: "Leider nehmen wir nur Bargeld." },
+    { s: 'Selin', g: 'f', t: "O zaman nakit ödeyeyim. Buyurun yüz lira.", n: "Dann zahle ich bar. Bitte, hundert Lira." }
+  ],
+  gloss: { "kek": "Kuchen", "alırsınız": "Sie nehmen", "alıyoruz": "wir nehmen", "kekler": "die Kuchen", "buyurun": "bitte (schön)", "dilim": "Stück/Scheibe", "taze": "frisch", "limonlu": "mit Zitrone", "çikolatalı": "mit Schokolade", "toplam": "insgesamt", "maalesef": "leider", "nakit": "Bargeld", "alayım": "ich nehme", "ödeyeyim": "ich zahle" },
+  questions: [
+    { id: "tr-a2-h04.q1", t: "mc", q: "Welchen Kuchen nimmt Selin?", o: ["Zitronenkuchen", "Schokoladenkuchen", "Keinen"], a: 0,
+      why: { 1: "Schokolade (*çikolatalı*) wird nur genannt, nicht gewählt.", 2: "Sie bestellt ein Stück Kuchen." },
+      e: "*Limonlu kek alayım.* = „Ich nehme den Zitronenkuchen.“ *-lI* = „mit“: *limonlu*." },
+    { id: "tr-a2-h04.q2", t: "mc", q: "Wie viel zahlt Selin insgesamt?", o: ["Sechzig Lira", "Hundert Lira", "Vierzig Lira"], a: 1,
+      why: { 0: "Sechzig Lira kostet nur der **Kuchen**.", 2: "Vierzig Lira kosten nur die **zwei Tee**." },
+      e: "*İki çay kırk lira, kek altmış lira, toplam yüz lira.* 40 + 60 = 100." },
+    { id: "tr-a2-h04.q3", t: "cloze", q: "Ergänze, wie Selin bezahlen möchte und was das Café annimmt.", text: "Selin {1} ödemek istiyor, ama kafe sadece {2} alıyor.", gaps: { 1: { a: ["kartla"], o: ["kartla", "nakit"], wrong: { "nakit": "Das ist das Gegenteil: Sie **fragt** nach der Karte." } }, 2: { a: ["nakit"], o: ["kartla", "nakit"], wrong: { "kartla": "Das Café nimmt keine Kartenzahlung." } } },
+      e: "*Kartla ödeyebilir miyim?* – *Sadece nakit alıyoruz.* *-lA* = „mit“: *kartla*." },
+    { id: "tr-a2-h04.q4", t: "match", q: "Ordne zu:", p: [["Sabah yaptık.", "Wir haben es heute früh gemacht."], ["Maalesef", "leider"], ["Toplam yüz lira.", "Zusammen hundert Lira."]],
+      e: "*yaptık* = Vergangenheit auf -dI, 1. Person Plural." }
+  ]
+});
+
+K.addText('tr-a2-h05', {
+  level: 'A2', kind: 'listen', scene: 'is', genre: 'interview',
+  title: "Fırıncıyla röportaj", sub: "Interview mit einem Bäcker", plays: 3,
+  lines: [
+    { s: 'Sunucu', g: 'f', t: "Mehmet Bey, günaydın. Gününüz kaçta başlıyor?", n: "Mehmet Bey, guten Morgen. Wann beginnt Ihr Tag?" },
+    { s: 'Mehmet', g: 'm', t: "Ben her gün sabah dörtte kalkıyorum, beşte fırındayım. Ekmekler altıda hazır oluyor.", n: "Ich stehe jeden Tag um vier auf, um fünf bin ich in der Bäckerei. Um sechs ist das Brot fertig." },
+    { s: 'Sunucu', g: 'f', t: "Çok erken! Hafta sonu da çalışıyor musunuz?", n: "Sehr früh! Arbeiten Sie auch am Wochenende?" },
+    { s: 'Mehmet', g: 'm', t: "Evet, pazar günü de çalışıyoruz. Sadece pazartesi kapalıyız.", n: "Ja, auch sonntags arbeiten wir. Nur montags haben wir geschlossen." },
+    { s: 'Sunucu', g: 'f', t: "En çok ne satıyorsunuz?", n: "Was verkaufen Sie am meisten?" },
+    { s: 'Mehmet', g: 'm', t: "Simit! Her sabah iki yüz simit yapıyoruz ve öğleye kadar hepsi bitiyor.", n: "Simit! Jeden Morgen machen wir zweihundert Simit, und bis Mittag sind alle weg." },
+    { s: 'Sunucu', g: 'f', t: "İşinizi seviyor musunuz?", n: "Mögen Sie Ihre Arbeit?" },
+    { s: 'Mehmet', g: 'm', t: "Çok seviyorum. Yorucu ama müşterilerim taze ekmeği çok seviyor.", n: "Sehr. Sie ist anstrengend, aber meine Kunden lieben frisches Brot." }
+  ],
+  gloss: { "musunuz": "(Fragepartikel, Sie)", "erken": "früh", "İşinizi": "Ihre Arbeit", "taze": "frisch", "öğleye": "Mittag", "fırın": "Bäckerei, Backofen", "simit": "Sesamring", "yorucu": "anstrengend", "müşteri": "Kunde", "hepsi": "alle", "bitiyor": "sind aus", "hazır": "fertig" },
+  questions: [
+    { id: "tr-a2-h05.q1", t: "mc", q: "Wann steht Mehmet auf?", o: ["Um vier", "Um fünf", "Um sechs"], a: 0,
+      why: { 1: "Um **fünf** ist er in der Bäckerei, nicht aufgestanden.", 2: "Um **sechs** ist das Brot fertig." },
+      e: "*sabah dörtte kalkıyorum* = „ich stehe um vier auf“." },
+    { id: "tr-a2-h05.q2", t: "gap", q: "Ben her gün sabah dörtte ___ . (kalkmak – ich stehe auf)", a: ["kalkıyorum", "kalkarım"],
+      wrong: { "kalkıyoruz": "*-uz* = „wir“. Mehmet spricht von sich: **-um**.", "kalktım": "Vergangenheit; Mehmet beschreibt seinen **täglichen** Ablauf." },
+      e: "*kalk-* + **-ıyor** + **-um**: kalk-**ıyor**-**um**. Auch der Aorist *kalkarım* („ich stehe (gewöhnlich) auf“) passt für Gewohnheiten; im Interview hörst du *kalkıyorum*." },
+    { id: "tr-a2-h05.q3", t: "mc", q: "An welchem Tag ist die Bäckerei geschlossen?", o: ["Montag", "Sonntag", "Samstag"], a: 0,
+      why: { 1: "Sonntags arbeiten sie (*pazar günü de çalışıyoruz*).", 2: "Am Samstag ist geöffnet." },
+      e: "*Sadece pazartesi kapalıyız.* = „Nur montags haben wir geschlossen.“" },
+    { id: "tr-a2-h05.q4", t: "match", q: "Ordne zu:", p: [["Beşte", "Mehmet ist in der Bäckerei"], ["Altıda", "das Brot ist fertig"], ["Öğleye kadar", "alle Simit sind weg"], ["Pazartesi", "geschlossen"]],
+      e: "Uhrzeit = Lokativ *-dA*; *-(y)A kadar* = bis." }
+  ]
+});
+
+K.addText('tr-a2-h06', {
+  level: 'A2', kind: 'listen', scene: 'market', genre: 'durchsage',
+  title: "Markette indirim", sub: "Supermarkt-Durchsage", plays: 2,
+  lines: [
+    { s: 'Anons', g: 'f', t: "Değerli müşterilerimiz, dikkat lütfen. Bugün marketimizde büyük indirim var. Süt ve yoğurt yüzde otuz indirimli. Taze meyve ve sebzeler ikinci koridorda. Üç kilo elma alırsanız, bir kilo portakal hediye! Bugün kasalarda uzun sıra olabilir, anlayışınız için teşekkür ederiz.", n: "Liebe Kunden, bitte aufgepasst. Heute gibt es in unserem Markt große Rabatte. Milch und Joghurt sind um dreißig Prozent reduziert. Frisches Obst und Gemüse finden Sie im zweiten Gang. Wenn Sie drei Kilo Äpfel kaufen, schenken wir Ihnen ein Kilo Orangen! Heute kann es an den Kassen lange Schlangen geben, danke für Ihr Verständnis." }
+  ],
+  gloss: { "alırsanız": "wenn Sie kaufen", "değerli": "geschätzt", "ederiz": "wir danken", "koridorda": "im Gang", "portakal": "Orange", "anlayışınız": "Ihr Verständnis", "taze": "frisch", "indirim": "Rabatt", "indirimli": "reduziert", "yüzde": "Prozent", "koridor": "Gang", "hediye": "Geschenk", "kasa": "Kasse", "sıra": "Schlange", "yoğurt": "Joghurt", "sebze": "Gemüse" },
+  questions: [
+    { id: "tr-a2-h06.q1", t: "cloze", q: "Ergänze die Rabattdurchsage.", text: "{1} ve yoğurt yüzde {2} indirimli.", gaps: { 1: { a: ["Süt"], o: ["Süt", "Meyve", "Ekmek"], wrong: { "Meyve": "Obst wird nur mit seinem Ort genannt; reduziert sind Milch und Joghurt.", "Ekmek": "Brot kommt in der Durchsage nicht vor." } }, 2: { a: ["otuz"], o: ["on", "yirmi", "otuz"], wrong: { "on": "*on* = 10. Gesagt wird *otuz* (30).", "yirmi": "*yirmi* = 20. Gesagt wird *otuz* (30)." } } },
+      e: "*Süt ve yoğurt yüzde otuz indirimli.* = „Milch und Joghurt sind um dreißig Prozent reduziert.“" },
+    { id: "tr-a2-h06.q2", t: "mc", q: "Wo findet man frisches Obst und Gemüse?", o: ["Im zweiten Gang", "An der Kasse", "Am Eingang"], a: 0,
+      why: { 1: "An der Kasse bezahlt man, dort gibt es eventuell eine Schlange.", 2: "Davon ist keine Rede." },
+      e: "*ikinci koridorda* = „im zweiten Gang“ (Ordnungszahl *ikinci* + Lokativ)." },
+    { id: "tr-a2-h06.q3", t: "mc", q: "Wann bekommt man ein Kilo Orangen geschenkt?", o: ["Beim Kauf von drei Kilo Äpfeln", "Beim Kauf von Milch", "Ab hundert Lira Einkauf"], a: 0,
+      why: { 1: "Milch ist reduziert, aber ohne Geschenk.", 2: "Von einem Mindestbetrag ist keine Rede." },
+      e: "*Üç kilo elma alırsanız, bir kilo portakal hediye!* *-(y)sAnIz* = „wenn Sie …“." },
+    { id: "tr-a2-h06.q4", t: "match", q: "Ordne zu:", p: [["Bugün kasalarda uzun sıra olabilir", "Heute kann es an den Kassen lange Schlangen geben."], ["anlayışınız için teşekkür ederiz", "Danke für Ihr Verständnis."], ["Taze meyve ve sebzeler ikinci koridorda.", "Frisches Obst und Gemüse ist im zweiten Gang."]],
+      e: "*olabilir* = es kann sein/geben; *için* = für; *ikinci koridorda* = im zweiten Gang." }
+  ]
+});
+
+K.addText('tr-a2-h07', {
+  level: 'A2', kind: 'listen', scene: 'lokanta', genre: 'anrufbeantworter',
+  title: "Lokantadan mesaj", sub: "Nachricht auf dem Anrufbeantworter", plays: 3,
+  lines: [
+    { s: 'Zeynep', g: 'f', t: "Merhaba Ahmet Bey, Lezzet Lokantasından arıyorum. Cumartesi akşamı dört kişilik masa için rezervasyon yaptınız. Maalesef saat sekizde bütün masalarımız dolu. Saat yedide ya da dokuz buçukta boş masamız var. Pazar akşamı sekizde de masamız var. Lütfen bugün bizi geri arayın, yoksa rezervasyonunuz iptal olur.", n: "Hallo Ahmet Bey, ich rufe vom Restaurant Lezzet an. Sie haben für Samstagabend einen Tisch für vier Personen reserviert. Leider sind um acht alle unsere Tische besetzt. Um sieben oder um halb zehn haben wir einen freien Tisch. Auch am Sonntagabend um acht haben wir einen Tisch. Bitte rufen Sie uns heute zurück, sonst wird Ihre Reservierung storniert." }
+  ],
+  gloss: { "arıyorum": "ich rufe an", "maalesef": "leider", "Lokantasından": "vom Restaurant", "dolu": "besetzt, voll", "rezervasyon": "Reservierung", "iptal olur": "wird storniert", "masa": "Tisch", "bütün": "alle", "boş": "frei", "geri arayın": "rufen Sie zurück", "yoksa": "sonst" },
+  questions: [
+    { id: "tr-a2-h07.q1", t: "mc", q: "Warum ruft das Restaurant an?", o: ["Der gewünschte Tisch um acht ist nicht frei.", "Es möchte den Preis ändern.", "Es hat eine Brieftasche gefunden."], a: 0,
+      why: { 1: "Vom Preis ist keine Rede.", 2: "Davon ist keine Rede." },
+      e: "*Maalesef saat sekizde bütün masalarımız dolu.* = „Leider sind um acht alle unsere Tische besetzt.“" },
+    { id: "tr-a2-h07.q2", t: "mc", q: "Welche Alternativzeit wird NICHT genannt?", o: ["Samstag um halb zehn", "Sonntag um acht", "Freitag um sieben"], a: 2,
+      why: { 0: "Doch: *dokuz buçukta*.", 1: "Doch: *Pazar akşamı sekizde*." },
+      e: "Genannt werden Samstag um sieben, Samstag um halb zehn und Sonntag um acht." },
+    { id: "tr-a2-h07.q3", t: "gap", q: "Cumartesi akşamı dört ___ masa için rezervasyon yaptınız. (Tisch für vier Personen)", a: ["kişilik"],
+      wrong: { "kişi": "*dört kişi* = „vier Personen“; vor *masa* braucht man **-lIk**.", "kişiye": "Dativ passt hier nicht; der Zusatz *-lIk* macht „für … Personen“." },
+      e: "Zahl + *kişilik* + Nomen: *iki kişilik oda*, *dört kişilik masa*." },
+    { id: "tr-a2-h07.q4", t: "mc", q: "Was passiert, wenn der Gast heute nicht zurückruft?", o: ["Die Reservierung wird storniert.", "Der Tisch wird teurer.", "Das Restaurant ruft erneut an."], a: 0,
+      why: { 1: "Davon ist keine Rede.", 2: "Davon ist keine Rede." },
+      e: "*Lütfen bugün bizi geri arayın, yoksa rezervasyonunuz iptal olur.* *yoksa* = „sonst“." }
+  ]
+});
+
+K.addText('tr-a2-h08', {
+  level: 'A2', kind: 'listen', scene: 'etkinlik', genre: 'radio',
+  title: "Hafta sonu önerileri", sub: "Veranstaltungstipps im Radio", plays: 2,
+  lines: [
+    { s: 'Spiker', g: 'f', t: "Hafta sonu için güzel haberlerimiz var. Cumartesi günü şehir parkında çocuk festivali başlıyor. Gün boyunca müzik, dans ve resim atölyeleri olacak. Giriş ücretsiz. Pazar akşamı ise sinemada eski bir Türk filmi var, bilet iki yüz lira. Hava güzel olursa festival iki gün sürecek. Kısacası hem çocuklar hem büyükler için eğlenceli bir hafta sonu sizi bekliyor.", n: "Wir haben gute Neuigkeiten fürs Wochenende. Am Samstag beginnt im Stadtpark ein Kinderfest. Den ganzen Tag gibt es Musik, Tanz und Malwerkstätten. Der Eintritt ist frei. Am Sonntagabend läuft im Kino ein alter türkischer Film, das Ticket kostet zweihundert Lira. Wenn das Wetter schön ist, dauert das Fest zwei Tage. Kurz gesagt erwartet Sie ein unterhaltsames Wochenende für Kinder und Erwachsene." }
+  ],
+  gloss: { "festival": "Fest/Festival", "atölye": "Workshop", "giriş": "Eintritt", "ücretsiz": "kostenlos", "sürecek": "wird dauern", "büyükler": "Erwachsene", "eğlenceli": "unterhaltsam", "resim": "Malerei, Bild", "gün boyunca": "den ganzen Tag" },
+  questions: [
+    { id: "tr-a2-h08.q1", t: "mc", q: "Was kostet der Eintritt zum Kinderfest?", o: ["Nichts", "Zweihundert Lira", "Zwanzig Lira"], a: 0,
+      why: { 1: "Zweihundert Lira kostet das **Kinoticket**.", 2: "Dieser Preis wird nicht genannt." },
+      e: "*Giriş ücretsiz.* = „Der Eintritt ist kostenlos.“ (*-sIz* = ohne)" },
+    { id: "tr-a2-h08.q2", t: "cloze", q: "Ergänze:", text: "Pazar akşamı sinemada {1} bir Türk filmi var. Bilet {2} lira.", gaps: { 1: { a: ["eski"], o: ["eski", "yeni"], wrong: { "yeni": "Es ist ein **alter** Film." } }, 2: { a: ["iki yüz"], o: ["on", "elli", "iki yüz"], wrong: { "on": "*on* = 10; der Preis ist *iki yüz* (200).", "elli": "*elli* = 50; der Preis ist *iki yüz* (200)." } } },
+      e: "*eski* = alt, *yeni* = neu; *iki yüz* = 200." },
+    { id: "tr-a2-h08.q3", t: "gap", q: "Hava güzel olursa festival iki gün ___ . (sürmek – Futur)", a: ["sürecek"],
+      wrong: { "sürüyor": "Präsens; hier wird eine Vorhersage getroffen (Futur).", "sürdü": "Vergangenheit – das Fest hat noch nicht stattgefunden." },
+      e: "*sür-* + **-ecek** (Vokalharmonie e): *sürecek*." },
+    { id: "tr-a2-h08.q4", t: "match", q: "Ordne zu:", p: [["Gün boyunca", "den ganzen Tag"], ["Giriş ücretsiz", "Eintritt frei"], ["Resim atölyeleri", "Malworkshops"]],
+      e: "*boyunca* = während (… hindurch)." }
+  ]
+});
+
+K.addText('tr-a2-h09', {
+  level: 'A2', kind: 'listen', scene: 'sokak', genre: 'gespraech',
+  title: "Postane nerede?", sub: "Nach dem Weg fragen", plays: 2,
+  lines: [
+    { s: 'Anna', g: 'f', t: "Affedersiniz, postane buralarda mı?", n: "Entschuldigung, ist die Post hier in der Nähe?" },
+    { s: 'Yoldan geçen', g: 'm', t: "Evet, çok yakın. Bu caddeden düz gidin, ikinci sokaktan sağa dönün.", n: "Ja, ganz nah. Gehen Sie diese Straße geradeaus und biegen Sie in der zweiten Straße rechts ab." },
+    { s: 'Anna', g: 'f', t: "İkinci sokak mı? Eczanenin yanındaki sokak mı?", n: "Die zweite Straße? Die Straße neben der Apotheke?" },
+    { s: 'Yoldan geçen', g: 'm', t: "Evet, doğru. Postane solda olacak, bankanın karşısında.", n: "Ja, genau. Die Post ist dann links, gegenüber der Bank." },
+    { s: 'Anna', g: 'f', t: "Yürüyerek kaç dakika sürer?", n: "Wie viele Minuten dauert es zu Fuß?" },
+    { s: 'Yoldan geçen', g: 'm', t: "Yaklaşık beş dakika. Ama pazar günü kapalı.", n: "Ungefähr fünf Minuten. Aber sonntags ist sie geschlossen." },
+    { s: 'Anna', g: 'f', t: "Bugün cumartesi, sorun yok. Çok teşekkürler!", n: "Heute ist Samstag, kein Problem. Vielen Dank!" }
+  ],
+  gloss: { "postane": "Post(amt)", "buralarda": "hier in der Gegend", "cadde": "Hauptstraße", "düz": "geradeaus", "sokak": "Gasse, Straße", "dönün": "biegen Sie ab", "karşısında": "gegenüber", "yaklaşık": "ungefähr", "Affedersiniz": "Entschuldigung", "eczane": "Apotheke" },
+  questions: [
+    { id: "tr-a2-h09.q1", t: "gap", q: "İkinci sokaktan ___ dönün. (nach rechts)", a: ["sağa"],
+      wrong: { "sağda": "*-dA* = „rechts (wo)“. Beim Abbiegen fragst du „wohin?“ → Dativ **-A**.", "sağ": "Ohne Endung fehlt die Richtung: *sağa* = nach rechts.", "sağdan": "*-dAn* = „von rechts“." },
+      e: "*sağa dön-* = rechts abbiegen. Richtung (wohin?) = Dativ **-(y)A**." },
+    { id: "tr-a2-h09.q2", t: "mc", q: "Wo liegt die Post?", o: ["Links, gegenüber der Bank", "Rechts, neben der Apotheke", "Geradeaus am Ende der Straße"], a: 0,
+      why: { 1: "Die **Abbiegestraße** liegt neben der Apotheke, nicht die Post.", 2: "Man biegt in der zweiten Straße ab." },
+      e: "*Postane solda olacak, bankanın karşısında.* = „Die Post ist links, gegenüber der Bank.“" },
+    { id: "tr-a2-h09.q3", t: "mc", q: "Wie lange dauert der Weg zu Fuß?", o: ["Etwa fünf Minuten", "Etwa fünfzehn Minuten", "Etwa eine Stunde"], a: 0,
+      why: { 1: "*beş* ist 5, nicht 15 (*on beş*).", 2: "Von einer Stunde ist keine Rede." },
+      e: "*Yaklaşık beş dakika.*" },
+    { id: "tr-a2-h09.q4", t: "match", q: "Ordne zu:", p: [["düz gidin", "gehen Sie geradeaus"], ["sağa dönün", "biegen Sie rechts ab"], ["bankanın karşısında", "gegenüber der Bank"]],
+      e: "*karşısında* = gegenüber (mit Besitzer-Endung: *bankanın karşısında*)." }
+  ]
+});
+
+K.addText('tr-a2-h10', {
+  level: 'A2', kind: 'listen', scene: 'is', genre: 'interview',
+  title: "Doktorla röportaj", sub: "Interview mit einer Ärztin", plays: 3,
+  lines: [
+    { s: 'Sunucu', g: 'm', t: "Hoş geldiniz, Elif Hanım. Gününüz nasıl geçiyor?", n: "Willkommen, Elif Hanım. Wie verläuft Ihr Tag?" },
+    { s: 'Elif', g: 'f', t: "Sabah sekizde hastaneye gidiyorum. Önce hastalarımı görüyorum, öğleye kadar çok yoğun oluyor. Öğle arasında yirmi dakika yemek yiyorum.", n: "Um acht gehe ich ins Krankenhaus. Zuerst sehe ich meine Patienten, bis mittags ist es sehr voll. In der Mittagspause esse ich zwanzig Minuten." },
+    { s: 'Sunucu', g: 'm', t: "Boş zamanınız var mı?", n: "Haben Sie Freizeit?" },
+    { s: 'Elif', g: 'f', t: "Az ama var. Akşamları koşuya çıkıyorum, hafta sonu arkadaşlarımla futbol oynuyorum. Yatmadan önce de her gün yarım saat kitap okuyorum.", n: "Wenig, aber ja. Abends gehe ich joggen, am Wochenende spiele ich mit Freunden Fußball. Vor dem Schlafen lese ich außerdem jeden Tag eine halbe Stunde." },
+    { s: 'Sunucu', g: 'm', t: "Gelecek hafta tatile çıkıyorsunuz, değil mi?", n: "Nächste Woche fahren Sie in den Urlaub, nicht wahr?" },
+    { s: 'Elif', g: 'f', t: "Evet, annemle birlikte İzmir’e gidiyoruz. Bir hafta sadece dinlenmek istiyorum.", n: "Ja, mit meiner Mutter fahren wir nach Izmir. Eine Woche möchte ich nur ausruhen." }
+  ],
+  gloss: { "gidiyorum": "ich gehe", "gidiyoruz": "wir fahren", "yiyorum": "ich esse", "öğleye": "Mittag", "hasta": "Patient/in", "yoğun": "voll, stressig", "öğle arası": "Mittagspause", "boş zaman": "Freizeit", "koşu": "Joggen", "yatmadan önce": "vor dem Schlafengehen", "tatil": "Urlaub", "geçiyor": "verläuft", "arkadaşlarımla": "mit meinen Freunden", "annemle": "mit meiner Mutter" },
+  questions: [
+    { id: "tr-a2-h10.q1", t: "mc", q: "Wann geht Elif ins Krankenhaus?", o: ["Um acht", "Um neun", "Um zwölf"], a: 0,
+      why: { 1: "*dokuz* wird nicht genannt.", 2: "Mittags hat sie ihre Pause." },
+      e: "*Sabah sekizde hastaneye gidiyorum.*" },
+    { id: "tr-a2-h10.q2", t: "mc", q: "Was macht Elif am Wochenende?", o: ["Fußball spielen mit Freunden", "Arbeiten", "Reisen"], a: 0,
+      why: { 1: "Sie arbeitet unter der Woche im Krankenhaus.", 2: "Die Reise ist erst **nächste Woche**." },
+      e: "*Hafta sonu arkadaşlarımla futbol oynuyorum.* *-(y)lA* = mit: *arkadaşlarımla*." },
+    { id: "tr-a2-h10.q3", t: "gap", q: "Evet, annemle birlikte İzmir’e ___ . (gitmek – wir fahren)", a: ["gidiyoruz"],
+      wrong: { "gidiyorum": "*-um* = ich; Elif fährt **mit** ihrer Mutter → **-uz** (wir).", "gittik": "Vergangenheit – sie fahren erst nächste Woche.", "gideriz": "Aorist; hier ist ein fester Plan (Präsens)." },
+      e: "*gid-* (t→d vor Vokal) + **-iyor** + **-uz**: gid-**iyor**-**uz**." },
+    { id: "tr-a2-h10.q4", t: "match", q: "Ordne zu:", p: [["Akşamları", "Joggen"], ["Yatmadan önce", "Lesen"], ["Öğle arasında", "zwanzig Minuten essen"], ["Gelecek hafta", "Urlaub in Izmir"]],
+      e: "*-mAdAn önce* = bevor man …; *akşamları* = abends (regelmäßig)." }
   ]
 });
 
