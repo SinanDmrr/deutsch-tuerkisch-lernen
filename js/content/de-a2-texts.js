@@ -119,4 +119,62 @@ K.addText('de-a2-r04', {
   ]
 });
 
+K.addText('de-a2-r05', {
+  level: 'A2', kind: 'read', scene: 'bahn', genre: 'hinweis',
+  title: 'Information für Fahrgäste', sub: 'Yolcular için bilgilendirme',
+  body: [
+    'Liebe Fahrgäste,',
+    'am Samstag, dem 28. November, fährt der Regionalzug nach Köln nicht von Gleis 4, sondern von Gleis 7 ab. Der Zug hat 20 Minuten Verspätung, weil auf der Strecke gebaut wird. Deshalb fährt er nicht um 9.15 Uhr, sondern erst um 9.35 Uhr ab. Der Aufzug zu Gleis 7 ist leider kaputt. Bitte benutzen Sie die Treppe.',
+    'Der Zug hat Verspätung. Trotzdem bekommen Sie in Köln Ihren Anschlusszug, denn dieser wartet auf Sie. Wenn Sie Fragen haben, hilft Ihnen der Schalter im Bahnhof. Er ist von 6 bis 20 Uhr geöffnet. Ihre Fahrkarte gilt auch für den späteren Zug.',
+    'Vielen Dank für Ihr Verständnis!',
+    'Ihre Bahn'
+  ],
+  gloss: { 'Fahrgäste': 'yolcular', 'Regionalzug': 'bölgesel tren', 'Gleis': 'peron (ray)', 'Verspätung': 'gecikme, rötar', 'Strecke': 'hat, güzergâh', 'gebaut wird': 'inşaat / yol çalışması yapılıyor', 'Aufzug': 'asansör', 'benutzen': 'kullanmak', 'Treppe': 'merdiven', 'erst': 'ancak, daha … değil', 'Anschlusszug': 'aktarma treni', 'Schalter': 'gişe', 'gilt': 'geçerlidir (gelten)', 'Verständnis': 'anlayış' },
+  questions: [
+    { id: 'de-a2-r05.q1', t: 'mc', q: 'Köln treni 28 Kasım Cumartesi günü hangi perondan kalkıyor?', o: ['7. peron', '4. peron', 'Peron değişmiyor', 'Peron belli değil, gişeye sormak gerekiyor'], a: 0,
+      why: { 1: '4. peron **olağan** peron; bu gün tren oradan **kalkmıyor**: *nicht von Gleis 4, sondern von Gleis 7*.', 2: 'Peron **değişiyor**: *nicht … sondern …*.', 3: 'Peron belli: **Gleis 7**. Gişe yalnızca sorular için.' },
+      e: '*nicht von Gleis 4, **sondern** von Gleis 7* = 4. peron değil, 7. peron. **sondern** düzeltme bildirir.' },
+    { id: 'de-a2-r05.q2', t: 'gap', q: 'Der Zug hat Verspätung. ___ fährt er erst um 9.35 Uhr ab.', a: ['Deshalb', 'Darum', 'Daher'],
+      wrong: { 'Trotzdem': '*trotzdem* = yine de. Gecikme kalkış saatinin **sebebidir**; beklenenin tersi değil. → **Deshalb**.', 'Denn': '*denn* sebebi ekler ve fiili öne almaz. Burada **sonuç** var ve *fährt er* (fiil önde): **Deshalb**.', 'Weil': '*weil* yan cümle kurar; fiil sona giderdi. Burada fiil 2. sırada: **Deshalb**.' },
+      e: 'Gecikme → bu yüzden geç kalkıyor: sonuç → **deshalb** + fiil + özne: *Deshalb fährt er … ab*.' },
+    { id: 'de-a2-r05.q3', t: 'gap', q: 'Der Zug hat 20 Minuten Verspätung, ___ auf der Strecke gebaut wird.', a: ['weil'],
+      wrong: { 'denn': '*denn* ile fiil yerinde kalır (*denn auf der Strecke wird gebaut*). Metinde fiil **sonda** (*gebaut wird*): **weil**.', 'deshalb': '*deshalb* sonucu bildirir; burada **sebep** var ve fiil sonda: **weil**.' },
+      e: '**weil** yan cümle kurar: çekimli fiil (*wird*) **en sonda**: *weil auf der Strecke gebaut **wird***.' },
+    { id: 'de-a2-r05.q4', t: 'mc', q: 'Annen Almanca bilmiyor ve “Ne yazıyor?” diye soruyor. Ona ne anlatırsın?', o: ['Köln treni cumartesi 4. peron yerine 7. perondan kalkıyor. Tren 20 dakika gecikmeli: 9.15 yerine 9.35’te. 7. peronun asansörü bozuk, merdiveni kullanmalıyız. Köln’de aktarma treni bizi bekliyor, bilet yeni trende de geçerli. Sorumuz olursa gişe 6–20 arası açık.', 'Köln treni 7. perondan 9.15’te kalkıyor. Aktarma treni beklemeyecek, yeni bilet almamız gerekiyor. Gişe 9.35’e kadar açık.', 'Köln treni 4. perondan 9.35’te kalkıyor. Aktarma treni bekliyor, bilet geçerli. Asansör çalışıyor.', 'Köln treni bu cumartesi hiç kalkmıyor. Gişeye gidip parayı geri almalıyız.'], a: 0,
+      why: { 1: 'Saat **9.35**’e kaymış, 9.15 değil; aktarma treni **bekliyor** ve bilet **geçerli**. Gişe **6–20** arası açık.', 2: 'Tren **7. perondan** kalkıyor, 4. değil. Asansör **bozuk**, bu yüzden **merdiven** öneriliyor; ayrıca tren 9.15’te değil 9.35’te kalkıyor.', 3: 'Tren **kalkıyor**, sadece 20 dakika geç. İade istenmiyor, bilet geçerli.' },
+      e: 'Sprachmittlung: peron (**Gleis 7**), saat (**9.35** yerine 9.15), aktarma treni **bekliyor**, bilet **geçerli**, gişe **6–20**.' },
+    { id: 'de-a2-r05.q5', t: 'match', q: 'Eşleştir:', p: [['Gleis 7', 'hier fährt der Zug ab'], ['20 Minuten', 'so viel Verspätung'], ['9.35 Uhr', 'neue Abfahrtszeit'], ['6 bis 20 Uhr', 'Schalter ist geöffnet'], ['Anschlusszug', 'wartet in Köln']],
+      e: 'Metindeki her bilgi bir göreve bağlı: peron, gecikme süresi, yeni kalkış saati, gişe saatleri ve bekleyen aktarma treni.' }
+  ]
+});
+
+K.addText('de-a2-r06', {
+  level: 'A2', kind: 'read', scene: 'amt', genre: 'email',
+  title: 'Anfrage an das Bürgeramt', sub: 'Bürgeramt’a bir soru',
+  body: [
+    'Sehr geehrte Damen und Herren,',
+    'ich ziehe am 30. November nach Bonn um und habe am Montag, dem 7. Dezember, um 10.30 Uhr einen Termin zur Anmeldung. Könnten Sie mir bitte sagen, welche Unterlagen ich mitbringen muss? Ich habe meinen Pass und den Mietvertrag. Brauche ich auch eine Wohnungsgeberbestätigung?',
+    'Ich möchte auch meine Frau anmelden. Wissen Sie, ob sie mitkommen muss? Sie hat am Montag leider keine Zeit. Ich kann nur am Vormittag kommen, denn ich arbeite am Nachmittag. Ich wäre Ihnen für eine kurze Antwort dankbar. Vielen Dank im Voraus!',
+    'Mit freundlichen Grüßen',
+    'Murat Kaya'
+  ],
+  gloss: { 'Sehr geehrte Damen und Herren': 'Sayın yetkililer (resmî hitap)', 'Anmeldung': 'ikametgâh kaydı', 'Unterlagen': 'belgeler', 'Mietvertrag': 'kira sözleşmesi', 'Wohnungsgeberbestätigung': 'konut verenin (ev sahibi/kiraya veren) taşınmayı onaylayan belgesi', 'mitbringen': 'yanında getirmek', 'mitkommen': 'birlikte gelmek', 'Vormittag': 'öğleden önce', 'dankbar': 'minnettar', 'im Voraus': 'şimdiden' },
+  questions: [
+    { id: 'de-a2-r06.q1', t: 'mc', q: 'Murat Bey neden yazıyor?', o: ['Anmeldung randevusu için hangi belgelerin gerektiğini ve eşinin gelip gelmeyeceğini soruyor.', 'Randevusunu başka bir güne ertelemek istiyor.', 'Pasaportunu kaybetmiş ve yenisini istiyor.', 'Kira sözleşmesini Bürgeramt’a göndermek istiyor.'], a: 0,
+      why: { 1: 'Erteleme isteği yok; randevu **7 Aralık Pazartesi 10.30**’da duruyor.', 2: 'Pasaportu **var**: *Ich habe meinen Pass*.', 3: 'Sözleşmeyi göndermeyi önermiyor; **belge gerekli mi** diye soruyor.' },
+      e: 'İki soru var: **Unterlagen** (belgeler) ve **ob sie mitkommen muss** (eşinin gelip gelmeyeceği).' },
+    { id: 'de-a2-r06.q2', t: 'gap', q: 'Wissen Sie, ___ sie mitkommen muss?', a: ['ob'],
+      wrong: { 'wenn': '*wenn* = eğer. “Gelmesi gerekip gerekmediği” evet/hayır sorusudur: **ob**.', 'dass': '*dass* bildirim içeriğini bağlar. Burada soru var: **ob**.', 'wann': '*wann* = ne zaman. Burada ne zaman değil, “**gerekip gerekmediği**” soruluyor: **ob**.' },
+      e: 'Evet/hayır sorusu dolaylıya dönünce **ob** gelir; çekimli fiil (*muss*) en sonda: *ob sie mitkommen **muss***.' },
+    { id: 'de-a2-r06.q3', t: 'gap', q: 'Könnten Sie mir bitte sagen, welche Unterlagen ich mitbringen ___?', a: ['muss'],
+      wrong: { 'müssen': 'Özne *ich* → ich **muss**. *müssen* wir/sie içindir.', 'musst': '*musst* du içindir; *ich* ile **muss**.' },
+      e: 'Dolaylı soruda modal fiil **sonda**: *welche Unterlagen ich mitbringen **muss***. *Könnten Sie …?* nazik rica kalıbıdır.' },
+    { id: 'de-a2-r06.q4', t: 'mc', q: 'Murat’ın babası Almanca bilmiyor. Oğlunun e-postasını gösterip “Ne yazmış?” diye soruyor. Ona ne anlatırsın?', o: ['Murat 30 Kasım’da Bonn’a taşınıyor. 7 Aralık Pazartesi saat 10.30’da kayıt randevusu var. Hangi belgeleri getirmesi gerektiğini soruyor: pasaportu ve kira sözleşmesi hazır, ev sahibi onay belgesi lazım mı diye soruyor. Eşi de gelmeli mi diye soruyor; eşinin pazartesi günü vakti yok. Kısa bir cevap bekliyor.', 'Murat 7 Aralık’ta Bonn’a taşınıyor. 30 Kasım Pazartesi kayıt randevusu var. Pasaportu ve kira sözleşmesi yok; yenilerini istiyor. Eşi mutlaka gelmeli.', 'Murat randevusunu iptal etmek istiyor, çünkü eşinin pazartesi günü vakti yok. Belgeleri postayla gönderecek.', 'Murat 30 Kasım’da Bonn’a taşınıyor. Randevu 10.30’da, belgeleri tamam. Sadece eşinin gelip gelmeyeceğini soruyor; başka sorusu yok.'], a: 0,
+      why: { 1: 'Tarihler ters: taşınma **30 Kasım**, randevu **7 Aralık**. Pasaport ve sözleşme **var**.', 2: 'İptal yok; randevu **duruyor**. Eşinin vakti yok, bu yüzden **gelmesi gerekip gerekmediğini** soruyor.', 3: 'Belgeler tam değil: **Wohnungsgeberbestätigung** gerekip gerekmediğini de soruyor. Yani **iki** sorusu var.' },
+      e: 'Sprachmittlung: taşınma (**30.11.**), randevu (**Mo, 7.12., 10.30**), iki soru (**Unterlagen**, **ob sie mitkommen muss**) ve kısa cevap isteği.' },
+    { id: 'de-a2-r06.q5', t: 'match', q: 'Eşleştir:', p: [['Sehr geehrte Damen und Herren', 'Anrede am Anfang'], ['Mit freundlichen Grüßen', 'Schluss der E-Mail'], ['Montag, 7. Dezember', 'Termin im Bürgeramt'], ['Pass und Mietvertrag', 'Unterlagen, die er hat'], ['Wohnungsgeberbestätigung', 'Frage zu einem Dokument']],
+      e: 'E-postanın yapısı: resmî hitap, konu, sorular, nazik kapanış. Her ifade bu yapıda bir göreve bağlı.' }
+  ]
+});
+
 })(window.KOPRU);

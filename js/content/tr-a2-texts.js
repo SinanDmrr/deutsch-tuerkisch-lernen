@@ -1,7 +1,7 @@
 /* Türkisch A2 – Lesetexte für Deutschsprechende (Erklärungen auf Deutsch)
  * Format: K.addText('tr-a2-rNN', { level, kind:'read', scene, genre, title (TR), sub (DE), body, gloss, questions }).
  * Fragen-IDs '<textId>.qN' sind fest und werden nie geändert oder wiederverwendet.
- * Paket 3: tr-a2-r01 (hastane), tr-a2-r02 (bayram). Paket 4: tr-a2-r03 (otel), tr-a2-r04 (ev).
+ * Paket 3: tr-a2-r01 (hastane), tr-a2-r02 (bayram). Paket 4: tr-a2-r03 (otel), tr-a2-r04 (ev). Paket 5: tr-a2-r05 (kargo), tr-a2-r06 (ofis).
  */
 (function (K) {
 
@@ -81,7 +81,7 @@ K.addText('tr-a2-r03', {
     { id: "tr-a2-r03.q1", t: "mc", q: "Warum schreibt Anna dem Hotel?", o: ["Sie möchte ihre Buchung bestätigt bekommen und hat Fragen zur Anreise und zum Frühstück.", "Sie will ihre Buchung stornieren.", "Sie möchte sich nur über das Frühstück vom letzten Jahr beschweren.", "Sie sucht eine Arbeit im Hotel."], a: 0,
       why: { 1: "Anna hat gebucht (*rezervasyon yaptım*) und will kommen. Von Stornieren steht nichts im Text.", 2: "Die Beschwerde ist nur ein Nebensatz; Hauptsache sind Bestätigung und Fragen.", 3: "Davon steht nichts im Text." },
       e: "*Rezervasyonumu onaylar mısınız?* = „Bestätigen Sie meine Reservierung?“ Dazu kommen Fragen zu Kahvaltı, Ankunft und Servis." },
-    { id: "tr-a2-r03.q2", t: "gap", q: "Anna otele en geç saat ___ geliyor. (Anna kommt spätestens um neun Uhr im Hotel an.)", a: ["dokuzda", "9’da", "9'da"],
+    { id: "tr-a2-r03.q2", t: "gap", q: "Anna otele en geç saat ___ geliyor. (Anna kommt spätestens um neun Uhr im Hotel an.)", a: ["dokuzda", "9’da"],
       wrong: { "dokuz": "Bei Uhrzeiten („um neun“) brauchst du den Lokativ **-dA**: dokuz**da**.", "yedide": "Um sieben landet das Flugzeug; im Hotel sind sie spätestens um **neun**.", "dokuza": "-A ist der Dativ („bis neun / auf neun zu“). Uhrzeit = Lokativ -dA." },
       e: "*Otele en geç dokuzda geliriz.* Uhrzeit = Zahl + **-dA**: dokuz**da**; *en geç* = „spätestens“." },
     { id: "tr-a2-r03.q3", t: "match", q: "Was war letztes Jahr im Hotel? Ordne zu:", p: [["Oda", "çok güzeldi."], ["Klima", "bozuktu."], ["Kahvaltıda", "kahve yoktu, sadece çay vardı."]],
@@ -121,6 +121,66 @@ K.addText('tr-a2-r04', {
     { id: "tr-a2-r04.q5", t: "mc", q: "Sprachmittlung: Dein Freund Tom sucht eine Wohnung. Er versteht kein Türkisch, hat einen Hund und möchte wissen, was in der Anzeige steht. Was sagst du ihm?", o: ["Zweizimmerwohnung im dritten Stock mit Balkon und Aufzug, unmöbliert; Miete 18.000 Lira plus 1.200 Lira Hausgeld (Wasser und Heizung inklusive), Kaution eine Monatsmiete. Haustiere sind nicht erlaubt, nachts ab 23 Uhr ist Ruhe. Besichtigung: werktags nach 18 Uhr bei der Vermieterin Ayşe Hanım.", "Möblierte Wohnung im Erdgeschoss ohne Aufzug; Miete 1.200 Lira, Kaution zwei Monatsmieten. Hunde sind erlaubt; Besichtigung am Wochenende.", "Zweizimmerwohnung im dritten Stock; Miete 18.000 Lira inklusive aller Nebenkosten. Haustiere sind erwünscht, abends ist Musik erlaubt. Besichtigung jederzeit.", "Zweizimmerwohnung mit Balkon, unmöbliert; Miete 12.000 Lira, Kaution drei Monatsmieten. Hunde sind erlaubt, wenn sie ruhig sind; Besichtigung nur sonntags."], a: 0,
       why: { 1: "Die Wohnung ist **unmöbliert** (*eşyalı değil*), im dritten Stock **mit Aufzug**, die Miete beträgt 18.000 Lira, und Haustiere sind **nicht** erlaubt (*köpek ya da kedi olmaz*).", 2: "Das Hausgeld ist **extra** (1.200 Lira), Haustiere sind nicht erlaubt, ab 23 Uhr darf kein Lärm gemacht werden, und Besichtigung nur werktags nach 18 Uhr.", 3: "Miete (18.000 Lira) und Kaution (eine Monatsmiete) stimmen nicht; Hunde sind nicht erlaubt, und die Besichtigung ist werktags." },
       e: "Für Tom (mit Hund) ist wichtig: Haustiere sind nicht erlaubt. Dazu Zimmer, Kosten (Miete, Hausgeld, Kaution), Hausregeln und Besichtigungstermin." }
+  ]
+});
+
+K.addText('tr-a2-r05', {
+  level: 'A2', kind: 'read', scene: 'kargo', genre: 'nachricht',
+  title: "Kargo mesajı", sub: "Eine Paketnachricht",
+  body: [
+    "Sayın Mehmet Bey,",
+    "Paketiniz bugün sabah on bir buçukta adresinize geldi. Kapıyı çaldık ama kimse açmadı. Bu yüzden paketi şubemize götürdük. Şubemiz metro durağının yanında.",
+    "Paketinizi cumartesi gününe kadar şubeden alabilirsiniz. Şubemiz hafta içi sabah dokuzdan akşam altıya kadar açık. Cumartesi günü sadece öğleye kadar çalışıyoruz, pazar günü kapalıyız.",
+    "Şubeye gelirken kimliğinizi getirin. Paketi başka biri mi alacak? O zaman onun kimliği ve sizin yazılı izniniz gerekir. Sorunuz varsa bizi telefonla arayabilirsiniz.",
+    "Hızlı Kargo"
+  ],
+  gloss: { "Kargo": "Paketdienst", "çaldık": "wir haben geklingelt", "açmadı": "hat nicht geöffnet", "durağının": "der Haltestelle", "yanında": "neben", "arayabilirsiniz": "Sie können anrufen", "adresinize": "zu Ihrer Adresse", "şubemize": "zu unserer Filiale", "götürdük": "wir haben gebracht", "şubeden": "aus der Filiale", "alabilirsiniz": "Sie können abholen", "hafta içi": "werktags", "açık": "geöffnet", "öğleye": "Mittag", "kapalıyız": "wir haben geschlossen", "kimliğinizi": "Ihren Ausweis", "getirin": "bringen Sie mit", "yazılı": "schriftlich", "izniniz": "Ihre Erlaubnis", "gerekir": "ist nötig", "Sayın": "Sehr geehrter", "çalışıyoruz": "wir haben geöffnet / arbeiten" },
+  questions: [
+    { id: "tr-a2-r05.q1", t: "mc", q: "Warum hat Herr Mehmet sein Paket nicht bekommen?", o: ["Niemand hat die Tür geöffnet.", "Die Adresse war falsch.", "Das Paket war beschädigt.", "Die Filiale war geschlossen."], a: 0,
+      why: { 1: "Das Paket kam *adresinize*, also zur richtigen Adresse. Es hat nur niemand geöffnet.", 2: "Von einem Schaden steht nichts im Text.", 3: "Die Filiale ist der Ort, wo das Paket **jetzt** liegt; sie war nicht der Grund." },
+      e: "*Kimse açmadı* = Niemand hat geöffnet. *Bu yüzden* (deshalb) leitet die Folge ein: Das Paket kam in die Filiale." },
+    { id: "tr-a2-r05.q2", t: "gap", q: "Şube hafta içi sabah dokuzdan akşam altıya ___ açık. (bis)", a: ["kadar"],
+      wrong: { "sonra": "*sonra* heißt „nach“. Hier endet die Öffnungszeit **bis** achtzehn Uhr.", "önce": "*önce* heißt „vor“. Gemeint ist „bis“.", "için": "*için* heißt „für / um zu“, nicht „bis“.", "gibi": "*gibi* heißt „wie“." },
+      e: "**… -dAn … -(y)A kadar** = „von … bis …“: *dokuzdan altıya kadar*. Vor *kadar* steht der Dativ." },
+    { id: "tr-a2-r05.q3", t: "match", q: "Ordne die Zeitangabe aus der Nachricht zu:", p: [["pazar günü", "kapalıyız."], ["Cumartesi günü", "sadece öğleye kadar çalışıyoruz."], ["Hafta içi", "sabah dokuzdan akşam altıya kadar açık."], ["Şubeye gelirken", "kimliğinizi getirin."]],
+      e: "Sonntag: geschlossen. Samstag: nur bis mittags. Werktags: von neun bis achtzehn Uhr. *gelirken* = „beim Kommen“." },
+    { id: "tr-a2-r05.q4", t: "mc", q: "Bis wann kann Herr Mehmet das Paket spätestens abholen?", o: ["Bis Samstag", "Bis Sonntag", "Nur heute", "Bis Freitag um achtzehn Uhr"], a: 0,
+      why: { 1: "Am Sonntag ist die Filiale geschlossen (*pazar günü kapalıyız*).", 2: "*Bugün* ist der Tag, an dem das Paket nicht zugestellt werden konnte. Abholen kann er bis Samstag.", 3: "Freitag ist ein Werktag; aber die Frist reicht bis **Samstag** (*cumartesi gününe kadar*)." },
+      e: "*cumartesi gününe kadar şubeden alabilirsiniz* = „Sie können es bis Samstag in der Filiale abholen.“" },
+    { id: "tr-a2-r05.q5", t: "mc", q: "Sprachmittlung: Mehmets Frau Julia versteht kein Türkisch und fragt dich, was in der Nachricht vom Paketdienst steht. Was sagst du ihr?", o: ["Das Paket konnte heute Vormittag nicht zugestellt werden, weil niemand die Tür geöffnet hat, und liegt jetzt in der Filiale. Man kann es bis Samstag abholen: werktags von neun bis achtzehn Uhr, samstags nur bis mittags, sonntags ist geschlossen. Man muss den Ausweis mitbringen; wenn jemand anderes abholt, braucht er seinen Ausweis und eine schriftliche Erlaubnis.", "Das Paket wird morgen noch einmal zugestellt, man muss nur zu Hause sein. Die Filiale ist immer geöffnet, auch sonntags.", "Das Paket ist verloren gegangen. Man soll die Filiale anrufen und einen Ausweis mitschicken.", "Das Paket liegt in der Filiale und kann nur am Sonntag abgeholt werden, ganz ohne Ausweis."], a: 0,
+      why: { 1: "Von einer erneuten Zustellung steht nichts im Text, und sonntags ist die Filiale **geschlossen**.", 2: "Das Paket ist nicht verloren; es liegt in der Filiale. Ein Ausweis wird **mitgebracht**, nicht geschickt.", 3: "Sonntags ist geschlossen, und ohne Ausweis gibt es das Paket nicht." },
+      e: "Du gibst die Hauptpunkte weiter: warum das Paket in der Filiale liegt, die Frist (bis Samstag), die Öffnungszeiten, Ausweis und die Regel für eine andere abholende Person." }
+  ]
+});
+
+K.addText('tr-a2-r06', {
+  level: 'A2', kind: 'read', scene: 'ofis', genre: 'email',
+  title: "Toplantı için e-posta", sub: "Eine E-Mail zur Besprechung",
+  body: [
+    "Konu: Pazartesi toplantısı",
+    "Sayın Murat Bey,",
+    "Pazartesi günü saat onda toplantımız var. Toplantı ikinci kattaki büyük odada olacak. Toplantıda geçen ayın satış rakamlarını konuşacağız.",
+    "Sizden bir ricam var: Satış raporunu hazırlayıp bana bugün akşama kadar gönderebilir misiniz? Raporu okuyup toplantıdan önce notlarımı yazmak istiyorum. Yarın ofiste olmayacağım, çünkü doktora gidiyorum. Bu yüzden raporu bugün istiyorum.",
+    "Toplantıda hem rapor hem de sunum gerekiyor. Sunumu da hazırlayıp pazartesi sabahı bana getirebilir misiniz? Rapor kısa olsun, iki sayfa yeterli. Bir sorunuz olursa bugün öğleden sonra beni arayın. Şimdiden teşekkür ederim.",
+    "Saygılarımla,",
+    "Elif Yıldız"
+  ],
+  gloss: { "Konu": "Betreff", "Sayın": "Sehr geehrter", "rakamlarını": "die Zahlen", "konuşacağız": "wir werden besprechen", "yeterli": "genug", "teşekkür": "Dank", "toplantı": "Besprechung, Meeting", "kattaki": "im Stockwerk", "ricam": "meine Bitte", "Satış": "Verkauf", "raporunu": "den Bericht", "hazırlayıp": "vorbereitet und", "gönderebilir": "schicken können", "okuyup": "gelesen und", "notlarımı": "meine Notizen", "ofiste": "im Büro", "olmayacağım": "ich werde nicht da sein", "sunum": "Präsentation", "gerekiyor": "ist nötig", "getirebilir": "mitbringen können", "Saygılarımla": "Mit freundlichen Grüßen" },
+  questions: [
+    { id: "tr-a2-r06.q1", t: "mc", q: "Was möchte Elif Yıldız von Murat Bey?", o: ["Er soll den Verkaufsbericht vorbereiten und ihr noch heute schicken.", "Er soll das Meeting am Montag absagen.", "Er soll morgen ins Büro kommen und sie vertreten.", "Er soll einen Arzttermin für sie machen."], a: 0,
+      why: { 1: "Das Meeting findet statt (*toplantımız var*); er soll nur Unterlagen vorbereiten.", 2: "*Yarın ofiste olmayacağım* – das sagt **sie**. Von einer Vertretung steht nichts im Text.", 3: "Sie geht selbst zum Arzt (*doktora gidiyorum*); er soll nichts für sie vereinbaren." },
+      e: "*Satış raporunu hazırlayıp bana bugün akşama kadar gönderebilir misiniz?* = „Können Sie den Verkaufsbericht vorbereiten und mir bis heute Abend schicken?“" },
+    { id: "tr-a2-r06.q2", t: "gap", q: "Satış raporunu ___ bana gönderebilir misiniz? (hazırlamak – Können Sie den Verkaufsbericht vorbereiten und mir schicken?)", a: ["hazırlayıp"],
+      wrong: { "hazırlıp": "*hazırla-* endet auf einen Vokal (a) → es braucht ein **y**: hazırla-**y**-ıp.", "hazırlayip": "Der letzte Vokal ist **a** → **-ıp** (ı ohne Punkt).", "hazırladım": "*hazırladım* hat eigene Zeit und Person. Mit -(y)Ip trägt nur das **letzte** Verb (*gönderebilir misiniz*) die Endung.", "hazırlayacak": "Das ist Futur. -(y)Ip zeigt selbst keine Zeit an." },
+      e: "hazırla + **y** + **-ıp** = **hazırlayıp**. Zwei Handlungen, ein Subjekt: Zeit und Person trägt nur das letzte Verb." },
+    { id: "tr-a2-r06.q3", t: "match", q: "Ordne die Satzhälften aus der E-Mail zu:", p: [["Yarın ofiste olmayacağım,", "çünkü doktora gidiyorum."], ["Yarın ofiste olmayacağım. Bu yüzden", "raporu bugün istiyorum."], ["Toplantıda hem rapor", "hem de sunum gerekiyor."], ["Raporu hazırlayıp", "bana gönderebilir misiniz?"]],
+      e: "*çünkü* = Grund, *bu yüzden* = Folge, *hem … hem de* = sowohl … als auch, *-(y)Ip* = zwei Handlungen nacheinander." },
+    { id: "tr-a2-r06.q4", t: "mc", q: "Wann kann Murat Bey Frau Yıldız bei Fragen anrufen?", o: ["Heute Nachmittag", "Morgen früh", "Am Montag nach dem Meeting", "Am Wochenende"], a: 0,
+      why: { 1: "Morgen ist sie **nicht im Büro** (*yarın ofiste olmayacağım*).", 2: "Montag ist das Meeting; das Telefonat soll **vorher** stattfinden, am heutigen Nachmittag.", 3: "Vom Wochenende steht nichts im Text." },
+      e: "*Bir sorunuz olursa bugün öğleden sonra beni arayın.* = „Wenn Sie eine Frage haben, rufen Sie mich heute Nachmittag an.“" },
+    { id: "tr-a2-r06.q5", t: "mc", q: "Sprachmittlung: Murats Kollegin Anna versteht kein Türkisch und fragt dich, was Frau Yıldız ihm schreibt. Was sagst du ihr?", o: ["Am Montag um zehn Uhr ist ein Meeting im zweiten Stock. Murat soll den Verkaufsbericht heute bis zum Abend schicken, weil Frau Yıldız morgen wegen eines Arztbesuchs nicht im Büro ist. Außerdem soll er die Präsentation vorbereiten und am Montagmorgen mitbringen. Bei Fragen soll er heute Nachmittag anrufen.", "Das Meeting ist morgen um zehn Uhr im Erdgeschoss. Murat soll den Bericht am Montag schicken und die Präsentation absagen. Fragen soll er am Wochenende stellen.", "Frau Yıldız ist krank und sagt das Meeting am Montag ab. Murat soll den Bericht nicht mehr schicken und sie auch nicht anrufen.", "Das Meeting ist am Montag um zehn Uhr. Murat soll nur die Präsentation vorbereiten; der Bericht ist nicht nötig. Er soll sie am Freitag besuchen."], a: 0,
+      why: { 1: "Das Meeting ist am **Montag** im **zweiten Stock**; der Bericht wird **heute** erwartet, und die Präsentation wird nicht abgesagt.", 2: "Frau Yıldız sagt das Meeting **nicht** ab; sie geht nur morgen zum Arzt. Murat soll den Bericht **doch** schicken.", 3: "Sowohl Bericht **als auch** Präsentation werden gebraucht (*hem rapor hem de sunum*), und von einem Besuch am Freitag steht nichts im Text." },
+      e: "Du gibst die Hauptpunkte weiter: Termin und Ort, die Bitte um den Bericht und die Frist, den Grund, die Präsentation und das Angebot zum Telefonat." }
   ]
 });
 
