@@ -1,7 +1,7 @@
 /* Deutsch A1 – für Türkischsprechende (Erklärungen auf Türkisch)
  * Übungstypen:
  *  mc    { q, o:[Optionen], a:Index, why:{Index:'warum falsch'}, e:'Erklärung' }
- *  gap   { q:'… ___ …', a:[richtige Antworten], wrong:{'falsche Antwort':'warum'}, cs:true (Groß/klein beachten), e }
+ *  gap   { q:'… ___ …', a:[richtige Antworten], wrong:{'falsche Antwort':'warum'}, cs:false nur, wenn Groß-/Kleinschreibung und Satzzeichen egal sind (Standard: strikt), e }
  *  order { q, w:[Wörter], a:[richtige Sätze], e }
  *  match { q, p:[[links, rechts], …], e }
  *  speak { say:'Satz zum Nachsprechen (3–8 Wörter, keine Ziffern/Eigennamen)', alt:[optionale Schreibweisen], e:'Aussprache-Tipp' }
@@ -117,7 +117,7 @@ K.add('de-a1-02', {
     { id: "de-a1-02.7", t: "mc", q: "Akşam 19:00’da bir restorana giriyorsun. Ne dersin?", o: ["Guten Abend!", "Gute Nacht!", "Guten Morgen!", "Auf Wiedersehen!"], a: 0,
       why: { 1: "“Gute Nacht” selamlaşma değil, yatmadan önce vedalaşmadır. Türkçede “İyi geceler” bazen selam olarak da kullanılır – Almancada **asla**!", 2: "Sabah selamıdır.", 3: "Vedalaşmadır." },
       e: "Akşam selamlaşma: **Guten Abend!**" },
-    { id: "de-a1-02.8", t: "gap", cs: true, q: "Mein ___ ist Ayşe. (adım)", a: ["Name"],
+    { id: "de-a1-02.8", t: "gap", q: "Mein ___ ist Ayşe. (adım)", a: ["Name"],
       wrong: { "name": "Neredeyse! Almancada isimler **büyük harfle** yazılır: **Name**.", "Namen": "“Namen” çoğul/çekimli hâl. Burada: **Name**." },
       e: "**Mein Name ist …** = Benim adım … (Name büyük harfle, çünkü isim.)" },
     { id: "de-a1-02.9", t: "speak", say: "Guten Abend, wie geht es Ihnen?",

@@ -384,7 +384,7 @@ K.add('tr-a1-09', {
     { id: "tr-a1-09.1", t: "gap", q: "Kitap ___ . (masa – Das Buch ist auf dem Tisch.)", a: ["masada"],
       wrong: { "masaya": "-ya = wohin (Dativ). Gesucht ist **wo** → Lokativ: **masada**.", "masade": "Letzter Vokal **a** → -d**a**." },
       e: "Lokativ (wo?): masa + **da** = **masada**." },
-    { id: "tr-a1-09.2", t: "gap", q: "___ gidiyorum. (okul – Ich gehe zur Schule.)", a: ["okula"],
+    { id: "tr-a1-09.2", t: "gap", q: "___ gidiyorum. (okul – Ich gehe zur Schule.)", a: ["Okula"],
       wrong: { "okulda": "-da = wo (Lokativ). „zur Schule“ = wohin → Dativ: **okula**.", "okule": "Letzter Vokal **u** → kleine Harmonie: -**a**." },
       e: "Dativ (wohin?): **okula**." },
     { id: "tr-a1-09.3", t: "gap", q: "___ geliyorum. (Almanya – Ich komme aus Deutschland.)", a: ["Almanya'dan"],
