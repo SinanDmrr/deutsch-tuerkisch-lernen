@@ -543,3 +543,11 @@ footer.foot { max-width: 1040px; margin: 0 auto; padding: 0 16px 40px; color: va
 #transfer-card textarea.input, #transfer-link { width: 100%; box-sizing: border-box; font-family: inherit; resize: vertical; margin: 8px 0; }
 #transfer-card h3 { margin: 20px 0 4px; font-size: 1rem; }
 #transfer-card .btn-row { margin: 10px 0; }
+
+/* Hörtexte (ADR-12.3): Steuerung, Sprechername beim Abspielen, Text erst auf Wunsch */
+.ls-ctrl .btn-row { margin: 8px 0 4px; }
+.ls-now { min-height: 1.4em; margin: 2px 0; font-weight: 700; color: var(--primary); }
+.ls-count { min-height: 1.2em; margin: 2px 0 6px; }
+.ls-transcript[hidden] { display: none; }
+.listen-panel .ls-transcript { margin-top: 10px; max-height: 45vh; overflow-y: auto; }
+@media (max-width: 640px) { .listen-panel .ls-transcript { max-height: 40vh; } }

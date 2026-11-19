@@ -14,13 +14,28 @@ const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const scripts = [...html.matchAll(/<script\s+src="(js\/(?:curriculum|content\/[A-Za-z0-9_-]+)\.js)(?:\?[^"]*)?"/g)].map(m => m[1]);
 scripts.forEach(s => vm.runInContext(fs.readFileSync(path.join(root, s), 'utf8'), ctx, { filename: s }));
 
+vm.runInContext(fs.readFileSync(path.join(root, 'js', 'core', 'voices.js'), 'utf8'), ctx, { filename: 'js/core/voices.js' });   // rein (ADR-10/14)
+const VA = ctx.window.DT.voices;
+const cfg = JSON.parse(fs.readFileSync(path.join(__dirname, 'tts-voices.json'), 'utf8'));
 const K = ctx.window.KOPRU;
 const plain = s => String(s || '').replace(/\*\*|\*/g, '').trim();   // identisch zu plain() in app.js
 function addEx(ex, set) {
   if ((ex.t === 'gap' || ex.t === 'order' || ex.t === 'dictation') && ex.a && ex.a[0]) set.add(plain(ex.a[0]));
   if (ex.say) set.add(plain(ex.say));
 }
-const out = {};
+const out = {}, extraOut = {};
+// Stimm-Plätze je Sprache aus der Konfiguration (wie die App sie aus manifest.voices ableitet): female, male, dann Extra-Plätze
+function slotsFor(lang) { return VA.slotsOf(Object.assign({}, (cfg.voices || {})[lang], ((cfg.extra || {})[lang]) || {})); }
+// Zeilen mit Sprecher (Dialoge, Hörtexte): Texte der Plätze, die NICHT die Primärstimmen (female/male) sind, zusätzlich in Extra-Stimmen erzeugen
+function addLines(lines, lang, roleG) {
+  const slots = slotsFor(lang), res = VA.assign(lines, slots, ((cfg.fallback || {})[lang]) || [], roleG || '');
+  lines.forEach(l => {
+    const sl = (res.map[l.s] || {}).slot;
+    if (sl && sl !== 'female' && sl !== 'male' && ((cfg.extra || {})[lang] || {})[sl]) {
+      ((extraOut[lang] = extraOut[lang] || {})[sl] = extraOut[lang][sl] || new Set()).add(plain(l.t));
+    }
+  });
+}
 Object.values(K.courses).forEach(c => {
   const set = new Set();
   Object.values(c.levels).forEach(list => list.forEach(([id]) => {
@@ -39,15 +54,22 @@ Object.values(K.courses).forEach(c => {
   Object.entries(K.dialogs || {}).forEach(([id, d]) => {
     if (!id.startsWith(c.id + '-')) return;
     (d.lines || []).forEach(l => set.add(plain(l.t)));
+    addLines(d.lines || [], c.target);
     (d.questions || []).forEach(q => addEx(q, set));
   });
   Object.entries(K.texts || {}).forEach(([id, t]) => {   // Lesetexte: Absätze bzw. Anzeigen (ADR-12.2: body[*] / items[*].t)
     if (!id.startsWith(c.id + '-')) return;
     (t.body || []).forEach(p => set.add(plain(p)));
     (t.items || []).forEach(it => set.add(plain(it.t)));
+    (t.lines || []).forEach(l => set.add(plain(l.t)));   // Hörtext (ADR-12.3): Zeilen in der Stimme des Sprechers
+    addLines(t.lines || [], c.target);
     (t.questions || []).forEach(q => addEx(q, set));
   });
   set.delete('');
   out[c.target] = [...set].sort();
 });
+// Zusätzlich zu den Primärstimmen (die weiter ALLE Texte bekommen): extra.<lang>.<platz> = [Texte]
+const extra = {};
+Object.keys(extraOut).forEach(lang => { extra[lang] = {}; Object.keys(extraOut[lang]).forEach(sl => { extra[lang][sl] = [...extraOut[lang][sl]].sort(); }); });
+if (Object.keys(extra).length) out.extra = extra;
 process.stdout.write(JSON.stringify(out, null, 1));

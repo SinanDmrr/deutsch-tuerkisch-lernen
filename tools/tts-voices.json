@@ -18,6 +18,17 @@
       "female": []
     }
   },
+  "extra": {
+    "tr": {
+      "male2": [
+        "tr_TR-fettah-medium"
+      ]
+    }
+  },
+  "fallback": {
+    "tr": ["male2", "male"],
+    "de": ["female", "male"]
+  },
   "samples": {
     "de": [
       "de_DE-kerstin-low",
@@ -33,5 +44,6 @@
     "tr": "Merhaba! Her gün biraz Türkçe öğreniyorum. Şeker yok."
   },
   "_genders": "Per Tonhöhe geprüft: kerstin weiblich, thorsten männlich, fahrettin männlich, fettah ~195 Hz (Hörprobe). Piper hat (Stand Nov. 2026) keine weibliche türkische Stimme mit freier Lizenz.",
+  "_extra": "ADR-14: zusätzliche Stimm-Plätze (Schlüssel beginnt mit female/male). Sprecher eines Dialogs/Hörtexts bekommen per DT.voices.assign (js/core/voices.js) einen Platz; Texte dieses Platzes stehen in texts.json unter extra.<lang>.<platz>. fallback = Reihenfolge für Sprecher, deren Geschlecht keine Stimme hat (TR: Frauen).",
   "_removed": "18.11.2026 entfernt: tr_TR-dfki-medium (Datensatz CC BY-NC-SA 4.0 = nicht kommerziell), de_DE-ramona-low/eva_k-x_low/karlsson-low (M-AILABS-Lizenz, nicht benötigt)."
 }

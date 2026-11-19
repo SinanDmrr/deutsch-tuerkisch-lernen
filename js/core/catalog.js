@@ -20,7 +20,7 @@
     });
     Object.keys(K.texts || {}).forEach(function (id) {
       var x = K.texts[id];
-      K.content[id] = { kind: 'read', text: x, exercises: x.questions || [] };
+      K.content[id] = { kind: x.kind === 'listen' ? 'listen' : 'read', text: x, exercises: x.questions || [] };
     });
     var EXI = {};
     Object.keys(K.content).forEach(function (tid) {
@@ -45,14 +45,18 @@
           var d = K.dialogs[id];
           list.push({ id: id, level: lv, num: 'D' + (i + 1), title: cid === 'de' ? d.sub : d.title, sub: cid === 'de' ? d.title : d.sub, kind: 'dialog', data: K.content[id], avail: true });
         });
+      var nR = 0, nL = 0;
       Object.keys(K.texts || {}).filter(function (id) { return id.indexOf(cid + '-') === 0 && K.texts[id].level === lv; }).sort()
-        .forEach(function (id, i) {
-          var x = K.texts[id];
-          list.push({ id: id, level: lv, num: 'T' + (i + 1), title: cid === 'de' ? x.sub : x.title, sub: cid === 'de' ? x.title : x.sub, kind: 'text', data: K.content[id], avail: true });
+        .forEach(function (id) {
+          var x = K.texts[id], lis = x.kind === 'listen';
+          list.push({ id: id, level: lv, num: lis ? 'H' + (++nL) : 'T' + (++nR), title: cid === 'de' ? x.sub : x.title, sub: cid === 'de' ? x.title : x.sub, kind: 'text', data: K.content[id], avail: true });
         });
     });
     return list;
   }
 
-  DT.catalog = { LEVELS: LEVELS, register: register, topicsOf: topicsOf };
+  // „Schwer“ (ADR-12.1): Fragen zu Lese-/Hörtexten gehören nicht in den 5-Minuten-Tagesmix
+  function isHeavy(K, topicId) { var c = K.content && K.content[topicId]; return !!c && (c.kind === 'read' || c.kind === 'listen'); }
+
+  DT.catalog = { isHeavy: isHeavy, LEVELS: LEVELS, register: register, topicsOf: topicsOf };
 })(window.DT = window.DT || {});

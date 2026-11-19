@@ -148,6 +148,33 @@ def main():
             manifest['files'][key] = files
             print(f'{lang}/{gender}: {key} – {len(files)} Texte, {made} neu erzeugt', flush=True)
 
+    # Extra-Stimm-Plätze (ADR-14): rein additiv, nur die Texte, die diesem Platz zugeordnet wurden (texts.json: extra.<lang>.<platz>).
+    # Die Primärstimmen oben behalten alle Texte. Fehlt die Stimme (Lizenz/Download) oder wird sie schon als Primärstimme genutzt, entfällt der Platz.
+    for lang, slots in cfg.get('extra', {}).items():
+        for slot, candidates in slots.items():
+            key = next((k for k in candidates if get(k)), None)
+            if not key or key in manifest['voices'].get(lang, {}).values():
+                continue
+            manifest['voices'].setdefault(lang, {})[slot] = key
+            voice, files, made = get(key), {}, 0
+            vdir = AUDIO / key
+            used_dirs.add(vdir.name)
+            for text in (texts.get('extra', {}).get(lang, {}).get(slot, [])):
+                fid = file_id(text)
+                target = vdir / f'{fid}.mp3'
+                if not target.exists():
+                    synth_mp3(voice, text, target)
+                    made += 1
+                files[text] = fid
+            keep = {f'{fid}.mp3' for fid in files.values()}
+            for f in vdir.glob('*.mp3'):
+                if f.name not in keep:
+                    f.unlink()
+            manifest['files'][key] = files
+            print(f'{lang}/{slot}: {key} – {len(files)} Texte, {made} neu erzeugt', flush=True)
+    if cfg.get('fallback'):
+        manifest['fallback'] = cfg['fallback']
+
     # Hörproben
     for lang, keys in cfg.get('samples', {}).items():
         for key in keys:

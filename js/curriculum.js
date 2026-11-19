@@ -21,12 +21,17 @@ window.KOPRU = {
     ['free', 'Freizeit, Wetter & Natur', 'Boş zaman, hava ve doğa'],
     ['verbs', 'Wichtige Verben', 'Önemli fiiller'],
     ['adj', 'Eigenschaften', 'Sıfatlar'],
-    ['small', 'Kleine Wörter', 'Küçük kelimeler']
+    ['small', 'Kleine Wörter', 'Küçük kelimeler'],
+    // ab A2 (nur anhängen, nie umsortieren oder umbenennen der IDs)
+    ['travel', 'Reisen & Urlaub', 'Seyahat ve tatil'],
+    ['media', 'Medien & Kommunikation', 'Medya ve iletişim'],
+    ['feel', 'Gefühle & Meinungen', 'Duygular ve görüşler'],
+    ['service', 'Dienstleistungen & Behörden', 'Hizmetler ve resmî işler']
   ],
   dialogs: {},   // Alltagsdialoge, z. B. dialogs['de-a1-d01'] = { level, title, lines, questions }
   addDialog: function (id, d) { d.id = id; this.dialogs[id] = d; },
   texts: {},     // Lesetexte (ADR-12.2), z. B. texts['de-a2-r01'] = { level, kind:'read', genre, title, sub, body|items, gloss?, questions }
-  addText: function (id, d) { d.id = id; if (!d.kind) d.kind = 'read'; this.texts[id] = d; },
+  addText: function (id, d) { d.id = id; if (!d.kind) d.kind = /-h\d+$/.test(id) ? 'listen' : 'read'; this.texts[id] = d; },
 
   levelNames: {
     A1: { de: 'Anfänger', tr: 'Başlangıç' },
