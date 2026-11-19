@@ -9,7 +9,7 @@
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var DT = window.DT;
   var SCHEMA = DT.storage.SCHEMA;    // Version des Speicherformats (Migrationen nur in js/core/storage.js)
-  var APP_VERSION = '2026-11-19.2';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-19.3';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -92,6 +92,11 @@
     orderHint: ['Tippe die Wörter in der richtigen Reihenfolge an. Antippen im Feld entfernt ein Wort wieder.', 'Kelimelere doğru sırayla dokun. Kutudaki kelimeye dokunursan geri alınır.'],
     orderEmpty: ['Hier entsteht dein Satz …', 'Cümlen burada oluşacak …'],
     matchHint: ['Wähle zu jedem Begriff die passende Übersetzung.', 'Her kelime için doğru karşılığı seç.'],
+    clozeHint: ['Fülle jede Lücke aus. Mit Enter springst du zur nächsten Lücke.', 'Her boşluğu doldur. Enter tuşuyla bir sonraki boşluğa geçersin.'],
+    clozeGapLabel: ['Lücke {n} von {m}', '{n}. boşluk ({m} boşluktan)'],
+    clozeResult: ['Lücke {n}', '{n}. boşluk'],
+    sortHint: ['Ordne jedes Wort einer Gruppe zu. Tippe dazu auf die passende Gruppe.', 'Her kelimeyi bir gruba yerleştir. Doğru gruba dokunman yeterli.'],
+    sortNot: ['nicht {c}', '{c} değil'],
     choose: ['– wählen –', '– seç –'],
     question: ['Aufgabe', 'Alıştırma'],
     of: ['von', '/'],
@@ -323,6 +328,10 @@
     toQuestions: ['Zu den Fragen →', 'Sorulara geç →'],
     dialogsTitle: ['Alltagsdialoge', 'Günlük diyaloglar'],
     dialogTab: ['Dialog', 'Diyalog'],
+    roleQ: ['Du spielst: {r}. Was sagst du?', 'Rolün: {r}. Ne dersin?'],
+    roleCtx: ['Bisheriges Gespräch', 'Şimdiye kadarki konuşma'],
+    roleTip: ['Rollenspiel: In den Aufgaben übernimmst du die Rolle „{r}“ und wählst jeweils die passende Antwort – auch auf Höflichkeit und Ton kommt es an.', 'Rol oyunu: Alıştırmalarda „{r}“ rolünü üstlenir, her seferinde uygun cevabı seçersin; nezaket ve üslup da önemlidir.'],
+    roleYouSay: ['So passt es', 'Doğrusu şu'],
     textsTitle: ['Lesetexte', 'Okuma metinleri'],
     textTab: ['Text', 'Metin'],
     listenTab: ['Hören', 'Dinleme'],
@@ -592,9 +601,9 @@
     var vk = piperVoices(lang.slice(0, 2))[slot], fid = vk && AUDIO.files && AUDIO.files[vk] && AUDIO.files[vk][plain(text).trim()];
     return fid ? 'audio/' + vk + '/' + fid + '.mp3' : null;
   }
-  function voiceAssign(lines) {
+  function voiceAssign(lines, roleG) {
     var lang2 = course().tts.slice(0, 2);
-    return DT.voices.assign(lines, DT.voices.slotsOf(piperVoices(lang2)), (AUDIO && AUDIO.fallback && AUDIO.fallback[lang2]) || [], '');
+    return DT.voices.assign(lines, DT.voices.slotsOf(piperVoices(lang2)), (AUDIO && AUDIO.fallback && AUDIO.fallback[lang2]) || [], roleG || '');
   }
   function deviceHas(lang, g) { return !!(g && canSpeak && sortedVoices(lang).some(function (v) { return voiceGender(v) === g; })); }
   // Eine Zeile in der Stimme ihres Sprechers; Ersatzstimme (fb) nur, wenn das Gerät keine passende Stimme hat; fehlt die Datei → bisherige Geschlechter-Logik
@@ -602,7 +611,7 @@
     o = o || {}; var m = (a && a.map[l.s]) || {}, lang = course().tts;
     var url = m.slot ? slotUrl(l.t, lang, m.slot) : null;
     if (url && m.fb && deviceHas(lang, l.g)) url = null;
-    speak(l.t, lang, { gender: l.g || '', rate: o.rate, chain: o.chain, onEnd: o.onEnd, url: url });
+    speak(l.t, lang, { gender: l.g || '', rate: o.rate, chain: o.chain, onEnd: o.onEnd, url: url, auto: o.auto });
   }
   function speak(text, lang, o) {
     o = o || {};
@@ -1149,29 +1158,30 @@
 
   /* ================= Thema: Erklärung ================= */
   function renderDialog(tp) {
-    var d = tp.data.dialog, tgt = course().target, first = d.lines.length ? d.lines[0].s : '';
-    var lines = d.lines.map(function (l, i) {
-      return '<div class="dl-line ' + (l.s === first ? 'dl-a' : 'dl-b') + ' g-' + (l.g || 'x') + '" data-line="' + i + '">' +
-        '<button class="speak" data-act="play-say" data-say="' + esc(plain(l.t)) + '" data-g="' + (l.g || '') + '" aria-label="' + esc(t('listen')) + '">🔊</button>' +
+    var d = tp.data.dialog, tgt = course().target, dls = DT.catalog.dialogLines(d), role = DT.catalog.hasRole(d), first = dls.length ? dls[0].s : '';
+    var lines = dls.map(function (l, i) {
+      return '<div class="dl-line ' + (l.me || l.s !== first ? 'dl-b' : 'dl-a') + (l.me ? ' dl-me' : '') + ' g-' + (l.g || 'x') + '" data-line="' + i + '">' +
+        (role ? '<button class="speak" data-act="dl-line" data-line="' + i + '" aria-label="' + esc(t('listen')) + '">🔊</button>'   // Rollenspiel: Stimme pro Sprecher
+          : '<button class="speak" data-act="play-say" data-say="' + esc(plain(l.t)) + '" data-g="' + (l.g || '') + '" aria-label="' + esc(t('listen')) + '">🔊</button>') +
         '<div class="dl-body"><span class="dl-who" lang="' + tgt + '">' + esc(l.s) + '</span><div class="tgt" lang="' + tgt + '">' + md(l.t) + '</div><div class="nat">' + md(l.n) + '</div></div></div>';
     }).join('');
     return '<div class="card dialog' + (dialogShowTr ? ' show-tr' : '') + '">' +
       '<div class="btn-row" style="margin-bottom:14px"><button class="btn primary" data-act="dl-play">▶ ' + esc(t('playDialog')) + '</button>' +
       '<button class="btn" data-act="dl-play" data-slow="1">🐢 ' + esc(t('slow')) + '</button>' +
       '<button class="btn" data-act="dl-tr" aria-pressed="' + dialogShowTr + '">🌐 ' + esc(t('translation')) + '</button></div>' +
-      '<p class="muted small">' + esc(t('dialogTip')) + '</p>' +
+      '<p class="muted small">' + esc(t('dialogTip')) + '</p>' + (role ? '<p class="muted small">🎭 ' + esc(t('roleTip', { r: d.role })) + '</p>' : '') +
       '<div class="dl-lines">' + lines + '</div>' +
       '<div class="btn-row" style="margin-top:18px"><a class="btn primary" href="#/topic/' + tp.id + '/exercises">' + esc(t('toQuestions')) + '</a></div></div>';
   }
   var dialogShowTr = false;
   function playDialog(tp, slow) {
-    var d = tp.data.dialog, my = ++seqToken, i = 0, va = voiceAssign(d.lines);
+    var d = tp.data.dialog, my = ++seqToken, i = 0, dls = DT.catalog.dialogLines(d), va = voiceAssign(dls, d.roleG);
     function step() {
       if (my !== seqToken) return;
       document.querySelectorAll('.dl-line.playing').forEach(function (x) { x.classList.remove('playing'); });
-      if (i >= d.lines.length) return;
+      if (i >= dls.length) return;
       var el = document.querySelector('.dl-line[data-line="' + i + '"]'); if (el) el.classList.add('playing');
-      var l = d.lines[i++];
+      var l = dls[i++];
       speakLine(l, va, { rate: slow ? 0.72 : 1, chain: true, onEnd: function () { setTimeout(step, 350); } });
     }
     step();
@@ -1308,6 +1318,8 @@
     var c = { sel: null, input: '', picked: [], choice: [] };
     if ((ex.t === 'mc' || ex.t === 'listen') && ex.o) c.order = shuffleNotIdentity(ex.o.map(function (_, i) { return i; }));
     if (ex.t === 'order') c.pool = shuffleNotIdentity(ex.w.map(function (_, i) { return i; }));
+    if (ex.t === 'cloze') c.gaps = {};
+    if (ex.t === 'sort') { c.assign = ex.items.map(function () { return null; }); c.order = shuffleNotIdentity(ex.items.map(function (_, i) { return i; })); }
     if (ex.t === 'match') { c.right = shuffle(ex.p.map(function (x) { return x[1]; })); c.choice = ex.p.map(function () { return ''; }); }
     return c;
   }
@@ -1339,6 +1351,42 @@
       (w.note ? '<div class="callout tip">' + md(w.note) + '</div>' : '') +
       '<div class="qactions"><button class="btn" data-act="word-known">' + esc(t('knowIt')) + '</button><button class="btn primary" data-act="card-next" id="next-btn">' + esc(t('next')) + '</button></div></div>';
   }
+  function clozeHasInput(ex) { return DT.check.clozeKeys(ex).some(function (n) { return !ex.gaps[n].o; }); }
+  // Lückentext (ADR-12.4): Text mit Eingabefeldern bzw. Auswahllisten (natives <select>) an den Lücken; nach dem Prüfen ✓/✗ je Lücke
+  function renderCloze(ex, c, res, target) {
+    var keys = DT.check.clozeKeys(ex), parts = ex.text.split(/\{\d+\}/), out = md(parts[0]);
+    keys.forEach(function (n, k) {
+      var g = ex.gaps[n], val = c.gaps[n] == null ? '' : c.gaps[n], r = res ? res.gaps[k] : null;
+      var cls = r ? (r.ok ? ' right' : ' wrong') : '';
+      var lab = esc(t('clozeGapLabel', { n: n, m: keys.length }));
+      if (g.o) {
+        out += '<select class="cloze-select' + cls + '" id="cloze-' + n + '" data-act="cloze" data-i="' + n + '" aria-label="' + lab + '" lang="' + target + '"' + (res ? ' disabled' : '') + '><option value="">' + esc(t('choose')) + '</option>' +
+          g.o.map(function (o) { return '<option value="' + esc(o) + '"' + (val === o ? ' selected' : '') + '>' + esc(o) + '</option>'; }).join('') + '</select>';
+      } else {
+        out += '<input class="gap-input cloze-input' + cls + '" id="cloze-' + n + '" data-gap="' + n + '" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" lang="' + target + '" aria-label="' + lab + '" value="' + esc(val) + '"' + (res ? ' disabled' : '') +
+          ' size="' + Math.max(6, (g.a[0] || '').length + 2) + '">';
+      }
+      if (r) out += '<span class="cloze-mark" aria-hidden="true" style="color:var(--' + (r.ok ? 'ok' : 'bad') + ')">' + (r.ok ? '✓' : '✗') + '</span><span class="sr-only"> – ' + esc(t(r.ok ? 'srRight' : 'srNotYet')) + '</span>';
+      out += md(parts[k + 1] || '');
+    });
+    return '<div class="gapline cloze">' + out + '</div>';
+  }
+  /* Rollenspiel (ADR-12.6): Kontextzeilen (≤ 3) vor der Wahl; die Lernenden-Rolle bleibt bis zur Auswahl stumm */
+  function roleDialog(item) { var dd = item && item.topic && item.topic.data; return dd && dd.dialog; }
+  function roleName(item) { var d = roleDialog(item); return d && d.role || ''; }
+  function roleContext(ex) {
+    var tgt = course().target;
+    return '<div class="role-ctx dialog" role="group" aria-label="' + esc(t('roleCtx')) + '"><div class="dl-lines">' + ex.ctx.map(function (l, i) {
+      return '<div class="dl-line ' + (l.me ? 'dl-b dl-me' : 'dl-a') + '"><button class="speak" data-act="role-line" data-k="' + i + '" aria-label="' + esc(t('listen')) + '">🔊</button>' +
+        '<div class="dl-body"><span class="dl-who" lang="' + tgt + '">' + esc(l.s) + '</span><div class="tgt" lang="' + tgt + '">' + md(l.t) + '</div></div></div>';
+    }).join('') + '</div></div>';
+  }
+  // Zeile des Rollenspiels in der Stimme ihres Sprechers: k = Index im Kontext, 'ans' = die richtige Antwort der eigenen Rolle
+  function playRoleLine(item, k, auto) {
+    var d = roleDialog(item); if (!d || !item.ex.role) return;
+    var l = k === 'ans' ? { s: d.role || '', g: d.roleG || '', t: item.ex.ans } : item.ex.ctx[+k]; if (!l) return;
+    speakLine(l, voiceAssign(DT.catalog.dialogLines(d), d.roleG), { auto: auto });
+  }
   function renderPlayer() {
     if (player.done || player.idx >= player.queue.length) return renderSummary();
     var item = curEx();
@@ -1352,9 +1400,9 @@
     var body = '', qtext = '', hint = '';
     var target = course().target;
     if (ex.t === 'mc' || ex.t === 'listen') {
-      qtext = md(ex.q || t('listenQ'));
+      qtext = ex.role ? esc(t('roleQ', { r: roleName(item) })) : md(ex.q || t('listenQ'));
       var order = c.order || ex.o.map(function (_, i) { return i; });
-      body = (ex.t === 'listen' ? audioBar(ex.say) : '') + '<div class="options" role="radiogroup">' + order.map(function (i, pos) {
+      body = (ex.t === 'listen' ? audioBar(ex.say) : '') + (ex.role ? roleContext(ex) : '') + '<div class="options" role="radiogroup">' + order.map(function (i, pos) {
         var o = ex.o[i];
         var cls = '';
         if (checked) { if (i === ex.a) cls = ' right'; else if (i === c.sel) cls = ' wrong'; }
@@ -1406,6 +1454,22 @@
           var used = c.picked.indexOf(wi) >= 0;
           return '<button class="chip' + (used ? ' used' : '') + '" data-act="pick" data-w="' + wi + '"' + (checked || used ? ' disabled' : '') + '>' + esc(ex.w[wi]) + '</button>';
         }).join('') + '</div>';
+    } else if (ex.t === 'cloze') {
+      qtext = md(ex.q || '');
+      hint = t('clozeHint') + (ex.cs !== false && clozeHasInput(ex) ? ' ' + t('strictNote') : '');
+      body = renderCloze(ex, c, checked ? res : null, target);
+      if (!checked && clozeHasInput(ex)) body += charBar();
+    } else if (ex.t === 'sort') {
+      qtext = md(ex.q || '');
+      hint = t('sortHint');
+      body = '<div class="sort-list">' + (c.order || []).map(function (i) {
+        var it = ex.items[i], sel = c.assign[i], r = checked ? res.items[i] : null;
+        return '<div class="sort-row' + (r ? (r.ok ? ' right' : ' wrong') : '') + '"><span class="sort-item" lang="' + target + '">' + md(it[0]) +
+          (r ? ' <span aria-hidden="true" style="color:var(--' + (r.ok ? 'ok' : 'bad') + ')">' + (r.ok ? '✓' : '✗') + '</span><span class="sr-only"> – ' + esc(t(r.ok ? 'srRight' : 'srNotYet')) + '</span>' : '') + '</span>' +
+          '<div class="sort-cats" role="radiogroup" aria-label="' + esc(plain(it[0])) + '">' + ex.cats.map(function (cat, ci) {
+            return '<button type="button" class="sort-cat' + (sel === ci ? ' sel' : '') + '" data-act="sort" data-i="' + i + '" data-c="' + ci + '" role="radio" aria-checked="' + (sel === ci) + '"' + (checked ? ' disabled' : '') + '>' + esc(cat) + '</button>';
+          }).join('') + '</div></div>';
+      }).join('') + '</div>';
     } else if (ex.t === 'match') {
       qtext = md(ex.q);
       hint = t('matchHint');
@@ -1441,11 +1505,22 @@
     if (ex.t === 'speak') return !!c.heardAlts || !!c.selfOk;
     if (ex.t === 'order') return c.picked.length > 0;
     if (ex.t === 'match') return c.choice.every(function (x) { return x; });
+    if (ex.t === 'cloze') return DT.check.clozeKeys(ex).every(function (n) { return String(c.gaps[n] == null ? '' : c.gaps[n]).trim().length > 0; });
+    if (ex.t === 'sort') return c.assign.every(function (x) { return x !== null; });
     return false;
   }
   function evaluate(ex, c) { return DT.check.evaluate(ex, c, course().target, t); }
+  function roleFeedback(ex, res, e) {
+    var tgt = course().target, ans = '<div class="fb-row"><span class="k">' + esc(t(res.ok ? 'roleYouSay' : 'rightAnswer')) + ':</span><b lang="' + tgt + '">' + md(ex.ans) + '</b> ' +
+      '<button class="speak" data-act="role-line" data-k="ans" aria-label="' + esc(t('listen')) + '">🔊</button></div>' + (ex.ansN ? '<p class="nat muted small" style="margin:0 0 6px">' + md(ex.ansN) + '</p>' : '');
+    if (res.ok) return '<div class="fb ok"><div class="fb-title">' + esc(t('great')) + '</div>' + ans + (ex.e ? '<p style="margin:0">' + md(ex.e) + '</p>' : '') + '</div>';
+    return '<div class="fb bad"><div class="fb-title">' + esc(t('notQuite')) + '</div>' +
+      '<div class="fb-row"><span class="k">' + esc(t('yourAnswer')) + ':</span><s lang="' + tgt + '">' + md(res.given || '–') + '</s></div>' + ans +
+      '<div class="fb-sec"><h4>' + esc(t('whyWrong')) + '</h4><p>' + md(res.hint || t('genericWrong')) + '</p></div>' + e + '</div>';
+  }
   function feedbackHtml(ex, res) {
     var e = ex.e ? '<div class="fb-sec"><h4>' + esc(t('whyRight')) + '</h4><p>' + md(ex.e) + '</p></div>' : '';
+    if (ex.role) return roleFeedback(ex, res, e);
     if (res.ok) {
       return '<div class="fb ok"><div class="fb-title">' + esc(t('great')) + '</div>' + (ex.say ? '<p style="margin:0 0 6px"><b lang="' + course().target + '">' + md(ex.say) + '</b> ' + speakBtn(ex.say) + '</p>' : '') + (ex.e ? '<p style="margin:0">' + md(ex.e) + '</p>' : '') + '</div>';
     }
@@ -1456,6 +1531,16 @@
         return '<li>' + (mine === x[1] ? '✅' : '❌') + ' <b>' + md(x[0]) + '</b> = ' + md(x[1]) + (mine !== x[1] ? ' <span class="muted">(' + esc(t('yourAnswer')) + ': <s>' + esc(mine || '–') + '</s>)</span>' : '') + '</li>';
       }).join('') + '</ul>';
       return '<div class="fb bad"><div class="fb-title">' + esc(t('notQuite')) + '</div>' + correctHtml + e + '</div>';
+    }
+    if (res.cloze || res.sort) {
+      var rows = res.cloze ? res.gaps.map(function (g) {
+        return '<li>' + (g.ok ? '✅' : '❌') + ' <b>' + esc(t('clozeResult', { n: g.n })) + ':</b> ' +
+          (g.ok ? '<b>' + md(g.correct) + '</b>' : '<s>' + esc(g.given || '–') + '</s> → <b>' + md(g.correct) + '</b>' + (g.hint ? ' <span class="muted">– ' + md(g.hint) + '</span>' : '')) + '</li>';
+      }) : res.items.map(function (x) {
+        return '<li>' + (x.ok ? '✅' : '❌') + ' <b>' + md(x.text) + '</b> → <b>' + esc(x.correct) + '</b>' +
+          (x.ok ? '' : ' <span class="muted">(' + esc(t('sortNot', { c: x.given || '–' })) + ')</span>') + (x.hint ? ' <span class="muted">– ' + md(x.hint) + '</span>' : '') + '</li>';
+      });
+      return '<div class="fb bad"><div class="fb-title">' + esc(t('notQuite')) + '</div><ul class="pairs">' + rows.join('') + '</ul>' + e + '</div>';
     }
     var why = res.hint || t('genericWrong');
     if (ex.t === 'speak') {
@@ -1657,9 +1742,10 @@
             '<a class="btn small" href="#/topic/' + tid + '/review">' + esc(t('practiceTopic')) + ' (' + groups[tid].length + ')</a></div>' +
             groups[tid].map(function (id) {
               var it = exById(id), r = p[id]; if (!it) return ''; var ex = it.ex;
-              var q = ex.t === 'match' ? ex.q + ' ' + ex.p.map(function (x) { return x[0]; }).join(', ')
+              var q = ex.role ? (ex.ctx.length ? '🎭 ' + ex.ctx[ex.ctx.length - 1].s + ': „' + plain(ex.ctx[ex.ctx.length - 1].t) + '“' : t('roleQ', { r: roleName({ topic: tp }) })) : ex.t === 'cloze' ? (ex.q || '') + ' ' + ex.text.replace(/\{\d+\}/g, '[…]') : ex.t === 'sort' ? (ex.q || '') + ' ' + ex.items.map(function (x) { return x[0]; }).join(', ')
+                : ex.t === 'match' ? ex.q + ' ' + ex.p.map(function (x) { return x[0]; }).join(', ')
                 : (ex.t === 'dictation' ? (ex.q || t('dictationQ')) + ' „' + ex.say + '“' : (ex.t === 'listen' ? (ex.q || t('listenQ')) + ' 🔊 „' + ex.say + '“' : ex.q));
-              var sol = (ex.t === 'mc' || ex.t === 'listen') ? ex.o[ex.a] : (ex.t === 'match' ? ex.p.map(function (x) { return x[0] + ' = ' + x[1]; }).join(' · ') : ex.a[0]);
+              var sol = (ex.t === 'mc' || ex.t === 'listen') ? ex.o[ex.a] : (ex.t === 'cloze' || ex.t === 'sort') ? evaluate(ex, { gaps: {}, assign: [] }).correct : (ex.t === 'match' ? ex.p.map(function (x) { return x[0] + ' = ' + x[1]; }).join(' · ') : ex.a[0]);
               return '<div class="gap-item"><span class="gi-q">' + md(q) + '</span><span class="badge bad">' + (r.w || 1) + esc(t('times')) + '</span>' +
                 '<div class="gi-meta"><span>' + esc(t('lastWrong')) + ': <s>' + md(r.a || '–') + '</s></span><span>' + esc(t('solution')) + ': <b>' + md(sol) + '</b></span></div></div>';
             }).join('') + '</div>';
@@ -2116,7 +2202,7 @@
     var y = window.scrollY, a = document.activeElement, sel = null;
     if (a && a.getAttribute && a.getAttribute('data-act')) {
       sel = '[data-act="' + a.getAttribute('data-act') + '"]';
-      ['data-i', 'data-w', 'data-k', 'data-v'].forEach(function (k) { if (a.hasAttribute(k)) sel += '[' + k + '="' + a.getAttribute(k) + '"]'; });
+      ['data-i', 'data-c', 'data-w', 'data-k', 'data-v'].forEach(function (k) { if (a.hasAttribute(k)) sel += '[' + k + '="' + a.getAttribute(k) + '"]'; });
     } else if (a && a.id) sel = '#' + a.id;
     render(); window.scrollTo(0, y);
     if (sel) {
@@ -2131,10 +2217,16 @@
       if (it && it.ex.say && (it.ex.t === 'listen' || it.ex.t === 'dictation') && player.autoKey !== it.id + '@' + player.idx) {
         player.autoKey = it.id + '@' + player.idx; setTimeout(function () { speak(it.ex.say, course().tts, { auto: true }); }, 250);
       }
+      if (it && it.ex && it.ex.role && it.ex.ctx.length && player.autoKey !== it.id + '@' + player.idx) {   // letzte Kontextzeile spielt einmal automatisch
+        player.autoKey = it.id + '@' + player.idx;
+        if (!it.ex.ctx[it.ex.ctx.length - 1].me) setTimeout(function () { if (player && curEx() === it || player && curEx() && curEx().id === it.id) playRoleLine(curEx(), it.ex.ctx.length - 1, true); }, 250);
+      }
       if (it && it.kind === 'card' && player.autoKey !== it.id + '@' + player.idx) {
         player.autoKey = it.id + '@' + player.idx; setTimeout(function () { speak(it.word.t, course().tts, { auto: true }); }, 250);
       }
     }
+    var ci0 = document.querySelector('.cloze input.cloze-input:not(:disabled)');
+    if (ci0) { var cf = [].slice.call(document.querySelectorAll('.cloze input.cloze-input:not(:disabled)')).filter(function (x) { return !x.value; })[0] || ci0; cf.focus({ preventScroll: true }); }
     var gi = document.getElementById('gap-input');
     if (gi && !gi.disabled) { gi.focus({ preventScroll: true }); var v = gi.value; gi.value = ''; gi.value = v; }
     var nb = document.getElementById('next-btn');
@@ -2158,6 +2250,7 @@
   var kbTimer = null;
   document.addEventListener('focusin', function (ev) {
     if (!isTypingField(ev.target)) return;
+    if (ev.target.hasAttribute('data-gap') && player && player.cur) player.cur.lastGap = ev.target.getAttribute('data-gap');   // Sonderzeichen-Leiste schreibt in die zuletzt benutzte Lücke
     clearTimeout(kbTimer); document.body.classList.add('typing');
     setTimeout(keepFieldVisible, 320);   // nach dem Aufklappen der Tastatur
   });
@@ -2189,13 +2282,15 @@
       case 'set-course': switchCourse(el.getAttribute('data-v')); break;
       case 'mc': if (player && !player.checked) { player.cur.sel = +el.getAttribute('data-i'); rerenderPlayerOnly(); } break;
       case 'char': {
-        var inp = document.getElementById('gap-input'); if (!inp) break;
-        var ch = el.getAttribute('data-ch'), s0 = inp.selectionStart || inp.value.length, s1 = inp.selectionEnd || inp.value.length;
-        inp.value = inp.value.slice(0, s0) + ch + inp.value.slice(s1); player.cur.input = inp.value;
+        var inp = document.getElementById('gap-input') || (player && player.cur && player.cur.lastGap && document.getElementById('cloze-' + player.cur.lastGap)); if (!inp || inp.disabled || inp.tagName !== 'INPUT') break;
+        var ch = el.getAttribute('data-ch'), s0 = inp.selectionStart == null ? inp.value.length : inp.selectionStart, s1 = inp.selectionEnd == null ? inp.value.length : inp.selectionEnd;
+        inp.value = inp.value.slice(0, s0) + ch + inp.value.slice(s1);
+        if (inp.id === 'gap-input') player.cur.input = inp.value; else player.cur.gaps[inp.getAttribute('data-gap')] = inp.value;
         inp.focus(); inp.setSelectionRange(s0 + ch.length, s0 + ch.length);
-        var cb = document.getElementById('check-btn'); if (cb) cb.disabled = !inp.value.trim();
+        var cb = document.getElementById('check-btn'); if (cb) cb.disabled = !canCheck(curEx().ex, player.cur);
         break;
       }
+      case 'sort': if (player && !player.checked) { player.cur.assign[+el.getAttribute('data-i')] = +el.getAttribute('data-c'); rerenderPlayerOnly(); } break;
       case 'pick': if (player && !player.checked) { player.cur.picked.push(+el.getAttribute('data-w')); rerenderPlayerOnly(); } break;
       case 'unpick': if (player && !player.checked) { player.cur.picked.splice(+el.getAttribute('data-k'), 1); rerenderPlayerOnly(); } break;
       case 'check': doCheck(); break;
@@ -2279,6 +2374,8 @@
         textPanelOpen = tpb.hasAttribute('hidden'); if (textPanelOpen) tpb.removeAttribute('hidden'); else tpb.setAttribute('hidden', '');
         el.setAttribute('aria-expanded', textPanelOpen); el.textContent = '📄 ' + t(textPanelOpen ? 'textHide' : 'textShow'); break;
       }
+      case 'role-line': { var rit = player && curEx(); if (rit) playRoleLine(rit, el.getAttribute('data-k')); break; }
+      case 'dl-line': { var dtp = topicById(parseHash().a), dd = dtp && dtp.data.dialog, dls2 = dd && DT.catalog.dialogLines(dd), dli = dls2 && dls2[+el.getAttribute('data-line')]; if (dli) speakLine(dli, voiceAssign(dls2, dd.roleG), {}); break; }
       case 'ls-play': playListen(el.getAttribute('data-tid'), !!el.getAttribute('data-slow')); break;
       case 'ls-stop': stopListen(); break;
       case 'ls-line': { var lc = K.content[el.getAttribute('data-tid')], lx2 = lc && lc.text, li = lx2 && lx2.lines[+el.getAttribute('data-line')]; if (li) speakLine(li, voiceAssign(lx2.lines), {}); break; }
@@ -2301,6 +2398,10 @@
   });
   app.addEventListener('input', function (ev) {
     if (ev.target.id === 'cert-name') { var lvc = (parseHash().a || 'A1'); renderCertCanvas(lvc); return; }
+    if (ev.target.getAttribute && ev.target.hasAttribute('data-gap') && player && player.cur) {
+      player.cur.gaps[ev.target.getAttribute('data-gap')] = ev.target.value; player.cur.lastGap = ev.target.getAttribute('data-gap');
+      var cb2 = document.getElementById('check-btn'); if (cb2) cb2.disabled = !canCheck(curEx().ex, player.cur);
+    }
     if (ev.target.id === 'gap-input' && player) {
       player.cur.input = ev.target.value;
       var cb = document.getElementById('check-btn'); if (cb) cb.disabled = !ev.target.value.trim();
@@ -2312,11 +2413,20 @@
       player.cur.choice[+el.getAttribute('data-i')] = el.value;
       var cb = document.getElementById('check-btn'); if (cb) cb.disabled = !canCheck(curEx().ex, player.cur);
     }
+    if (el.matches('select[data-act="cloze"]') && player) {
+      player.cur.gaps[el.getAttribute('data-i')] = el.value;
+      var cb3 = document.getElementById('check-btn'); if (cb3) cb3.disabled = !canCheck(curEx().ex, player.cur);
+    }
     if (el.matches('input[data-act="import"]')) doImport(el.files && el.files[0]);
     if (el.matches('select[data-act="voice"]')) { db.voices = db.voices || {}; db.voices[course().tts] = el.value; save(); speak(t('testSentence'), course().tts, { voiceName: el.value }); }
   });
   app.addEventListener('keydown', function (ev) {
     if (ev.key === 'Enter' && ev.target.id === 'gap-input') { ev.preventDefault(); doCheck(); }
+    if (ev.key === 'Enter' && ev.target.hasAttribute && ev.target.hasAttribute('data-gap')) {   // Lückentext: Enter → nächste Lücke, bei der letzten prüfen
+      ev.preventDefault();
+      var fields = [].slice.call(app.querySelectorAll('.cloze [id^="cloze-"]:not(:disabled)')), at = fields.indexOf(ev.target);
+      if (at >= 0 && at < fields.length - 1) fields[at + 1].focus(); else doCheck();
+    }
     if (ev.key === 'Enter' && ev.target.id === 'ob-name') { ev.preventDefault(); var b = app.querySelector('[data-act="ob-start"]'); if (b) b.click(); }
   });
   document.addEventListener('keydown', function (ev) {
@@ -2360,6 +2470,7 @@
     player.result = res; player.checked = true;
     player.session[item.id] = res.ok;
     if (player.mode === 'placement') placementAnswer(res.ok); else recordAnswer(item, res.ok, res.given);
+    if (item.ex.role) setTimeout(function () { playRoleLine(item, 'ans', true); }, 150);   // danach spricht die Stimme der eigenen Rolle die richtige Zeile
     if (item.kind === 'word' && res.ok && item.ex.mode !== 'listen') setTimeout(function () { speak(item.word.t, course().tts, { auto: true }); }, 150);
     // In Lern-/Wiederholungs-Sitzungen kommt ein Fehler am Ende noch einmal (höchstens einmal)
     if (!res.ok && player.mode !== 'all' && player.mode !== 'review' && player.mode !== 'placement' && !player.requeued[item.id] && item.kind !== 'card') {

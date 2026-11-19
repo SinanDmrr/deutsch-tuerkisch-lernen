@@ -8,8 +8,8 @@
 
   var GENRES = ['anzeige', 'email', 'nachricht', 'hinweis', 'artikel', 'programm', 'formular'];
   var LISTEN_GENRES = ['durchsage', 'anrufbeantworter', 'radio', 'gespraech', 'interview'];
-  var QTYPES = ['mc', 'gap', 'match']; // cloze, sort, write folgen mit Schritt 5/7 (erst wenn der Player sie darstellen kann)
-  var LISTEN_QTYPES = ['mc', 'listen', 'gap', 'match'];
+  var QTYPES = ['mc', 'gap', 'match', 'cloze']; // sort und write sind in Texten laut ADR-12.2 nicht vorgesehen
+  var LISTEN_QTYPES = ['mc', 'listen', 'gap', 'cloze', 'match'];
   var KINDS = { r: 'read', h: 'listen' };
   var ID_RE = /^([a-z]{2})-(a1|a2|b1|b2|c1|c2)-([rh])(\d{2,})$/;
   var MIN_WORDS = 60, MAX_WORDS = 180, MIN_WORDS_L = 30, MAX_WORDS_L = 120;

@@ -15,7 +15,8 @@ const scripts = [...html.matchAll(/<script\s+src="(js\/(?:curriculum|content\/[A
 scripts.forEach(s => vm.runInContext(fs.readFileSync(path.join(root, s), 'utf8'), ctx, { filename: s }));
 
 vm.runInContext(fs.readFileSync(path.join(root, 'js', 'core', 'voices.js'), 'utf8'), ctx, { filename: 'js/core/voices.js' });   // rein (ADR-10/14)
-const VA = ctx.window.DT.voices;
+vm.runInContext(fs.readFileSync(path.join(root, 'js', 'core', 'catalog.js'), 'utf8'), ctx, { filename: 'js/core/catalog.js' });   // dialogLines: Wahlzeilen des Rollenspiels (ADR-12.6)
+const VA = ctx.window.DT.voices, CAT = ctx.window.DT.catalog;
 const cfg = JSON.parse(fs.readFileSync(path.join(__dirname, 'tts-voices.json'), 'utf8'));
 const K = ctx.window.KOPRU;
 const plain = s => String(s || '').replace(/\*\*|\*/g, '').trim();   // identisch zu plain() in app.js
@@ -53,8 +54,9 @@ Object.values(K.courses).forEach(c => {
   });
   Object.entries(K.dialogs || {}).forEach(([id, d]) => {
     if (!id.startsWith(c.id + '-')) return;
-    (d.lines || []).forEach(l => set.add(plain(l.t)));
-    addLines(d.lines || [], c.target);
+    const dl = CAT.dialogLines(d);   // Wahlzeile → richtige Antwort in der Stimme der Rolle (roleG)
+    dl.forEach(l => set.add(plain(l.t)));
+    addLines(dl, c.target, d.roleG);
     (d.questions || []).forEach(q => addEx(q, set));
   });
   Object.entries(K.texts || {}).forEach(([id, t]) => {   // Lesetexte: Absätze bzw. Anzeigen (ADR-12.2: body[*] / items[*].t)

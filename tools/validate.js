@@ -123,6 +123,13 @@ function checkSpelling(e) {
   });
 }
 
+// cloze/sort: Format-Prüfung liegt in js/core/check.js (DT.check.lint, rein und in tools/test-core.js getestet)
+function lintNew(e) {
+  const r = CHK.lint(e);
+  r.errors.forEach(m => err(m[0], e.id, m[1] == null ? '' : m[1]));
+  r.warnings.forEach(m => warn(m[0], e.id, m[1] == null ? '' : m[1]));
+}
+
 function checkExercise(e, where) {
   useId(e.id, where);
   if (!e.e) warn('Erklärung (e) fehlt', e.id);
@@ -149,6 +156,7 @@ function checkExercise(e, where) {
       const r = e.p.map(x => x[1]); if (new Set(r).size !== r.length) err('Zuordnung doppelt', e.id);
       break;
     }
+    case 'cloze': case 'sort': lintNew(e); break;
     case 'speak': if (!e.say) err('speak ohne say', e.id); break;
     default: err('unbekannter Typ', e.t, e.id);
   }
@@ -212,18 +220,49 @@ Object.keys(K.courses).forEach(cid => {
     return !toks.some(w => corpus.includes(w.length >= 4 ? ' ' + stemOf(w, tr) : ' ' + w + ' ') );
   });
   if (lonely.length) warn(`${lonely.length} von ${a2.length} A2-Wörtern (${cid}) kommen in keinem A2-Text/-Dialog/-Übung vor, z. B.: ` + lonely.slice(0, 15).map(v => v.t).join(', '));
-  // Abdeckung je Text: A1- + A2-Wortschatz + gloss
-  const stems = new Set(), exact = new Set();
-  const addForm = x => normW(x).forEach(w => { exact.add(w); stems.add(stemOf(w, tr)); });
+  // Abdeckung je Text: A1- + A2-Wortschatz + gloss. Nicht gezählt: Zahlen, Eigennamen (TR: Wörter mit Apostroph-Suffix, großgeschrieben mitten im Satz;
+  // DE: großgeschriebenes Wort, das kein Nomen nach Artikel/Adjektiv ist, Sprechernamen, Unterschriften), Stoppwörter (tools/stopwords.js) gelten als bekannt.
+  const stems = new Set(), exact = new Set(), STOP = require('./stopwords.js')[tr ? 'tr' : 'de'];
+  const addStem = b => { stems.add(b); if (tr && b.length >= 4) { stems.add(b.replace(/[aeıioöuü]$/, '')); stems.add(b.replace(/t$/, 'd').replace(/k$/, 'ğ').replace(/ç$/, 'c').replace(/p$/, 'b')); } };
+  const addForm = x => normW(x).forEach(w => { exact.add(w); addStem(stemOf(w, tr)); });
   ['a1', 'a2'].forEach(l => ((K.vocab || {})[cid + '-' + l] || []).forEach(v => { addForm(v.t); if (v.pl) addForm(v.pl); if (v.pf) addForm(v.pf); if (v.ao) addForm(v.ao); }));
-  const known = (w, gl) => exact.has(w) || gl.has(w) || /^\d+$/.test(w) || (() => { for (let i = Math.min(w.length, 12); i >= 3; i--) if (stems.has(w.slice(0, i))) return true; return false; })();
+  const known = (w, gl) => exact.has(w) || STOP.has(w) || gl.has(w) || (() => { for (let i = Math.min(w.length, 12); i >= 3; i--) if (stems.has(w.slice(0, i))) return true; return false; })();
+  const paras = t => [].concat(t.body || [], (t.items || []).map(i => i.t), (t.lines || []).map(l => l.t)).map(x => String(x).replace(/\*\*|\*/g, ''));
+  const DE_DET = new Set(['der', 'die', 'das', 'den', 'dem', 'des', 'ein', 'eine', 'einen', 'einem', 'einer', 'eines', 'kein', 'keine', 'keinen', 'keinem', 'keiner', 'mein', 'meine', 'meinen', 'meinem', 'meiner', 'dein', 'deine', 'deinen', 'deinem', 'deiner', 'sein', 'seine', 'seinen', 'seinem', 'seiner', 'ihr', 'ihre', 'ihren', 'ihrem', 'ihrer', 'unser', 'unsere', 'unseren', 'unserem', 'euer', 'eure', 'dieser', 'diese', 'dieses', 'diesen', 'diesem', 'jeder', 'jede', 'jedes', 'jeden', 'jedem', 'alle', 'viele', 'einige', 'manche', 'welche', 'welcher', 'welches', 'im', 'am', 'zum', 'zur', 'vom', 'beim', 'ins', 'aufs', 'ans', 'in', 'an', 'auf', 'mit', 'von', 'zu', 'bei', 'nach', 'aus', 'für', 'über', 'unter', 'neben', 'zwischen', 'hinter', 'vor', 'durch', 'gegen', 'ohne', 'um', 'bis', 'seit', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn']);
+  // Tokens eines Textes: { w: normalisiert, name: Eigenname/Zahl (nicht zählen) }
+  const tokenize = (text, names) => {
+    const out = [];
+    paras(text).forEach((p, pi, all) => {
+      const toks = [...p.matchAll(/[\p{L}\p{N}][\p{L}\p{N}'’-]*/gu)].map(m => ({ raw: m[0], i: m.index }));
+      const sig = pi === all.length - 1 && all.length > 1 && toks.length <= 4;   // kurze Schlusszeile = Unterschrift
+      toks.forEach((tk, k) => {
+        const raw = tk.raw, w = normW(raw).join(' '), prev = k ? toks[k - 1].raw : '', start = !k || /[.!?:]/.test(p.slice(toks[k - 1].i + prev.length, tk.i));
+        const cap = /^\p{Lu}/u.test(raw);
+        let name = false;
+        if (/\d/.test(raw)) name = true;
+        else if (tr && /['’]/.test(raw)) name = true;
+        else if (cap && tr && !start) name = true;
+        else if (cap && !tr && !start) {
+          const pw = prev.toLowerCase(), lower = /^\p{Ll}/u.test(prev);
+          name = /^(herr|frau|dr)$/.test(pw) ? true : !DE_DET.has(pw) && !(lower && /(e|en|er|es|em)$/.test(pw));   // Nomen stehen nach Artikel/Präposition/Adjektiv
+        } else if (cap && sig) name = true;
+        if (name && cap && !/\d/.test(raw)) names.add(w.split(' ')[0].replace(/'.*/, ''));
+        out.push({ w: w.split(' ')[0], name: name });
+      });
+    });
+    return out;
+  };
+  const names = new Set();
+  Object.entries(K.texts || {}).forEach(([id, t]) => { if (id.startsWith(cid + '-')) { (t.lines || []).forEach(l => normW(l.s || '').forEach(w => names.add(w))); tokenize(t, names); } });
+  Object.entries(K.dialogs || {}).forEach(([id, d]) => { if (id.startsWith(cid + '-')) (d.lines || []).forEach(l => normW(l.s || '').forEach(w => names.add(w))); });
   Object.entries(K.texts || {}).forEach(([id, t]) => {
     if (!id.startsWith(cid + '-a2-')) return;
-    const text = [].concat(t.body || [], (t.items || []).map(i => i.t), (t.lines || []).map(l => l.t)).join(' ');
-    const words = normW(text), gl = new Set(); Object.keys(t.gloss || {}).forEach(g => normW(g).forEach(w => gl.add(w)));
-    if (!words.length) return;
-    const unk = [...new Set(words.filter(w => !known(w, gl)))], pctCov = 100 * (1 - words.filter(w => !known(w, gl)).length / words.length);
-    if (pctCov < 95) warn(`Abdeckung ${id}: ${pctCov.toFixed(0)} % der Textwörter bekannt (A1/A2-Wortschatz, gloss); unbekannt z. B.: ` + unk.slice(0, 10).join(', '));
+    const toks = tokenize(t, names).filter(x => !x.name && !names.has(x.w) && x.w), gl = new Set(); Object.keys(t.gloss || {}).forEach(g => normW(g).forEach(w => gl.add(w)));
+    if (!toks.length) return;
+    const bad = toks.filter(x => !known(x.w, gl)), pctCov = 100 * (1 - bad.length / toks.length), freq = {};
+    bad.forEach(x => { freq[x.w] = (freq[x.w] || 0) + 1; });
+    const top = Object.entries(freq).sort((x, y) => y[1] - x[1] || (x[0] < y[0] ? -1 : 1)).slice(0, 10).map(([w, n]) => n > 1 ? `${w} (${n}×)` : w);
+    if (pctCov < 95) warn(`Abdeckung ${id}: ${pctCov.toFixed(0)} % der Textwörter bekannt (A1/A2-Wortschatz, gloss, ohne Namen/Zahlen/Funktionswörter); häufigste unbekannte: ` + top.join(', '));
   });
 });
 
@@ -248,10 +287,19 @@ Object.entries(K.dialogs || {}).forEach(([id, d]) => {
   else if (d.level && d.level.toLowerCase() !== id.split('-')[1]) err('Dialog: level passt nicht zur ID', id, d.level);
   if (!d.lines || d.lines.length < 2) err('Dialog zu kurz', id);
   (d.lines || []).forEach((l, i) => {
+    if (l.me) return;   // Wahlzeile des Rollenspiels (ADR-12.6): prüft catalog.checkRoleplay
     if (!l.t || !l.n || !l.s) err('Dialogzeile unvollständig', id, i);
     else if (!/-a1-/.test(id) && l.g !== 'f' && l.g !== 'm') err('Dialogzeile ab A2 braucht g (f|m) für die Stimme (ADR-14)', id, i);
   });
   (d.questions || []).forEach((q, i) => { checkExercise(q, id + '?' + i); prefix(q.id, id + '.', 'Dialogfrage in ' + id); });
+  // Rollenspiel (ADR-12.6): Wahlzeilen als Format prüfen, dann die abgeleiteten Aufgaben wie alle Übungen (IDs, why je falscher Option, Kontext ≤ 3)
+  const CAT = coreCtx.window.DT.catalog;
+  if (CAT.hasRole(d)) {
+    const r = CAT.checkRoleplay(id, d);
+    r.errors.forEach(m => err('Rollenspiel:', ...m.filter(x => x != null), id));
+    r.warnings.forEach(m => warn('Rollenspiel:', ...m.filter(x => x != null), id));
+    if (!r.errors.length) CAT.roleExercises(d).forEach(q => { checkExercise(q, id + '?' + q.id); if (q.ctx.length > 3) err('Rollenspiel: Kontext > 3 Zeilen', q.id); });
+  }
 });
 
 console.log(`\nVersion: ${appVersion || '?'}${swVersion ? ' (sw.js ✓)' : ''} · Skripte: ${scripts.length}`);

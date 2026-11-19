@@ -692,6 +692,133 @@ test('check: evaluate – Tabelle je Übungstyp (mc, listen, gap, dictation, spe
   ok(DT.check && DT.catalog, 'DT.check und DT.catalog vorhanden');
   CHECK_TABLE.forEach(([name, ex, c, lang, want]) => eq(DT.check.evaluate(ex, copy(c), lang, tfx), want, name));
 });
+/* ---------- cloze und sort (ADR-12.4/12.5) ---------- */
+const CL = { t: 'cloze', q: 'x', text: 'Gestern {1} ich im Kino {2}. Der Film {3} toll!', e: 'E',
+  gaps: { 1: { a: ['bin'], o: ['bin', 'habe', 'war'], wrong: { habe: 'W-habe', war: 'W-war' } }, 2: { a: ['gewesen'], wrong: { gegangen: 'W-gegangen' } }, 3: { a: ['war'], o: ['war', 'hatte', 'ist'], wrong: { hatte: 'W-hatte', ist: 'W-ist' } } } };
+const CLTR = { t: 'cloze', q: 'x', text: 'Ben okul{1} gidiyorum. Ankara’ya {2}.', e: 'E',
+  gaps: { 1: { a: ['a'], o: ['a', 'e'], wrong: { e: 'W-e' } }, 2: { a: ['gittim'], wrong: { gittik: 'W-gittik' } } } };
+const cev = (ex, gaps, lang) => DT.check.evaluate(ex, { gaps: gaps }, lang || 'de', tfx);
+test('check: cloze – alle richtig / eine falsch / Teilergebnis / wrong-Treffer', () => {
+  let r = cev(CL, { 1: 'bin', 2: 'gewesen', 3: 'war' });
+  eq([r.ok, r.cloze, r.gaps.map(g => g.ok)], [true, true, [true, true, true]], 'alle richtig');
+  eq(r.given, '{1} bin · {2} gewesen · {3} war', 'given');
+  r = cev(CL, { 1: 'bin', 2: 'gewesen', 3: 'ist' });
+  eq([r.ok, r.gaps.map(g => g.ok), r.gaps[2].hint], [false, [true, true, false], 'W-ist'], 'letzte Lücke falsch (Select) mit wrong');
+  r = cev(CL, { 1: 'habe', 2: 'gegangen', 3: 'war' });
+  eq([r.ok, r.gaps.map(g => g.ok), r.gaps[0].hint, r.gaps[1].hint], [false, [false, false, true], 'W-habe', 'W-gegangen'], 'zwei falsch, wrong je Lücke');
+  eq(r.correct, '{1} bin · {2} gewesen · {3} war', 'correct');
+  eq(cev(CL, {}).ok, false, 'leere Lücken ⇒ falsch (canCheck verhindert das vorher)');
+});
+test('check: cloze – streng (Groß/klein, Satzzeichen, Sonderzeichen, Leerraum)', () => {
+  eq(cev(CL, { 1: 'Bin', 2: 'gewesen', 3: 'war' }).gaps[0].hint, 'T:caseHint', 'Groß/klein ⇒ caseHint (strikt falsch)');
+  eq(cev(CL, { 1: 'bin', 2: 'gewesen.', 3: 'war' }).gaps[1].hint, 'T:punctHint', 'Satzzeichen ⇒ punctHint');
+  eq(cev(CL, { 1: 'bin', 2: '  gewesen ', 3: 'war' }).ok, true, 'Leerraum am Rand wird toleriert');
+  eq(cev(CLTR, { 1: 'a', 2: 'gıttım' }, 'tr').gaps[1].hint, 'T:specialChars', 'TR ı statt i ⇒ specialChars');
+  eq(cev(CLTR, { 1: 'a', 2: 'GİTTİM' }, 'tr').gaps[1].hint, 'T:caseHint', 'TR Großschreibung ⇒ caseHint');
+  eq(cev(CLTR, { 1: 'a', 2: 'gittim' }, 'tr').ok, true, 'TR richtig');
+  eq(cev(Object.assign({}, CL, { cs: false }), { 1: 'BIN', 2: 'Gewesen', 3: 'war' }).ok, true, 'cs:false nachsichtig');
+  eq(cev({ t: 'cloze', text: '{1} {2}', gaps: { 1: { a: ['der', 'die'] }, 2: { a: ['x'] } } }, { 1: 'die', 2: 'x' }).ok, true, 'mehrere gültige Antworten');
+  eq(cev({ t: 'cloze', text: '{1} {2}', gaps: { 1: { a: ['Ankara’ya'] }, 2: { a: ['x'] } } }, { 1: "Ankara'ya", 2: 'x' }, 'tr').ok, true, 'typografischer Apostroph');
+  eq(DT.check.clozeKeys(CL), ['1', '2', '3'], 'clozeKeys');
+  const long = { t: 'cloze', text: '{1} {2}', gaps: { 1: { a: ['a'] }, 2: { a: ['b'] } } };
+  eq(cev(long, { 1: 'x'.repeat(200), 2: 'y' }).given.length <= 120, true, 'given höchstens 120 Zeichen');
+});
+const SO = { t: 'sort', q: 'x', cats: ['haben', 'sein'], items: [['fahren', 1], ['kaufen', 0], ['aufstehen', 1], ['schlafen', 0]], why: { fahren: 'W1', kaufen: 'W2', aufstehen: 'W3', schlafen: 'W4' }, e: 'E' };
+const sev = (assign) => DT.check.evaluate(SO, { assign: assign }, 'de', tfx);
+test('check: sort – alles richtig / ein Fehler / unvollständig / why je Element', () => {
+  let r = sev([1, 0, 1, 0]);
+  eq([r.ok, r.sort, r.items.map(x => x.ok)], [true, true, [true, true, true, true]], 'alle richtig');
+  r = sev([0, 0, 1, 0]);
+  eq([r.ok, r.items.map(x => x.ok), r.items[0].given, r.items[0].correct, r.items[0].hint], [false, [false, true, true, true], 'haben', 'sein', 'W1'], 'ein Element falsch + why');
+  eq(r.given, 'fahren → haben · kaufen → haben · aufstehen → sein · schlafen → haben', 'given');
+  eq(r.correct, 'fahren → sein · kaufen → haben · aufstehen → sein · schlafen → haben', 'correct');
+  r = sev([null, 0, 1, 0]);
+  eq([r.ok, r.items[0].given], [false, null], 'nicht zugeordnet ⇒ falsch');
+  eq(sev([0, 1, 0, 1]).items.every(x => !x.ok), true, 'alles vertauscht: alle falsch');
+  eq(sev([]).ok, false, 'leere Zuordnung');
+});
+test('check: isCountable zählt cloze und sort (nur speak nicht)', () => {
+  ['cloze', 'sort', 'gap', 'mc', 'order', 'match'].forEach(x => eq(DT.check.isCountable({ t: x }), true, x + ' zählbar'));
+  eq(DT.check.isCountable({ t: 'speak' }), false, 'speak nicht');
+});
+test('check: lint – gültige Beispiele ohne Fehler', () => {
+  eq(DT.check.lint(CL).errors, [], 'cloze gültig'); eq(DT.check.lint(SO), { errors: [], warnings: [] }, 'sort gültig');
+  const stubK = { dialogs: {}, addDialog(id, d) { this.dialogs[id] = d; } };
+  vm.runInContext(fs.readFileSync(path.join(__dirname, 'fixtures', 'cloze-sort-test.js'), 'utf8').replace('window.KOPRU', 'K'), Object.assign(vm.createContext({ K: stubK }), {}));
+  const qs = [].concat(...Object.values(stubK.dialogs).map(d => d.questions));
+  eq(qs.length, 5, 'Fixture: 5 Fragen'); eq(qs.map(q => DT.check.lint(q)).filter(r => r.errors.length || r.warnings.length).length, 0, 'Fixture: Validator ohne Fehler/Hinweise');
+  ['de', 'tr'].forEach(c => eq(qs.filter(q => q.id.indexOf(c + '-') === 0).map(q => q.t).sort(), c === 'de' ? ['cloze', 'cloze', 'sort'] : ['cloze', 'sort'], 'Fixture ' + c));
+});
+test('catalog: Rollenspiel – Fixture, IDs, Reihenfolge, Kontext, Validator', () => {
+  const CAT = DT.catalog, stubK = { dialogs: {}, addDialog(id, d) { this.dialogs[id] = d; } };
+  vm.runInContext(fs.readFileSync(path.join(__dirname, 'fixtures', 'roleplay-test.js'), 'utf8').replace('window.KOPRU', 'K'), vm.createContext({ K: stubK }));
+  const ids = Object.keys(stubK.dialogs); eq(ids, ['de-a2-d91', 'tr-a2-d91'], 'Fixture: 2 Dialoge');
+  ids.forEach(id => {
+    const d = stubK.dialogs[id], r = CAT.checkRoleplay(id, d), ex = CAT.roleExercises(d);
+    eq(r, { errors: [], warnings: [] }, id + ': Validator ohne Fehler/Hinweise');
+    eq(ex.map(q => q.id), [1, 2, 3].map(n => id + '.c' + n), id + ': IDs in Dialogreihenfolge');
+    ok(ex.every(q => q.t === 'mc' && q.role === true && q.ans === q.o[q.a] && q.ansN && q.ctx.length >= 1 && q.ctx.length <= 3), id + ': Form der Aufgaben');
+    ex.forEach(q => { q.o.forEach((_, j) => { if (j !== q.a) ok(String(q.why[j] || '').length > 0, q.id + ': why für ' + j); }); eq(DT.check.lint(q).errors, [], q.id + ': check.lint'); });
+    eq(ex[1].ctx.map(x => x.s + '|' + x.me), [d.lines[0].s + '|false', d.role + '|true', d.lines[2].s + '|false'], id + ': Kontext c2 enthält die eigene Rollenzeile (richtige Antwort) und Gegenzeilen');
+    eq(ex[2].ctx.length, 3, id + ': Kontext höchstens 3'); eq(ex[0].ctx.length, 1, id + ': c1 hat 1 Zeile Kontext');
+    eq(CAT.dialogLines(d).filter(l => l.me).map(l => l.g), [d.roleG, d.roleG, d.roleG], id + ': roleG gilt für eigene Zeilen');
+    const K = { dialogs: {}, content: {}, texts: {} }; K.dialogs[id] = d; CAT.register(K); CAT.register(K);
+    eq(K.content[id].exercises.map(q => q.id), ex.map(q => q.id).concat(d.questions.map(q => q.id)), id + ': Wahlzeilen zuerst, dann Verständnisfragen (idempotent)');
+  });
+  eq(CAT.roleExercises({ lines: [{ s: 'A', g: 'f', t: 'x', n: 'y' }] }), [], 'ohne Wahlzeilen: keine Aufgaben');
+  const D = () => copy(stubK.dialogs['de-a2-d91']), bad = (mut, frag) => { const d = D(); mut(d); const r = CAT.checkRoleplay('de-a2-d91', d); ok(r.errors.some(m => m[0].indexOf(frag) >= 0), 'Roleplay: ' + frag + ' → ' + JSON.stringify(r.errors)); };
+  bad(d => { delete d.lines[1].why[1]; }, 'why fehlt');
+  bad(d => { d.lines[1].id = 'de-a2-d92.c1'; }, 'ID muss');
+  bad(d => { d.lines[3].id = d.lines[1].id; }, 'ID doppelt');
+  bad(d => { d.lines[1].t = 'x'; }, 'kein t');
+  bad(d => { d.lines[1].a = 5; }, 'a ist kein gültiger Index');
+  bad(d => { d.lines[1].o = ['nur eine']; }, '2–4');
+  bad(d => { delete d.lines[1].e; }, 'e (Erklärung)');
+  bad(d => { delete d.lines[1].n; }, 'n (Übersetzung');
+  bad(d => { delete d.role; }, 'role');
+  bad(d => { d.roleG = 'x'; }, 'roleG');
+  bad(d => { delete d.lines[0].g; }, 'braucht g');
+  bad(d => { d.lines.splice(5, 1); }, '3–4 Wahlzeilen');
+  const w = D(); w.lines.unshift(w.lines.splice(1, 1)[0]); ok(CAT.checkRoleplay('de-a2-d91', w).warnings.length >= 1, 'Wahlzeile ohne vorherige Zeile: Hinweis');
+});
+test('check: lint – Negativfälle cloze', () => {
+  const bad = (mut, frag) => { const x = copy(CL); mut(x); const r = DT.check.lint(x); ok(r.errors.some(m => m[0].indexOf(frag) >= 0), 'cloze: ' + frag + ' → ' + JSON.stringify(r.errors)); };
+  bad(x => { x.text = 'Nur {1} eine Lücke.'; delete x.gaps[2]; delete x.gaps[3]; }, 'mindestens 2');
+  bad(x => { x.text = '{1} {2} {3} {4} {5} {6}'; x.gaps = { 1: { a: ['a'] }, 2: { a: ['a'] }, 3: { a: ['a'] }, 4: { a: ['a'] }, 5: { a: ['a'] }, 6: { a: ['a'] } }; }, 'mehr als 5');
+  bad(x => { x.text = 'A {1} B {3}'; }, 'fortlaufend');
+  bad(x => { x.text = 'A {1} B {1} C {2} {3}'; }, 'fortlaufend');
+  bad(x => { delete x.gaps[3]; }, 'gaps-Schlüssel');
+  bad(x => { x.gaps[2].a = []; }, 'a (nicht leere');
+  bad(x => { delete x.gaps; }, 'ohne gaps');
+  bad(x => { x.gaps[1].o = ['bin']; }, '2–4');
+  bad(x => { x.gaps[1].o = ['a', 'b', 'c', 'd', 'e']; }, '2–4');
+  bad(x => { x.gaps[1].o = ['habe', 'war']; }, 'Lösung steht nicht in o');
+  bad(x => { delete x.gaps[1].wrong.war; }, 'wrong fehlt für falsche Option');
+  bad(x => { x.gaps[2].wrong.gewesen = 'x'; }, 'wrong-Schlüssel ist eine richtige Lösung');
+  bad(x => { x.gaps[1].o = ['bin', 'habe', 'habe', 'war']; }, 'doppelte Optionen');
+  bad(x => { x.gaps[2].a = ['gewesen', 'gewesen']; }, 'doppelte Lösungen');
+  const w = copy(CL); delete w.gaps[2].wrong; ok(DT.check.lint(w).errors.length === 0 && DT.check.lint(w).warnings.length === 1, 'freie Lücke ohne wrong nur Hinweis');
+});
+test('check: lint – Negativfälle sort', () => {
+  const bad = (mut, frag) => { const x = copy(SO); mut(x); const r = DT.check.lint(x); ok(r.errors.some(m => m[0].indexOf(frag) >= 0), 'sort: ' + frag + ' → ' + JSON.stringify(r.errors)); };
+  bad(x => { x.cats = ['haben']; }, 'cats braucht');
+  bad(x => { x.cats = ['a', 'b', 'c', 'd']; }, 'cats braucht');
+  bad(x => { x.cats = ['haben', 'haben']; }, 'nicht eindeutig');
+  bad(x => { x.items.pop(); }, '4–8');
+  bad(x => { x.items = x.items.concat([['a', 0], ['b', 0], ['c', 0], ['d', 0], ['e', 0]]); }, '4–8');
+  bad(x => { x.items[0][1] = 2; }, 'Index gültig');
+  bad(x => { x.items[0][1] = 0.5; }, 'Index gültig');
+  bad(x => { x.items[1][0] = 'fahren'; }, 'Elemente nicht eindeutig');
+  bad(x => { x.items.forEach(i => { i[1] = 0; }); }, 'Kategorie ohne Element');
+  bad(x => { delete x.why.kaufen; }, 'why fehlt');
+  bad(x => { x.why.kaufen = ' '; }, 'why fehlt');
+  bad(x => { delete x.why; }, 'why fehlt');
+  const w = copy(SO); w.why.extra = 'x'; eq(DT.check.lint(w).warnings.length, 1, 'why ohne Element ⇒ Hinweis');
+});
+test('texts: cloze ist als Fragetyp in Lese- und Hörtexten erlaubt, sort nicht', () => {
+  ok(DT.texts.QTYPES.includes('cloze') && DT.texts.LISTEN_QTYPES.includes('cloze'), 'cloze erlaubt');
+  ok(!DT.texts.QTYPES.includes('sort') && !DT.texts.LISTEN_QTYPES.includes('sort'), 'sort in Texten nicht vorgesehen');
+});
 test('check: evaluate ohne Textfunktion liefert den Schlüssel als Hinweis', () => {
   eq(DT.check.evaluate({ t: 'gap', a: ['Haus'], cs: true }, { input: 'haus' }, 'de').hint, 'caseHint', 'caseHint');
 });
