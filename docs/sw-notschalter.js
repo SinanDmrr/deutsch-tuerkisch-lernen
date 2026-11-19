@@ -16,7 +16,7 @@
  */
 'use strict';
 
-const VERSION = '2026-11-18.23';   // muss weiter == APP_VERSION sein (tools/bump-version.py pflegt das)
+const VERSION = '2026-11-19.1';   // muss weiter == APP_VERSION sein (tools/bump-version.py pflegt das)
 
 self.addEventListener('install', function () {
   self.skipWaiting();

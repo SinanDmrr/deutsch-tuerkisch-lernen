@@ -120,6 +120,10 @@ Object.entries(K.vocab || {}).forEach(([key, list]) => {
 const textsCtx = { window: {}, console }; vm.createContext(textsCtx);
 vm.runInContext(fs.readFileSync(path.join(root, 'js', 'core', 'texts.js'), 'utf8'), textsCtx, { filename: 'js/core/texts.js' });
 const TX = textsCtx.window.DT.texts;
+// Bewertung und Katalog (ADR-12.9): reine Kernlogik – hier geladen, damit Syntax-/Ladefehler den Validator rot machen
+const coreCtx = { window: {}, console }; vm.createContext(coreCtx);
+['check.js', 'catalog.js'].forEach(f => vm.runInContext(fs.readFileSync(path.join(root, 'js', 'core', f), 'utf8'), coreCtx, { filename: 'js/core/' + f }));
+if (!coreCtx.window.DT.check || !coreCtx.window.DT.catalog) err('js/core/check.js bzw. catalog.js definiert DT.check/DT.catalog nicht');
 let nTxt = 0;
 Object.entries(K.texts || {}).forEach(([id, t]) => {
   nTxt++; useId(id, 'text');

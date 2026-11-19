@@ -582,6 +582,102 @@ atest('storage: Übertragungscode von neuerer App wird abgelehnt (wie Datei)', a
   eq(storage.importData(storage.migrate(V2, T).data.profiles.k4l5m6, u.data, T, TODAY_KEY), { ok: false, error: 'newer' }, 'Schema 4 → newer');
 });
 
+/* ================= check / catalog (ADR-12.9, Schritt 2) =================
+ * Erwartungswerte stammen aus dem Ist-Zustand von js/app.js VOR der Verschiebung nach js/core/check.js. */
+const CHECK_TABLE = [
+  ["mc ok",{"t":"mc","o":["a","b","c"],"a":1,"why":{"0":"w0","2":"w2"}},{"sel":1},"de",{"ok":true,"given":"b","correct":"b"}],
+  ["mc falsch+why",{"t":"mc","o":["a","b","c"],"a":1,"why":{"0":"w0","2":"w2"}},{"sel":2},"de",{"ok":false,"given":"c","correct":"b","hint":"w2"}],
+  ["mc falsch ohne why",{"t":"mc","o":["a","b"],"a":1},{"sel":0},"tr",{"ok":false,"given":"a","correct":"b"}],
+  ["listen ok",{"t":"listen","say":"x","o":["a","b"],"a":0,"why":{"1":"nein"}},{"sel":0},"tr",{"ok":true,"given":"a","correct":"a"}],
+  ["listen falsch",{"t":"listen","say":"x","o":["a","b"],"a":0,"why":{"1":"nein"}},{"sel":1},"tr",{"ok":false,"given":"b","correct":"a","hint":"nein"}],
+  ["gap ok",{"t":"gap","q":"___","a":["Haus"]},{"input":"haus"},"de",{"ok":true,"given":"haus","correct":"Haus","hint":null}],
+  ["gap ok Satzzeichen/Leerraum",{"t":"gap","q":"___","a":["ich bin"]},{"input":"  Ich   bin! "},"de",{"ok":true,"given":"  Ich   bin! ","correct":"ich bin","hint":null}],
+  ["gap alt zweite Antwort",{"t":"gap","q":"___","a":["a1","a2"]},{"input":"a2"},"de",{"ok":true,"given":"a2","correct":"a1","hint":null}],
+  ["gap cs ok",{"t":"gap","q":"___","a":["Haus"],"cs":true},{"input":"Haus"},"de",{"ok":true,"given":"Haus","correct":"Haus","hint":null}],
+  ["gap cs Hinweis",{"t":"gap","q":"___","a":["Haus"],"cs":true},{"input":"haus"},"de",{"ok":false,"given":"haus","correct":"Haus","hint":"T:caseHint"}],
+  ["gap wrong-Treffer",{"t":"gap","q":"___","a":["gehe"],"wrong":{"gehst":"Du-Form"}},{"input":"Gehst!"},"de",{"ok":false,"given":"Gehst!","correct":"gehe","hint":"Du-Form"}],
+  ["gap wrong vor cs",{"t":"gap","q":"___","a":["Haus"],"cs":true,"wrong":{"haus":"Nomen groß"}},{"input":"haus"},"de",{"ok":false,"given":"haus","correct":"Haus","hint":"Nomen groß"}],
+  ["gap falsch ohne Hinweis",{"t":"gap","q":"___","a":["Haus"]},{"input":"Maus"},"de",{"ok":false,"given":"Maus","correct":"Haus","hint":null}],
+  ["gap tr ç",{"t":"gap","q":"___","a":["çocuk"]},{"input":"cocuk"},"tr",{"ok":false,"given":"cocuk","correct":"çocuk","hint":"T:specialChars"}],
+  ["gap tr ğ",{"t":"gap","q":"___","a":["dağ"]},{"input":"dag"},"tr",{"ok":false,"given":"dag","correct":"dağ","hint":"T:specialChars"}],
+  ["gap tr ı",{"t":"gap","q":"___","a":["kız"]},{"input":"kiz"},"tr",{"ok":false,"given":"kiz","correct":"kız","hint":"T:specialChars"}],
+  ["gap tr İ/I ok",{"t":"gap","q":"___","a":["Işık"]},{"input":"ışık"},"tr",{"ok":true,"given":"ışık","correct":"Işık","hint":null}],
+  ["gap tr İ Großschreibung",{"t":"gap","q":"___","a":["İstanbul"]},{"input":"istanbul"},"tr",{"ok":true,"given":"istanbul","correct":"İstanbul","hint":null}],
+  ["gap tr I-Punkt",{"t":"gap","q":"___","a":["ıslak"]},{"input":"islak"},"tr",{"ok":false,"given":"islak","correct":"ıslak","hint":"T:specialChars"}],
+  ["gap tr ö",{"t":"gap","q":"___","a":["göz"]},{"input":"goz"},"tr",{"ok":false,"given":"goz","correct":"göz","hint":"T:specialChars"}],
+  ["gap tr ş",{"t":"gap","q":"___","a":["şeker"]},{"input":"seker"},"tr",{"ok":false,"given":"seker","correct":"şeker","hint":"T:specialChars"}],
+  ["gap tr ü",{"t":"gap","q":"___","a":["gül"]},{"input":"gul"},"tr",{"ok":false,"given":"gul","correct":"gül","hint":"T:specialChars"}],
+  ["gap de ä ß",{"t":"gap","q":"___","a":["Straße"]},{"input":"strasse"},"de",{"ok":false,"given":"strasse","correct":"Straße","hint":"T:specialChars"}],
+  ["gap de ä",{"t":"gap","q":"___","a":["Mädchen"]},{"input":"madchen"},"de",{"ok":false,"given":"madchen","correct":"Mädchen","hint":"T:specialChars"}],
+  ["gap Apostroph",{"t":"gap","q":"___","a":["Ankara'ya"]},{"input":"Ankara’ya"},"tr",{"ok":true,"given":"Ankara’ya","correct":"Ankara'ya","hint":null}],
+  ["gap Apostroph fehlt",{"t":"gap","q":"___","a":["Ankara'ya"]},{"input":"Ankaraya"},"tr",{"ok":false,"given":"Ankaraya","correct":"Ankara'ya","hint":"T:specialChars"}],
+  ["gap tr Satzzeichen",{"t":"gap","q":"___","a":["evet"]},{"input":"Evet."},"tr",{"ok":true,"given":"Evet.","correct":"evet","hint":null}],
+  ["dictation ok",{"t":"dictation","say":"s","a":["Guten Tag"]},{"input":"guten tag!"},"de",{"ok":true,"given":"guten tag!","correct":"Guten Tag","hint":null}],
+  ["dictation Sonderzeichen",{"t":"dictation","say":"s","a":["Günaydın"]},{"input":"gunaydin"},"tr",{"ok":false,"given":"gunaydin","correct":"Günaydın","hint":"T:specialChars"}],
+  ["dictation falsch",{"t":"dictation","say":"s","a":["Guten Tag"],"wrong":{"gute tag":"Endung"}},{"input":"Gute Tag"},"de",{"ok":false,"given":"Gute Tag","correct":"Guten Tag","hint":"Endung"}],
+  ["speak selfOk",{"t":"speak","say":"Guten Tag"},{"selfOk":true},"de",{"ok":true,"given":"","correct":"Guten Tag"}],
+  ["speak exakt",{"t":"speak","say":"Guten Tag"},{"heardAlts":["guten tag"],"heard":"guten tag"},"de",{"ok":true,"given":"guten tag","correct":"Guten Tag","hint":"T:speakAlmost"}],
+  ["speak 0.8 Grenze (ok)",{"t":"speak","say":"abcde"},{"heardAlts":["abcdx"],"heard":"abcdx"},"de",{"ok":true,"given":"abcdx","correct":"abcde","hint":"T:speakAlmost"}],
+  ["speak 0.6 Grenze (fast)",{"t":"speak","say":"abcde"},{"heardAlts":["abcxx"],"heard":"abcxx"},"de",{"ok":false,"given":"abcxx","correct":"abcde","hint":"T:speakAlmost"}],
+  ["speak weit weg",{"t":"speak","say":"abcde"},{"heardAlts":["xyz"],"heard":"xyz"},"de",{"ok":false,"given":"xyz","correct":"abcde","hint":"T:speakRetry"}],
+  ["speak alt",{"t":"speak","say":"halb acht","alt":["halb 8"]},{"heardAlts":["halb 8"],"heard":"halb 8"},"de",{"ok":true,"given":"halb 8","correct":"halb acht","hint":"T:speakAlmost"}],
+  ["speak mehrere Hörvarianten",{"t":"speak","say":"Nasılsın"},{"heardAlts":["nasilsin","nasılsın"],"heard":"nasilsin"},"tr",{"ok":true,"given":"nasilsin","correct":"Nasılsın","hint":"T:speakAlmost"}],
+  ["speak leer",{"t":"speak","say":"abc"},{"heardAlts":[""],"heard":""},"de",{"ok":false,"given":"","correct":"abc","hint":"T:speakRetry"}],
+  ["speak keine Alts",{"t":"speak","say":"abc"},{"heard":""},"de",{"ok":false,"given":"","correct":"abc","hint":"T:speakRetry"}],
+  ["order ok",{"t":"order","w":["ich","bin","da"],"a":["ich bin da"]},{"picked":[0,1,2]},"de",{"ok":true,"given":"ich bin da","correct":"ich bin da","hint":null}],
+  ["order gleichwertig",{"t":"order","w":["heute","gehe","ich"],"a":["heute gehe ich","ich gehe heute"]},{"picked":[2,1,0]},"de",{"ok":true,"given":"ich gehe heute","correct":"heute gehe ich","hint":null}],
+  ["order falsch",{"t":"order","w":["ich","bin","da"],"a":["ich bin da"]},{"picked":[1,0,2]},"de",{"ok":false,"given":"bin ich da","correct":"ich bin da","hint":null}],
+  ["order Satzzeichen",{"t":"order","w":["Ben","geldim."],"a":["Ben geldim"]},{"picked":[0,1]},"tr",{"ok":true,"given":"Ben geldim.","correct":"Ben geldim","hint":null}],
+  ["match ok",{"t":"match","p":[["a","1"],["b","2"]]},{"choice":["1","2"]},"de",{"ok":true,"given":"a = 1 · b = 2","correct":"a = 1 · b = 2","hint":null,"match":true}],
+  ["match falsch",{"t":"match","p":[["a","1"],["b","2"]]},{"choice":["2","1"]},"de",{"ok":false,"given":"a = 2 · b = 1","correct":"a = 1 · b = 2","hint":null,"match":true}],
+  ["match unvollständig",{"t":"match","p":[["a","1"],["b","2"]]},{"choice":["1",null]},"de",{"ok":false,"given":"a = 1 · b = –","correct":"a = 1 · b = 2","hint":null,"match":true}],
+  ["unbekannter Typ",{"t":"zzz"},{},"de",{"ok":false}]
+];
+const tfx = k => 'T:' + k;
+test('check: evaluate – Tabelle je Übungstyp (mc, listen, gap, dictation, speak, order, match)', () => {
+  ok(DT.check && DT.catalog, 'DT.check und DT.catalog vorhanden');
+  CHECK_TABLE.forEach(([name, ex, c, lang, want]) => eq(DT.check.evaluate(ex, copy(c), lang, tfx), want, name));
+});
+test('check: evaluate ohne Textfunktion liefert den Schlüssel als Hinweis', () => {
+  eq(DT.check.evaluate({ t: 'gap', a: ['Haus'], cs: true }, { input: 'haus' }, 'de').hint, 'caseHint', 'caseHint');
+});
+test('check: levRatio', () => {
+  [["abc","abc",1],["","a",0],["kitten","sitting",0.5714285714285714],["ışık","isik",0.25],["a","b",0]].forEach(([a, b, r]) => eq(DT.check.levRatio(a, b), r, 'levRatio ' + a + '/' + b));
+});
+test('check: norm (türkisches İ/I, Satzzeichen, cs)', () => {
+  [[["  Ça, Ğ! ","tr",false],"ça ğ"],[["İSTANBUL","tr",false],"istanbul"],[["I","tr",false],"ı"],[["I","de",false],"i"],[["Haus.","de",true],"Haus"],[["„Hi“","de",false],"hi"]].forEach(([a, r]) => eq(DT.check.norm(a[0], a[1], a[2]), r, 'norm ' + a[0]));
+});
+test('check: fold (ç ğ ı ö ş ü ä ß)', () => {
+  [["ÇŞĞÜÖİI","csguoii"],["Straße","strasse"],["Ä̇","a"],["a'b","ab"]].forEach(([a, r]) => eq(DT.check.fold(a), r, 'fold ' + a));
+});
+test('check: isCountable – speak zählt nicht', () => {
+  eq([DT.check.isCountable({ t: 'speak' }), DT.check.isCountable({ t: 'gap' }), !!DT.check.isCountable(null)], [false, true, false], 'isCountable');
+});
+test('catalog: register + topicsOf (Pseudo-Themen, Index, Idempotenz)', () => {
+  const K = {
+    courses: { de: { levels: { A1: [['de-a1-01', 'Titel TR', 'Titel DE']] } } },
+    content: { 'de-a1-01': { exercises: [{ id: 'de-a1-01.1', t: 'mc' }, { t: 'mc' }] } },
+    dialogs: { 'de-a1-d02': { level: 'A1', title: 'T', sub: 'S', questions: [{ id: 'de-a1-d02.q1', t: 'mc' }] }, 'de-a1-d01': { level: 'A1', title: 'T1', sub: 'S1' }, 'tr-a1-d01': { level: 'A1' } },
+    texts: { 'de-a1-r01': { level: 'A1', title: 'RT', sub: 'RS', questions: [{ id: 'de-a1-r01.q1', t: 'mc' }] } }
+  };
+  const logs = [];
+  const idx = DT.catalog.register(K, { warn: (...a) => logs.push(['w', ...a]), error: (...a) => logs.push(['e', ...a]) });
+  eq(Object.keys(idx).sort(), ['de-a1-01#1', 'de-a1-01.1', 'de-a1-d02.q1', 'de-a1-r01.q1'].sort(), 'Index-IDs');
+  eq(idx['de-a1-d02.q1'], { topicId: 'de-a1-d02', idx: 0, ex: K.dialogs['de-a1-d02'].questions[0] }, 'Dialogfrage im Index');
+  eq(K.content['de-a1-r01'].kind, 'read', 'Lesetext als Pseudo-Thema');
+  eq(logs.length, 1, 'eine Warnung für Aufgabe ohne ID');
+  eq(K.content['de-a1-01'].exercises[1].id, 'de-a1-01#1', 'Ersatz-ID vergeben');
+  const idx2 = DT.catalog.register(K, {});
+  eq(Object.keys(idx2).sort(), Object.keys(idx).sort(), 'erneutes register ist idempotent');
+  const list = DT.catalog.topicsOf(K, 'de');
+  eq(list.map(x => [x.id, x.num, x.kind || '', x.avail, x.title, x.sub]), [
+    ['de-a1-01', 1, '', true, 'Titel DE', 'Titel TR'],
+    ['de-a1-d01', 'D1', 'dialog', true, 'S1', 'T1'],
+    ['de-a1-d02', 'D2', 'dialog', true, 'S', 'T'],
+    ['de-a1-r01', 'T1', 'text', true, 'RS', 'RT']
+  ], 'topicsOf de (Dialoge/Texte sortiert, Titel je Kurs)');
+});
+
 (async () => {
   for (const [name, fn] of asyncTests) {
     current = name;

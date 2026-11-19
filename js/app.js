@@ -9,7 +9,7 @@
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var DT = window.DT;
   var SCHEMA = DT.storage.SCHEMA;    // Version des Speicherformats (Migrationen nur in js/core/storage.js)
-  var APP_VERSION = '2026-11-18.23';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-19.1';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -347,24 +347,8 @@
 
   /* ================= Speicher ================= */
   /* ---------- Aufgaben-Index: feste ID → Thema/Aufgabe ---------- */
-  // Alltagsdialoge werden wie Themen behandelt (eigene Statistik, Fehlerwiederholung, Überblick)
-  Object.keys(K.dialogs || {}).forEach(function (id) {
-    var d = K.dialogs[id];
-    K.content[id] = { kind: 'dialog', dialog: d, exercises: d.questions || [] };
-  });
-  // Lesetexte (ADR-12.2) genauso: Fragen laufen über Fortschritt, Lücken und Wiederholung
-  Object.keys(K.texts || {}).forEach(function (id) {
-    var x = K.texts[id];
-    K.content[id] = { kind: 'read', text: x, exercises: x.questions || [] };
-  });
-  var EXI = {};
-  Object.keys(K.content).forEach(function (tid) {
-    (K.content[tid].exercises || []).forEach(function (ex, i) {
-      if (!ex.id) { ex.id = tid + '#' + i; if (window.console) console.warn('Aufgabe ohne feste ID:', tid, i); }
-      if (EXI[ex.id] && window.console) console.error('Doppelte Aufgaben-ID:', ex.id);
-      EXI[ex.id] = { topicId: tid, idx: i, ex: ex };
-    });
-  });
+  // Dialoge/Lesetexte als Pseudo-Themen und Aufgaben-Index: js/core/catalog.js
+  var EXI = DT.catalog.register(K, window.console);
 
   /* ---------- Laden, Migrieren, Sichern ----------
    * Grundsatz: Gespeicherter Fortschritt wird NIE gelöscht oder überschrieben, nur ergänzt bzw. umbenannt.
@@ -483,16 +467,7 @@
     var live = LEVELS.filter(levelHas), planned = LEVELS.filter(function (lv) { return !levelHas(lv); });
     return { live: live, planned: planned, label: planned.length ? planned[0] + (planned.length > 1 ? '–' + planned[planned.length - 1] : '') : '' };
   }
-  function locale(l) { return l === 'tr' ? 'tr-TR' : 'de-DE'; }
-  function norm(s, lang, cs) {
-    s = String(s || '').replace(/[’‘`´ʼ]/g, "'").replace(/[.,!?;:¿¡"«»„“”]/g, ' ').replace(/\s+/g, ' ').trim();
-    return cs ? s : s.toLocaleLowerCase(locale(lang));
-  }
-  function fold(s) {
-    return String(s).toLocaleLowerCase('tr-TR').replace(/'/g, '')
-      .replace(/\u0307/g, '').replace(/[çć]/g, 'c').replace(/ğ/g, 'g').replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ş/g, 's')
-      .replace(/ü/g, 'u').replace(/ä/g, 'a').replace(/ß/g, 'ss');
-  }
+  var locale = DT.check.locale, isCountable = DT.check.isCountable;   // js/core/check.js
   function shuffle(arr) {
     var a = arr.slice();
     for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var x = a[i]; a[i] = a[j]; a[j] = x; }
@@ -696,18 +671,6 @@
   /* ---------- Sprechen: Spracherkennung (Chrome, Edge, Safari) ---------- */
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
   var recog = null;
-  function levRatio(a, b) {
-    if (a === b) return 1;
-    var m = a.length, n = b.length, prev = [], cur, i, j;
-    if (!m || !n) return 0;
-    for (j = 0; j <= n; j++) prev[j] = j;
-    for (i = 1; i <= m; i++) {
-      cur = [i];
-      for (j = 1; j <= n; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
-      prev = cur;
-    }
-    return 1 - prev[n] / Math.max(m, n);
-  }
   function startListening(onText, onError) {
     if (!SR) { onError('unsupported'); return; }
     try { if (recog) recog.abort(); } catch (e) { /* ignore */ }
@@ -745,26 +708,7 @@
   var LOGO = '<svg class="logo" aria-hidden="true" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#3b5bdb"/><path d="M11 14h26a5 5 0 0 1 5 5v13a5 5 0 0 1-5 5H24l-7 6v-6h-6a5 5 0 0 1-5-5V19a5 5 0 0 1 5-5z" fill="#fff"/><path d="M53 26H30a5 5 0 0 0-5 5v12a5 5 0 0 0 5 5h12l7 6v-6h4a5 5 0 0 0 5-5V31a5 5 0 0 0-5-5z" fill="#fcc419"/><path d="M14 22h18M14 28h12" stroke="#3b5bdb" stroke-width="3" stroke-linecap="round"/><path d="M32 35h18M32 41h12" stroke="#3b5bdb" stroke-width="3" stroke-linecap="round"/></svg>';
 
   /* ================= Lehrplan-Zugriff ================= */
-  function topicsOf(cid) {
-    var c = K.courses[cid], list = [];
-    LEVELS.forEach(function (lv) {
-      (c.levels[lv] || []).forEach(function (row, i) {
-        var data = K.content[row[0]];
-        list.push({ id: row[0], level: lv, num: i + 1, title: cid === 'de' ? row[2] : row[1], sub: cid === 'de' ? row[1] : row[2], data: data, avail: !!(data && data.exercises && data.exercises.length) });
-      });
-      Object.keys(K.dialogs || {}).filter(function (id) { return id.indexOf(cid + '-') === 0 && K.dialogs[id].level === lv; }).sort()
-        .forEach(function (id, i) {
-          var d = K.dialogs[id];
-          list.push({ id: id, level: lv, num: 'D' + (i + 1), title: cid === 'de' ? d.sub : d.title, sub: cid === 'de' ? d.title : d.sub, kind: 'dialog', data: K.content[id], avail: true });
-        });
-      Object.keys(K.texts || {}).filter(function (id) { return id.indexOf(cid + '-') === 0 && K.texts[id].level === lv; }).sort()
-        .forEach(function (id, i) {
-          var x = K.texts[id];
-          list.push({ id: id, level: lv, num: 'T' + (i + 1), title: cid === 'de' ? x.sub : x.title, sub: cid === 'de' ? x.title : x.sub, kind: 'text', data: K.content[id], avail: true });
-        });
-    });
-    return list;
-  }
+  function topicsOf(cid) { return DT.catalog.topicsOf(K, cid); }
   function allTopics() { return topicsOf(courseId()); }
   function topicById(id) { return allTopics().filter(function (x) { return x.id === id; })[0]; }
   function exId(topicId, i) { return K.content[topicId].exercises[i].id; }
@@ -774,8 +718,6 @@
     if (!tp || !tp.avail) return null;
     return { topic: tp, ex: e.ex, idx: e.idx, id: id };
   }
-  // Sprechübungen sind Bonus (ADR-6): zählen nicht in Prozente, Lücken und Wiederholung
-  function isCountable(ex) { return ex && ex.t !== 'speak'; }
   function topicStats(tp) {
     var s = { n: 0, c: 0, w: 0, o: 0, first: 0, firstW: 0, answered: 0 };
     if (!tp.avail) return s;
@@ -1383,42 +1325,7 @@
     if (ex.t === 'match') return c.choice.every(function (x) { return x; });
     return false;
   }
-  function evaluate(ex, c) {
-    var lang = course().target;
-    if (ex.t === 'mc' || ex.t === 'listen') {
-      return { ok: c.sel === ex.a, given: ex.o[c.sel], correct: ex.o[ex.a], hint: ex.why && ex.why[c.sel] };
-    }
-    if (ex.t === 'gap' || ex.t === 'dictation') {
-      var val = c.input, nv = norm(val, lang, ex.cs);
-      var ok = ex.a.some(function (a) { return norm(a, lang, ex.cs) === nv; });
-      var hint = null;
-      if (!ok) {
-        var nvl = norm(val, lang, false);
-        if (ex.wrong) Object.keys(ex.wrong).forEach(function (k) { if (!hint && norm(k, lang, false) === nvl) hint = ex.wrong[k]; });
-        if (!hint && ex.cs && ex.a.some(function (a) { return norm(a, lang, false) === nvl; })) hint = t('caseHint');
-        if (!hint && ex.a.some(function (a) { return fold(norm(a, lang)) === fold(nvl); })) hint = t('specialChars');
-      }
-      return { ok: ok, given: val, correct: ex.a[0], hint: hint };
-    }
-    if (ex.t === 'speak') {
-      if (c.selfOk) return { ok: true, given: '', correct: ex.say };
-      // Ziel und gleichwertige Schreibweisen (alt, z. B. „halb 8“ statt „halb acht“) – die beste Übereinstimmung zählt
-      var targets = [ex.say].concat(ex.alt || []).map(function (x) { return norm(x, lang); }), best = 0;
-      (c.heardAlts || []).forEach(function (h) { var nh = norm(h, lang); targets.forEach(function (tg) { best = Math.max(best, levRatio(nh, tg)); }); });
-      return { ok: best >= 0.8, given: c.heard, correct: ex.say, hint: best >= 0.6 ? t('speakAlmost') : t('speakRetry') };
-    }
-    if (ex.t === 'order') {
-      var sent = c.picked.map(function (i) { return ex.w[i]; }).join(' ');
-      var ok2 = ex.a.some(function (a) { return norm(a, lang) === norm(sent, lang); });
-      return { ok: ok2, given: sent, correct: ex.a[0], hint: null };
-    }
-    if (ex.t === 'match') {
-      var ok3 = ex.p.every(function (pair, i) { return c.choice[i] === pair[1]; });
-      var given = ex.p.map(function (pair, i) { return pair[0] + ' = ' + (c.choice[i] || '–'); }).join(' · ');
-      return { ok: ok3, given: given, correct: ex.p.map(function (x) { return x[0] + ' = ' + x[1]; }).join(' · '), hint: null, match: true };
-    }
-    return { ok: false };
-  }
+  function evaluate(ex, c) { return DT.check.evaluate(ex, c, course().target, t); }
   function feedbackHtml(ex, res) {
     var e = ex.e ? '<div class="fb-sec"><h4>' + esc(t('whyRight')) + '</h4><p>' + md(ex.e) + '</p></div>' : '';
     if (res.ok) {

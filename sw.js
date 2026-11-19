@@ -30,7 +30,7 @@
  */
 'use strict';
 
-const VERSION = '2026-11-18.23';            // pflegt tools/bump-version.py (== APP_VERSION, prüft tools/validate.js)
+const VERSION = '2026-11-19.1';            // pflegt tools/bump-version.py (== APP_VERSION, prüft tools/validate.js)
 const ASSETS = 'dt-assets-' + VERSION;     // Präfix dt- ist Pflicht (geteilter Origin!)
 const AUDIO = 'dt-audio-v1';               // versionslos: Dateinamen = Hash des Textes
 
