@@ -209,4 +209,209 @@ K.addDialog('de-a2-d05', {
   ]
 });
 
+K.addDialog('de-a2-d06', {
+  level: 'A2', scene: 'bahn', title: 'Verspätung am Bahnhof', sub: 'Tren rötarı, peron değişikliği ve bilet',
+  role: 'Yolcu (Emre Aydın)', roleG: 'm',
+  lines: [
+    { s: "Bahnmitarbeiterin", g: "f", t: "Guten Tag, wie kann ich Ihnen helfen?", n: "İyi günler, size nasıl yardımcı olabilirim?" },
+    { me: true, id: "de-a2-d06.c1",
+      o: ["Guten Tag. Mein Zug nach Hannover hat Verspätung. Erreiche ich dort noch meinen Anschluss nach Hamburg?", "Guten Tag. Mein Zug nach Hannover ist Verspätung. Erreiche ich dort noch meinen Anschluss nach Hamburg?", "Guten Tag. Mein Zug hat Verspätung, deshalb ich erreiche meinen Anschluss nicht."], a: 0,
+      why: { 1: "„Verspätung“ bir isimdir; „sein“ ile kullanılmaz. Türkçedeki „gecikmesi var“ gibi „haben“ gerekir: „Der Zug hat Verspätung.“", 2: "„deshalb“ cümlenin başında durunca fiil hemen arkasından gelir: „deshalb kann ich …“. „deshalb ich erreiche“ diye sıralamak hatalıdır; ayrıca soru sormak yerine bilgi vermiş oluyorsun." },
+      e: "„Der Zug hat Verspätung“ (haben + Verspätung). „Erreiche ich … noch meinen Anschluss?“ evet/hayır sorusudur, fiil başta gelir. „erreichen“ = yetişmek, ulaşmak.", n: "İyi günler. Hannover'e giden trenim rötarlı. Orada Hamburg aktarmama yetişebilir miyim?" },
+    { s: "Bahnmitarbeiterin", g: "f", t: "Ihr Zug fährt mit fünfundzwanzig Minuten Verspätung ab. Den Anschluss in Hannover erreichen Sie wahrscheinlich nicht mehr. Haben Sie schon eine Fahrkarte?", n: "Trenin yirmi beş dakika rötarla kalkacak. Hannover'deki aktarmaya büyük ihtimalle yetişemezsiniz. Biletiniz var mı?" },
+    { me: true, id: "de-a2-d06.c2",
+      o: ["Ja, ich habe eine Fahrkarte nach Hamburg. Darf ich wegen der Verspätung einen anderen Zug nehmen?", "Ja, ich habe eine Fahrkarte nach Hamburg. Darf ich wegen die Verspätung einen anderen Zug nehmen?", "Ja, ich habe eine Fahrkarte nach Hamburg. Darf ich wegen der Verspätung mit einen anderen Zug fahren?"], a: 0,
+      why: { 1: "„wegen“ ardından Genitiv ister: „wegen der Verspätung“. „die Verspätung“ Nominativ/Akkusativ şeklidir ve burada yanlış.", 2: "„mit“ her zaman Dativ ister: „mit einem anderen Zug“. „einen“ Akkusativ'dir." },
+      e: "„wegen“ + Genitiv: wegen der Verspätung = rötar yüzünden. „einen Zug nehmen“ (Akkusativ) veya „mit einem Zug fahren“ (Dativ): iki kalıp da doğru, ama karıştırma.", n: "Evet, Hamburg'a bir biletim var. Rötar yüzünden başka bir trene binebilir miyim?" },
+    { s: "Bahnmitarbeiterin", g: "f", t: "Ja, das dürfen Sie. Ab zwanzig Minuten Verspätung am Ziel gilt Ihre Fahrkarte auch für andere Züge. Der nächste Zug nach Hannover fährt um vierzehn Uhr dreißig, aber nicht von Gleis fünf, sondern von Gleis neun.", n: "Evet, olur. Varışta yirmi dakika ve üzeri rötarda biletiniz başka trenler için de geçerli. Hannover'e bir sonraki tren saat on dört otuzda kalkıyor, ama beşinci perondan değil, dokuzuncu perondan." },
+    { me: true, id: "de-a2-d06.c3",
+      o: ["Also fährt der Zug um halb drei von Gleis neun ab?", "Also fährt der Zug um halb zwei von Gleis neun ab?"], a: 0,
+      why: { 1: "Türkçedeki „iki buçuk“tan yola çıkıp „halb zwei“ dersen 13.30 olur. Almancada „halb“ bir sonraki saate bakar: 14.30 = halb drei." },
+      e: "14.30 = vierzehn Uhr dreißig = „halb drei“ = üçe yarım saat kala, yani iki buçuk. Ayrılabilen fiil: „abfahren“ → „Der Zug fährt um … ab.“", n: "Yani tren saat iki buçukta 9 numaralı perondan mı kalkıyor?" },
+    { s: "Bahnmitarbeiterin", g: "f", t: "Genau. Gleis neun erreichen Sie über die Unterführung. Brauchen Sie sonst noch etwas?", n: "Aynen. Dokuzuncu perona alt geçitten ulaşırsınız. Başka bir şeye ihtiyacınız var mı?" },
+    { me: true, id: "de-a2-d06.c4",
+      o: ["Ja, bitte. Könnten Sie mir eine Bestätigung für die Verspätung geben? Mein Chef möchte sie sehen.", "Ja, bitte. Könnten Sie mich eine Bestätigung für die Verspätung geben? Mein Chef möchte sie sehen.", "Ja, bitte. Könnten Sie geben mir eine Bestätigung für die Verspätung? Mein Chef möchte sie sehen."], a: 0,
+      why: { 1: "„geben“ ile kişi Dativ'de olur: „mir“ = bana. „mich“ Akkusativ'dir; „jemandem etwas geben“ kalıbına uymaz.", 2: "Modal fiilli (könnten) cümlede asıl fiil mastar halinde en sona gider: „Könnten Sie mir … geben?“. Fiili ortaya almak hatalıdır." },
+      e: "„Könnten Sie mir … geben?“: nazik rica. Kişi Dativ (mir), şey Akkusativ (eine Bestätigung), mastar en sonda. „sie“ = die Bestätigung.", n: "Evet, lütfen. Bana rötar için bir belge verebilir misiniz? Patronum görmek istiyor." },
+    { s: "Bahnmitarbeiterin", g: "f", t: "Gern, hier ist sie. Gute Fahrt!", n: "Memnuniyetle, işte. İyi yolculuklar!" }
+  ],
+  questions: [
+    { id: "de-a2-d06.1", t: "mc", q: "Emre'nin treni kaç dakika rötarlı?", o: ["Yirmi dakika", "Yirmi beş dakika", "Otuz dakika"], a: 1,
+      why: { 0: "Yirmi dakika, biletin başka trenlerde geçerli olduğu sınırdır („ab zwanzig Minuten“), trenin gerçek rötarı değil.", 2: "Metinde otuz dakika geçmiyor; „dreißig“ sadece 14.30'daki kalkış saatinde var." },
+      e: "Çalışan: „Ihr Zug fährt mit fünfundzwanzig Minuten Verspätung ab.“ Yani 25 dakika. „ab zwanzig Minuten“ ise bilet kuralıdır." },
+    { id: "de-a2-d06.2", t: "gap", q: "Der Zug fährt nicht von Gleis fünf, ___ von Gleis neun.", a: ["sondern"],
+      wrong: { "aber": "„aber“ karşıtlık bildirir ama olumsuzdan sonra düzeltme yapmaz. „nicht A, sondern B“ kalıbı „A değil, B“ demektir.", "denn": "„denn“ sebep bildirir (çünkü). Burada sebep değil, düzeltme var." },
+      e: "„nicht … , sondern …“ = …değil, … . Olumsuz bir ifadeyi düzeltirken „sondern“ kullanılır; Türkçesi „-değil, -dir“ yapısına yakındır." },
+    { id: "de-a2-d06.3", t: "match", q: "Almanca cümleleri Türkçe karşılıklarıyla eşleştir.",
+      p: [["Der Zug hat Verspätung.", "Tren rötarlı."], ["Ihre Fahrkarte gilt auch für andere Züge.", "Biletiniz başka trenler için de geçerli."], ["Sie erreichen Gleis neun über die Unterführung.", "Dokuzuncu perona alt geçitten ulaşırsınız."], ["Ich brauche eine Bestätigung.", "Bir belgeye ihtiyacım var."]],
+      e: "„die Verspätung“ = rötar, „die Fahrkarte“ = bilet, „gelten“ = geçerli olmak, „die Unterführung“ = alt geçit, „die Bestätigung“ = onay belgesi." },
+    { id: "de-a2-d06.4", t: "order", q: "Cümleyi „Darf“ ile başlayarak sırala.", w: ["Darf", "ich", "wegen", "der", "Verspätung", "einen", "anderen", "Zug", "nehmen?"], a: ["Darf ich wegen der Verspätung einen anderen Zug nehmen?", "Darf ich einen anderen Zug wegen der Verspätung nehmen?"],
+      e: "Evet/hayır sorusunda fiil başta gelir (Darf), sonra özne (ich). „nehmen“ mastar olarak en sonda durur. „wegen der Verspätung“ cümlenin ortasında yer alır." }
+  ]
+});
+
+K.addDialog('de-a2-d07', {
+  level: 'A2', scene: 'laden', title: 'Die Jacke ist kaputt', sub: 'Mağazada kusurlu ürünü değiştirmek (fişle)',
+  role: 'Müşteri (Defne Yıldız)', roleG: 'f',
+  lines: [
+    { s: "Herr Wolf", g: "m", t: "Guten Tag, kann ich Ihnen helfen?", n: "İyi günler, size yardımcı olabilir miyim?" },
+    { me: true, id: "de-a2-d07.c1",
+      o: ["Guten Tag. Ich habe diese Jacke vor drei Tagen gekauft, aber der Reißverschluss ist kaputt.", "Guten Tag. Ich habe diese Jacke vor drei Tagen kaufen, aber der Reißverschluss ist kaputt.", "Guten Tag. Ich habe diese Jacke seit drei Tagen gekauft, aber der Reißverschluss ist kaputt."], a: 0,
+      why: { 1: "Perfekt'te „haben“ + Partizip II gerekir: „gekauft“. „kaufen“ mastardır; Perfekt'te yeri yoktur.", 2: "„seit“ hâlâ süren bir durumu anlatır (üç gündür). Geçmişte tek seferlik alışveriş için „vor drei Tagen“ (üç gün önce) kullanılır." },
+      e: "„vor drei Tagen“ = üç gün önce (vor + Dativ). Perfekt: „Ich habe … gekauft“. „der Reißverschluss“ = fermuar; „kaputt“ = bozuk.", n: "İyi günler. Bu ceketi üç gün önce aldım ama fermuarı bozuk." },
+    { s: "Herr Wolf", g: "m", t: "Oh, das tut mir leid. Haben Sie den Kassenbon dabei?", n: "Kusura bakmayın. Yanınızda kasa fişi var mı?" },
+    { me: true, id: "de-a2-d07.c2",
+      o: ["Ja, hier ist er. Ich habe ihn aufgehoben, weil man ihn bei einer Reklamation braucht.", "Ja, hier ist sie. Ich habe sie aufgehoben, weil man sie bei einer Reklamation braucht.", "Ja, hier ist er. Ich habe ihn aufgehoben, weil man braucht ihn bei einer Reklamation."], a: 0,
+      why: { 1: "„der Kassenbon“ eril olduğu için Nominativ'de „er“, Akkusativ'de „ihn“ gelir. „sie“ dişil isimler (die Quittung) içindir; Türkçede „o“ tek olduğu için bu hata sık yapılır.", 2: "„weil“ yan cümle başlatır, çekimli fiil sona gider: „weil man ihn … braucht“. „weil man braucht ihn“ ana cümle sırasıdır ve yanlıştır." },
+      e: "„der Kassenbon → er / ihn“. „aufheben“ (saklamak) ayrılabilen fiildir; Perfekt: „aufgehoben“. „weil“ → fiil sonda.", n: "Evet, işte. Sakladım, çünkü değişim/iade için fiş gerekiyor." },
+    { s: "Herr Wolf", g: "m", t: "Danke. Das ist wirklich ein Defekt. Möchten Sie die Jacke umtauschen oder lieber Ihr Geld zurückbekommen?", n: "Teşekkürler. Gerçekten bir kusur var. Ceketi değiştirmek mi istersiniz, yoksa paranızı geri mi almak?" },
+    { me: true, id: "de-a2-d07.c3",
+      o: ["Ich möchte sie umtauschen. Haben Sie dieselbe Jacke noch in Größe M?", "Ich möchte es umtauschen. Haben Sie dieselbe Jacke noch in Größe M?", "Ich möchte sie tauschen um. Haben Sie dieselbe Jacke noch in Größe M?"], a: 0,
+      why: { 1: "„die Jacke“ dişildir, bu yüzden „sie“ gerekir. „es“ yalnızca nötr isimler (das Hemd gibi) için kullanılır.", 2: "Modal fiille (möchte) ayrılabilen fiil mastar halinde ayrılmaz: „umtauschen“ bir bütün olarak sona gider. „tauschen um“ yanlıştır." },
+      e: "„die Jacke → sie“. „umtauschen“ (değiştirmek): „Ich möchte sie umtauschen.“ Modal fiille mastar birleşik kalır; ayrılma sadece düz cümlede olur: „Ich tausche sie um.“", n: "Değiştirmek istiyorum. Aynı ceketin M bedeni hâlâ var mı?" },
+    { s: "Herr Wolf", g: "m", t: "Moment, ich schaue nach. Ja, wir haben noch eine in Größe M. Soll ich sie holen?", n: "Bir dakika, bakıyorum. Evet, M bedende hâlâ bir tane var. Getireyim mi?" },
+    { me: true, id: "de-a2-d07.c4",
+      o: ["Ja, bitte. Aber ich probiere sie vorher an. Wo ist die Umkleidekabine?", "Ja, bitte. Aber ich anprobiere sie vorher. Wo ist die Umkleidekabine?", "Ja, bitte. Aber ich probiere sie vorher an. Wo ist der Umkleidekabine?"], a: 0,
+      why: { 1: "„anprobieren“ ayrılabilen bir fiildir. Düz cümlede ön ek sona gider: „ich probiere sie an“. „ich anprobiere“ yanlıştır.", 2: "Bileşik isimlerde artikeli son kelime belirler: die Kabine → die Umkleidekabine." },
+      e: "„anprobieren“ = denemek (giysi): „Ich probiere die Jacke an.“ „die Umkleidekabine“ = soyunma kabini. „Wo ist …?“ ile yer sorulur.", n: "Evet, lütfen. Ama önce deneyeceğim. Deneme kabini nerede?" },
+    { s: "Herr Wolf", g: "m", t: "Dort hinten links. Und keine Sorge: Der Umtausch kostet nichts. Den neuen Kassenbon bekommen Sie an der Kasse.", n: "Şurada arkada solda. Endişelenmeyin: Değişim ücretsiz. Yeni fişi kasadan alırsınız." }
+  ],
+  questions: [
+    { id: "de-a2-d07.1", t: "mc", q: "Defne'nin ceketinde ne bozuk?", o: ["Fermuar", "Cep", "Düğme"], a: 0,
+      why: { 1: "Cepten söz edilmiyor; Defne „der Reißverschluss ist kaputt“ diyor.", 2: "Düğmeden söz edilmiyor; bozuk olan fermuardır („Reißverschluss“)." },
+      e: "Defne: „Der Reißverschluss ist kaputt.“ „der Reißverschluss“ = fermuar (cep: die Tasche, düğme: der Knopf)." },
+    { id: "de-a2-d07.2", t: "gap", q: "Ich habe die Jacke vor drei Tagen ___.", a: ["gekauft"],
+      wrong: { "kaufen": "Perfekt'te mastar kullanılmaz; „haben“ + Partizip II gerekir: gekauft.", "gekaufen": "„kaufen“ düzenli (zayıf) bir fiildir: ge- + kauf + -t = gekauft. „-en“ ile biten Partizip düzensiz fiillerde olur." },
+      e: "„kaufen“ → „gekauft“ (düzenli fiil: ge + gövde + t). Perfekt: Ich habe die Jacke gekauft." },
+    { id: "de-a2-d07.3", t: "match", q: "Almanca cümleleri Türkçe karşılıklarıyla eşleştir.",
+      p: [["Haben Sie den Kassenbon dabei?", "Yanınızda fiş var mı?"], ["Ich möchte die Jacke umtauschen.", "Ceketi değiştirmek istiyorum."], ["Der Umtausch kostet nichts.", "Değişim ücretsiz."], ["Der Reißverschluss ist kaputt.", "Fermuar bozuk."]],
+      e: "„der Kassenbon“ = kasa fişi, „umtauschen“ = değiştirmek, „kosten“ = ücreti olmak, „kaputt“ = bozuk." },
+    { id: "de-a2-d07.4", t: "order", q: "Cümleyi „Ich“ ile başlayarak sırala.", w: ["Ich", "habe", "die", "Jacke", "vor", "drei", "Tagen", "gekauft."], a: ["Ich habe die Jacke vor drei Tagen gekauft.", "Ich habe vor drei Tagen die Jacke gekauft."],
+      e: "Perfekt'te çekimli yardımcı fiil (habe) ikinci sırada, Partizip II (gekauft) en sonda durur. Zaman ifadesi „vor drei Tagen“ nesneden önce de sonra da gelebilir." }
+  ]
+});
+
+K.addDialog('de-a2-d08', {
+  level: 'A2', scene: 'post', title: 'Abholschein und Paket', sub: 'Postanede paket almak ve Türkiye\'ye göndermek',
+  role: 'Müşteri (Kemal Arslan)', roleG: 'm',
+  lines: [
+    { s: "Postmitarbeiterin", g: "f", t: "Guten Tag, was kann ich für Sie tun?", n: "İyi günler, sizin için ne yapabilirim?" },
+    { me: true, id: "de-a2-d08.c1",
+      o: ["Guten Tag. Ich habe einen Abholschein im Briefkasten gefunden. Ich möchte mein Paket abholen.", "Guten Tag. Ich habe einen Abholschein im Briefkasten gefunden. Ich möchte mein Paket abholt.", "Guten Tag. Ich habe einen Abholschein in den Briefkasten gefunden. Ich möchte mein Paket abholen."], a: 0,
+      why: { 1: "„möchte“ gibi modal fiilden sonra asıl fiil mastar olur: „abholen“. „abholt“ çekimli bir şekildir (yan cümlede: …, dass er es abholt). Modal fiilden sonra mastar gerekir: abholen.", 2: "„Wo?“ (nerede?) sorusunda „in“ Dativ alır: „im Briefkasten“ (in dem). „in den“ Akkusativ'dir ve hareketi (nereye?) anlatır. Türkçede „-de“ ile „-e“ ayrımını burada hatırla." },
+      e: "Yer sorusu (Wo?) → Dativ: „im Briefkasten gefunden“. „abholen“ = gidip almak. Modal fiille mastar sonda: „Ich möchte mein Paket abholen.“", n: "İyi günler. Posta kutusunda bir teslim alma bildirimi buldum. Paketimi almak istiyorum." },
+    { s: "Postmitarbeiterin", g: "f", t: "Gern. Bitte zeigen Sie mir den Abholschein und Ihren Ausweis.", n: "Tabii. Lütfen teslim alma bildirimini ve kimliğinizi gösterin." },
+    { me: true, id: "de-a2-d08.c2",
+      o: ["Hier ist der Abholschein, und hier ist mein Ausweis.", "Hier ist der Abholschein, und hier ist meine Ausweis.", "Hier ist den Abholschein, und hier ist mein Ausweis."], a: 0,
+      why: { 1: "„der Ausweis“ eriltir; sahiplik eki „mein“ olur. „meine“ dişil isimler içindir (meine Karte). İyelik sözcüğü (Possessivartikel) ismin cinsiyetine göre değişir.", 2: "„sein“ fiilinden sonra Nominativ gelir: „hier ist der Abholschein“. „den“ Akkusativ'dir; „zeigen“ cümlesindeki Akkusativ'le karıştırılmış." },
+      e: "„sein“ (ist) + Nominativ: der Abholschein, mein Ausweis. Akkusativ ise eylemden gelen nesnede olur: „Zeigen Sie mir den Abholschein.“ „der Ausweis“ = kimlik.", n: "İşte teslim alma bildirimi, işte kimliğim." },
+    { s: "Postmitarbeiterin", g: "f", t: "Danke. Einen Moment, ich hole Ihr Paket. So, bitte unterschreiben Sie hier. Füllen Sie bitte noch die Zollinhaltserklärung aus. Möchten Sie noch etwas aufgeben?", n: "Teşekkürler. Bir dakika, paketinizi getiriyorum. Şimdi lütfen buraya imzalayın. Gümrük içerik beyanını da doldurun lütfen. Başka bir şey göndermek ister misiniz?" },
+    { me: true, id: "de-a2-d08.c3",
+      o: ["Ja, ich möchte ein Paket in die Türkei schicken. Wie lange dauert das, und was kostet es?", "Ja, ich möchte ein Paket an die Türkei schicken. Wie lange dauert das, und was kostet es?", "Ja, ich möchte ein Paket in der Türkei schicken. Wie lange dauert das, und was kostet es?"], a: 0,
+      why: { 1: "„an die Türkei“ ülkeyi alıcı gibi gösterir. Hedef ülke için „in die Türkei“ (Akkusativ) denir; „nach“ yalnızca artikelsiz ülkelerde kullanılır (nach Frankreich).", 2: "„schicken“ hareket içerir (nereye?), bu yüzden „in“ Akkusativ ister: „in die Türkei“. „in der Türkei“ (Dativ) bulunulan yeri anlatır." },
+      e: "„die Türkei“ artikelli bir ülke adıdır: nereye? → „in die Türkei“ (Akkusativ). Artikelsiz ülkelerde „nach“ kullanılır: nach Deutschland. „aufgeben“ = (postaya) vermek, göndermek.", n: "Evet, Türkiye'ye bir paket göndermek istiyorum. Ne kadar sürüyor ve ne kadar tutuyor?" },
+    { s: "Postmitarbeiterin", g: "f", t: "Legen Sie das Paket bitte auf die Waage. Es wiegt vier Kilo. Mit dem Standardversand dauert es etwa eine Woche und kostet neununddreißig Euro. Der Expressversand dauert nur drei Tage, kostet aber neunundsechzig Euro.", n: "Lütfen paketi teraziye koyun. Dört kilo geliyor. Standart gönderimle yaklaşık bir hafta sürer ve otuz dokuz euro tutar. Ekspres gönderim sadece üç gün sürer ama altmış dokuz euro tutar." },
+    { me: true, id: "de-a2-d08.c4",
+      o: ["Der Expressversand ist mir zu teuer. Ich nehme den normalen Versand. Kann ich bar zahlen? Meine neue Bankkarte kommt erst nächste Woche.", "Der Expressversand ist mich zu teuer. Ich nehme den normalen Versand. Kann ich bar zahlen? Meine neue Bankkarte kommt erst nächste Woche.", "Der Expressversand ist mir zu teuer. Ich nehme der normale Versand. Kann ich bar zahlen? Meine neue Bankkarte kommt erst nächste Woche."], a: 0,
+      why: { 1: "„zu teuer sein“ ile kişi Dativ'de söylenir: „mir zu teuer“ = bana çok pahalı. „mich“ Akkusativ'dir.", 2: "„nehmen“ Akkusativ ister: „den normalen Versand“ (der Versand eril). „der normale“ Nominativ'dir ve burada yanlış." },
+      e: "„Das ist mir zu teuer.“ (Dativ). „Ich nehme den normalen Versand.“ (Akkusativ, eril: der → den, sıfat sonu -en). „bar zahlen“ = nakit ödemek; „die Bankkarte“ = banka kartı.", n: "Ekspres gönderim bana çok pahalı. Normal gönderimi seçiyorum. Nakit ödeyebilir miyim? Yeni banka kartım ancak gelecek hafta gelecek." },
+    { s: "Postmitarbeiterin", g: "f", t: "Natürlich, bar geht auch. Das macht neununddreißig Euro. Hier ist Ihre Quittung. Das Paket kommt in etwa einer Woche an. Schönen Tag noch!", n: "Tabii, nakit de olur. Toplam otuz dokuz euro. İşte makbuzunuz. Paket yaklaşık bir hafta içinde varır. İyi günler!" }
+  ],
+  questions: [
+    { id: "de-a2-d08.1", t: "mc", q: "Kemal paketini almak için neye ihtiyaç duyuyor?", o: ["Yalnızca teslim alma bildirimine", "Teslim alma bildirimine ve kimliğe", "Kasa fişine ve banka kartına"], a: 1,
+      why: { 0: "Çalışan iki şey istiyor: „den Abholschein und Ihren Ausweis“. Yalnızca bildirim yetmez.", 2: "Kasa fişi ve banka kartı istenmiyor; Kemal zaten nakit ödeyecek." },
+      e: "Çalışan: „Bitte zeigen Sie mir den Abholschein und Ihren Ausweis.“ Paketi teslim almak için bildirim ve kimlik gerekir." },
+    { id: "de-a2-d08.2", t: "gap", q: "Kemal schickt das Paket in die ___.", a: ["Türkei"],
+      wrong: { "Türkiye": "„Türkiye“ Türkçe yazımdır. Almancada ülkenin adı „die Türkei“.", "türkei": "Almancada özel adlar ve isimler büyük harfle başlar: Türkei." },
+      e: "„die Türkei“ dişildir ve artikelle kullanılır: „in die Türkei“ (nereye? → Akkusativ). Yazımda „ü“ ve „ei“ dikkat: Tür-kei." },
+    { id: "de-a2-d08.3", t: "match", q: "Almanca cümleleri Türkçe karşılıklarıyla eşleştir.",
+      p: [["Ich habe einen Abholschein bekommen.", "Bir teslim alma bildirimi aldım."], ["Bitte unterschreiben Sie hier.", "Lütfen buraya imzalayın."], ["Ich zahle bar.", "Nakit ödüyorum."], ["Der Versand dauert eine Woche.", "Gönderim bir hafta sürüyor."]],
+      e: "„der Abholschein“ = teslim alma bildirimi, „unterschreiben“ = imzalamak, „bar zahlen“ = nakit ödemek, „der Versand“ = gönderim." },
+    { id: "de-a2-d08.4", t: "order", q: "Cümleyi „Ich“ ile başlayarak sırala.", w: ["Ich", "möchte", "heute", "mein", "Paket", "abholen."], a: ["Ich möchte heute mein Paket abholen.", "Ich möchte mein Paket heute abholen."],
+      e: "Modal fiil (möchte) ikinci sırada, asıl fiil mastar (abholen) en sonda. „heute“ zaman bilgisi olduğu için nesneden önce de sonra da gelebilir." }
+  ]
+});
+
+K.addDialog('de-a2-d09', {
+  level: 'A2', scene: 'fest', title: 'Einladung zum Geburtstag', sub: 'Doğum günü daveti: kabul etmek, ne getireceğini sormak (birbirinize „sen“ diye hitap ediyorsunuz)',
+  role: 'Konuk (Burak Şahin)', roleG: 'm',
+  lines: [
+    { s: "Anna", g: "f", t: "Hallo Burak, ich werde am Samstag dreißig und feiere bei mir zu Hause. Hast du Lust zu kommen?", n: "Merhaba Burak, cumartesi günü otuz yaşına giriyorum ve evimde kutlayacağım. Gelmek ister misin?" },
+    { me: true, id: "de-a2-d09.c1",
+      o: ["Oh, das freut mich! Vielen Dank für die Einladung. Ich komme sehr gern.", "Oh, das freut mich! Vielen Dank für die Einladung. Ich kommen sehr gern.", "Oh, das freut mich! Vielen Dank für der Einladung. Ich komme sehr gern."], a: 0,
+      why: { 1: "Özne „ich“ ile fiil „komme“ olur. „kommen“ mastardır ve çekimlenmemiştir. Türkçede kişi eki fiile eklenir; Almancada da fiili özneye göre çekimlemelisin.", 2: "„für“ her zaman Akkusativ ister. „die Einladung“ dişildir; „der“ Dativ/Genitiv şeklidir ve burada yanlıştır." },
+      e: "Daveti kabul ederken: „Vielen Dank für die Einladung. Ich komme gern.“ (für + Akkusativ, ich komme). „Das freut mich“ = sevindim.", n: "Ah, çok sevindim! Davet için çok teşekkürler. Çok memnuniyetle gelirim." },
+    { s: "Anna", g: "f", t: "Super! Wir fangen um sieben an. Möchtest du etwas zu essen oder zu trinken mitbringen? Das ist aber nicht nötig.", n: "Harika! Yedide başlıyoruz. Yiyecek ya da içecek bir şey getirmek ister misin? Ama şart değil." },
+    { me: true, id: "de-a2-d09.c2",
+      o: ["Gern. Ich backe einen Kuchen und bringe ihn mit. Ist das okay?", "Gern. Ich backe einen Kuchen und bringe mit ihn. Ist das okay?", "Gern. Ich backe einen Kuchen und bringe sie mit. Ist das okay?"], a: 0,
+      why: { 1: "„mitbringen“ ayrılabilen fiildir; „mit“ en sona gider, ama nesne (ihn) ondan önce gelir: „bringe ihn mit“. „bringe mit ihn“ diye sıralamak hatalıdır.", 2: "„der Kuchen“ eril olduğu için Akkusativ'de „ihn“ gerekir. „sie“ dişil veya çoğul isimler içindir." },
+      e: "„mitbringen“ (yanında getirmek): „Ich bringe einen Kuchen mit.“ Nesne zamiri araya girer: „Ich bringe ihn mit.“ „der Kuchen → ihn“.", n: "Memnuniyetle. Bir pasta yapıp getireceğim. Olur mu?" },
+    { s: "Anna", g: "f", t: "Das wäre toll! Kannst du bis zum Ende bleiben? Wir feiern bestimmt lange.", n: "Harika olur! Sonuna kadar kalabilir misin? Eminim uzun kutlarız." },
+    { me: true, id: "de-a2-d09.c3",
+      o: ["Leider kann ich nicht bis zum Ende bleiben, weil ich am Sonntag früh aufstehen muss. Ich gehe gegen zehn Uhr.", "Leider kann ich nicht bis zum Ende bleiben, weil ich muss am Sonntag früh aufstehen. Ich gehe gegen zehn Uhr.", "Leider ich kann nicht bis zum Ende bleiben, weil ich am Sonntag früh aufstehen muss. Ich gehe gegen zehn Uhr."], a: 0,
+      why: { 1: "„weil“ yan cümlede çekimli fiil sona gider: „weil ich … aufstehen muss“. „weil ich muss …“ ana cümle sırasıdır.", 2: "Cümle „Leider“ ile başladığında fiil ikinci sırada gelir: „Leider kann ich …“. „Leider ich kann“ hatalıdır; Türkçede fiil sonda olduğu için bu hata sık görülür." },
+      e: "Nazik ret: „Leider kann ich nicht …, weil …“. İlk yerde „Leider“ varsa fiil hemen arkasından gelir; „weil“ yan cümlesinde fiil sondadır. „gegen zehn Uhr“ = saat on civarı.", n: "Maalesef sonuna kadar kalamam, çünkü pazar günü erken kalkmam gerekiyor. Saat on civarı çıkarım." },
+    { s: "Anna", g: "f", t: "Schade, aber das ist kein Problem. Du kommst also um sieben und gehst gegen zehn. Hast du noch meine Adresse? Ich wohne in der Lindenstraße.", n: "Yazık, ama sorun değil. Yani yedide geliyorsun ve on civarı çıkıyorsun. Adresim hâlâ sende mi? Lindenstraße'de oturuyorum." },
+    { me: true, id: "de-a2-d09.c4",
+      o: ["Ja, ich habe sie noch. Ich freue mich schon auf Samstag. Bis dann!", "Ja, ich habe sie noch. Ich freue mich schon für Samstag. Bis dann!", "Ja, ich habe sie noch. Ich freue mir schon auf Samstag. Bis dann!"], a: 0,
+      why: { 1: "Gelecekteki bir şeye sevinmek için „sich freuen auf + Akkusativ“ kullanılır. „für“ burada yanlıştır.", 2: "„sich freuen“ yansıtmalı fiildir ve zamiri Akkusativ'dir: „ich freue mich“. „mir“ (Dativ) yanlıştır." },
+      e: "„sich freuen auf“ + Akkusativ = (gelecekteki) bir şeyi dört gözle beklemek: „Ich freue mich auf Samstag.“ „über“ ise yaşanan/olan bir şeye sevinmek içindir.", n: "Evet, hâlâ bende. Cumartesi için şimdiden çok heyecanlıyım. Görüşürüz!" },
+    { s: "Anna", g: "f", t: "Prima, dann bis Samstag! Tschüss!", n: "Süper, o zaman cumartesiye kadar! Hoşça kal!" }
+  ],
+  questions: [
+    { id: "de-a2-d09.1", t: "mc", q: "Anna'nın kutlaması saat kaçta başlıyor?", o: ["Altıda", "Yedide", "Onda"], a: 1,
+      why: { 0: "Altı demiyor; Anna: „Wir fangen um sieben an.“", 2: "Saat on, Burak'ın evden ayrılmak istediği zamandır („gegen zehn“)." },
+      e: "Anna: „Wir fangen um sieben an.“ „anfangen“ ayrılabilen fiildir: „Wir fangen … an“. Başlangıç saat yedi." },
+    { id: "de-a2-d09.2", t: "gap", q: "Ich freue mich ___ Samstag.", a: ["auf"],
+      wrong: { "für": "„für“ amaç veya fayda bildirir. Gelecekteki bir şeyi beklerken „sich freuen auf“ kullanılır.", "über": "„sich freuen über“ olmuş/bugün yaşanan bir şeye sevinmek içindir (örn. bir hediye). Cumartesi henüz gelmedi, bu yüzden „auf“." },
+      e: "„sich freuen auf + Akkusativ“ = gelecekteki bir şeyi sabırsızlıkla beklemek. „sich freuen über + Akkusativ“ = şu an olan/olmuş bir şeye sevinmek." },
+    { id: "de-a2-d09.3", t: "match", q: "Almanca cümleleri Türkçe karşılıklarıyla eşleştir.",
+      p: [["Hast du Lust zu kommen?", "Gelmek ister misin?"], ["Vielen Dank für die Einladung.", "Davet için çok teşekkürler."], ["Ich kann leider nicht bis zum Ende bleiben.", "Maalesef sonuna kadar kalamam."], ["Ich bringe einen Kuchen mit.", "Bir pasta getiriyorum."]],
+      e: "„Lust haben“ = canı istemek, „die Einladung“ = davet, „das Ende“ = son, „mitbringen“ = yanında getirmek." },
+    { id: "de-a2-d09.4", t: "order", q: "Cümleyi „Leider“ ile başlayarak sırala.", w: ["Leider", "kann", "ich", "nicht", "bis", "zum", "Ende", "bleiben."], a: ["Leider kann ich nicht bis zum Ende bleiben."],
+      e: "Cümle „Leider“ ile başlıyorsa fiil (kann) ikinci sıraya gelir, özne (ich) fiilden sonra durur. Mastar „bleiben“ en sonda yer alır." }
+  ]
+});
+
+K.addDialog('de-a2-d10', {
+  level: 'A2', scene: 'urlaub', title: 'Hotel buchen und Ausflug planen', sub: 'Telefonla otel odası ayırtmak ve gezi önerisi almak',
+  role: 'Tatilci (Nilay Korkmaz)', roleG: 'f',
+  lines: [
+    { s: "Rezeption", g: "f", t: "Hotel Seeblick, guten Tag. Wie kann ich Ihnen helfen?", n: "Hotel Seeblick, iyi günler. Size nasıl yardımcı olabilirim?" },
+    { me: true, id: "de-a2-d10.c1",
+      o: ["Guten Tag. Ich möchte ein Doppelzimmer für drei Nächte buchen, vom zwölften bis zum fünfzehnten Juli.", "Guten Tag. Ich möchte ein Doppelzimmer für drei Nächte buchen, vom zwölf bis zum fünfzehn Juli.", "Guten Tag. Ich möchte ein Doppelzimmer für drei Nacht buchen, vom zwölften bis zum fünfzehnten Juli."], a: 0,
+      why: { 1: "Tarihlerde sıra sayıları (Ordinalzahlen) kullanılır: „der zwölfte“, „vom zwölften“. „zwölf“ asıl sayıdır ve tarih için yanlıştır.", 2: "birden büyük sayılardan sonra isim çoğul olur: „die Nacht → die Nächte“. „drei Nacht“ yanlıştır. Türkçede sayıdan sonra isim tekil kalır, Almancada kalmaz." },
+      e: "Tarih: „vom zwölften bis zum fünfzehnten Juli“ (vom/zum + Dativ, sıra sayısı + -en). „die Nacht, die Nächte“: sayıdan sonra çoğul.", n: "İyi günler. 12–15 Temmuz arası, üç gece için çift kişilik bir oda ayırtmak istiyorum." },
+    { s: "Rezeption", g: "f", t: "Gern. In dieser Zeit haben wir noch zwei Zimmer frei: eins mit Seeblick für neunzig Euro pro Nacht und eins mit Blick auf die Stadt für siebzig Euro. Welches möchten Sie?", n: "Tabii. O tarihlerde iki odamız boş: biri göl manzaralı, gecesi doksan euro; diğeri şehir manzaralı, gecesi yetmiş euro. Hangisini istersiniz?" },
+    { me: true, id: "de-a2-d10.c2",
+      o: ["Ich nehme das Zimmer mit Seeblick. Ist das Frühstück im Preis inbegriffen?", "Ich nehme den Zimmer mit Seeblick. Ist das Frühstück im Preis inbegriffen?", "Ich nehme das Zimmer mit Seeblick, weil es ist schöner. Ist das Frühstück im Preis inbegriffen?"], a: 0,
+      why: { 1: "„das Zimmer“ nötrdür (Almancada „oda“ der değil, das). Akkusativ'de nötr artikel değişmez: „das Zimmer“.", 2: "„weil“ yan cümlesinde fiil sona gider: „weil es schöner ist“. „weil es ist schöner“ yanlıştır." },
+      e: "„das Zimmer“ nötr → Akkusativ'de de „das“. „im Preis inbegriffen“ = fiyata dahil. „weil es schöner ist“ yazsaydın fiil sonda olurdu.", n: "Göl manzaralı odayı alıyorum. Kahvaltı fiyata dahil mi?" },
+    { s: "Rezeption", g: "f", t: "Ja, das Frühstück ist im Preis inbegriffen. Soll ich das Zimmer für Sie reservieren?", n: "Evet, kahvaltı fiyata dahil. Odayı sizin için ayırtayım mı?" },
+    { me: true, id: "de-a2-d10.c3",
+      o: ["Ja, bitte reservieren Sie es. Mein Name ist Korkmaz. Wir kommen am Freitag gegen fünf Uhr an.", "Ja, bitte reservieren Sie es. Mein Name ist Korkmaz. Wir ankommen am Freitag gegen fünf Uhr.", "Ja, bitte reservieren Sie ihn. Mein Name ist Korkmaz. Wir kommen am Freitag gegen fünf Uhr an."], a: 0,
+      why: { 1: "„ankommen“ ayrılabilen fiildir: düz cümlede „wir kommen … an“. „wir ankommen“ yanlıştır.", 2: "„das Zimmer“ nötr olduğu için „es“ gerekir. „ihn“ eril isimler içindir (der Platz → ihn)." },
+      e: "„ankommen“ (varmak): „Wir kommen am Freitag an.“ „das Zimmer → es“. „gegen fünf Uhr“ = saat beş civarı.", n: "Evet, lütfen ayırtın. Adım Korkmaz. Cuma günü saat beş civarı varıyoruz." },
+    { s: "Rezeption", g: "f", t: "Gut, ich habe Sie eingetragen, Frau Korkmaz. Brauchen Sie sonst noch Informationen?", n: "Tamam, sizi kaydettim Bayan Korkmaz. Başka bilgiye ihtiyacınız var mı?" },
+    { me: true, id: "de-a2-d10.c4",
+      o: ["Ja. Wir möchten am Samstag einen Ausflug machen. Was können Sie uns empfehlen?", "Ja. Wir möchten am Samstag einen Ausflug machen. Was können Sie wir empfehlen?", "Ja. Wir möchten am Samstag ein Ausflug machen. Was können Sie uns empfehlen?"], a: 0,
+      why: { 1: "„empfehlen“ ile kişi Dativ'de olur: „uns“ = bize. „wir“ Nominativ'dir ve burada yanlıştır.", 2: "„der Ausflug“ eril olduğu için Akkusativ'de „einen Ausflug“ gerekir. „ein“ Nominativ'dir." },
+      e: "„einen Ausflug machen“ = gezi yapmak (der Ausflug → einen). „jemandem etwas empfehlen“: kişi Dativ (uns), şey Akkusativ.", n: "Evet. Cumartesi günü bir gezi yapmak istiyoruz. Bize ne önerebilirsiniz?" },
+    { s: "Rezeption", g: "f", t: "Wenn das Wetter schön ist, können Sie mit dem Schiff über den See fahren. Es fährt um zehn Uhr am Hafen ab, und die Fahrt dauert zwei Stunden. Wenn es regnet, ist das Museum in der Stadt eine gute Idee. Wir freuen uns auf Sie!", n: "Hava güzelse gemiyle göl turu yapabilirsiniz. Gemi saat onda limandan kalkıyor ve yolculuk iki saat sürüyor. Yağmur yağarsa şehirdeki müze iyi bir fikir. Sizi bekliyoruz!" }
+  ],
+  questions: [
+    { id: "de-a2-d10.1", t: "mc", q: "Nilay hangi odayı seçiyor?", o: ["Göl manzaralı oda", "Şehir manzaralı oda", "Tek kişilik oda"], a: 0,
+      why: { 1: "Şehir manzaralı oda daha ucuz ama Nilay onu seçmiyor: „Ich nehme das Zimmer mit Seeblick.“", 2: "Nilay baştan bir çift kişilik oda („Doppelzimmer“) istiyor, tek kişilik değil." },
+      e: "Nilay: „Ich nehme das Zimmer mit Seeblick.“ „der Seeblick“ = göl manzarası; „Doppelzimmer“ = çift kişilik oda." },
+    { id: "de-a2-d10.2", t: "gap", q: "Die Fahrt mit dem Schiff dauert zwei ___.", a: ["Stunden"],
+      wrong: { "Stunde": "„zwei“ ile birden çok olduğu için isim çoğul olur: die Stunde → die Stunden.", "stunden": "Almancada isimler büyük harfle yazılır: Stunden." },
+      e: "„die Stunde, die Stunden“ (dişil isimlerde çoğul genelde -n/-en). İki saat: „zwei Stunden“. Türkçede sayıdan sonra çoğul eki gelmediği için bu hata sık yapılır." },
+    { id: "de-a2-d10.3", t: "match", q: "Almanca cümleleri Türkçe karşılıklarıyla eşleştir.",
+      p: [["Ich möchte ein Zimmer buchen.", "Bir oda ayırtmak istiyorum."], ["Das Frühstück ist im Preis inbegriffen.", "Kahvaltı fiyata dahil."], ["Wir kommen gegen fünf Uhr an.", "Saat beş civarı varıyoruz."], ["Was können Sie uns empfehlen?", "Bize ne önerebilirsiniz?"]],
+      e: "„buchen“ = (yer) ayırtmak/rezervasyon yapmak, „inbegriffen“ = dahil, „ankommen“ = varmak, „empfehlen“ = önermek." },
+    { id: "de-a2-d10.4", t: "order", q: "Cümleyi „Wir“ ile başlayarak sırala.", w: ["Wir", "möchten", "am", "Samstag", "einen", "Ausflug", "machen."], a: ["Wir möchten am Samstag einen Ausflug machen.", "Wir möchten einen Ausflug am Samstag machen."],
+      e: "Modal fiil (möchten) ikinci sırada, asıl fiil mastar (machen) en sonda. Zaman bilgisi („am Samstag“) nesneden önce gelir; nesneden sonra da mümkündür ama daha az doğaldır." }
+  ]
+});
+
 })(window.KOPRU);
