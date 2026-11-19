@@ -584,14 +584,17 @@ atest('storage: Übertragungscode von neuerer App wird abgelehnt (wie Datei)', a
 
 /* ================= check / catalog (ADR-12.9, Schritt 2) =================
  * Erwartungswerte stammen aus dem Ist-Zustand von js/app.js VOR der Verschiebung nach js/core/check.js. */
+const tfx = k => 'T:' + k;
 const CHECK_TABLE = [
   ["mc ok",{"t":"mc","o":["a","b","c"],"a":1,"why":{"0":"w0","2":"w2"}},{"sel":1},"de",{"ok":true,"given":"b","correct":"b"}],
   ["mc falsch+why",{"t":"mc","o":["a","b","c"],"a":1,"why":{"0":"w0","2":"w2"}},{"sel":2},"de",{"ok":false,"given":"c","correct":"b","hint":"w2"}],
   ["mc falsch ohne why",{"t":"mc","o":["a","b"],"a":1},{"sel":0},"tr",{"ok":false,"given":"a","correct":"b"}],
   ["listen ok",{"t":"listen","say":"x","o":["a","b"],"a":0,"why":{"1":"nein"}},{"sel":0},"tr",{"ok":true,"given":"a","correct":"a"}],
   ["listen falsch",{"t":"listen","say":"x","o":["a","b"],"a":0,"why":{"1":"nein"}},{"sel":1},"tr",{"ok":false,"given":"b","correct":"a","hint":"nein"}],
-  ["gap ok",{"t":"gap","q":"___","a":["Haus"]},{"input":"haus"},"de",{"ok":true,"given":"haus","correct":"Haus","hint":null}],
-  ["gap ok Satzzeichen/Leerraum",{"t":"gap","q":"___","a":["ich bin"]},{"input":"  Ich   bin! "},"de",{"ok":true,"given":"  Ich   bin! ","correct":"ich bin","hint":null}],
+  ["gap ok",{"t":"gap","q":"___","a":["Haus"]},{"input":"Haus"},"de",{"ok":true,"given":"Haus","correct":"Haus","hint":null}],
+  ["gap strikt: Nomen klein (geändert, früher ok)",{"t":"gap","q":"___","a":["Haus"]},{"input":"haus"},"de",{"ok":false,"given":"haus","correct":"Haus","hint":"T:caseHint"}],
+  ["gap strikt: Groß+Satzzeichen (geändert, früher ok)",{"t":"gap","q":"___","a":["ich bin"]},{"input":"  Ich   bin! "},"de",{"ok":false,"given":"  Ich   bin! ","correct":"ich bin","hint":"T:casePunctHint"}],
+  ["gap Leerraum toleriert",{"t":"gap","q":"___","a":["ich bin"]},{"input":"  ich   bin "},"de",{"ok":true,"given":"  ich   bin ","correct":"ich bin","hint":null}],
   ["gap alt zweite Antwort",{"t":"gap","q":"___","a":["a1","a2"]},{"input":"a2"},"de",{"ok":true,"given":"a2","correct":"a1","hint":null}],
   ["gap cs ok",{"t":"gap","q":"___","a":["Haus"],"cs":true},{"input":"Haus"},"de",{"ok":true,"given":"Haus","correct":"Haus","hint":null}],
   ["gap cs Hinweis",{"t":"gap","q":"___","a":["Haus"],"cs":true},{"input":"haus"},"de",{"ok":false,"given":"haus","correct":"Haus","hint":"T:caseHint"}],
@@ -601,8 +604,8 @@ const CHECK_TABLE = [
   ["gap tr ç",{"t":"gap","q":"___","a":["çocuk"]},{"input":"cocuk"},"tr",{"ok":false,"given":"cocuk","correct":"çocuk","hint":"T:specialChars"}],
   ["gap tr ğ",{"t":"gap","q":"___","a":["dağ"]},{"input":"dag"},"tr",{"ok":false,"given":"dag","correct":"dağ","hint":"T:specialChars"}],
   ["gap tr ı",{"t":"gap","q":"___","a":["kız"]},{"input":"kiz"},"tr",{"ok":false,"given":"kiz","correct":"kız","hint":"T:specialChars"}],
-  ["gap tr İ/I ok",{"t":"gap","q":"___","a":["Işık"]},{"input":"ışık"},"tr",{"ok":true,"given":"ışık","correct":"Işık","hint":null}],
-  ["gap tr İ Großschreibung",{"t":"gap","q":"___","a":["İstanbul"]},{"input":"istanbul"},"tr",{"ok":true,"given":"istanbul","correct":"İstanbul","hint":null}],
+  ["gap tr I/ı strikt (geändert, früher ok)",{"t":"gap","q":"___","a":["Işık"]},{"input":"ışık"},"tr",{"ok":false,"given":"ışık","correct":"Işık","hint":"T:caseHint"}],
+  ["gap tr İ Großschreibung (geändert, früher ok)",{"t":"gap","q":"___","a":["İstanbul"]},{"input":"istanbul"},"tr",{"ok":false,"given":"istanbul","correct":"İstanbul","hint":"T:caseHint"}],
   ["gap tr I-Punkt",{"t":"gap","q":"___","a":["ıslak"]},{"input":"islak"},"tr",{"ok":false,"given":"islak","correct":"ıslak","hint":"T:specialChars"}],
   ["gap tr ö",{"t":"gap","q":"___","a":["göz"]},{"input":"goz"},"tr",{"ok":false,"given":"goz","correct":"göz","hint":"T:specialChars"}],
   ["gap tr ş",{"t":"gap","q":"___","a":["şeker"]},{"input":"seker"},"tr",{"ok":false,"given":"seker","correct":"şeker","hint":"T:specialChars"}],
@@ -611,8 +614,8 @@ const CHECK_TABLE = [
   ["gap de ä",{"t":"gap","q":"___","a":["Mädchen"]},{"input":"madchen"},"de",{"ok":false,"given":"madchen","correct":"Mädchen","hint":"T:specialChars"}],
   ["gap Apostroph",{"t":"gap","q":"___","a":["Ankara'ya"]},{"input":"Ankara’ya"},"tr",{"ok":true,"given":"Ankara’ya","correct":"Ankara'ya","hint":null}],
   ["gap Apostroph fehlt",{"t":"gap","q":"___","a":["Ankara'ya"]},{"input":"Ankaraya"},"tr",{"ok":false,"given":"Ankaraya","correct":"Ankara'ya","hint":"T:specialChars"}],
-  ["gap tr Satzzeichen",{"t":"gap","q":"___","a":["evet"]},{"input":"Evet."},"tr",{"ok":true,"given":"Evet.","correct":"evet","hint":null}],
-  ["dictation ok",{"t":"dictation","say":"s","a":["Guten Tag"]},{"input":"guten tag!"},"de",{"ok":true,"given":"guten tag!","correct":"Guten Tag","hint":null}],
+  ["gap tr Satzzeichen (geändert, früher ok)",{"t":"gap","q":"___","a":["evet"]},{"input":"Evet."},"tr",{"ok":false,"given":"Evet.","correct":"evet","hint":"T:casePunctHint"}],
+  ["dictation strikt (geändert, früher ok)",{"t":"dictation","say":"s","a":["Guten Tag"]},{"input":"guten tag!"},"de",{"ok":false,"given":"guten tag!","correct":"Guten Tag","hint":"T:casePunctHint"}],
   ["dictation Sonderzeichen",{"t":"dictation","say":"s","a":["Günaydın"]},{"input":"gunaydin"},"tr",{"ok":false,"given":"gunaydin","correct":"Günaydın","hint":"T:specialChars"}],
   ["dictation falsch",{"t":"dictation","say":"s","a":["Guten Tag"],"wrong":{"gute tag":"Endung"}},{"input":"Gute Tag"},"de",{"ok":false,"given":"Gute Tag","correct":"Guten Tag","hint":"Endung"}],
   ["speak selfOk",{"t":"speak","say":"Guten Tag"},{"selfOk":true},"de",{"ok":true,"given":"","correct":"Guten Tag"}],
@@ -633,7 +636,58 @@ const CHECK_TABLE = [
   ["match unvollständig",{"t":"match","p":[["a","1"],["b","2"]]},{"choice":["1",null]},"de",{"ok":false,"given":"a = 1 · b = –","correct":"a = 1 · b = 2","hint":null,"match":true}],
   ["unbekannter Typ",{"t":"zzz"},{},"de",{"ok":false}]
 ];
-const tfx = k => 'T:' + k;
+/* Strikte Schreibprüfung (gap, dictation): Groß-/Kleinschreibung und Satzzeichen zählen. [name, ex, input, lang, ok, hint] */
+const G = a => ({ t: 'gap', q: '___', a: a }), D = a => ({ t: 'dictation', say: a[0], a: a });
+const STRICT_TABLE = [
+  ['DE Nomen groß ok', G(['Hund']), 'Hund', 'de', true, null],
+  ['DE Nomen klein', G(['Hund']), 'hund', 'de', false, 'T:caseHint'],
+  ['DE Verb großgeschrieben', G(['komme']), 'Komme', 'de', false, 'T:caseHint'],
+  ['DE Satzanfang klein', G(['Wie']), 'wie', 'de', false, 'T:caseHint'],
+  ['TR Satzanfang İ ok', G(['İki bin']), 'İki bin', 'tr', true, null],
+  ['TR Satzanfang i statt İ', G(['İki bin']), 'iki bin', 'tr', false, 'T:caseHint'],
+  ['TR İ als I+Punkt (NFD) ok', G(['İstanbul']), 'I\u0307stanbul', 'tr', true, null],
+  ['TR I statt İ', G(['İstanbul']), 'Istanbul', 'tr', false, 'T:specialChars'],
+  ['TR ı/i vertauscht', G(['kız']), 'kiz', 'tr', false, 'T:specialChars'],
+  ['TR ç ğ ö ş ü ok', G(['çiğ köfte, şöyle güzel']), 'çiğ köfte, şöyle güzel', 'tr', true, null],
+  ['TR ş fehlt', G(['şöyle']), 'soyle', 'tr', false, 'T:specialChars'],
+  ['Apostroph typografisch ’', G(["Ankara'ya"]), 'Ankara’ya', 'tr', true, null],
+  ['Apostroph typografisch ´ und `', G(["9'da"]), '9´da', 'tr', true, null],
+  ['Apostroph in Lösung typografisch', G(['Ali’yle']), "Ali'yle", 'tr', true, null],
+  ['Apostroph klein + Eigenname', G(["Ankara'ya"]), "ankara'ya", 'tr', false, 'T:caseHint'],
+  ['Leerraum mehrfach/Rand', G(['hem de']), '  hem   de ', 'tr', true, null],
+  ['Satzzeichen zu viel in Lücke', G(['gel']), 'gel!', 'tr', false, 'T:punctHint'],
+  ['Bindestrich zählt', G(['E-Mail']), 'EMail', 'de', false, null],
+  ['Diktat ok', D(['Ich glaube, dass er kommt.']), 'Ich glaube, dass er kommt.', 'de', true, null],
+  ['Diktat Leerzeichen vor Satzzeichen', D(['Ich glaube, dass er kommt.']), 'Ich glaube , dass er kommt .', 'de', true, null],
+  ['Diktat Punkt fehlt', D(['Ich glaube, dass er kommt.']), 'Ich glaube, dass er kommt', 'de', false, 'T:punctHint'],
+  ['Diktat Komma fehlt', D(['Ich glaube, dass er kommt.']), 'Ich glaube dass er kommt.', 'de', false, 'T:punctHint'],
+  ['Diktat Großschreibung', D(['Ich glaube, dass er kommt.']), 'ich glaube, dass er kommt.', 'de', false, 'T:caseHint'],
+  ['Diktat beides', D(['Ich glaube, dass er kommt.']), 'ich glaube dass er kommt', 'de', false, 'T:casePunctHint'],
+  ['Diktat Fragezeichen statt Punkt', D(['Neredeydin?']), 'Neredeydin.', 'tr', false, 'T:punctHint'],
+  ['Diktat Anführungszeichen typografisch', D(['Er sagt: "Hallo".']), 'Er sagt: „Hallo“.', 'de', true, null],
+  ['Diktat Auslassungspunkte …', D(['Na ja...']), 'Na ja…', 'de', true, null],
+  ['wrong greift lenient (Satzzeichen/groß)', Object.assign(G(['gehe']), { wrong: { gehst: 'Du-Form' } }), 'Gehst.', 'de', false, 'Du-Form'],
+  ['wrong vor caseHint', Object.assign(G(['Ihnen']), { wrong: { ihnen: 'Höflichkeitsform groß' } }), 'ihnen', 'de', false, 'Höflichkeitsform groß'],
+  ['wrong für Diktat lenient', Object.assign(D(['Seid leise.']), { wrong: { 'seit leise': 'seid/seit' } }), 'Seit leise.', 'de', false, 'seid/seit'],
+  ['cs:false Opt-out: klein ok', Object.assign(G(['Haus']), { cs: false }), 'haus', 'de', true, null],
+  ['cs:false Opt-out: Satzzeichen ok', Object.assign(G(['ich bin']), { cs: false }), 'Ich bin!', 'de', true, null],
+  ['cs:false Opt-out: Sonderzeichen weiter', Object.assign(G(['Straße']), { cs: false }), 'strasse', 'de', false, 'T:specialChars'],
+  ['cs:true (alt) weiter strikt', Object.assign(G(['Haus']), { cs: true }), 'haus', 'de', false, 'T:caseHint']
+];
+test('check: strikte Schreibprüfung gap/dictation (Groß-/Kleinschreibung, Satzzeichen, Hinweise)', () => {
+  STRICT_TABLE.forEach(([name, ex, input, lang, wantOk, wantHint]) => {
+    const r = DT.check.evaluate(ex, { input: input }, lang, tfx);
+    eq([r.ok, r.hint, r.correct], [wantOk, wantHint, ex.a[0]], name);
+  });
+});
+test('check: order und speak bleiben nachsichtig', () => {
+  const o = { t: 'order', w: ['ich', 'Komme', 'heute,', 'oder?'], a: ['Ich komme heute, oder?'] };
+  eq(DT.check.evaluate(o, { picked: [0, 1, 2, 3] }, 'de', tfx).ok, true, 'order: Bausteine mit Satzzeichen/Großschreibung');
+  eq(DT.check.evaluate({ t: 'speak', say: 'Guten Tag, Anna!' }, { heardAlts: ['guten tag anna'], heard: 'guten tag anna' }, 'de', tfx).ok, true, 'speak ohne Satzzeichen/Großschreibung');
+});
+test('check: strict (Leerraum, typografische Zeichen, NFC)', () => {
+  [['  a ,  b . ', 'a, b.'], ['„x“ «y»', '"x" "y"'], ['a’b‘c`d´eʼf', "a'b'c'd'e'f"], ['I\u0307', 'İ'], ['Ja …', 'Ja...']].forEach(([a, r]) => eq(DT.check.strict(a), r, 'strict ' + a));
+});
 test('check: evaluate – Tabelle je Übungstyp (mc, listen, gap, dictation, speak, order, match)', () => {
   ok(DT.check && DT.catalog, 'DT.check und DT.catalog vorhanden');
   CHECK_TABLE.forEach(([name, ex, c, lang, want]) => eq(DT.check.evaluate(ex, copy(c), lang, tfx), want, name));
@@ -676,6 +730,80 @@ test('catalog: register + topicsOf (Pseudo-Themen, Index, Idempotenz)', () => {
     ['de-a1-d02', 'D2', 'dialog', true, 'S', 'T'],
     ['de-a1-r01', 'T1', 'text', true, 'RS', 'RT']
   ], 'topicsOf de (Dialoge/Texte sortiert, Titel je Kurs)');
+});
+
+/* ================= voices (ADR-14) + Hörtexte (ADR-12.3, Schritt 4) ================= */
+test('voices.assign: Zuordnung Sprecher → Stimm-Platz', () => {
+  const V = DT.voices; ok(!!V, 'DT.voices vorhanden');
+  const L = (...a) => a.map(([s, g]) => ({ s, g, t: 'x' }));
+  const de = ['female', 'male'], deFb = ['female', 'male'], tr = ['male', 'male2'], trFb = ['male2', 'male'];
+  const slots = r => Object.fromEntries(Object.entries(r.map).map(([k, v]) => [k, v.slot + (v.fb ? '*' : '')]));
+  eq(slots(V.assign(L(['Anna', 'f'], ['Ben', 'm'], ['Anna', 'f']), de, deFb, '')), { Anna: 'female', Ben: 'male' }, 'DE 1♀/1♂');
+  eq(slots(V.assign(L(['A', 'f'], ['B', 'f']), de, deFb, '')), { A: 'female', B: 'female' }, 'DE zwei Frauen = gleiche Stimme');
+  eq(V.assign(L(['B', 'm'], ['A', 'f']), de, deFb, '').speakers, ['B', 'A'], 'Reihenfolge des ersten Auftretens');
+  eq(slots(V.assign(L(['Jonas', 'm'], ['Elif', 'f']), tr, trFb, '')), { Jonas: 'male', Elif: 'male2*' }, 'TR: Elif (♀) bekommt fettah, markiert fb');
+  eq(slots(V.assign(L(['Elif', 'f'], ['Jonas', 'm']), tr, trFb, '')), { Elif: 'male2*', Jonas: 'male' }, 'TR: unabhängig von der Reihenfolge');
+  eq(slots(V.assign(L(['A', 'm'], ['B', 'm']), tr, trFb, '')), { A: 'male', B: 'male2' }, 'TR 2♂ → zwei Stimmen');
+  eq(slots(V.assign(L(['A', 'm'], ['B', 'm'], ['C', 'm']), tr, trFb, '')), { A: 'male', B: 'male2', C: 'male' }, 'TR 3 Sprecher: reihum');
+  eq(slots(V.assign(L(['A', 'f'], ['B', 'f'], ['C', 'm']), tr, trFb, '')), { A: 'male2*', B: 'male2*', C: 'male' }, 'TR 2♀: beide Fallback (unbenutzt, dann erster)');
+  eq(slots(V.assign(L(['A', 'm']), tr, trFb, '')), { A: 'male' }, 'TR 1 Sprecher');
+  eq(slots(V.assign(L(['Ich', ''], ['Er', 'm']), de, deFb, 'f')), { Ich: 'female', Er: 'male' }, 'roleG gilt für Zeilen ohne g');
+  const n = V.assign(L(['Ich', ''], ['Er', 'm']), de, deFb, '');
+  eq(slots(n), { Ich: 'female', Er: 'male' }, 'neutral: erster unbenutzter Platz (Fallback-Reihenfolge), nicht als fb markiert');
+  eq(V.assign(L(['A', 'm']), [], [], '').map.A.slot, null, 'ohne Plätze: slot null (Gerätestimme)');
+  eq(slots(V.assign(L(['A', 'f']), ['male'], ['male', 'zzz'], '')), { A: 'male*' }, 'unbekannte Fallback-Plätze werden ignoriert');
+  const a1 = canon(V.assign(L(['A', 'f'], ['B', 'm']), tr, trFb, '')), a2 = canon(V.assign(L(['A', 'f'], ['B', 'm']), tr, trFb, ''));
+  ok(a1 === a2, 'deterministisch');
+  eq(V.slotsOf({ male: 'k', female: 'j', male2: 'x', other: 'y' }), ['female', 'male', 'male2'], 'slotsOf: Reihenfolge female, male, Extra');
+  eq(V.slotsOf({ female: [], male: ['a'] }), ['male'], 'slotsOf: leere Listen zählen nicht (tts-voices.json)');
+  eq(V.slotsOf(undefined), [], 'slotsOf ohne Daten');
+});
+test('texts: Hörtexte prüfen und registrieren', () => {
+  const tx = DT.texts, words = n => Array.from({ length: n }, (_, i) => 'wort' + i).join(' ');
+  const q = (id, i) => ({ id: id + '.q' + i, t: 'mc', q: '?', o: ['a', 'b'], a: 0, why: { 1: 'x' }, e: 'y' });
+  const mk = (id, lines) => ({ level: 'A2', kind: 'listen', genre: 'durchsage', title: 'T', sub: 'S', plays: 2, lines, questions: [q(id, 1), q(id, 2), q(id, 3)] });
+  const ln = (s, g, n) => ({ s, g, t: words(n), n: 'Übersetzung' });
+  eq(tx.check('de-a2-h01', mk('de-a2-h01', [ln('Anna', 'f', 20), ln('Ben', 'm', 20)])), { errors: [], warnings: [] }, 'gültiger Hörtext');
+  ok(tx.check('de-a2-h01', Object.assign(mk('de-a2-h01', [ln('A', 'f', 40)]), { kind: 'read' })).errors.some(e => /kind/.test(e)), 'kind passt nicht zu h');
+  ok(tx.check('de-a2-h01', mk('de-a2-h01', [ln('A', 'x', 40)])).errors.some(e => /\.g/.test(e)), 'g muss f/m sein');
+  ok(tx.check('de-a2-h01', mk('de-a2-h01', [{ s: 'A', g: 'f', t: 'x' }])).errors.some(e => /braucht/.test(e)), 'Zeile ohne n');
+  ok(tx.check('de-a2-h01', Object.assign(mk('de-a2-h01', [ln('A', 'f', 40)]), { genre: 'artikel' })).errors.some(e => /genre/.test(e)), 'Lese-Genre im Hörtext');
+  ok(tx.check('de-a2-h01', Object.assign(mk('de-a2-h01', [ln('A', 'f', 40)]), { body: ['x'] })).errors.some(e => /lines/.test(e)), 'body im Hörtext');
+  ok(tx.check('de-a2-r01', Object.assign(mk('de-a2-r01', [ln('A', 'f', 40)]), { kind: 'read', genre: 'hinweis' })).errors.length > 0, 'lines im Lesetext');
+  ok(tx.check('de-a2-h01', mk('de-a2-h02', [ln('A', 'f', 40)])).errors.some(e => /\.q/.test(e)), 'Fragen-ID-Präfix');
+  ok(tx.check('de-a2-h01', Object.assign(mk('de-a2-h01', [ln('A', 'f', 40)]), { plays: 9 })).errors.some(e => /plays/.test(e)), 'plays 1–5');
+  ok(tx.check('de-a2-h01', mk('de-a2-h01', [ln('A', 'f', 5)])).warnings.some(w => /Länge/.test(w)), 'zu kurz → Hinweis');
+  eq(tx.check('de-a2-h01', mk('de-a2-h01', [ln('A', 'f', 130)])).warnings.length, 1, 'zu lang → Hinweis (30–120)');
+  eq(tx.check('tr-a2-h01', mk('tr-a2-h01', [ln('A', 'f', 20), ln('B', 'm', 20), ln('C', 'm', 20)])).warnings.length, 1, 'TR ab 3 Sprechern → Hinweis');
+  eq(tx.check('de-a2-h01', mk('de-a2-h01', [ln('A', 'f', 20), ln('B', 'm', 20), ln('C', 'm', 20)])).warnings.length, 0, 'DE 3 Sprecher ohne Hinweis');
+  eq(tx.speakers({ lines: [{ s: 'B' }, { s: 'A' }, { s: 'B' }] }), ['B', 'A'], 'speakers');
+  // Registrierung + Katalog
+  const K = { courses: { de: { levels: { A2: [] } } }, content: {}, dialogs: {}, texts: { 'de-a2-h01': mk('de-a2-h01', [ln('A', 'f', 40)]), 'de-a2-r01': Object.assign(mk('de-a2-r01', [ln('A', 'f', 40)]), { kind: 'read' }) } };
+  K.texts['de-a2-h01'].id = 'de-a2-h01';
+  const idx = DT.catalog.register(K, {});
+  eq(K.content['de-a2-h01'].kind, 'listen', 'Hörtext als Pseudo-Thema kind listen');
+  eq(idx['de-a2-h01.q2'].topicId, 'de-a2-h01', 'Hörtext-Frage im Index (Lücken/Review/Tagesmix wie Text-Fragen)');
+  eq(DT.catalog.topicsOf(K, 'de').filter(x => x.kind === 'text').map(x => x.num), ['H1', 'T1'], 'Nummern H1/T1');
+  ok(DT.catalog.isHeavy(K, 'de-a2-h01') && DT.catalog.isHeavy(K, 'de-a2-r01'), 'isHeavy: Lese- und Hörtext = schwer (nicht im Tagesmix)');
+  ok(!DT.catalog.isHeavy({ content: { 'de-a1-01': { exercises: [] }, 'de-a1-d01': { kind: 'dialog' } } }, 'de-a1-d01') && !DT.catalog.isHeavy(K, 'x'), 'isHeavy: Dialog/Thema/unbekannt nicht schwer');
+  const KK = ctx.window.KOPRU; if (KK) { KK.addText('tr-a2-h99', { level: 'A2' }); eq(KK.texts['tr-a2-h99'].kind, 'listen', 'addText: -h-ID ⇒ kind listen'); delete KK.texts['tr-a2-h99']; }
+});
+
+test('Wortschatz je Niveau (ADR-11.3)', () => {
+  const cur = fs.readFileSync(path.join(root, 'js', 'curriculum.js'), 'utf8'), c2 = { window: {} }; vm.createContext(c2); vm.runInContext(cur, c2);
+  const KK = c2.window.KOPRU, vc = vm.runInContext('(function(){return window})()', c2).DT;
+  const ids = KK.wordfields.map(f => f[0]);
+  eq(ids.length, new Set(ids).size, 'wordfields: IDs eindeutig');
+  ['travel', 'media', 'feel', 'service'].forEach(f => ok(ids.includes(f), 'wordfield ' + f));
+  ok(KK.wordfields.every(f => f.length === 3 && f[1] && f[2]), 'wordfields: [id, de, tr] vollständig');
+  const V = DT.vocab;
+  KK.addVocab('de-a1', [{ id: 'de-a1.w001', t: 'hallo', n: 'x', topic: 'greet' }]);
+  KK.addVocab('de-a2', [{ id: 'de-a2.w001', t: 'verreisen', pos: 'v', n: 'y', topic: 'travel', pf: 'ist verreist' }]);
+  eq(V.wordsOf(KK, 'de', 'A1').map(w => w.id), ['de-a1.w001'], 'wordsOf A1 enthält keine A2-Wörter');
+  eq(V.wordsOf(KK, 'de', 'A2').map(w => w.id), ['de-a2.w001'], 'wordsOf A2 nur A2');
+  eq(V.wordsOf(KK, 'de', 'A2', 'greet').length, 0, 'leeres Wortfeld ⇒ []');
+  eq(V.wordsOf(KK, 'de').map(w => w.id), ['de-a1.w001', 'de-a2.w001'], 'ohne Niveau: aufsteigend');
+  eq(V.index(KK)['de-a2.w001'].level, 'A2', 'index: Niveau A2');
 });
 
 (async () => {

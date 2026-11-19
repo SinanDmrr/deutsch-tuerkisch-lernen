@@ -1,7 +1,12 @@
 /* Antwort-Bewertung (ADR-12.9) – rein, ohne DOM/localStorage, in Node testbar.
  * Aus js/app.js herausgelöst (reine Verschiebung, Verhalten unverändert):
- *   norm/fold/levRatio = Text-Vergleich, evaluate = Bewertung je Übungstyp (mc, listen, gap, dictation, speak, order, match).
+ *   norm/strict/fold/levRatio = Text-Vergleich, evaluate = Bewertung je Übungstyp (mc, listen, gap, dictation, speak, order, match).
  * Texte für Hinweise kommen über die Funktion tf(key) von außen (app.js übergibt t), damit hier keine Oberfläche steckt.
+ *
+ * Schreibaufgaben (gap, dictation) werden STRIKT verglichen: Groß-/Kleinschreibung und Satzzeichen zählen.
+ * Toleriert werden nur Leerraum (mehrfach, am Rand, vor Satzzeichen) und typografische Varianten von Apostroph,
+ * Anführungszeichen und Auslassungspunkten. Opt-out pro Aufgabe: cs:false (dann wie früher: ohne Groß-/Kleinschreibung
+ * und Satzzeichen). order (vorgegebene Bausteine) und speak (Spracherkennung) bleiben bewusst nachsichtig (norm).
  */
 (function (DT) {
   'use strict';
@@ -13,6 +18,13 @@
   function norm(s, lang, cs) {
     s = String(s || '').replace(/[’‘`´ʼ]/g, "'").replace(/[.,!?;:¿¡"«»„“”]/g, ' ').replace(/\s+/g, ' ').trim();
     return cs ? s : s.toLocaleLowerCase(locale(lang));
+  }
+  // Strikter Vergleich: nur Leerraum und typografische Varianten werden vereinheitlicht – kein Kleinschreiben
+  function strict(s) {
+    s = String(s || '');
+    if (s.normalize) s = s.normalize('NFC');   // „İ“ als I + Punkt (U+0307) = „İ“
+    return s.replace(/[’‘`´ʼ]/g, "'").replace(/[„“”«»]/g, '"').replace(/…/g, '...')
+      .replace(/\s+/g, ' ').replace(/ ([.,!?;:])/g, '$1').trim();
   }
   function fold(s) {
     return String(s).toLocaleLowerCase('tr-TR').replace(/'/g, '')
@@ -33,20 +45,27 @@
   }
 
   // ex: Aufgabe, c: Zustand der Aufgabe (sel/input/heardAlts/heard/selfOk/picked/choice), lang: Zielsprache ('de'|'tr'),
-  // tf: Textfunktion (key → Text) für caseHint, specialChars, speakAlmost, speakRetry
+  // tf: Textfunktion (key → Text) für caseHint, punctHint, casePunctHint, specialChars, speakAlmost, speakRetry
   function evaluate(ex, c, lang, tf) {
     tf = tf || function (k) { return k; };
     if (ex.t === 'mc' || ex.t === 'listen') {
       return { ok: c.sel === ex.a, given: ex.o[c.sel], correct: ex.o[ex.a], hint: ex.why && ex.why[c.sel] };
     }
     if (ex.t === 'gap' || ex.t === 'dictation') {
-      var val = c.input, nv = norm(val, lang, ex.cs);
-      var ok = ex.a.some(function (a) { return norm(a, lang, ex.cs) === nv; });
+      var val = c.input, lenient = ex.cs === false;
+      var ok = ex.a.some(function (a) { return lenient ? norm(a, lang) === norm(val, lang) : strict(a) === strict(val); });
       var hint = null;
       if (!ok) {
-        var nvl = norm(val, lang, false);
+        var nvl = norm(val, lang, false), lc = function (x) { return strict(x).toLocaleLowerCase(locale(lang)); };
+        // vorhandene wrong-Hinweise greifen weiter nachsichtig (Schlüssel ohne Satzzeichen/Großschreibung)
         if (ex.wrong) Object.keys(ex.wrong).forEach(function (k) { if (!hint && norm(k, lang, false) === nvl) hint = ex.wrong[k]; });
-        if (!hint && ex.cs && ex.a.some(function (a) { return norm(a, lang, false) === nvl; })) hint = tf('caseHint');
+        // Nur Schreibweise falsch: Groß-/Kleinschreibung, Satzzeichen oder beides?
+        if (!hint) ex.a.forEach(function (a) {
+          if (hint || norm(a, lang, false) !== nvl) return;
+          if (lc(a) === lc(val)) hint = tf('caseHint');
+          else if (norm(a, lang, true) === norm(val, lang, true)) hint = tf('punctHint');
+          else hint = tf('casePunctHint');
+        });
         if (!hint && ex.a.some(function (a) { return fold(norm(a, lang)) === fold(nvl); })) hint = tf('specialChars');
       }
       return { ok: ok, given: val, correct: ex.a[0], hint: hint };
@@ -71,5 +90,5 @@
     return { ok: false };
   }
 
-  DT.check = { isCountable: isCountable, locale: locale, norm: norm, fold: fold, levRatio: levRatio, evaluate: evaluate };
+  DT.check = { isCountable: isCountable, locale: locale, norm: norm, strict: strict, fold: fold, levRatio: levRatio, evaluate: evaluate };
 })(window.DT = window.DT || {});
