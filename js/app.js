@@ -9,7 +9,7 @@
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var DT = window.DT;
   var SCHEMA = DT.storage.SCHEMA;    // Version des Speicherformats (Migrationen nur in js/core/storage.js)
-  var APP_VERSION = '2026-11-19.1';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-19.2';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -83,7 +83,10 @@
     great: ['Richtig! 🎉', 'Doğru! 🎉'],
     notQuite: ['Noch nicht ganz', 'Tam olmadı'],
     specialChars: ['Fast! Achte auf die türkischen Sonderzeichen (ı, ş, ç, ğ, ö, ü) und den Apostroph.', 'Neredeyse! Almancadaki özel harflere dikkat et (ä, ö, ü, ß).'],
-    caseHint: ['Fast! Achte auf Groß- und Kleinschreibung.', 'Neredeyse! Büyük-küçük harfe dikkat et.'],
+    caseHint: ['Fast! Achte auf Groß- und Kleinschreibung – z. B. Satzanfang, Eigennamen und den Unterschied zwischen İ/i und I/ı.', 'Neredeyse! Büyük-küçük harfe dikkat et – Almancada isimler ve cümle başı büyük harfle yazılır.'],
+    punctHint: ['Fast! Achte auf die Satzzeichen (Komma, Punkt, Fragezeichen, Apostroph).', 'Neredeyse! Noktalama işaretlerine dikkat et (virgül, nokta, soru işareti, kesme işareti).'],
+    casePunctHint: ['Fast! Achte auf Groß- und Kleinschreibung und auf die Satzzeichen (Komma, Punkt, Fragezeichen, Apostroph).', 'Neredeyse! Hem büyük-küçük harfe hem de noktalama işaretlerine dikkat et (virgül, nokta, soru işareti).'],
+    strictNote: ['Groß- und Kleinschreibung sowie Satzzeichen zählen.', 'Büyük-küçük harf ve noktalama işaretleri de önemli.'],
     genericWrong: ['Deine Antwort passt nicht zur Regel – lies die Erklärung darunter genau.', 'Cevabın kurala uymuyor – aşağıdaki açıklamayı dikkatlice oku.'],
     typeHere: ['Antwort …', 'Cevap …'],
     orderHint: ['Tippe die Wörter in der richtigen Reihenfolge an. Antippen im Feld entfernt ein Wort wieder.', 'Kelimelere doğru sırayla dokun. Kutudaki kelimeye dokunursan geri alınır.'],
@@ -322,6 +325,15 @@
     dialogTab: ['Dialog', 'Diyalog'],
     textsTitle: ['Lesetexte', 'Okuma metinleri'],
     textTab: ['Text', 'Metin'],
+    listenTab: ['Hören', 'Dinleme'],
+    listenTip: ['Tipp: Hör zuerst nur zu, ohne mitzulesen. Danach beantwortest du die Fragen. Der Text bleibt verborgen, bis du „Text zeigen“ antippst.', 'İpucu: Önce metne bakmadan yalnızca dinle, sonra soruları cevapla. Metin, “Metni göster” düğmesine dokunana kadar gizli kalır.'],
+    listenHint: ['Empfehlung: {n}-mal anhören.', 'Öneri: {n} kez dinle.'],
+    listenCount: ['{n}. Mal gehört', '{n}. kez dinlendi'],
+    listenNow: ['Es spricht: {s}', 'Konuşan: {s}'],
+    listenStop: ['Stopp', 'Durdur'],
+    listenNoAudio: ['Für diesen Hörtext gibt es auf diesem Gerät gerade keine Aufnahme. Du kannst die Fragen mit „Überspringen“ auslassen – sie zählen dann nicht.', 'Bu dinleme metni için bu cihazda şu an kayıt yok. Soruları “Atla” ile geçebilirsin; bunlar değerlendirmeye girmez.'],
+    transcriptShow: ['Text zeigen', 'Metni göster'],
+    transcriptHide: ['Text verbergen', 'Metni gizle'],
     textTip: ['Tipp: Lies den Text in Ruhe, auch mehrmals. Mit 🔊 hörst du jeden Absatz. Die Fragen findest du danach – der Text bleibt dabei sichtbar.', 'İpucu: Metni acele etmeden, gerekirse birkaç kez oku. 🔊 ile her paragrafı dinleyebilirsin. Sorular hemen ardından gelir; metin soruları cevaplarken de görünür kalır.'],
     glossTitle: ['Wörter zum Text', 'Metindeki kelimeler'],
     textShow: ['Text anzeigen', 'Metni göster'],
@@ -524,7 +536,10 @@
     if (!window.fetch) return;
     fetch('audio/manifest.json?v=' + APP_VERSION, { cache: 'no-cache' })
       .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (j) { AUDIO = j; if (db.active && ['settings', 'legal'].indexOf(parseHash().page) >= 0) render(); })
+      .then(function (j) {
+        AUDIO = j; var hp = parseHash(), hc = hp.page === 'topic' && K.content[hp.a];
+        if (db.active && (['settings', 'legal'].indexOf(hp.page) >= 0 || (hc && isListen(hc) && hp.b !== 'exercises'))) render();
+      })
       .catch(function () { /* offline oder lokal geöffnet → Gerätestimme */ });
   }
   function piperVoices(lang2) { return (AUDIO && AUDIO.voices && AUDIO.voices[lang2]) || {}; }
@@ -571,12 +586,30 @@
     if (!voicesCache.length) loadVoices();
     return !voicesCache.length || sortedVoices(lang).length > 0;   // Stimmen noch nicht geladen → optimistisch
   }
+  /* Stimme pro Sprecher (ADR-14): Platz → Datei. DT.voices.assign ist dasselbe wie im Werkzeug (tools/extract-texts.js). */
+  function slotUrl(text, lang, slot) {
+    if (!AUDIO || !slot) return null;
+    var vk = piperVoices(lang.slice(0, 2))[slot], fid = vk && AUDIO.files && AUDIO.files[vk] && AUDIO.files[vk][plain(text).trim()];
+    return fid ? 'audio/' + vk + '/' + fid + '.mp3' : null;
+  }
+  function voiceAssign(lines) {
+    var lang2 = course().tts.slice(0, 2);
+    return DT.voices.assign(lines, DT.voices.slotsOf(piperVoices(lang2)), (AUDIO && AUDIO.fallback && AUDIO.fallback[lang2]) || [], '');
+  }
+  function deviceHas(lang, g) { return !!(g && canSpeak && sortedVoices(lang).some(function (v) { return voiceGender(v) === g; })); }
+  // Eine Zeile in der Stimme ihres Sprechers; Ersatzstimme (fb) nur, wenn das Gerät keine passende Stimme hat; fehlt die Datei → bisherige Geschlechter-Logik
+  function speakLine(l, a, o) {
+    o = o || {}; var m = (a && a.map[l.s]) || {}, lang = course().tts;
+    var url = m.slot ? slotUrl(l.t, lang, m.slot) : null;
+    if (url && m.fb && deviceHas(lang, l.g)) url = null;
+    speak(l.t, lang, { gender: l.g || '', rate: o.rate, chain: o.chain, onEnd: o.onEnd, url: url });
+  }
   function speak(text, lang, o) {
     o = o || {};
     if (!o.chain) seqToken++;
     var g = o.gender || db.voiceGender || '';
     if (!o.voiceName) {
-      var url = piperUrl(text, lang, g);
+      var url = o.url || piperUrl(text, lang, g);
       if (url) { playUrl(url, { rate: o.rate, onEnd: o.onEnd, onFail: function () { deviceSpeak(text, lang, o, g); } }); return; }
     }
     deviceSpeak(text, lang, o, g);
@@ -814,9 +847,26 @@
     return DT.srs.due(p, cid, today(), limit || 30).filter(function (id) { return WI[id] ? WI[id].course === cid : !!exById(id); })
       .map(function (id) { return WI[id] ? wordQ(id) : id; });
   }
-  function newWords(field, n) {
-    var p = ensureProfile(prof()), cid = courseId(), lv = 'A1';
-    return DT.vocab.wordsOf(K, cid, lv, field).filter(function (w) { return !DT.srs.get(p, cid, w.id); }).slice(0, n);
+  /* ADR-11.2: Fokus-Niveau = Niveau des ersten offenen Grammatikthemas (nie gespeichert, immer berechnet) */
+  function focusLevel() {
+    var list = allTopics().filter(function (x) { return x.avail && !x.kind; });
+    for (var i = 0; i < list.length; i++) { var s = topicStats(list[i]); if (s.c < s.n && !isSkipped(list[i].id)) return list[i].level; }
+    var top = 'A1'; list.forEach(function (x) { if (LEVELS.indexOf(x.level) > LEVELS.indexOf(top)) top = x.level; });
+    return top;
+  }
+  function wordLevels() { return LEVELS.filter(function (lv) { return DT.vocab.wordsOf(K, courseId(), lv).length > 0; }); }
+  /* Standard-Niveau der Wortschatzseite: höchstes Niveau mit Wörtern bis zum Fokus-Niveau (sonst A1) */
+  function defaultWordLevel() {
+    var f = LEVELS.indexOf(focusLevel()), ok = wordLevels().filter(function (lv) { return LEVELS.indexOf(lv) <= f; });
+    return ok.length ? ok[ok.length - 1] : 'A1';
+  }
+  /* lv angegeben: nur dieses Niveau. Ohne lv (Tagesmix): alle Niveaus ≤ Fokus, aufsteigend (ADR-11.4) */
+  function newWords(field, n, lv) {
+    var p = ensureProfile(prof()), cid = courseId(), f = LEVELS.indexOf(focusLevel()), out = [];
+    (lv ? [lv] : wordLevels().filter(function (x) { return LEVELS.indexOf(x) <= f; })).forEach(function (l) {
+      DT.vocab.wordsOf(K, cid, l, field).forEach(function (w) { if (!DT.srs.get(p, cid, w.id)) out.push(w); });
+    });
+    return out.slice(0, n);
   }
   /* Lern-Sitzung für neue Wörter: Karte → gleich danach eine leichte Abfrage, am Ende zweite Runde (hören/umgekehrt) */
   function learnQueue(words) {
@@ -829,7 +879,7 @@
   /* 5-Minuten-Tagesmix (ADR-4): fällige Wiederholungen → neue Wörter → offene Aufgaben aus begonnenen Themen */
   function buildMix() {
     var p = ensureProfile(prof()), cid = courseId(), goal = p.daily.goal || 10, q = [];
-    var due = dueItems(8); q = q.concat(due);
+    var due = dueItems(30).filter(function (id) { return !(EXI[id] && DT.catalog.isHeavy(K, EXI[id].topicId)); }).slice(0, 8); q = q.concat(due);
     var backlog = DT.srs.due(p, cid, today(), 999).length;
     if (backlog <= 30) {
       var nw = newWords(null, DT.daily.newWordLimit(goal));
@@ -837,7 +887,7 @@
     }
     var pr = prog(), target = Math.max(12, q.length);
     allTopics().forEach(function (tp) {
-      if (q.length >= target || !tp.avail || isSkipped(tp.id)) return;
+      if (q.length >= target || !tp.avail || isSkipped(tp.id) || DT.catalog.isHeavy(K, tp.id)) return;
       var s = topicStats(tp); if (!s.answered) return;                // nur begonnene Themen
       tp.data.exercises.forEach(function (ex) { if (q.length < target && isCountable(ex) && !pr[ex.id] && q.indexOf(ex.id) < 0) q.push(ex.id); });
     });
@@ -879,7 +929,10 @@
   function parseHash() {
     var h = (location.hash || '').replace(/^#\/?/, '');
     var parts = h.split('/').filter(Boolean).map(function (x) { try { return decodeURIComponent(x); } catch (e) { return x; } });
-    return { page: parts[0] || 'dashboard', a: parts[1], b: parts[2] };
+    var r = { page: parts[0] || 'dashboard', a: parts[1], b: parts[2] };
+    // ADR-11.3: #/words/<LV>[/feld[/learn|practice]]; alte Links #/words/<feld>[/…] gelten als A1
+    if (r.page === 'words' && r.a && LEVELS.indexOf(r.a) >= 0) { r.lv = r.a; r.a = parts[2]; r.b = parts[3]; }
+    return r;
   }
   function go(hash) { if (location.hash === hash) render(); else location.hash = hash; }
   window.addEventListener('hashchange', function () {
@@ -1112,17 +1165,74 @@
   }
   var dialogShowTr = false;
   function playDialog(tp, slow) {
-    var d = tp.data.dialog, my = ++seqToken, i = 0;
+    var d = tp.data.dialog, my = ++seqToken, i = 0, va = voiceAssign(d.lines);
     function step() {
       if (my !== seqToken) return;
       document.querySelectorAll('.dl-line.playing').forEach(function (x) { x.classList.remove('playing'); });
       if (i >= d.lines.length) return;
       var el = document.querySelector('.dl-line[data-line="' + i + '"]'); if (el) el.classList.add('playing');
       var l = d.lines[i++];
-      speak(l.t, course().tts, { gender: l.g || '', rate: slow ? 0.72 : 1, chain: true, onEnd: function () { setTimeout(step, 350); } });
+      speakLine(l, va, { rate: slow ? 0.72 : 1, chain: true, onEnd: function () { setTimeout(step, 350); } });
     }
     step();
   }
+  /* ---------- Hörtexte (ADR-12.3): erst nur hören, Text erst nach Wunsch (oder wenn alle Fragen beantwortet sind) ---------- */
+  var listenShown = {}, listenPlays = {};
+  function isListen(data) { return !!data && data.kind === 'listen'; }
+  function listenRevealed(x) {
+    if (listenShown[x.id] != null) return listenShown[x.id];
+    var tp = topicById(x.id), s = tp ? topicStats(tp) : null;
+    return !!(s && s.n && s.answered >= s.n);
+  }
+  function listenCountText(x) {
+    var n = listenPlays[x.id] || 0;
+    return (x.plays ? t('listenHint', { n: x.plays }) + ' ' : '') + (n ? t('listenCount', { n: n }) : '');
+  }
+  function listenControls(x) {
+    var noAudio = x.lines.some(function (l) { return !canPlay(l.t, course().tts); });
+    return '<div class="ls-ctrl" data-tid="' + x.id + '"><div class="btn-row">' +
+      '<button class="btn primary" data-act="ls-play" data-tid="' + x.id + '">▶ ' + esc(t('play')) + '</button>' +
+      '<button class="btn" data-act="ls-play" data-slow="1" data-tid="' + x.id + '">🐢 ' + esc(t('slow')) + '</button>' +
+      '<button class="btn" data-act="ls-stop" data-tid="' + x.id + '">⏹ ' + esc(t('listenStop')) + '</button></div>' +
+      '<p class="ls-now small" aria-live="polite"></p><p class="muted small ls-count" aria-live="polite">' + esc(listenCountText(x)) + '</p>' +
+      (noAudio ? '<div class="callout warn ls-noaudio">' + esc(t('listenNoAudio')) + '</div>' : '') + '</div>';
+  }
+  function listenToggle(x, shown) {
+    return '<button class="btn small ls-toggle" data-act="ls-toggle" data-tid="' + x.id + '" aria-expanded="' + shown + '">📄 ' + esc(t(shown ? 'transcriptHide' : 'transcriptShow')) + '</button>';
+  }
+  function listenTranscript(x, shown) {
+    var tgt = course().target, first = x.lines.length ? x.lines[0].s : '';
+    return '<div class="dialog show-tr ls-transcript" data-tid="' + x.id + '"' + (shown ? '' : ' hidden') + '><div class="dl-lines">' + x.lines.map(function (l, i) {
+      return '<div class="dl-line ' + (l.s === first ? 'dl-a' : 'dl-b') + ' g-' + (l.g || 'x') + '" data-line="' + i + '">' +
+        '<button class="speak" data-act="ls-line" data-tid="' + x.id + '" data-line="' + i + '" aria-label="' + esc(t('listen')) + '">🔊</button>' +
+        '<div class="dl-body"><span class="dl-who" lang="' + tgt + '">' + esc(l.s) + '</span><div class="tgt" lang="' + tgt + '">' + md(l.t) + '</div><div class="nat">' + md(l.n) + '</div></div></div>';
+    }).join('') + '</div></div>';
+  }
+  function renderListen(tp) {
+    var x = tp.data.text, shown = listenRevealed(x);
+    return '<div class="card readtext listentext"><h2 class="rt-title" lang="' + course().target + '">' + esc(courseId() === 'de' ? x.title : x.sub) + '</h2>' +
+      '<p class="muted small">' + esc(t('listenTip')) + '</p>' + listenControls(x) +
+      '<div class="btn-row" style="margin:10px 0">' + listenToggle(x, shown) + '</div>' + listenTranscript(x, shown) +
+      '<div class="btn-row" style="margin-top:18px"><a class="btn primary" href="#/topic/' + tp.id + '/exercises">' + esc(t('toQuestions')) + '</a></div></div>';
+  }
+  function setNow(txt) { document.querySelectorAll('.ls-now').forEach(function (e) { e.textContent = txt; }); }
+  function playListen(tid, slow) {
+    var c = K.content[tid], x = c && c.text; if (!x || !x.lines) return;
+    var my = ++seqToken, i = 0, va = voiceAssign(x.lines);
+    listenPlays[tid] = (listenPlays[tid] || 0) + 1;
+    document.querySelectorAll('.ls-count').forEach(function (e) { e.textContent = listenCountText(x); });
+    function step() {
+      if (my !== seqToken) return;
+      document.querySelectorAll('.dl-line.playing').forEach(function (e) { e.classList.remove('playing'); });
+      if (i >= x.lines.length) { setNow(''); return; }
+      var l = x.lines[i], el = document.querySelector('.ls-transcript .dl-line[data-line="' + i + '"]'); i++;
+      if (el) el.classList.add('playing');
+      setNow(t('listenNow', { s: l.s }));   // Sprechername auch bei verborgenem Text
+      speakLine(l, va, { rate: slow ? 0.72 : 1, chain: true, onEnd: function () { setTimeout(step, 450); } });
+    }
+    step();
+  }
+  function stopListen() { stopAudio(); setNow(''); document.querySelectorAll('.dl-line.playing').forEach(function (e) { e.classList.remove('playing'); }); }
   /* ---------- Lesetexte (ADR-12.2) ---------- */
   function renderTextBody(x) {
     var tgt = course().target, tp = DT.texts.paragraphs(x), out = '';
@@ -1143,6 +1253,11 @@
   // Text-Panel über der Frage: Desktop offen, Handy zu; Zustand nur im Speicher
   var textPanelOpen = null;
   function textPanel(topicData) {
+    if (isListen(topicData)) {
+      var lx = topicData.text, shown = listenRevealed(lx);
+      return '<div class="card text-panel listen-panel">' + listenControls(lx) + '<div class="btn-row" style="margin-top:8px">' + listenToggle(lx, shown) +
+        '<span class="muted small tp-title" lang="' + course().target + '"> ' + esc(courseId() === 'de' ? lx.title : lx.sub) + '</span></div>' + listenTranscript(lx, shown) + '</div>';
+    }
     if (!topicData || topicData.kind !== 'read') return '';
     var x = topicData.text, open = textPanelOpen === null ? !(window.matchMedia && window.matchMedia('(max-width: 640px)').matches) : textPanelOpen;
     return '<div class="card text-panel"><button class="btn small" data-act="text-toggle" aria-expanded="' + open + '" aria-controls="text-panel-body">📄 ' +
@@ -1152,6 +1267,7 @@
   function renderLesson(tp) {
     if (tp.data.kind === 'dialog') return renderDialog(tp);
     if (tp.data.kind === 'read') return renderText(tp);
+    if (tp.data.kind === 'listen') return renderListen(tp);
     var tgt = course().tts, out = '';
     (tp.data.lesson || []).forEach(function (b) {
       if (b.h) out += '<h3>' + md(b.h) + '</h3>';
@@ -1267,13 +1383,15 @@
       }
     } else if (ex.t === 'dictation') {
       qtext = md(ex.q || t('dictationQ'));
+      if (ex.cs !== false) hint = t('strictNote');
       var dcls = checked ? (res.ok ? ' right' : ' wrong') : '';
-      body = audioBar(ex.say) + '<input class="gap-input dict-input' + dcls + '" id="gap-input" autocomplete="off" autocapitalize="off" spellcheck="false" lang="' + target + '" placeholder="' + esc(t('typeWhatYouHear')) + '" value="' + esc(c.input) + '"' + (checked ? ' disabled' : '') + '>';
+      body = audioBar(ex.say) + '<input class="gap-input dict-input' + dcls + '" id="gap-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" lang="' + target + '" placeholder="' + esc(t('typeWhatYouHear')) + '" value="' + esc(c.input) + '"' + (checked ? ' disabled' : '') + '>';
       if (!checked) body += charBar();
     } else if (ex.t === 'gap') {
+      if (ex.cs !== false) hint = t('strictNote');
       var parts = ex.q.split(/_{3,}/);
       var inputCls = checked ? (res.ok ? ' right' : ' wrong') : '';
-      var input = '<input class="gap-input' + inputCls + '" id="gap-input" autocomplete="off" autocapitalize="off" spellcheck="false" lang="' + target + '" placeholder="' + esc(t('typeHere')) + '" value="' + esc(c.input) + '"' + (checked ? ' disabled' : '') + ' size="' + Math.max(8, (ex.a[0] || '').length + 2) + '">';
+      var input = '<input class="gap-input' + inputCls + '" id="gap-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" lang="' + target + '" placeholder="' + esc(t('typeHere')) + '" value="' + esc(c.input) + '"' + (checked ? ' disabled' : '') + ' size="' + Math.max(8, (ex.a[0] || '').length + 2) + '">';
       if (parts.length > 1) body = '<div class="gapline">' + md(parts[0]) + input + md(parts.slice(1).join('___')) + '</div>';
       else body = '<div class="gapline">' + md(ex.q) + '<br>' + input + '</div>';
       if (!checked) body += charBar();
@@ -1362,7 +1480,7 @@
       var okN = uniq.filter(function (q) { return player.session[q] === true; }).length;
       var pg = DT.daily.progress(ensureProfile(prof()), todayKey());
       var b2 = '<a class="btn primary" href="#/dashboard">' + esc(t('dashboard')) + '</a>';
-      if (player.mode === 'learn' && player.field && newWords(player.field, 1).length) b2 = '<a class="btn primary" href="#/words/' + player.field + '/learn" data-act="restart-review">✨ ' + esc(t('learnMore')) + '</a>' + b2.replace(' primary', '');
+      if (player.mode === 'learn' && player.field && newWords(player.field, 1, player.lv).length) b2 = '<a class="btn primary" href="#/words/' + (player.lv || 'A1') + '/' + player.field + '/learn" data-act="restart-review">✨ ' + esc(t('learnMore')) + '</a>' + b2.replace(' primary', '');
       if (player.mode !== 'srs' && dueItems(1).length) b2 += '<a class="btn" href="#/review" data-act="restart-review">🔁 ' + esc(t('review')) + '</a>';
       b2 += '<a class="btn" href="#/words">' + esc(t('words')) + '</a>';
       return '<div class="card summary"><div style="font-size:2.6rem">' + (pg.reached ? '🎉' : '💪') + '</div><h2>' + esc(t('sessionDone')) + '</h2>' +
@@ -1405,7 +1523,7 @@
     tab = tab || 'learn';
     var s = topicStats(tp), wN = wrongIds(tp.id).length, spN = tp.data.exercises.filter(function (e) { return e.t === 'speak'; }).length;
     var subtabs = [
-      ['learn', tp.kind === 'dialog' ? '💬 ' + t('dialogTab') : tp.kind === 'text' ? '📄 ' + t('textTab') : '📖 ' + t('explanation')],
+      ['learn', tp.kind === 'dialog' ? '💬 ' + t('dialogTab') : tp.kind === 'text' ? (isListen(tp.data) ? '🎧 ' + t('listenTab') : '📄 ' + t('textTab')) : '📖 ' + t('explanation')],
       ['exercises', '✏️ ' + t('exercisesShort') + ' (' + s.c + '/' + s.n + (spN ? ' + ' + spN + ' 🎤' : '') + ')'],
       ['review', '🔁 ' + t('reviewShort') + (wN ? ' (' + wN + ')' : '')]
     ];
@@ -1437,30 +1555,38 @@
   function srsBar(st, total) {
     return '<div class="bar"><span class="ok" style="width:' + pct(st.sicher, total) + '%"></span><span class="fill" style="width:' + pct(st.lernend, total) + '%"></span></div>';
   }
-  function viewWords() {
-    var p = ensureProfile(prof()), cid = courseId(), all = DT.vocab.wordsOf(K, cid, 'A1');
+  function levelPicker(lv) {
+    var ls = wordLevels(); if (ls.length < 2) return '';
+    return '<div class="btn-row" role="group" aria-label="' + esc(t('words')) + '" style="margin:8px 0 14px">' + ls.map(function (l) {
+      return '<a class="btn' + (l === lv ? ' primary' : '') + '" href="#/words/' + l + '"' + (l === lv ? ' aria-current="page"' : '') + '>' + l + '</a>';
+    }).join('') + '</div>';
+  }
+  function viewWords(lv) {
+    lv = lv || defaultWordLevel();
+    var p = ensureProfile(prof()), cid = courseId(), all = DT.vocab.wordsOf(K, cid, lv);
     if (!all.length) return '<h1>' + esc(t('words')) + '</h1><div class="card empty"><p>' + esc(t('comingSoon')) + '</p></div>';
     var st = DT.srs.stats(p, cid, all.map(function (w) { return w.id; }));
     var dueN = DT.srs.due(p, cid, today(), 999).filter(function (id) { return WI[id]; }).length;
-    var next = (K.wordfields || []).map(function (f) { return f[0]; }).filter(function (f) { return newWords(f, 1).length; })[0];
+    var next = (K.wordfields || []).map(function (f) { return f[0]; }).filter(function (f) { return newWords(f, 1, lv).length; })[0];
     var fields = (K.wordfields || []).map(function (f) {
       var ws = all.filter(function (w) { return w.topic === f[0]; }); if (!ws.length) return '';
       var fs = DT.srs.stats(p, cid, ws.map(function (w) { return w.id; }));
-      return '<a class="topic-card" href="#/words/' + f[0] + '"><span class="tc-title">' + esc(fieldName(f[0])) + '</span>' +
+      return '<a class="topic-card" href="#/words/' + lv + '/' + f[0] + '"><span class="tc-title">' + esc(fieldName(f[0])) + '</span>' +
         '<span class="tc-sub">' + ws.length + ' ' + esc(t('wordsN')) + '</span>' + srsBar(fs, ws.length) +
         '<div class="tc-foot"><span>' + fs.sicher + ' ' + esc(t('known')) + ' · ' + fs.lernend + ' ' + esc(t('learning')) + '</span>' + (fs.neu === ws.length ? '<span class="badge primary">' + esc(t('newBadge')) + '</span>' : '') + '</div></a>';
     }).join('');
-    return '<h1>📖 ' + esc(t('words')) + ' <span class="lvl lvl-A1">A1</span></h1><p class="muted">' + esc(t('wordsIntro')) + '</p>' +
+    return '<h1>📖 ' + esc(t('words')) + ' <span class="lvl lvl-' + lv + '">' + lv + '</span>' + buildingBadge(lv) + '</h1><p class="muted">' + esc(t('wordsIntro')) + '</p>' + levelPicker(lv) +
       '<div class="card section"><div class="section-head"><b>' + st.sicher + ' / ' + all.length + ' ' + esc(t('wordsKnown')) + '</b><span class="muted small">' + st.lernend + ' ' + esc(t('learning')) + ' · ' + st.neu + ' ' + esc(t('newWordsN')) + '</span></div>' +
         srsBar(st, all.length) +
         '<div class="btn-row" style="margin-top:14px">' +
           (dueN ? '<a class="btn primary" href="#/review">🔁 ' + esc(t('reviewDue', { n: Math.min(dueN, 30) })) + '</a>' : '<span class="badge ok">✓ ' + esc(t('nothingDue')) + '</span>') +
-          (next ? '<a class="btn' + (dueN ? '' : ' primary') + '" href="#/words/' + next + '/learn">✨ ' + esc(t('learnNew')) + ' · ' + esc(fieldName(next)) + '</a>' : '') +
+          (next ? '<a class="btn' + (dueN ? '' : ' primary') + '" href="#/words/' + lv + '/' + next + '/learn">✨ ' + esc(t('learnNew')) + ' · ' + esc(fieldName(next)) + '</a>' : '') +
         '</div></div>' +
       '<div class="topic-grid section">' + fields + '</div>';
   }
-  function viewField(field) {
-    var p = ensureProfile(prof()), cid = courseId(), ws = DT.vocab.wordsOf(K, cid, 'A1', field), tgt = course().target;
+  function viewField(field, lv) {
+    lv = lv || 'A1';
+    var p = ensureProfile(prof()), cid = courseId(), ws = DT.vocab.wordsOf(K, cid, lv, field), tgt = course().target;
     var nNew = ws.filter(function (w) { return !DT.srs.get(p, cid, w.id); }).length;
     var rows = ws.map(function (w) {
       var e = DT.srs.get(p, cid, w.id), box = e ? e[DT.srs.B] : -1;
@@ -1468,23 +1594,24 @@
       return '<tr><td style="width:44px">' + speakBtn(w.t) + '</td><td lang="' + tgt + '"><b>' + esc(w.t) + '</b>' + (w.pl ? '<div class="muted small">' + esc(w.pl) + '</div>' : '') + '</td><td>' + esc(w.n) +
         (w.ex ? '<div class="muted small" lang="' + tgt + '">' + esc(w.ex) + '</div>' : '') + '</td><td style="text-align:right">' + chip + '</td></tr>';
     }).join('');
-    return '<div class="crumbs"><a href="#/words">' + esc(t('words')) + '</a></div><h1>' + esc(fieldName(field)) + '</h1>' +
+    return '<div class="crumbs"><a href="#/words/' + lv + '">' + esc(t('words')) + ' ' + lv + '</a></div><h1>' + esc(fieldName(field)) + '</h1>' +
       '<div class="btn-row" style="margin:10px 0 16px">' +
-        (nNew ? '<a class="btn primary" href="#/words/' + field + '/learn">✨ ' + esc(t('learnNewN', { n: Math.min(5, nNew) })) + '</a>' : '') +
-        (nNew < ws.length ? '<a class="btn" href="#/words/' + field + '/practice">🔁 ' + esc(t('practiceField')) + '</a>' : '') + '</div>' +
+        (nNew ? '<a class="btn primary" href="#/words/' + lv + '/' + field + '/learn">✨ ' + esc(t('learnNewN', { n: Math.min(5, nNew) })) + '</a>' : '') +
+        (nNew < ws.length ? '<a class="btn" href="#/words/' + lv + '/' + field + '/practice">🔁 ' + esc(t('practiceField')) + '</a>' : '') + '</div>' +
       '<div class="card lesson"><div class="tbl-wrap"><table><tbody>' + rows + '</tbody></table></div></div>';
   }
-  function viewWordSession(field, kind) {
-    var key = 'words:' + field + ':' + kind;
+  function viewWordSession(field, kind, lv) {
+    lv = lv || 'A1';
+    var key = 'words:' + lv + ':' + field + ':' + kind;
     if (!player || player.key !== key) {
       var p = ensureProfile(prof()), cid = courseId(), q;
-      if (kind === 'learn') q = learnQueue(newWords(field, 5));
-      else q = DT.vocab.shuffle(DT.vocab.wordsOf(K, cid, 'A1', field).filter(function (w) { return DT.srs.get(p, cid, w.id); }), DT.vocab.rng(Date.now())).slice(0, 15).map(function (w) { return wordQ(w.id); });
-      if (!q.length) return viewField(field);
+      if (kind === 'learn') q = learnQueue(newWords(field, 5, lv));
+      else q = DT.vocab.shuffle(DT.vocab.wordsOf(K, cid, lv, field).filter(function (w) { return DT.srs.get(p, cid, w.id); }), DT.vocab.rng(Date.now())).slice(0, 15).map(function (w) { return wordQ(w.id); });
+      if (!q.length) return viewField(field, lv);
       newPlayer(key, kind === 'learn' ? 'learn' : 'wpractice', q, null);
-      player.field = field;
+      player.field = field; player.lv = lv;
     }
-    return '<div class="crumbs"><a href="#/words">' + esc(t('words')) + '</a> › <a href="#/words/' + field + '">' + esc(fieldName(field)) + '</a></div>' +
+    return '<div class="crumbs"><a href="#/words/' + lv + '">' + esc(t('words')) + '</a> › <a href="#/words/' + lv + '/' + field + '">' + esc(fieldName(field)) + '</a></div>' +
       '<h1>' + esc(kind === 'learn' ? t('learnNew') : t('practiceField')) + '</h1>' + renderPlayer();
   }
   function viewReview() {
@@ -1930,7 +2057,7 @@
   /* ================= Render ================= */
   function parentRoute(r) {
     if (r.page === 'topic') { var tp0 = topicById(r.a); return '#/lessons' + (tp0 ? '/' + tp0.level : ''); }
-    if (r.page === 'words') return r.b ? '#/words/' + r.a : '#/words';
+    if (r.page === 'words') return r.b ? '#/words/' + (r.lv || 'A1') + '/' + r.a : '#/words' + (r.lv ? '/' + r.lv : '');
     if (r.page === 'review') return '#/words';
     if (r.page === 'placement') return '#/lessons';
     if (r.page === 'legal') return '#/settings';
@@ -1969,7 +2096,7 @@
       case 'lessons': inner = viewLessons(r.a); break;
       case 'topic': inner = viewTopic(r.a, r.b); active = 'lessons'; break;
       case 'gaps': inner = viewGaps(); break;
-      case 'words': inner = (!r.a || !(K.wordfields || []).some(function (f) { return f[0] === r.a; })) ? viewWords() : (r.b === 'learn' || r.b === 'practice' ? viewWordSession(r.a, r.b) : viewField(r.a)); break;
+      case 'words': inner = (!r.a || !(K.wordfields || []).some(function (f) { return f[0] === r.a; })) ? viewWords(r.lv) : (r.b === 'learn' || r.b === 'practice' ? viewWordSession(r.a, r.b, r.lv) : viewField(r.a, r.lv)); break;
       case 'review': inner = viewReview(); active = 'words'; break;
       case 'daily': inner = viewDaily(); active = 'dashboard'; break;
       case 'practice': inner = viewPractice(); active = 'gaps'; break;
@@ -2151,6 +2278,15 @@
         var tpb = document.getElementById('text-panel-body'); if (!tpb) break;
         textPanelOpen = tpb.hasAttribute('hidden'); if (textPanelOpen) tpb.removeAttribute('hidden'); else tpb.setAttribute('hidden', '');
         el.setAttribute('aria-expanded', textPanelOpen); el.textContent = '📄 ' + t(textPanelOpen ? 'textHide' : 'textShow'); break;
+      }
+      case 'ls-play': playListen(el.getAttribute('data-tid'), !!el.getAttribute('data-slow')); break;
+      case 'ls-stop': stopListen(); break;
+      case 'ls-line': { var lc = K.content[el.getAttribute('data-tid')], lx2 = lc && lc.text, li = lx2 && lx2.lines[+el.getAttribute('data-line')]; if (li) speakLine(li, voiceAssign(lx2.lines), {}); break; }
+      case 'ls-toggle': {
+        var ltid = el.getAttribute('data-tid'), lbox = document.querySelector('.ls-transcript[data-tid="' + ltid + '"]'); if (!lbox) break;
+        var lshow = lbox.hasAttribute('hidden'); listenShown[ltid] = lshow;
+        if (lshow) lbox.removeAttribute('hidden'); else lbox.setAttribute('hidden', '');
+        el.setAttribute('aria-expanded', lshow); el.textContent = '📄 ' + t(lshow ? 'transcriptHide' : 'transcriptShow'); break;
       }
       case 'dl-play': { var tpd = topicById(parseHash().a); if (tpd) playDialog(tpd, !!el.getAttribute('data-slow')); break; }
       case 'dl-tr': { dialogShowTr = !dialogShowTr; var box = document.querySelector('.dialog'); if (box) box.classList.toggle('show-tr', dialogShowTr); el.setAttribute('aria-pressed', dialogShowTr); break; }
