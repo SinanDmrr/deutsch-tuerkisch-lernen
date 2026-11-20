@@ -209,7 +209,10 @@ K.addText('tr-a2-r07', {
       e: "*İçecekler dâhil değil.* = „Getränke sind nicht inbegriffen.“ *dâhil* = inbegriffen, *değil* verneint." },
     { id: "tr-a2-r07.q5", t: "mc", q: "Sprachmittlung: Dein Freund Paul versteht kein Türkisch. Er fragt, was er mitbringen soll und was der Ausflug kostet. Was sagst du ihm?", o: ["Eine warme Jacke, weil es auf dem Berg kalt sein kann. Der Preis ist 2.000 Lira pro Person, Kinder zahlen die Hälfte.", "Nichts, es wird warm. Der Preis ist 2.000 Lira für die ganze Familie.", "Eine Badehose. Der Preis ist 150 Lira, Getränke sind inklusive.", "Einen Regenschirm. Der Ausflug ist kostenlos, man muss sich nur bis Freitag anmelden."], a: 0,
       why: { 1: "Es kann auf dem Berg **kalt** sein (*kalın bir ceket getirin*), und der Preis gilt **pro Person**.", 2: "Von Schwimmen steht nichts im Text; Getränke sind **nicht** inbegriffen.", 3: "Der Ausflug kostet 2.000 Lira pro Person. Die Anmeldung (bis Freitag) ist nur ein weiterer Punkt." },
-      e: "Du gibst das Wichtige weiter: warme Kleidung und den Preis (*kişi başı*, Kinder *yarı fiyat*)." }
+      e: "Du gibst das Wichtige weiter: warme Kleidung und den Preis (*kişi başı*, Kinder *yarı fiyat*)." },
+    { id: "tr-a2-r07.q6", t: "gap", q: "Akşam altıda ___ biniyoruz. (otobüs – in den Bus)", a: ["otobüse"],
+      wrong: { "otobüsü": "Akkusativ. *binmek* verlangt aber den **Dativ** (-A): man steigt „in etwas hinein“.", "otobüste": "Lokativ (-DA) = „im Bus“ (wo man schon ist). Hier geht es um die Richtung: *otobüs**e***.", "otobüs": "Ohne Endung fehlt der Dativ, den *binmek* verlangt." },
+      e: "*binmek* + Dativ: *otobüs**e** binmek*, *trene binmek*, *uçağa binmek* – im Deutschen „in den Bus einsteigen“. Vor Vokal bleibt *otobüs* stabil: otobüs + **e**." }
   ]
 });
 
@@ -230,11 +233,14 @@ K.addText('tr-a2-r08', {
     { id: "tr-a2-r08.q2", t: "gap", q: "Önce yavaş ___ . (yürümek – Aufforderung, Sie)", a: ["yürüyün", "yürüyünüz"],
       wrong: { "yürü": "Das ist die du-Form. Der Artikel spricht die Leser mit „Sie“ an → **-yIn**.", "yürümeyin": "Das ist das **Verbot** („gehen Sie nicht“). Gemeint ist der Befehl ohne -mA-.", "yürüyen": "*-yAn* ist ein Partizip („der Gehende“), kein Befehl." },
       e: "Befehl (Sie): Stamm auf Vokal + **y** + **-In**: yürü-**y**-**ün** (Vokalharmonie ü → ün)." },
-    { id: "tr-a2-r08.q3", t: "match", q: "Ordne den Rat aus dem Text der Bedeutung zu:", p: [["Yanınıza su alın.", "Nehmen Sie Wasser mit."], ["Telefonunuza bakmayın.", "Schauen Sie nicht aufs Handy."], ["Her gün aynı saatte çıkın.", "Gehen Sie täglich zur selben Zeit los."], ["Önce yavaş yürüyün.", "Gehen Sie zuerst langsam."]],
+    { id: "tr-a2-r08.q3", t: "match", q: "Ordne den Rat aus dem Text der Bedeutung zu:", p: [["Yanınıza su alın.", "Nehmen Sie Wasser mit."], ["Telefonunuza bakmayın.", "Schauen Sie nicht aufs Handy."], ["Her hafta on dakika ekleyin.", "Fügen Sie jede Woche zehn Minuten hinzu."], ["Önce yavaş yürüyün.", "Gehen Sie zuerst langsam."]],
       e: "Alle Ratschläge sind Befehle an „Sie“. Die verneinte Form hat **-mA-**: *bakmayın*." },
     { id: "tr-a2-r08.q4", t: "mc", q: "Was kann man tun, wenn das Wetter schlecht ist?", o: ["Zu Hause bleiben und nicht gehen", "Im Einkaufszentrum spazieren", "Im Regen laufen", "Mit dem Bus zum Park fahren"], a: 1,
       why: { 0: "Der Text gibt eine **Alternative** an; man muss nicht zu Hause bleiben.", 2: "Bei Regen rät der Text zum Einkaufszentrum.", 3: "Vom Bus steht nichts im Text." },
-      e: "*Hava yağmurluysa alışveriş merkezinde de yürüyebilirsiniz.* = „Wenn es regnerisch ist, können Sie auch im Einkaufszentrum laufen.“" }
+      e: "*Hava yağmurluysa alışveriş merkezinde de yürüyebilirsiniz.* = „Wenn es regnerisch ist, können Sie auch im Einkaufszentrum laufen.“" },
+    { id: "tr-a2-r08.q5", t: "mc", q: "Welchen Rat gibt der Text, damit der Spaziergang zur Gewohnheit wird?", o: ["Jeden Tag zur selben Zeit losgehen", "Nur bei schönem Wetter gehen", "Immer allein gehen", "Jeden Tag eine andere Strecke wählen"], a: 0,
+      why: { 1: "Bei schlechtem Wetter rät der Text sogar zum Einkaufszentrum; man geht also trotzdem.", 2: "Im Gegenteil: Mit Freund oder Hund macht es mehr Spaß (*daha eğlenceli*).", 3: "Von wechselnden Strecken steht nichts im Text; wichtig ist die feste Uhrzeit." },
+      e: "*Her gün aynı saatte çıkın. Böylece yürüyüş … bir alışkanlık hâline gelir.* = „Gehen Sie jeden Tag zur selben Zeit los. So wird der Spaziergang … zur Gewohnheit.“ *aynı* = derselbe, *böylece* = dadurch." }
   ]
 });
 
@@ -532,11 +538,14 @@ K.addText('tr-a2-h08', {
       e: "*Giriş ücretsiz.* = „Der Eintritt ist kostenlos.“ (*-sIz* = ohne)" },
     { id: "tr-a2-h08.q2", t: "cloze", q: "Ergänze:", text: "Pazar akşamı sinemada {1} bir Türk filmi var. Bilet {2} lira.", gaps: { 1: { a: ["eski"], o: ["eski", "yeni"], wrong: { "yeni": "Es ist ein **alter** Film." } }, 2: { a: ["iki yüz"], o: ["on", "elli", "iki yüz"], wrong: { "on": "*on* = 10; der Preis ist *iki yüz* (200).", "elli": "*elli* = 50; der Preis ist *iki yüz* (200)." } } },
       e: "*eski* = alt, *yeni* = neu; *iki yüz* = 200." },
-    { id: "tr-a2-h08.q3", t: "gap", q: "Hava güzel olursa festival iki gün ___ . (sürmek – Futur)", a: ["sürecek"],
-      wrong: { "sürüyor": "Präsens; hier wird eine Vorhersage getroffen (Futur).", "sürdü": "Vergangenheit – das Fest hat noch nicht stattgefunden." },
-      e: "*sür-* + **-ecek** (Vokalharmonie e): *sürecek*." },
+    { id: "tr-a2-h08.q3", t: "gap", q: "Cumartesi günü şehir parkında çocuk festivali ___ . (başlamak – Präsens)", a: ["başlıyor"],
+      wrong: { "başlayor": "Endet der Stamm auf *a*, fällt es vor *-Iyor* weg und wird zu **ı**: *başla-* → *başlıyor*.", "başladı": "Vergangenheit – die Ansage kündigt das Fest für das kommende Wochenende an.", "başlamak": "Infinitiv – am Satzende steht ein konjugiertes Verb." },
+      e: "*başla-* + **-Iyor**: Das auslautende *a* wird zu **ı**: *başlıyor*. Das Präsens kann auch einen festen Plan der nahen Zukunft nennen." },
     { id: "tr-a2-h08.q4", t: "match", q: "Ordne zu:", p: [["Gün boyunca", "den ganzen Tag"], ["Giriş ücretsiz", "Eintritt frei"], ["Resim atölyeleri", "Malworkshops"]],
-      e: "*boyunca* = während (… hindurch)." }
+      e: "*boyunca* = während (… hindurch)." },
+    { id: "tr-a2-h08.q5", t: "mc", q: "Was passiert laut Ansage, wenn das Wetter schön ist?", o: ["Das Kinderfest dauert zwei Tage.", "Der Eintritt zum Kinderfest ist dann kostenlos.", "Der Film läuft draußen im Park."], a: 0,
+      why: { 1: "Der Eintritt ist **immer** frei (*Giriş ücretsiz*), unabhängig vom Wetter.", 2: "Vom Wetter hängt nur die Dauer des Festes ab; der Film läuft im Kino." },
+      e: "*Hava güzel olursa festival iki gün sürecek.* = „Wenn das Wetter schön ist, dauert das Fest zwei Tage.“ *-sA* (olursa) = wenn/falls." }
   ]
 });
 
