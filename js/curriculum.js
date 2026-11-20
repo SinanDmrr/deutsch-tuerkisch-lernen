@@ -49,7 +49,7 @@ window.KOPRU = {
     de: {
       id: 'de', ui: 'tr', target: 'de', tts: 'de-DE',
       label: 'Almanca Öğren', sublabel: 'Açıklamalar Türkçe',
-      complete: ['A1'],   // ADR-11: freigegebene Niveaus (Zertifikat, Einstufung); alles andere mit Inhalt gilt als „im Aufbau“
+      complete: ['A1', 'A2'],   // ADR-11: freigegebene Niveaus (Zertifikat, Einstufung); alles andere mit Inhalt gilt als „im Aufbau“
       chars: ['ä', 'ö', 'ü', 'ß', 'Ä', 'Ö', 'Ü'],
       levels: {
         A1: [
@@ -130,7 +130,7 @@ window.KOPRU = {
     tr: {
       id: 'tr', ui: 'de', target: 'tr', tts: 'tr-TR',
       label: 'Türkisch lernen', sublabel: 'Erklärungen auf Deutsch',
-      complete: ['A1'],   // ADR-11: freigegebene Niveaus (Zertifikat, Einstufung); alles andere mit Inhalt gilt als „im Aufbau“
+      complete: ['A1', 'A2'],   // ADR-11: freigegebene Niveaus (Zertifikat, Einstufung); alles andere mit Inhalt gilt als „im Aufbau“
       chars: ['ç', 'ğ', 'ı', 'İ', 'ö', 'ş', 'ü', "'"],
       levels: {
         A1: [
