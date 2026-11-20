@@ -15,6 +15,10 @@
   // sie zählen nicht in Prozente, Lücken und Wiederholung
   var UNCOUNTED = { speak: 1, write: 1, respond: 1 };
   function isCountable(ex) { return !!ex && !UNCOUNTED[ex.t]; }
+  // ADR-15: Aufgabentypen, die diese App-Version anzeigen kann. Ein alter Tab kann neuere Inhalte nachladen –
+  // unbekannte Typen überspringt der Player (Fortschritt dazu bleibt unangetastet).
+  var KNOWN = { mc: 1, listen: 1, gap: 1, dictation: 1, order: 1, match: 1, speak: 1, respond: 1, cloze: 1, sort: 1, write: 1 };
+  function isKnownType(ex) { return !!ex && KNOWN.hasOwnProperty(ex.t); }
 
   function locale(l) { return l === 'tr' ? 'tr-TR' : 'de-DE'; }
   function norm(s, lang, cs) {
@@ -193,5 +197,5 @@
     return { ok: false };
   }
 
-  DT.check = { lint: lint, checkGap: checkGap, clozeKeys: clozeKeys, isCountable: isCountable, locale: locale, norm: norm, strict: strict, fold: fold, levRatio: levRatio, evaluate: evaluate };
+  DT.check = { isKnownType: isKnownType, lint: lint, checkGap: checkGap, clozeKeys: clozeKeys, isCountable: isCountable, locale: locale, norm: norm, strict: strict, fold: fold, levRatio: levRatio, evaluate: evaluate };
 })(window.DT = window.DT || {});

@@ -9,7 +9,7 @@
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var DT = window.DT;
   var SCHEMA = DT.storage.SCHEMA;    // Version des Speicherformats (Migrationen nur in js/core/storage.js)
-  var APP_VERSION = '2026-11-20.3';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-20.4';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -456,12 +456,51 @@
     confirmResetTexts: ['Fortschritt UND alle eigenen Texte dieses Kurses löschen?', 'Bu kurstaki ilerleme VE tüm metinlerin silinsin mi?'],
     transferHasTexts: ['Der Code enthält auch deine eigenen Texte aus der Schreibwerkstatt.', 'Kod, yazma atölyesindeki kendi metinlerini de içerir.'],
     writeImportOver: ['Übernommen. Hinweis: Deine eigenen Texte brauchen jetzt mehr Platz als vorgesehen – lösche bei Gelegenheit alte Texte.', 'Aktarıldı. Not: Kendi metinlerin artık öngörülenden fazla yer kaplıyor – fırsat bulunca eski metinleri sil.'],
+    loading: ['Lädt …', 'Yükleniyor …'],
+    loadRetry: ['Erneut versuchen', 'Tekrar dene'],
+    loadFailTitle: ['Konnte nicht geladen werden', 'Yüklenemedi'],
+    loadFail: ['Die Inhalte dieses Niveaus kamen nicht an. Prüfe die Verbindung und versuche es noch einmal.', 'Bu seviyenin içerikleri gelmedi. Bağlantını kontrol edip bir kez daha dene.'],
+    loadOfflineTitle: ['Du bist offline', 'İnternet bağlantın yok'],
+    loadOffline: ['Dieses Niveau ist auf dem Gerät noch nicht gespeichert. Verbinde dich mit dem Internet und tippe auf „Erneut versuchen“.', 'Bu seviye cihazına henüz kaydedilmedi. İnternete bağlan ve “Tekrar dene”ye dokun.'],
+    loadFailUpdate: ['Vielleicht gibt es gerade eine neue Version der Seite – dann hilft Neuladen.', 'Sitenin yeni bir sürümü çıkmış olabilir, o zaman sayfayı yenilemek işe yarar.'],
+    updateReady: ['Neue Version verfügbar – bitte neu laden.', 'Yeni sürüm hazır, lütfen sayfayı yenile.'],
+    loadPartial: ['Einige Inhalte fehlen gerade – die Zahlen sind deshalb unvollständig.', 'Bazı içerikler şu an eksik, bu yüzden sayılar tam değil.'],
+    writeLazy: ['{n} Schreibaufgaben · öffnen', '{n} yazma görevi · aç'],
     testSentence: ['Merhaba! Her gün biraz Türkçe öğreniyorum.', 'Guten Tag! Ich lerne jeden Tag ein bisschen Deutsch.']
   };
 
   /* ================= Speicher ================= */
   /* ---------- Aufgaben-Index: feste ID → Thema/Aufgabe ---------- */
   // Dialoge/Lesetexte als Pseudo-Themen und Aufgaben-Index: js/core/catalog.js
+  /* ADR-15: Inhalte je Kurs+Niveau nachladen (js/core/loader.js). Nur Script-Tags einfügen – Fortschritt wird hier nie angefasst. */
+  function injectScript(src) {
+    return new Promise(function (resolve, reject) {
+      var el = document.createElement('script');
+      el.src = src;   // dynamisch eingefügt = async; Reihenfolge der Paketdateien ist egal (nur K.add*)
+      el.onload = function () { resolve(); };
+      el.onerror = function () { if (el.parentNode) el.parentNode.removeChild(el); reject(new Error('load ' + src)); };
+      document.head.appendChild(el);
+    });
+  }
+  var LOADER = DT.loader.create({
+    manifest: function () { return K.manifest; }, version: APP_VERSION, inject: injectScript, timeout: 15000,
+    onLoad: function (key) {   // danach: Aufgaben-Index neu, Wort-Index neu, Ablenker-Cache leer
+      if (K.loaded) K.loaded[key] = true;
+      EXI = DT.catalog.register(K, window.console); WI = DT.vocab.index(K); poolCache = {};
+    }
+  });
+  var loadErr = {};   // Pakete, deren Laden fehlschlug (nur im Speicher; „Erneut versuchen“ leert die Liste)
+  /* ADR-15: geladene Pakete (Kurs+Niveau). Fest in index.html eingebundene Inhaltsdateien gelten als geladen;
+   * ohne Manifest bleibt K.loaded leer (= alles gilt als geladen, wie bisher). Nicht geladene Niveaus zählt DT.catalog aus dem Manifest. */
+  if (K.manifest) {
+    K.loaded = {};
+    (function () {
+      var st = {};
+      Array.prototype.forEach.call(document.querySelectorAll('script[src*="js/content/"]'), function (el) { var m = /js\/content\/([^?#]+)/.exec(el.getAttribute('src') || ''); if (m) st[m[1]] = 1; });
+      Object.keys(K.manifest).forEach(function (k) { if (K.manifest[k].files.every(function (f) { return st[f]; })) K.loaded[k] = true; });
+      Object.keys(st).forEach(function (f) { LOADER.markLoaded(f); });   // nie doppelt laden (z. B. Rücknahme: Tags wieder in index.html)
+    })();
+  }
   var EXI = DT.catalog.register(K, window.console);
 
   /* ---------- Laden, Migrieren, Sichern ----------
@@ -588,7 +627,7 @@
   function levelBuilding(lv) { return levelHas(lv) && !levelComplete(lv); }
   function buildingBadge(lv) {
     if (!levelBuilding(lv)) return '';
-    var l = levelTopics(lv).filter(function (x) { return !x.kind; }), done = l.filter(function (x) { return x.avail; }).length;
+    var l = levelTopics(lv).filter(function (x) { return !x.kind; }), done = l.filter(hasContent).length;
     return ' <span class="badge warn" title="' + esc(t('buildingHint')) + '">🚧 ' + esc(t('building', { a: done, n: l.length })) + '</span>';
   }
   function splitLevels() {
@@ -862,14 +901,16 @@
   function topicById(id) { return allTopics().filter(function (x) { return x.id === id; })[0]; }
   function exId(topicId, i) { return K.content[topicId].exercises[i].id; }
   function exById(id) {
-    var e = EXI[id]; if (!e) return null;
+    var e = EXI[id]; if (!e || !DT.check.isKnownType(e.ex)) return null;   // unbekannter Typ (neuere Inhalte, alter Tab) → Player überspringt
     var tp = topicById(e.topicId);
     if (!tp || !tp.avail) return null;
     return { topic: tp, ex: e.ex, idx: e.idx, id: id };
   }
+  // ADR-15: lazy = Thema eines noch nicht geladenen Niveaus (Zahlen aus dem Manifest, ohne Fortschritt); öffnen lädt es nach
+  function hasContent(tp) { return !!(tp && (tp.avail || tp.lazy)); }
   function topicStats(tp) {
     var s = { n: 0, c: 0, w: 0, o: 0, first: 0, firstW: 0, answered: 0 };
-    if (!tp.avail) return s;
+    if (!tp.avail) { if (tp.lazy) { s.n = s.o = tp.n || 0; } return s; }
     var p = prog();
     tp.data.exercises.forEach(function (ex, i) {
       if (!isCountable(ex)) return;
@@ -884,7 +925,7 @@
   function sumStats(list) {
     var s = { n: 0, c: 0, w: 0, o: 0, first: 0, firstW: 0, answered: 0, topics: 0, avail: 0 };
     list.forEach(function (tp) {
-      var x = topicStats(tp); s.topics++; if (tp.avail) s.avail++;
+      var x = topicStats(tp); s.topics++; if (hasContent(tp)) s.avail++;
       ['n', 'c', 'w', 'o', 'first', 'firstW', 'answered'].forEach(function (k) { s[k] += x[k]; });
     });
     return s;
@@ -899,7 +940,7 @@
     return out;
   }
   function nextTopic() {
-    var list = allTopics().filter(function (x) { return x.avail; });
+    var list = allTopics().filter(hasContent);
     for (var i = 0; i < list.length; i++) { var s = topicStats(list[i]); if (s.c < s.n && !isSkipped(list[i].id)) return list[i]; }
     return null;
   }
@@ -966,12 +1007,18 @@
   }
   /* ADR-11.2: Fokus-Niveau = Niveau des ersten offenen Grammatikthemas (nie gespeichert, immer berechnet) */
   function focusLevel() {
-    var list = allTopics().filter(function (x) { return x.avail && !x.kind; });
+    var list = allTopics().filter(function (x) { return hasContent(x) && !x.kind; });
     for (var i = 0; i < list.length; i++) { var s = topicStats(list[i]); if (s.c < s.n && !isSkipped(list[i].id)) return list[i].level; }
     var top = 'A1'; list.forEach(function (x) { if (LEVELS.indexOf(x.level) > LEVELS.indexOf(top)) top = x.level; });
     return top;
   }
-  function wordLevels() { return LEVELS.filter(function (lv) { return DT.vocab.wordsOf(K, courseId(), lv).length > 0; }); }
+  function wordLevels() {
+    return LEVELS.filter(function (lv) {
+      var key = DT.catalog.levelKey(courseId(), lv);
+      if (!DT.catalog.levelLoaded(K, key)) { var sm = DT.catalog.levelSummary(K, key); return !!(sm && sm.words); }   // ADR-15
+      return DT.vocab.wordsOf(K, courseId(), lv).length > 0;
+    });
+  }
   /* Standard-Niveau der Wortschatzseite: höchstes Niveau mit Wörtern bis zum Fokus-Niveau (sonst A1) */
   function defaultWordLevel() {
     var f = LEVELS.indexOf(focusLevel()), ok = wordLevels().filter(function (lv) { return LEVELS.indexOf(lv) <= f; });
@@ -1092,6 +1139,8 @@
       (storageBroken ? '<div class="save-banner" role="alert">⚠️ ' + esc(t('bannerCorrupt')) + '</div>' : '') +
       ((saveFailed || readOnly || newerData) ? '<div id="save-banner" class="save-banner" role="alert">⚠️ ' + esc(t(newerData ? 'bannerNewer' : (readOnly ? 'bannerReadOnly' : 'bannerSaveFail'))) +
         (newerData ? ' <button class="btn small" onclick="location.reload()">' + esc(t('reload')) + '</button>' : ' <button class="btn small" data-act="export">' + esc(t('exportBtn')) + '</button>') + '</div>' : '') +
+      (swUpdated ? updateBanner() : '') +
+      (partialMissing() ? '<div class="save-banner info" role="status">⚠️ ' + esc(t('loadPartial')) + ' <button class="btn small" data-act="retry-load">' + esc(t('loadRetry')) + '</button></div>' : '') +
       '<main id="main">' + inner + '</main>' +
       '<footer class="foot">' + esc(t('footer')) + '<br><span>© 2026 Sinan Demir · ' + esc(t('rights')) + ' · <a href="#/legal">' + esc(t('legal')) + '</a></span></footer>';
   }
@@ -1235,7 +1284,7 @@
   /* ================= Lektionen ================= */
   function topicCard(tp) {
     var s = topicStats(tp);
-    if (!tp.avail) {
+    if (!hasContent(tp)) {
       return '<div class="topic-card planned"><span class="tc-num">' + tp.level + ' · ' + tp.num + '</span><span class="tc-title">' + esc(tp.title) + '</span>' +
         '<span class="tc-sub">' + esc(tp.sub) + '</span><div class="tc-foot"><span class="badge">' + esc(t('planned')) + '</span></div></div>';
     }
@@ -1871,6 +1920,19 @@
   function writeHead(w) { return uiLang() === 'de' ? w.title : w.sub; }      // title = Deutsch, sub = Türkisch (wie Dialoge)
   function writeSubline(w) { return uiLang() === 'de' ? w.sub : w.title; }
   function writeList(lv) { return DT.catalog.writesOf(K, courseId(), lv); }
+  // ADR-15: Schreibaufgaben noch nicht geladener Niveaus – nur IDs aus dem Manifest (zum Zählen und Verlinken)
+  function lazyWriteIds(lv) {
+    var out = [];
+    (lv ? [lv] : LEVELS).forEach(function (l) {
+      var key = DT.catalog.levelKey(courseId(), l);
+      if (!DT.catalog.levelLoaded(K, key)) { var sm = DT.catalog.levelSummary(K, key); if (sm) out = out.concat(sm.writes); }
+    });
+    return out;
+  }
+  function writeListAll() {
+    var have = {}, list = writeList(); list.forEach(function (w) { have[w.id] = 1; });
+    return list.concat(lazyWriteIds().filter(function (id) { return !have[id]; }).map(function (id) { return { id: id, lazy: true }; })).sort(function (a, b) { return a.id < b.id ? -1 : 1; });
+  }
   function writeCounts(list) {
     var c = { n: list.length, done: 0, draft: 0, open: 0 };
     list.forEach(function (w) { var s = writeStatus(w.id); if (s === 'done') c.done++; else if (s === 'submitted') c.open++; if (writeHasDraft(w.id)) c.draft++; });
@@ -1893,11 +1955,15 @@
       '<div class="tc-foot"><span>' + esc(w.reg) + ' · ' + w.words.min + '–' + w.words.ziel + ' ' + esc(t('wordsShort')) + '</span>' + writeBadge(writeStatus(w.id)) + '</div></a>';
   }
   function writeSection(lv) {
-    var wl = writeList(lv);
+    var wl = writeList(lv), lz = wl.length ? [] : lazyWriteIds(lv);
+    if (lz.length) {   // ADR-15: Niveau noch nicht geladen → eine Karte, die das Niveau öffnet
+      return '<h3 class="sub-head">✍️ ' + esc(t('writeTitle')) + '</h3><div class="topic-grid"><a class="topic-card w-card" href="#/lessons/' + lv + '"><span class="tc-num">' + lv + '</span>' +
+        '<span class="tc-title">' + esc(t('writeTitle')) + '</span><span class="tc-sub">' + esc(t('writeLazy', { n: lz.length })) + '</span></a></div>';
+    }
     return wl.length ? '<h3 class="sub-head">✍️ ' + esc(t('writeTitle')) + '</h3><div class="topic-grid">' + wl.map(writeCard).join('') + '</div>' : '';
   }
   function writeCounterHtml() {
-    var all = writeList(); if (!all.length) return '';
+    var all = writeListAll(); if (!all.length) return '';
     var c = writeCounts(all), first = all.filter(function (w) { return writeStatus(w.id) !== 'done'; })[0] || all[0];
     var drafts = c.draft ? ' · ' + (c.draft === 1 ? t('writeCounterDraft1') : t('writeCounterDrafts', { e: c.draft })) : '';
     return '<a class="card section w-counter" href="#/write/' + first.id + '"><span aria-hidden="true">✍️</span><span><b>' + esc(t('writeCounter', { d: c.done, n: c.n })) + '</b>' + esc(drafts) + '</span><span class="muted">→</span></a>';
@@ -2106,7 +2172,7 @@
       var list = levelTopics(lv), s = sumStats(list);
       var rows = list.map(function (tp) {
         var x = topicStats(tp);
-        if (!tp.avail) return '<div class="ov-row planned"><div><div class="t-title">' + esc(tp.title) + '</div><div class="t-sub">' + esc(tp.sub) + '</div></div><div class="ov-bar"><span class="badge">' + esc(t('planned')) + '</span></div><span class="num">–</span><span class="num">–</span><span class="num">–</span></div>';
+        if (!hasContent(tp)) return '<div class="ov-row planned"><div><div class="t-title">' + esc(tp.title) + '</div><div class="t-sub">' + esc(tp.sub) + '</div></div><div class="ov-bar"><span class="badge">' + esc(t('planned')) + '</span></div><span class="num">–</span><span class="num">–</span><span class="num">–</span></div>';
         return '<div class="ov-row"><div><a class="t-title" href="#/topic/' + tp.id + '/' + (x.answered ? 'exercises' : 'learn') + '">' + esc(tp.title) + '</a><div class="t-sub">' + esc(tp.sub) + ' · ' + x.n + ' ' + esc(t('tasks')) + '</div></div>' +
           '<div class="ov-bar"><div class="bar"><span class="ok" style="width:' + pct(x.c, x.n) + '%"></span><span class="bad" style="width:' + pct(x.w, x.n) + '%"></span></div></div>' +
           '<span class="num ok">' + fmtPct(pct(x.c, x.n)) + '</span><span class="num bad">' + fmtPct(pct(x.w, x.n)) + '</span><span class="num">' + fmtPct(pct(x.o, x.n)) + '</span></div>';
@@ -2176,6 +2242,8 @@
     });
     var words = DT.vocab.wordsOf(K, cid, lv).map(function (w) { return w.id; });
     var ws = DT.srs.stats(ensureProfile(prof()), cid, words);
+    var lkey = DT.catalog.levelKey(cid, lv), lsm = DT.catalog.levelLoaded(K, lkey) ? null : DT.catalog.levelSummary(K, lkey);
+    if (lsm) { words = { length: lsm.words }; ws = { sicher: 0 }; }   // ADR-15: ungeladen → Anzahl aus dem Manifest, ohne Fortschritt
     var r = DT.catalog.certCheck(rule, { c: c, n: n, wk: ws.sicher, wn: words.length, skills: rule && rule.skill ? skillsOf(lv, true) : null });
     return { c: c, n: n, wk: ws.sicher, wn: words.length, exPct: pct(c, n), wPct: pct(ws.sicher, words.length), ok: !!rule && r.ok, exOk: r.exOk, wOk: r.wOk, skills: r.skills, writes: r.writes, rule: rule };
   }
@@ -2535,6 +2603,93 @@
   function backButton(r) {
     return '<div class="backrow"><a class="back-btn" href="' + parentRoute(r) + '">‹ ' + esc(t('back')) + '</a></div>';
   }
+  /* ---------- ADR-15: benötigte Pakete vor dem Zeichnen ---------- */
+  function tabOf(page) {
+    return { topic: 'lessons', write: 'lessons', placement: 'lessons', review: 'words', daily: 'dashboard', certificate: 'dashboard', practice: 'gaps' }[page] || page;
+  }
+  function neededKeys(r) {
+    var cid = courseId(), need = DT.loader.neededLevels(prof(), cid, r, K.manifest);
+    var fk = DT.catalog.levelKey(cid, focusLevel());   // Fokus-Niveau (Tagesmix, „Weiter“, Wortschatz) – aus Manifest berechenbar
+    if (K.manifest[fk] && need.indexOf(fk) < 0) need.push(fk);
+    return need;
+  }
+  function loadCard(kind) {
+    var off = typeof navigator !== 'undefined' && navigator.onLine === false;
+    if (kind === 'wait') return '<div class="card empty load-card" role="status" aria-live="polite"><div class="big" aria-hidden="true">⏳</div><p>' + esc(t('loading')) + '</p></div>';
+    return '<div class="card empty load-card" role="alert"><div class="big" aria-hidden="true">' + (off ? '📡' : '⚠️') + '</div>' +
+      '<p><b>' + esc(t(off ? 'loadOfflineTitle' : 'loadFailTitle')) + '</b></p><p class="muted">' + esc(t(off ? 'loadOffline' : 'loadFail')) + '</p>' +
+      (off ? '' : '<p class="muted small">' + esc(t('loadFailUpdate')) + ' <button class="btn small" onclick="location.reload()">' + esc(t('reload')) + '</button></p>') +
+      '<div class="btn-row" style="justify-content:center"><button class="btn primary" data-act="retry-load">↻ ' + esc(t('loadRetry')) + '</button>' +
+      (parseHash().page !== 'dashboard' ? '<a class="btn" href="#/dashboard">' + esc(t('dashboard')) + '</a>' : '') + '</div></div>';
+  }
+  // true = alles da (oder nur Teilausfall → Hinweisleiste); false = Lade-/Fehlerkarte gezeichnet
+  function contentReady() {
+    var r = parseHash(), need = neededKeys(r);
+    var miss = need.filter(function (k) { return !LOADER.isLoaded(k); });
+    if (!miss.length) return true;
+    var todo = miss.filter(function (k) { return !loadErr[k]; });
+    if (todo.length) {
+      LOADER.ensure(todo).then(function () { render(); }, function (e) {
+        ((e && e.failed) || todo).forEach(function (k) { loadErr[k] = true; });
+        render();
+      });
+      app.innerHTML = shell(tabOf(r.page), loadCard('wait'));
+      return false;
+    }
+    // Nur Fehlgeschlagenes fehlt: blockiert, wenn die Route es braucht oder vom Kurs noch gar nichts geladen ist
+    var cid = courseId(), route = DT.loader.routeLevels(cid, r);
+    var none = !Object.keys(K.manifest).some(function (k) { return k.indexOf(cid + '-') === 0 && LOADER.isLoaded(k); });
+    if (none || miss.some(function (k) { return route.indexOf(k) >= 0; })) {
+      showingLoadCard = true;   // Fehlerkarte sagt es schon – keine zusätzliche Hinweisleiste
+      try { app.innerHTML = shell(tabOf(r.page), loadCard('fail')); } finally { showingLoadCard = false; }
+      return false;
+    }
+    return true;   // Teilausfall: App läuft, shell() zeigt die Hinweisleiste
+  }
+  var showingLoadCard = false;
+  /* ADR-15 Schritt 5: nächstes Niveau des aktiven Kurses im Leerlauf vorab holen – nur mit aktivem Service Worker
+   * (die Antwort landet cache-first in dt-assets-<VERSION>), nicht bei Datensparen/2G. Nur Abruf, kein Ausführen. */
+  var prefetched = {}, prefetchQueued = false;
+  function nextLevelKey() {
+    var cid = courseId(), keys = DT.loader.sortKeys(Object.keys(K.manifest).filter(function (k) { return k.indexOf(cid + '-') === 0; }));
+    var top = -1; keys.forEach(function (k, i) { if (LOADER.isLoaded(k)) top = i; });
+    var nk = top >= 0 ? keys[top + 1] : null;
+    return nk && !LOADER.isLoaded(nk) ? nk : null;
+  }
+  function prefetchNext() {
+    prefetchQueued = false;
+    if (!K.manifest || !db.active || !db.profiles[db.active] || !window.fetch) return;
+    var nc = navigator.connection; if (nc && (nc.saveData || /2g$/.test(nc.effectiveType || ''))) return;
+    if (!navigator.serviceWorker || !navigator.serviceWorker.controller || navigator.onLine === false) return;
+    var k = nextLevelKey(); if (!k || prefetched[k]) return;
+    prefetched[k] = true;
+    LOADER.filesOf(k).forEach(function (f) {
+      fetch('js/content/' + f + '?v=' + APP_VERSION).catch(function () { prefetched[k] = false; });   // Fehler: beim nächsten Zeichnen erneut
+    });
+  }
+  function schedulePrefetch() {
+    if (prefetchQueued || !K.manifest) return; prefetchQueued = true;
+    if (window.requestIdleCallback) requestIdleCallback(prefetchNext, { timeout: 8000 }); else setTimeout(prefetchNext, 1500);
+  }
+  // Update-Hinweis (ADR-15 §2.4): neuer Worker übernimmt einen schon kontrollierten Tab → bitte neu laden
+  var swUpdated = false;
+  if (navigator.serviceWorker && navigator.serviceWorker.addEventListener) {
+    var hadController = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.addEventListener('controllerchange', function () {
+      if (!hadController) { hadController = true; schedulePrefetch(); return; }   // erste Installation: kein Update
+      swUpdated = true;
+      if (!document.getElementById('update-banner') && app) {
+        var d = document.createElement('div'); d.innerHTML = updateBanner(); if (d.firstChild) app.insertBefore(d.firstChild, app.firstChild);
+      }
+    });
+  }
+  function updateBanner() {
+    return '<div id="update-banner" class="save-banner info" role="status">🔄 ' + esc(t('updateReady')) + ' <button class="btn small" onclick="location.reload()">' + esc(t('reload')) + '</button></div>';
+  }
+  function partialMissing() {
+    if (showingLoadCard || !K.manifest || !db.active || !db.profiles[db.active]) return false;
+    return Object.keys(loadErr).some(function (k) { return k.indexOf(courseId() + '-') === 0 && !LOADER.isLoaded(k); });
+  }
   function render() {
     flushDraft();   // Schreibwerkstatt: getippten Text vor jedem Neu-Rendern sichern (ADR-13)
     applyTheme();
@@ -2558,6 +2713,7 @@
       try { history.replaceState(null, '', transferBase() + '#/settings'); } catch (e) { location.hash = '#/settings'; }
       receiveTransfer(tcode).then(function (found) { if (found && parseHash().page === 'settings') { render(); window.scrollTo(0, 0); } });
     }
+    if (K.manifest && !contentReady()) return;   // ADR-15: Lade- bzw. Fehlerkarte gezeigt; render() folgt nach dem Laden
     var r = parseHash(), active = r.page, inner;
     // Player zurücksetzen, wenn man die Übungsansicht verlässt
     var inPlayer = (r.page === 'topic' && (r.b === 'exercises' || r.b === 'review')) || r.page === 'practice' || r.page === 'review' || r.page === 'daily' || (r.page === 'words' && r.b) || r.page === 'placement';
@@ -2582,6 +2738,7 @@
     if (['topic', 'write', 'words', 'review', 'daily', 'placement', 'certificate', 'legal'].indexOf(r.page) >= 0 && !(r.page === 'words' && !r.a)) inner = backButton(r) + inner;
     app.innerHTML = shell(active, inner);
     afterRender();
+    schedulePrefetch();   // ADR-15: nächstes Niveau im Leerlauf für offline vorhalten
   }
   function rerenderPlayerOnly() {
     // Rendert die Seite neu, behält aber Scrollposition und Fokus bei (Tastatur-Nutzer verlieren sonst ihren Platz)
@@ -2671,6 +2828,7 @@
       case 'toggle-theme': db.theme = currentThemeIsDark() ? 'light' : 'dark'; save(); render(); break;
       case 'set-theme': db.theme = el.getAttribute('data-v'); save(); render(); break;
       case 'toggle-course': switchCourse(courseId() === 'de' ? 'tr' : 'de'); break;
+      case 'retry-load': loadErr = {}; render(); break;
       case 'set-course': switchCourse(el.getAttribute('data-v')); break;
       case 'mc': if (player && !player.checked) { player.cur.sel = +el.getAttribute('data-i'); rerenderPlayerOnly(); } break;
       case 'char': {

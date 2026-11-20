@@ -17,7 +17,7 @@ Lernplattform für **Türkischsprechende, die Deutsch lernen** (Erklärungen auf
 ## Inhalte erweitern
 
 - Lehrplan (alle Themen A1–C2): `js/curriculum.js`
-- Inhalte je Niveau: `js/content/de-a1.js`, `js/content/tr-a1.js` – neue Dateien (z. B. `de-a2.js`) in `index.html` einbinden.
+- Inhalte je Niveau: `js/content/<kurs>-<niveau>[-teil].js` (z. B. `de-a2-vocab.js`) – neue Datei anlegen, dann `node tools/build-manifest.js` (erzeugt `js/content/manifest.js`; die App lädt jedes Niveau erst bei Bedarf nach, ADR-15). Nicht in `index.html` eintragen.
 - Bei jedem Release `APP_VERSION` in `js/app.js` und die `?v=…`-Angaben in `index.html` erhöhen (damit Browser keine alten Dateien aus dem Cache nehmen).
 
 ## Updates ohne Datenverlust für die Nutzer

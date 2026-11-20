@@ -34,6 +34,9 @@ window.KOPRU = {
   addText: function (id, d) { d.id = id; if (!d.kind) d.kind = /-h\d+$/.test(id) ? 'listen' : 'read'; this.texts[id] = d; },
   writes: {},    // Schreibaufgaben (ADR-13), z. B. writes['de-a2-s01'] = { scene, title, sub, task, points, reg, words, chunks, hint, model, modeln, check, mistakes, e }
   addWrites: function (key, list) { var self = this; list.forEach(function (w) { if (self.writes[w.id]) (self.writeDups = self.writeDups || []).push(w.id); w.key = key; w.t = 'write'; self.writes[w.id] = w; }); },
+  // ADR-15: Übersicht aller Pakete (Kurs+Niveau) aus js/content/manifest.js – erzeugt von tools/build-manifest.js
+  manifest: null,
+  setManifest: function (m) { this.manifest = m; },
 
   levelNames: {
     A1: { de: 'Anfänger', tr: 'Başlangıç' },

@@ -1257,6 +1257,144 @@ test('badges: A2-Abzeichen (neue IDs, alte unverändert, aus Fortschritt abgelei
   eq(B.award(p, 'tr', { a2: { listenOk: 9 } }, 4).map(b => b.id), [], 'pro Kurs getrennt, Grenze 10');
 });
 
+/* ---------- ADR-15: Nachladen je Kurs+Niveau (js/core/loader.js) ---------- */
+const LD = DT.loader;
+const MFX = (() => { const c = { window: { KOPRU: { setManifest(m) { this.manifest = m; } } } }; vm.createContext(c);
+  vm.runInContext(fs.readFileSync(path.join(root, 'js', 'content', 'manifest.js'), 'utf8'), c); return c.window.KOPRU.manifest; })();
+test('loader: levelKeyOf für alle ID-Formen', () => {
+  eq(['de-a2-03.5', 'de-a2.w001', 'de-a2-r01.q1', 'de-a1-d01', 'de-a2-s01', 'tr-b1-03', 'de-a2-d01.c1', 'de-a1-01#2', 'de-a2', 'x', '', null, 'de-a22-01', 'dea2-01'].map(LD.levelKeyOf),
+    ['de-a2', 'de-a2', 'de-a2', 'de-a1', 'de-a2', 'tr-b1', 'de-a2', 'de-a1', 'de-a2', null, null, null, null, null], 'Präfix → Paket');
+});
+test('loader: usedLevels/neededLevels (Fixtures v3, v4-writes)', () => {
+  const p3 = Object.values(copy(V3).profiles)[0];
+  eq(LD.usedLevels(p3, 'de'), ['de-a1', 'de-a2'], 'v3: prog/srs/place → A1+A2 (de)');
+  eq(LD.usedLevels(p3, 'tr'), ['tr-a1'], 'v3: je Kurs getrennt');
+  eq(LD.usedLevels(copy(W4.cur), 'de'), ['de-a2'], 'v4-writes: eigene Texte zählen (writes)');
+  eq(LD.usedLevels(copy(W4.inc), 'tr'), ['tr-a2'], 'v4-writes inc: tr-Schreibtext');
+  eq(LD.usedLevels({ skip: { de: { 'de-a2-04': true } } }, 'de'), ['de-a2'], 'skip zählt');
+  eq(LD.usedLevels(null, 'de'), [], 'kein Profil');
+  const fresh = { course: 'de', prog: { de: {}, tr: {} } };
+  eq(LD.neededLevels(fresh, 'de', { page: 'dashboard' }, MFX), ['de-a1'], 'neuer Nutzer: nur A1');
+  eq(LD.neededLevels(fresh, 'tr', { page: 'topic', a: 'tr-a2-03' }, MFX), ['tr-a2'], 'Deep-Link: Niveau der Route (ohne A1)');
+  eq(LD.neededLevels(fresh, 'de', { page: 'topic', a: 'tr-a2-03' }, MFX), ['de-a1'], 'Route des anderen Kurses lädt nichts');
+  eq(LD.neededLevels(fresh, 'de', { page: 'placement' }, MFX), ['de-a1', 'de-a2'], 'Einstufung: A1+A2');
+  eq(LD.neededLevels(fresh, 'de', { page: 'words', lv: 'A2' }, MFX), ['de-a2'], 'Wortschatz-Filter A2');
+  eq(LD.neededLevels(fresh, 'de', { page: 'lessons', a: 'C2' }, MFX), ['de-a1'], 'Niveau ohne Inhalt wird übersprungen');
+  eq(LD.neededLevels(fresh, 'de', { page: 'write', a: 'de-a2-s03' }, MFX), ['de-a2'], 'Schreibaufgabe');
+  eq(LD.neededLevels(p3, 'de', { page: 'dashboard' }, MFX), ['de-a1', 'de-a2'], 'v3-Nutzer: A1+A2');
+  const before = JSON.stringify(p3); LD.neededLevels(p3, 'de', {}, MFX); LD.usedLevels(p3, 'de');
+  ok(JSON.stringify(p3) === before, 'Profil bleibt unverändert');
+});
+// Volle Inhalte in eigener VM (wie der Validator): Manifest == Inhalt; ungeladen (lazy) == geladen ohne Fortschritt
+function contentCtx(only) {
+  const c = { window: {}, console }; vm.createContext(c);
+  const run = f => vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'), c, { filename: f });
+  run('js/curriculum.js'); run('js/content/manifest.js');
+  const M = c.window.KOPRU.manifest;
+  Object.keys(M).sort().filter(k => !only || only.indexOf(k) >= 0).forEach(k => M[k].files.forEach(f => run('js/content/' + f)));
+  ['check.js', 'catalog.js', 'vocab.js'].forEach(f => run('js/core/' + f));
+  c.window.DT.catalog.register(c.window.KOPRU);
+  return c.window;
+}
+test('catalog.levelSummary: Manifest == geladener Inhalt (jedes Paket)', () => {
+  const W = contentCtx(), Kc = W.KOPRU, C = W.DT.catalog;
+  Object.keys(Kc.manifest).forEach(key => {
+    const m = Object.assign({}, Kc.manifest[key]); delete m.files; delete m.bytes;
+    eq(C.levelSummary(Kc, key), m, key + ': Summen aus Inhalt == Manifest');
+  });
+  ok(Object.keys(Kc.manifest).length >= 4, 'Manifest hat Pakete');
+});
+test('catalog: ungeladenes Niveau (lazy) zählt wie geladenes ohne Fortschritt', () => {
+  const W = contentCtx(), Kc = W.KOPRU, C = W.DT.catalog, isC = W.DT.check.isCountable;
+  ['de', 'tr'].forEach(cid => C.LEVELS.forEach(lv => {
+    const key = C.levelKey(cid, lv); if (!Kc.manifest[key]) return;
+    const full = C.topicsOf(Kc, cid).filter(x => x.level === lv);
+    const skFull = C.skillOf(Kc, cid, lv, {}, {});
+    Kc.loaded = {}; Object.keys(Kc.manifest).forEach(k => { if (k !== key) Kc.loaded[k] = true; });
+    const lazy = C.topicsOf(Kc, cid).filter(x => x.level === lv);
+    eq(lazy.map(x => [x.id, x.num, x.title, x.sub, x.kind || '']), full.map(x => [x.id, x.num, x.title, x.sub, x.kind || '']), key + ': gleiche Zeilen');
+    eq(lazy.map(x => x.lazy ? x.n : 0), full.map(x => x.avail ? x.data.exercises.filter(isC).length : 0), key + ': n je Thema');
+    ok(lazy.every(x => !x.avail && !x.data), key + ': lazy-Zeilen ohne Aufgaben (avail:false)');
+    eq(C.skillOf(Kc, cid, lv, {}, {}), skFull, key + ': skillOf aus Manifest');
+    eq(C.levelSummary(Kc, key).writes, Object.keys(Kc.writes).filter(id => id.indexOf(key + '-') === 0).sort(), key + ': Schreibaufgaben-IDs');
+    delete Kc.loaded;
+  }));
+});
+test('ADR-15 §3: nur de-a1 geladen – A2-Einträge nach Antwort, Tagesziel, Speichern, Export, Import byte-gleich', () => {
+  const t = 1790000000000, db = { v: storage.SCHEMA, app: 'X', theme: 'system', active: 'u1', profiles: { u1: {
+    id: 'u1', name: 'Test', course: 'de', created: t,
+    prog: { de: { 'de-a1-02.1': { f: 'c', s: 'c', n: 1, t }, 'de-a2-03.5': { f: 'w', s: 'w', n: 2, w: 2, a: 'falsch', t }, 'de-a2-d01.c1': { f: 'c', s: 'c', n: 1, t } }, tr: {} },
+    srs: { de: { 'de-a2.w010': { b: 2, d: T + 3, k: 'word', n: 3 }, 'de-a2-03.5': { b: 1, d: T + 1, k: 'ex', n: 1 } }, tr: {} },
+    skip: { de: { 'de-a2-04': true }, tr: {} }, place: {}, badges: {}, daily: { goal: 10, log: {} },
+    writes: { de: { 'de-a2-s01': { x: 'Liebe Anna, ich komme morgen.', t: t + 2, n: 1 } }, tr: {} } } } };
+  const a2 = p => { const o = {}; ['prog', 'srs', 'writes', 'skip'].forEach(f => { const m = (p[f] || {}).de || {}; Object.keys(m).sort().forEach(k => { if (k.indexOf('de-a2') === 0) o[f + ':' + k] = JSON.stringify(m[k]); }); }); return o; };
+  const p = db.profiles.u1, before = a2(p);
+  ok(Object.keys(before).length === 6, 'Fixture hat 6 A2-Einträge');
+  ok(JSON.stringify(LD.neededLevels(p, 'de', { page: 'dashboard' }, MFX)) === '["de-a1","de-a2"]', 'A2 gilt als benutzt (würde geladen)');
+  srs.answer(p, 'de', 'de-a1-02.1', false, T, 'ex'); daily.tick(p, TODAY_KEY);   // Antwort + Tagesziel (nur A1)
+  eq(a2(p), before, 'nach SRS-Antwort und Tagesziel');
+  const ls = { data: {}, getItem(k) { return this.data[k] || null; }, setItem(k, v) { this.data[k] = String(v); }, removeItem(k) { delete this.data[k]; } };
+  storage.save(ls, db, 'X');
+  const saved = JSON.parse(ls.getItem('dt-data')).profiles.u1;
+  eq(a2(saved), before, 'nach Speichern');
+  const re = storage.migrate(JSON.parse(ls.getItem('dt-data')), T, TODAY_KEY).data.profiles.u1;
+  eq(a2(re), before, 'nach erneutem Laden/Migration');
+  const ex = storage.exportData(p, 'X', t + 9);
+  eq(a2(ex.profile || ex), before, 'Export');
+  const im = storage.importData(copy(p), JSON.stringify(ex), T, TODAY_KEY);
+  ok(im.ok, 'Import ok'); eq(a2(im.profile), before, 'nach Import/Merge (gleicher Stand)');
+});
+const fakeMf = { 'de-a1': { files: ['de-a1.js', 'de-a1-vocab.js'] }, 'de-a2': { files: ['de-a2.js'] }, 'tr-a1': { files: ['tr-a1.js'] } };
+function fakeLoader(opt) {
+  const log = { inject: [], onLoad: [] }, pend = {};
+  const L = LD.create(Object.assign({ manifest: () => fakeMf, version: 'V', timeout: 0,
+    inject: src => { log.inject.push(src); const mode = (opt.mode || {})[src.split('?')[0].split('/').pop()];
+      if (mode === 'fail') return Promise.reject(new Error('net'));
+      if (mode === 'hang') return new Promise((res, rej) => { pend[src] = res; });
+      return Promise.resolve(); },
+    onLoad: k => log.onLoad.push(k) }, opt.extra || {}));
+  return { L, log, pend };
+}
+atest('loader: ensure lädt jede Datei einmal, register nach jedem Paket', async () => {
+  const { L, log } = fakeLoader({});
+  const [a, b] = await Promise.all([L.ensure(['de-a1']), L.ensure(['de-a1', 'de-a2', 'xx-a9'])]);
+  eq(log.inject, ['js/content/de-a1.js?v=V', 'js/content/de-a1-vocab.js?v=V', 'js/content/de-a2.js?v=V'], 'keine Datei doppelt (auch parallel), mit ?v=');
+  eq(log.onLoad.slice().sort(), ['de-a1', 'de-a2'], 'onLoad je Paket genau einmal');
+  eq(b.loaded, ['de-a1', 'de-a2'], 'unbekanntes Paket wird ignoriert');
+  await L.ensure(['de-a1', 'de-a2']);
+  eq(log.inject.length, 3, 'zweiter Aufruf lädt nichts');
+  ok(L.isLoaded('de-a1') && !L.isLoaded('tr-a1'), 'isLoaded');
+});
+atest('loader: Fehler → reject, Retry lädt neu; Teilerfolg wird registriert', async () => {
+  const mode = { 'de-a2.js': 'fail' }, { L, log } = fakeLoader({ mode });
+  let err = null; try { await L.ensure(['de-a1', 'de-a2']); } catch (e) { err = e; }
+  ok(err && err.failed && err.failed.join() === 'de-a2' && err.loaded.join() === 'de-a1', 'reject mit failed/loaded');
+  eq(log.onLoad, ['de-a1'], 'A1 trotzdem registriert');
+  eq(L.failed(), ['de-a2'], 'failed() nennt das Paket');
+  delete mode['de-a2.js'];
+  await L.ensure(['de-a2']);
+  eq(log.inject.filter(s => s.indexOf('de-a2.js') >= 0).length, 2, 'Retry fügt die Datei neu ein');
+  eq(log.onLoad, ['de-a1', 'de-a2'], 'danach registriert'); eq(L.failed(), [], 'kein Fehler mehr');
+});
+atest('loader: Zeitlimit – Retry fügt die hängende Datei NICHT erneut ein', async () => {
+  const timers = [], { L, log, pend } = fakeLoader({ mode: { 'de-a2.js': 'hang' }, extra: { timeout: 15000, setTimeout: (fn) => { timers.push(fn); return 0; } } });
+  const p = L.ensure(['de-a2']); await null; await null; await null;
+  timers.forEach(fn => fn());
+  let err = null; try { await p; } catch (e) { err = e; }
+  ok(err && /timeout/.test(String(err.error && err.error.message)), 'Zeitlimit → reject');
+  const p2 = L.ensure(['de-a2']); await null; await null;
+  pend['js/content/de-a2.js?v=V']();
+  await p2;
+  eq(log.inject.filter(s => s.indexOf('de-a2.js') >= 0).length, 1, 'nur einmal eingefügt');
+  eq(log.onLoad, ['de-a2'], 'einmal registriert');
+});
+atest('loader: markLoaded (fest eingebundene Dateien) wird nicht nachgeladen', async () => {
+  const { L, log } = fakeLoader({});
+  L.markLoaded('de-a1.js'); L.markLoaded('de-a1-vocab.js');
+  await L.ensure(['de-a1']);
+  eq(log.inject, [], 'nichts eingefügt'); eq(log.onLoad, [], 'kein erneutes Registrieren nötig');
+});
+
 (async () => {
   for (const [name, fn] of asyncTests) {
     current = name;

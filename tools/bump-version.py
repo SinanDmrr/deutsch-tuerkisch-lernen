@@ -1,9 +1,12 @@
 """Erhöht APP_VERSION in js/app.js, alle ?v=… in index.html und VERSION in sw.js (Cache-Busting).
+Erzeugt vorher js/content/manifest.js neu (ADR-15: node tools/build-manifest.js) – ein Befehl pro Release.
 Aufruf: python3 tools/bump-version.py   → Version = heutiges Datum + laufende Nummer
 """
-import datetime, re
+import datetime, re, subprocess
 from pathlib import Path
 root = Path(__file__).resolve().parent.parent
+# ADR-15: Manifest zuerst – schlägt es fehl, bleibt die Version unverändert
+subprocess.run(['node', str(root / 'tools' / 'build-manifest.js')], check=True)
 app = root / 'js' / 'app.js'
 s = app.read_text(encoding='utf-8')
 old = re.search(r"var APP_VERSION = '([^']+)';", s).group(1)

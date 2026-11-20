@@ -99,9 +99,70 @@
     return EXI;
   }
 
+  /* ADR-15: Pakete (Kurs+Niveau, 'de-a2') können ungeladen sein. K.loaded = { 'de-a1': true, … } setzt die App;
+   * fehlt K.loaded (Node, Validator, Werkzeuge), gilt alles als geladen. */
+  function levelKey(cid, lv) { return cid + '-' + String(lv).toLowerCase(); }
+  function levelLoaded(K, key) { return !K.loaded || !!K.loaded[key]; }
+  // Zählbare Aufgaben (n, wie topicStats) und alle Aufgaben je Fertigkeit (sk, wie skillOf) einer Aufgabenliste
+  function countEx(list, kind) {
+    var isC = DT.check && DT.check.isCountable, n = 0, sk = {};
+    (list || []).forEach(function (ex) {
+      if (isC ? isC(ex) : true) n++;
+      var k = skillKind(ex, kind);
+      if (k && k !== 'write') sk[k] = (sk[k] || 0) + 1;
+    });
+    return { n: n, sk: sk };
+  }
+  function summaryFromContent(K, key) {
+    var pre = key + '-', out = { topics: {}, dialogs: [], texts: [], writes: [], words: 0, wordsByField: {} };
+    Object.keys(K.content).sort().forEach(function (id) {
+      var c = K.content[id];
+      if (id.indexOf(pre) !== 0 || (K.dialogs || {})[id] || (K.texts || {})[id] || !c || c.kind === 'write' || !(c.exercises && c.exercises.length)) return;
+      var x = countEx(c.exercises, c.kind); out.topics[id] = { n: x.n, sk: x.sk };
+    });
+    Object.keys(K.dialogs || {}).sort().forEach(function (id) {
+      if (id.indexOf(pre) !== 0) return;
+      var d = K.dialogs[id], c = K.content[id], x = countEx(c ? c.exercises : (d.questions || []), 'dialog');
+      out.dialogs.push({ id: id, level: d.level, title: d.title, sub: d.sub, n: x.n, sk: x.sk });
+    });
+    Object.keys(K.texts || {}).sort().forEach(function (id) {
+      if (id.indexOf(pre) !== 0) return;
+      var t = K.texts[id], kind = t.kind === 'listen' ? 'listen' : 'read', x = countEx(t.questions, kind);
+      out.texts.push({ id: id, level: t.level, kind: t.kind, title: t.title, sub: t.sub, n: x.n, sk: x.sk });
+    });
+    out.writes = Object.keys(K.writes || {}).filter(function (id) { return id.indexOf(pre) === 0; }).sort();
+    (K.vocab[key] || []).forEach(function (w) { out.words++; if (w.topic) out.wordsByField[w.topic] = (out.wordsByField[w.topic] || 0) + 1; });
+    return out;
+  }
+  /* Eine Quelle für Zahlen eines Pakets: aus geladenem Inhalt oder – ungeladen – aus dem Manifest.
+   * → { topics:{ id:{ n, sk } }, dialogs:[{ id, level, title, sub, n, sk }], texts:[…, kind], writes:[ids], words, wordsByField } | null */
+  function levelSummary(K, key) {
+    if (levelLoaded(K, key)) return summaryFromContent(K, key);
+    var m = K.manifest && K.manifest[key];
+    return m ? { topics: m.topics || {}, dialogs: m.dialogs || [], texts: m.texts || [], writes: m.writes || [], words: m.words || 0, wordsByField: m.wordsByField || {} } : null;
+  }
+
+  // Ungeladene Niveaus: Zeilen aus Lehrplan + Manifest mit lazy:true (avail:false, data:null, n = zählbare Aufgaben, sk).
+  // Wer Aufgaben braucht, prüft weiter avail; Zähler/Listen dürfen lazy-Zeilen als „hat Inhalt“ werten (Laden beim Öffnen).
   function topicsOf(K, cid) {
     var c = K.courses[cid], list = [];
     LEVELS.forEach(function (lv) {
+      var key = levelKey(cid, lv), sm = levelLoaded(K, key) ? null : levelSummary(K, key);
+      if (sm) {
+        (c.levels[lv] || []).forEach(function (row, i) {
+          var m = sm.topics[row[0]];
+          list.push({ id: row[0], level: lv, num: i + 1, title: cid === 'de' ? row[2] : row[1], sub: cid === 'de' ? row[1] : row[2], data: null, avail: false, lazy: !!m, n: m ? m.n : 0, sk: m ? m.sk : {} });
+        });
+        sm.dialogs.filter(function (d) { return d.level === lv; }).forEach(function (d, i) {
+          list.push({ id: d.id, level: lv, num: 'D' + (i + 1), title: cid === 'de' ? d.sub : d.title, sub: cid === 'de' ? d.title : d.sub, kind: 'dialog', data: null, avail: false, lazy: true, n: d.n, sk: d.sk });
+        });
+        var mR = 0, mL = 0;
+        sm.texts.filter(function (x) { return x.level === lv; }).forEach(function (x) {
+          var lis = x.kind === 'listen';
+          list.push({ id: x.id, level: lv, num: lis ? 'H' + (++mL) : 'T' + (++mR), title: cid === 'de' ? x.sub : x.title, sub: cid === 'de' ? x.title : x.sub, kind: 'text', data: null, avail: false, lazy: true, n: x.n, sk: x.sk });
+        });
+        return;
+      }
       (c.levels[lv] || []).forEach(function (row, i) {
         var data = K.content[row[0]];
         list.push({ id: row[0], level: lv, num: i + 1, title: cid === 'de' ? row[2] : row[1], sub: cid === 'de' ? row[1] : row[2], data: data, avail: !!(data && data.exercises && data.exercises.length) });
@@ -151,6 +212,15 @@
   function skillOf(K, cid, lv, pr, o) {
     o = o || {}; pr = pr || {};
     var out = { grammar: { n: 0, c: 0, w: 0 }, read: { n: 0, c: 0, w: 0 }, listen: { n: 0, c: 0, w: 0 }, dialog: { n: 0, c: 0, w: 0 }, speak: { n: 0, done: 0 }, write: { n: 0, done: 0 } };
+    var key = levelKey(cid, lv);
+    if (!levelLoaded(K, key)) {   // ADR-15: ungeladen → nur Summen aus dem Manifest (ungeladene Niveaus haben keinen Fortschritt)
+      topicsOf(K, cid).forEach(function (tp) {
+        if (tp.level !== lv || !tp.lazy || (o.skip && o.skip[tp.id])) return;
+        Object.keys(tp.sk || {}).forEach(function (k) { if (out[k]) out[k].n += tp.sk[k]; });
+      });
+      var sm = levelSummary(K, key); out.write.n = sm ? sm.writes.length : 0;
+      return out;
+    }
     topicsOf(K, cid).forEach(function (tp) {
       if (tp.level !== lv || !tp.avail || (o.skip && o.skip[tp.id])) return;
       var kind = tp.data && tp.data.kind;
@@ -197,5 +267,5 @@
     return res;
   }
 
-  DT.catalog = { SKILLS: SKILLS, skillKind: skillKind, skillOf: skillOf, CERT_RULES: CERT_RULES, certCheck: certCheck, hasRole: hasRole, dialogLines: dialogLines, roleExercises: roleExercises, checkRoleplay: checkRoleplay, isHeavy: isHeavy, writesOf: writesOf, writeLevel: writeLevel, LEVELS: LEVELS, register: register, topicsOf: topicsOf };
+  DT.catalog = { SKILLS: SKILLS, skillKind: skillKind, skillOf: skillOf, CERT_RULES: CERT_RULES, certCheck: certCheck, hasRole: hasRole, dialogLines: dialogLines, roleExercises: roleExercises, checkRoleplay: checkRoleplay, isHeavy: isHeavy, writesOf: writesOf, writeLevel: writeLevel, LEVELS: LEVELS, register: register, topicsOf: topicsOf, levelKey: levelKey, levelLoaded: levelLoaded, levelSummary: levelSummary };
 })(window.DT = window.DT || {});

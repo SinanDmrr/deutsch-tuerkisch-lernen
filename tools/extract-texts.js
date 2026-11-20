@@ -9,10 +9,14 @@ const vm = require('vm');
 const root = path.join(__dirname, '..');
 const ctx = { window: {} };
 vm.createContext(ctx);
-const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-// Nur Lehrplan und Inhalte laden, in derselben Reihenfolge wie index.html (ADR-10: App-/Kern-Dateien nutzen DOM/Speicher)
-const scripts = [...html.matchAll(/<script\s+src="(js\/(?:curriculum|content\/[A-Za-z0-9_-]+)\.js)(?:\?[^"]*)?"/g)].map(m => m[1]);
-scripts.forEach(s => vm.runInContext(fs.readFileSync(path.join(root, s), 'utf8'), ctx, { filename: s }));
+// Nur Lehrplan und Inhalte laden (ADR-10: App-/Kern-Dateien nutzen DOM/Speicher); Dateiliste aus dem Manifest (ADR-15)
+vm.runInContext(fs.readFileSync(path.join(root, 'js', 'curriculum.js'), 'utf8'), ctx, { filename: 'js/curriculum.js' });
+vm.runInContext(fs.readFileSync(path.join(root, 'js', 'content', 'manifest.js'), 'utf8'), ctx, { filename: 'js/content/manifest.js' });
+const MF = ctx.window.KOPRU.manifest || {};
+Object.keys(MF).sort().forEach(k => MF[k].files.forEach(f => {
+  const s = 'js/content/' + f;
+  vm.runInContext(fs.readFileSync(path.join(root, s), 'utf8'), ctx, { filename: s });
+}));
 
 vm.runInContext(fs.readFileSync(path.join(root, 'js', 'core', 'voices.js'), 'utf8'), ctx, { filename: 'js/core/voices.js' });   // rein (ADR-10/14)
 vm.runInContext(fs.readFileSync(path.join(root, 'js', 'core', 'catalog.js'), 'utf8'), ctx, { filename: 'js/core/catalog.js' });   // dialogLines: Wahlzeilen des Rollenspiels (ADR-12.6)

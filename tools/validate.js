@@ -1,6 +1,6 @@
 /* Inhaltsprüfung – läuft lokal (node tools/validate.js) und als GitHub Action.
  * Prüft: eindeutige IDs, ID-Präfixe, gültige Antworten, Erklärungen vorhanden, Wortschatz- und Dialogformat,
- * gleiche Version überall (?v= in index.html, APP_VERSION, später VERSION in sw.js).
+ * gleiche Version überall (?v= in index.html, APP_VERSION, später VERSION in sw.js), Manifest aktuell (ADR-15).
  * Geladen werden NUR js/curriculum.js und js/content/*.js (ADR-10) – App- und Kern-Dateien dürfen DOM/Speicher nutzen.
  */
 const fs = require('fs'), path = require('path'), vm = require('vm');
@@ -8,20 +8,53 @@ const root = path.join(__dirname, '..');
 const ctx = { window: {}, console };
 vm.createContext(ctx);
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-const CONTENT_SCRIPT = /<script\s+src="(js\/(?:curriculum|content\/[A-Za-z0-9_-]+)\.js)(?:\?[^"]*)?"/g;
-const scripts = [...html.matchAll(CONTENT_SCRIPT)].map(m => m[1]);
-scripts.forEach(s => vm.runInContext(fs.readFileSync(path.join(root, s), 'utf8'), ctx, { filename: s }));
+/* ADR-15: Dateiliste aus dem Manifest (js/content/manifest.js, erzeugt von tools/build-manifest.js) statt aus index.html.
+ * Geladen werden weiterhin ALLE Inhaltsdateien (Lehrplan zuerst, dann Manifest, dann je Paket). */
+const BM = require('./build-manifest.js');
+const manifestFile = path.join(root, 'js', 'content', 'manifest.js');
+vm.runInContext(fs.readFileSync(path.join(root, 'js', 'curriculum.js'), 'utf8'), ctx, { filename: 'js/curriculum.js' });
+if (fs.existsSync(manifestFile)) vm.runInContext(fs.readFileSync(manifestFile, 'utf8'), ctx, { filename: 'js/content/manifest.js' });
+const MF = (ctx.window.KOPRU && ctx.window.KOPRU.manifest) || {};
+const scripts = ['js/curriculum.js'];
+Object.keys(MF).sort().forEach(k => (MF[k].files || []).forEach(f => scripts.push('js/content/' + f)));
+scripts.slice(1).forEach(s => { if (fs.existsSync(path.join(root, s))) vm.runInContext(fs.readFileSync(path.join(root, s), 'utf8'), ctx, { filename: s }); });
 const K = ctx.window.KOPRU;
 
 let errors = 0, warnings = 0;
 const err = (...a) => { errors++; console.log('FEHLER:', ...a); };
 const warn = (...a) => { warnings++; console.log('Hinweis:', ...a); };
-if (!K) { err('window.KOPRU fehlt – ist js/curriculum.js in index.html eingebunden?'); process.exit(1); }
-if (scripts[0] !== 'js/curriculum.js') err('js/curriculum.js muss als erstes Inhaltsskript geladen werden');
+if (!K) { err('window.KOPRU fehlt – js/curriculum.js fehlt oder ist kaputt'); process.exit(1); }
 
-// Jede Inhaltsdatei muss in index.html eingebunden sein (sonst fehlt sie still in der App)
-fs.readdirSync(path.join(root, 'js', 'content')).filter(f => f.endsWith('.js')).forEach(f => {
-  if (!scripts.includes('js/content/' + f)) err('Inhaltsdatei nicht in index.html eingebunden', 'js/content/' + f);
+/* ---------- Manifest (ADR-15) ---------- */
+const MF_CMD = 'node tools/build-manifest.js';
+if (!fs.existsSync(manifestFile)) err('js/content/manifest.js fehlt –', MF_CMD, 'ausführen');
+else {
+  const built = BM.build(root);
+  built.problems.forEach(p => err('Manifest:', p));
+  if (fs.readFileSync(manifestFile, 'utf8') !== built.text) err('js/content/manifest.js ist veraltet –', MF_CMD, 'ausführen');
+}
+// (a) jede Inhaltsdatei ↔ Manifest
+fs.readdirSync(path.join(root, 'js', 'content')).filter(f => f.endsWith('.js') && f !== 'manifest.js').forEach(f => {
+  if (!BM.FILE_RE.test(f)) err('Inhaltsdatei: Name muss <kurs>-<niveau>[-teil].js sein', 'js/content/' + f);
+  else if (!scripts.includes('js/content/' + f)) err('Inhaltsdatei fehlt im Manifest –', MF_CMD, 'ausführen', 'js/content/' + f);
+});
+scripts.slice(1).forEach(s => { if (!fs.existsSync(path.join(root, s))) err('Manifest nennt eine Datei, die es nicht gibt –', MF_CMD, 'ausführen', s); });
+// index.html: Lehrplan und Manifest synchron, Manifest direkt danach (K.setManifest braucht KOPRU)
+const tagOrder = [...html.matchAll(/<script\s+src="(js\/[^"?]+)/g)].map(m => m[1]);
+const iCur = tagOrder.indexOf('js/curriculum.js'), iMf = tagOrder.indexOf('js/content/manifest.js');
+if (iCur < 0) err('index.html: js/curriculum.js nicht eingebunden');
+if (iMf < 0) err('index.html: js/content/manifest.js nicht eingebunden');
+else if (iMf !== iCur + 1) err('index.html: js/content/manifest.js muss direkt nach js/curriculum.js stehen');
+if (tagOrder.includes('js/core/loader.js') && tagOrder.indexOf('js/core/loader.js') > tagOrder.indexOf('js/app.js')) err('index.html: js/core/loader.js muss vor js/app.js stehen');
+// (c) größte Startlast je Kurs: alle Pakete eines Kurses + Lehrplan/Manifest + App/Kern (ADR-15 Stufe 2 ab 1,5 MB)
+const startBase = tagOrder.filter(s => !/^js\/content\/(?!manifest\.js)/.test(s) && fs.existsSync(path.join(root, s)))
+  .reduce((n, s) => n + fs.statSync(path.join(root, s)).size, 0);
+const startLoad = {};
+Object.keys(MF).forEach(k => { const c = k.split('-')[0]; startLoad[c] = (startLoad[c] || startBase) + (MF[k].bytes || 0); });
+Object.keys(startLoad).sort().forEach(c => {
+  const kb = Math.round(startLoad[c] / 1024);
+  console.log(`Startlast Kurs ${c} (alle Niveaus geladen): ${kb} KB roh`);
+  if (startLoad[c] > 1.5 * 1024 * 1024) warn(`Startlast Kurs ${c} über 1,5 MB (${kb} KB) – ADR-15 Stufe 2 prüfen`);
 });
 
 /* ---------- Versionsgleichheit ---------- */

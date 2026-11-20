@@ -400,6 +400,7 @@ Jede Datei: `(function (DT) { 'use strict'; … })(window.DT = window.DT || {});
 
 ### Folgen/Risiken
 - `index.html` bekommt ~12 Skript-Tags; Ladeleistung über HTTP/2 unkritisch. Bei A1–C2 werden die Inhaltsdateien (geschätzt 2–3 MB JS) das eigentliche Gewicht – **Auslöser** > 1,5 MB: Inhalte je Niveau nachladen (dafür braucht der Lehrplan dann Aufgabenzahlen als Metadaten, erzeugt per Tool).
+  → **Umgesetzt in ADR-15** (`docs/adr-15-nachladen.md`): Pakete je Kurs+Niveau über `js/core/loader.js`, Aufgabenzahlen im erzeugten `js/content/manifest.js` (`node tools/build-manifest.js`); Inhaltsdateien stehen nicht mehr in `index.html`.
 - CLAUDE.md-Tabelle „Dateien“ und README nach Schritt 2 anpassen (Entwickler).
 
 ---
