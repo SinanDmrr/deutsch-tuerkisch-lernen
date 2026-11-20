@@ -72,5 +72,13 @@
     return LIST.map(function (b) { return { def: b, at: have[key(b, cid)] || 0 }; });
   }
 
-  DT.badges = { LIST: LIST, key: key, award: award, list: list };
+  /** Zeitstempel des Zertifikats-Abzeichens „<kurs>:cert-<Niveau>“ (0 = nicht erworben).
+   *  Einmal erworben = bleibt: Zertifikat bleibt gültig und herunterladbar, auch wenn erweiterte Inhalte die
+   *  Live-Rechnung (CERT_RULES) später unter die Grenze drücken (A1-Aufrüstung Paket 0). Datum = dieser Zeitstempel. */
+  function certAt(p, cid, lv) {
+    var v = p && p.badges && p.badges[cid + ':cert-' + lv];
+    return typeof v === 'number' && v > 0 ? v : (v ? 1 : 0);
+  }
+
+  DT.badges = { LIST: LIST, key: key, award: award, list: list, certAt: certAt };
 })(window.DT = window.DT || {});

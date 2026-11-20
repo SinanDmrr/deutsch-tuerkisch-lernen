@@ -9,7 +9,7 @@
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var DT = window.DT;
   var SCHEMA = DT.storage.SCHEMA;    // Version des Speicherformats (Migrationen nur in js/core/storage.js)
-  var APP_VERSION = '2026-11-20.4';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-20.5';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -204,6 +204,10 @@
     certCondA2: ['80 % der Aufgaben richtig, in Grammatik, Lesen, Hören und Dialogen je mindestens 60 %, 70 % der Wörter sicher und 6 Schreibaufgaben geübt', 'Alıştırmaların %80’i doğru; dil bilgisi, okuma, dinleme ve diyaloglarda en az %60; kelimelerin %70’i oturmuş ve 6 yazma görevi tamamlanmış olmalı'],
     certSkill: ['{s}: {p}\u00a0% (Ziel {z}\u00a0%)', '{s}: %{p} (hedef %{z})'],
     certWrites: ['Schreiben: {d} von {z} geübt', 'Yazma: {z} görevden {d} tanesi tamam'],
+    certKept: ['Erworben am {d} – bleibt gültig. {lv} ist seitdem gewachsen, darum zählen die Balken die neuen Inhalte mit.', '{d} tarihinde kazandın, geçerliliği devam ediyor. {lv} o günden beri genişledi; çubuklar yeni içerikleri de hesaba katıyor.'],
+    certKeptNoDate: ['Schon erworben – bleibt gültig. {lv} ist seitdem gewachsen, darum zählen die Balken die neuen Inhalte mit.', 'Bu sertifikayı zaten kazandın, geçerliliği devam ediyor. {lv} o günden beri genişledi; çubuklar yeni içerikleri de hesaba katıyor.'],
+    certSkillsHint: ['Lesen, Hören und Schreiben übst du in {lv} zusätzlich – fürs Zertifikat sind sie keine Bedingung.', '{lv} seviyesinde okuma, dinleme ve yazma ek alıştırmalardır; sertifika için şart değil.'],
+    extNote: ['{lv} wurde erweitert – deine bisherigen Antworten zählen weiter. Grundstock {b} · Erweiterung {e}', '{lv} genişletildi – önceki cevapların sayılmaya devam ediyor. Temel kısım {b} · Yeni eklenenler {e}'],
     certSoon: ['{lv}-Zertifikat: kommt, sobald {lv} fertig ist. Bis dahin zählt alles schon mit.', '{lv} sertifikası, {lv} tamamlanınca açılacak. O zamana kadar yaptığın her şey sayılıyor.'],
     skillsTitle: ['Deine Fertigkeiten · {lv}', 'Becerilerin · {lv}'],
     skillsNote: ['Nur deine eigenen Zahlen – kein Vergleich mit anderen. Sprechen ist freiwilliger Bonus.', 'Sadece senin rakamların – kimseyle karşılaştırma yok. Konuşma isteğe bağlı bir bonus.'],
@@ -939,10 +943,22 @@
     });
     return out;
   }
+  /* „Weiter“: erstes offenes Thema. A1-Aufrüstung P0: Niveaus, die per Zertifikat, Antwort im nächsthöheren Niveau oder
+   * Einstufung (mit übersprungenen Themen, ≥ 75 % erledigt) hinter einem liegen, werden übersprungen – so springt „Weiter“
+   * nach einer Erweiterung nicht zurück. Wer A1 normal der Reihe nach lernt, behält alle A1-Themen im „Weiter“. Gibt es
+   * sonst nichts mehr, kommt wie bisher das erste offene Thema überhaupt. */
   function nextTopic() {
-    var list = allTopics().filter(hasContent);
-    for (var i = 0; i < list.length; i++) { var s = topicStats(list[i]); if (s.c < s.n && !isSkipped(list[i].id)) return list[i]; }
-    return null;
+    var list = allTopics().filter(hasContent), rows = focusRows(), o = focusOpts(), past = {}, first = null;
+    LEVELS.forEach(function (lv) {
+      var why = DT.catalog.levelDone(rows, lv, o);
+      past[lv] = why === 'cert' || why === 'next' || (why === 'share' && rows.some(function (r) { return r.level === lv && r.skip; }));
+    });
+    for (var i = 0; i < list.length; i++) {
+      var s = topicStats(list[i]); if (!(s.c < s.n) || isSkipped(list[i].id)) continue;
+      if (!first) first = list[i];
+      if (!past[list[i].level]) return list[i];
+    }
+    return first;
   }
   function levelName(lv) { return K.levelNames[lv][uiLang()]; }
 
@@ -1005,13 +1021,21 @@
     return DT.srs.due(p, cid, today(), limit || 30).filter(function (id) { return WI[id] ? WI[id].course === cid : !!exById(id); })
       .map(function (id) { return WI[id] ? wordQ(id) : id; });
   }
-  /* ADR-11.2: Fokus-Niveau = Niveau des ersten offenen Grammatikthemas (nie gespeichert, immer berechnet) */
-  function focusLevel() {
-    var list = allTopics().filter(function (x) { return hasContent(x) && !x.kind; });
-    for (var i = 0; i < list.length; i++) { var s = topicStats(list[i]); if (s.c < s.n && !isSkipped(list[i].id)) return list[i].level; }
-    var top = 'A1'; list.forEach(function (x) { if (LEVELS.indexOf(x.level) > LEVELS.indexOf(top)) top = x.level; });
-    return top;
+  /* ADR-11.2 + A1-Aufrüstung P0: Fokus-Niveau = Niveau des ersten offenen Grammatikthemas, dessen Niveau noch nicht
+   * als erledigt gilt (Zertifikat, Antwort im nächsthöheren Niveau oder ≥ 75 % Themen erledigt/übersprungen). Nie gespeichert. */
+  function focusRows() {
+    return allTopics().filter(function (x) { return hasContent(x) && !x.kind; }).map(function (x) {
+      var s = topicStats(x); return { id: x.id, level: x.level, n: s.n, c: s.c, skip: isSkipped(x.id) };
+    });
   }
+  function focusOpts() {
+    var p = ensureProfile(prof()), cid = courseId(), o = { cert: {}, answered: {} };
+    LEVELS.forEach(function (lv) { if (DT.badges.certAt(p, cid, lv)) o.cert[lv] = true; });
+    // „schon geantwortet“ direkt aus prog (funktioniert auch für noch nicht geladene Niveaus, ADR-15)
+    Object.keys(prog()).forEach(function (id) { var m = /^[a-z]{2}-(a1|a2|b1|b2|c1|c2)(?=$|[-.#])/.exec(id); if (m) o.answered[m[1].toUpperCase()] = true; });
+    return o;
+  }
+  function focusLevel() { return DT.catalog.focusLevel(focusRows(), focusOpts()); }
   function wordLevels() {
     return LEVELS.filter(function (lv) {
       var key = DT.catalog.levelKey(courseId(), lv);
@@ -1024,13 +1048,14 @@
     var f = LEVELS.indexOf(focusLevel()), ok = wordLevels().filter(function (lv) { return LEVELS.indexOf(lv) <= f; });
     return ok.length ? ok[ok.length - 1] : 'A1';
   }
-  /* lv angegeben: nur dieses Niveau. Ohne lv (Tagesmix): alle Niveaus ≤ Fokus, aufsteigend (ADR-11.4) */
+  /* lv angegeben: nur dieses Niveau. Ohne lv (Tagesmix): alle Niveaus ≤ Fokus; neue Wörter unterer Niveaus wechseln sich
+   * 1:1 mit dem Fokus-Niveau ab (ADR-11.4, A1-Aufrüstung P0: ein erweitertes A1 verdrängt die A2-Wörter nicht) */
   function newWords(field, n, lv) {
-    var p = ensureProfile(prof()), cid = courseId(), f = LEVELS.indexOf(focusLevel()), out = [];
-    (lv ? [lv] : wordLevels().filter(function (x) { return LEVELS.indexOf(x) <= f; })).forEach(function (l) {
-      DT.vocab.wordsOf(K, cid, l, field).forEach(function (w) { if (!DT.srs.get(p, cid, w.id)) out.push(w); });
+    var p = ensureProfile(prof()), cid = courseId(), f = LEVELS.indexOf(focusLevel());
+    var lists = (lv ? [lv] : wordLevels().filter(function (x) { return LEVELS.indexOf(x) <= f; })).map(function (l) {
+      return DT.vocab.wordsOf(K, cid, l, field).filter(function (w) { return !DT.srs.get(p, cid, w.id); });
     });
-    return out.slice(0, n);
+    return DT.vocab.mixNew(lists, n);
   }
   /* Lern-Sitzung für neue Wörter: Karte → gleich danach eine leichte Abfrage, am Ende zweite Runde (hören/umgekehrt) */
   function learnQueue(words) {
@@ -1304,7 +1329,7 @@
       var list = levelTopics(lv), s = sumStats(list);
       return '<section class="level-section" id="lv-' + lv + '"><div class="level-head"><span class="lvl lvl-' + lv + '">' + lv + '</span><h2>' + esc(levelName(lv)) + buildingBadge(lv) + '</h2>' +
         (s.n ? '<div class="bar"><span class="fill-' + lv + '" style="width:' + pct(s.c, s.n) + '%"></span>' + (skippedOpenCount(list) ? '<span class="skip" style="width:' + pct(skippedOpenCount(list), s.n) + '%"></span>' : '') + '</div><b>' + fmtPct(pct(s.c, s.n)) + '</b>' : '<span class="badge">' + esc(t('comingSoon')) + '</span>') +
-        '</div><div class="topic-grid">' + list.filter(function (x) { return !x.kind; }).map(topicCard).join('') + '</div>' +
+        '</div>' + extNote(lv, 'ex') + '<div class="topic-grid">' + list.filter(function (x) { return !x.kind; }).map(topicCard).join('') + '</div>' +
         (list.some(function (x) { return x.kind === 'dialog'; }) ? '<h3 class="sub-head">💬 ' + esc(t('dialogsTitle')) + '</h3><div class="topic-grid">' + list.filter(function (x) { return x.kind === 'dialog'; }).map(topicCard).join('') + '</div>' : '') +
         (list.some(function (x) { return x.kind === 'text'; }) ? '<h3 class="sub-head">📄 ' + esc(t('textsTitle')) + '</h3><div class="topic-grid">' + list.filter(function (x) { return x.kind === 'text'; }).map(topicCard).join('') + '</div>' : '') +
         writeSection(lv) +
@@ -1845,7 +1870,7 @@
     }).join('');
     return '<h1>📖 ' + esc(t('words')) + ' <span class="lvl lvl-' + lv + '">' + lv + '</span>' + buildingBadge(lv) + '</h1><p class="muted">' + esc(t('wordsIntro')) + '</p>' + levelPicker(lv) +
       '<div class="card section"><div class="section-head"><b>' + st.sicher + ' / ' + all.length + ' ' + esc(t('wordsKnown')) + '</b><span class="muted small">' + st.lernend + ' ' + esc(t('learning')) + ' · ' + st.neu + ' ' + esc(t('newWordsN')) + '</span></div>' +
-        srsBar(st, all.length) +
+        srsBar(st, all.length) + extNote(lv, 'words') +
         '<div class="btn-row" style="margin-top:14px">' +
           (dueN ? '<a class="btn primary" href="#/review">🔁 ' + esc(t('reviewDue', { n: Math.min(dueN, 30) })) + '</a>' : '<span class="badge ok">✓ ' + esc(t('nothingDue')) + '</span>') +
           (next ? '<a class="btn' + (dueN ? '' : ' primary') + '" href="#/words/' + lv + '/' + next + '/learn">✨ ' + esc(t('learnNew')) + ' · ' + esc(fieldName(next)) + '</a>' : '') +
@@ -2245,7 +2270,9 @@
     var lkey = DT.catalog.levelKey(cid, lv), lsm = DT.catalog.levelLoaded(K, lkey) ? null : DT.catalog.levelSummary(K, lkey);
     if (lsm) { words = { length: lsm.words }; ws = { sicher: 0 }; }   // ADR-15: ungeladen → Anzahl aus dem Manifest, ohne Fortschritt
     var r = DT.catalog.certCheck(rule, { c: c, n: n, wk: ws.sicher, wn: words.length, skills: rule && rule.skill ? skillsOf(lv, true) : null });
-    return { c: c, n: n, wk: ws.sicher, wn: words.length, exPct: pct(c, n), wPct: pct(ws.sicher, words.length), ok: !!rule && r.ok, exOk: r.exOk, wOk: r.wOk, skills: r.skills, writes: r.writes, rule: rule };
+    // A1-Aufrüstung P0: einmal erworben = bleibt (Abzeichen „<kurs>:cert-<Niveau>“), auch wenn neue Inhalte die Live-Rechnung senken
+    var held = rule ? DT.badges.certAt(ensureProfile(prof()), cid, lv) : 0, live = !!rule && r.ok;
+    return { c: c, n: n, wk: ws.sicher, wn: words.length, exPct: pct(c, n), wPct: pct(ws.sicher, words.length), ok: live || !!held, live: live, held: held, exOk: r.exOk, wOk: r.wOk, skills: r.skills, writes: r.writes, rule: rule };
   }
   var SKILL_ROWS = [['grammar', '📖', 'skGrammar'], ['read', '📄', 'skRead'], ['listen', '🎧', 'skListen'], ['dialog', '💬', 'skDialog'], ['write', '✍️', 'skWrite'], ['speak', '🎤', 'skSpeak']];
   function skillLabel(k) { var r = SKILL_ROWS.filter(function (x) { return x[0] === k; })[0]; return r ? t(r[2]) : k; }
@@ -2305,6 +2332,35 @@
     }
     return fresh;
   }
+  /* A1-Aufrüstung P0: wächst ein Niveau (Inhaltsfeld ext:1, kein Speicherfeld), sinken Prozente bei Bestandsnutzern.
+   * Ruhiger Hinweis mit getrennten Zahlen – nur wenn es Erweiterungen gibt und schon Fortschritt im Grundstock da ist.
+   * kind: 'ex' (Aufgaben richtig) | 'words' (Wörter sicher) */
+  function extNote(lv, kind) {
+    var p = ensureProfile(prof()), cid = courseId(), sp, started;
+    if (kind === 'words') {
+      var ws = DT.vocab.wordsOf(K, cid, lv), base = [], ext = [];
+      ws.forEach(function (w) { (w.ext ? ext : base).push(w.id); });
+      if (!ext.length) return '';
+      var sb = DT.srs.stats(p, cid, base), se = DT.srs.stats(p, cid, ext);
+      sp = { base: { n: base.length, d: sb.sicher }, ext: { n: ext.length, d: se.sicher } };
+      started = sb.neu < base.length;
+    } else {
+      var pr = prog(), items = [];
+      started = false;
+      levelTopics(lv).forEach(function (tp) {
+        if (!tp.avail) return;
+        tp.data.exercises.forEach(function (ex) {
+          if (!isCountable(ex)) return;
+          var x = !!(ex.ext || tp.data.ext); items.push({ ext: x, done: !!(pr[ex.id] && pr[ex.id].s === 'c') });
+          if (!x && pr[ex.id]) started = true;
+        });
+      });
+      sp = DT.catalog.extSplit(items);
+      if (!sp.ext.n) return '';
+    }
+    if (!started) return '';
+    return '<p class="muted small ext-note">ℹ️ ' + esc(t('extNote', { lv: lv, b: fmtPct(pct(sp.base.d, sp.base.n)), e: fmtPct(pct(sp.ext.d, sp.ext.n)) })) + '</p>';
+  }
   function certBar(label, ok, w) { return '<div class="small">' + esc(label) + '<div class="bar thin"><span class="' + (ok ? 'ok' : 'fill') + '" style="width:' + Math.max(0, Math.min(100, w)) + '%"></span></div></div>'; }
   function certBox(lv) {
     var cs = certStatus(lv), rule = cs.rule || {};
@@ -2312,7 +2368,11 @@
       var x = cs.skills[k]; return certBar(t('certSkill', { s: skillLabel(k), p: x.p, z: x.need }), x.ok, Math.round(x.p / x.need * 100));
     }).join('');
     var wr = cs.writes && cs.writes.need ? certBar(t('certWrites', { d: Math.min(cs.writes.done, cs.writes.need), z: cs.writes.need }), cs.writes.ok, Math.round(cs.writes.done / cs.writes.need * 100)) : '';
-    return '<div class="cert-box"><div><b>🎓 ' + esc(t('certTitle', { lv: lv })) + '</b><div class="muted small">' + esc(t(rule.skill ? 'certCondA2' : 'certCond')) + '</div></div>' +
+    // A1-Aufrüstung P0: Lesen/Hören/Schreiben sind in A1 keine Bedingung – nur ein ruhiger Hinweis, sobald es sie gibt
+    var skAll = rule.skill ? null : skillsOf(lv, false);
+    var skNote = skAll && (skAll.read.n || skAll.write.n) ? '<div class="muted small">' + esc(t('certSkillsHint', { lv: lv })) + '</div>' : '';
+    var kept = cs.held && !cs.live ? '<div class="small cert-kept">✓ ' + esc(cs.held > 1 ? t('certKept', { lv: lv, d: new Date(cs.held).toLocaleDateString(locale(uiLang())) }) : t('certKeptNoDate', { lv: lv })) + '</div>' : '';
+    return '<div class="cert-box"><div><b>🎓 ' + esc(t('certTitle', { lv: lv })) + '</b><div class="muted small">' + esc(t(rule.skill ? 'certCondA2' : 'certCond')) + '</div>' + kept + skNote + '</div>' +
       '<div class="cert-bars">' + certBar(t('certEx', { p: cs.exPct }), cs.exOk, Math.round(cs.exPct / (rule.ex || 0.8))) +
         (cs.wn ? certBar(t('certWords', { p: cs.wPct }), cs.wOk, Math.round(cs.wPct / (rule.words || 0.7))) : '') + skills + wr + '</div>' +
       (cs.ok ? '<a class="btn primary" href="#/certificate/' + lv + '">🎓 ' + esc(t('certGet')) + '</a>' : '') + '</div>';
@@ -2387,7 +2447,7 @@
     var cv = document.getElementById('cert-canvas'); if (!cv) return;
     var cs = certStatus(lv), cid = courseId(), nameEl = document.getElementById('cert-name');
     var lvName = K.levelNames[lv], de = cid === 'de';
-    var d = new Date(), dateStr = d.toLocaleDateString('de-DE') + ' · ' + d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+    var d = cs.held > 1 ? new Date(cs.held) : new Date(), dateStr = d.toLocaleDateString('de-DE')   // Datum = Erwerb des Abzeichens (P0) + ' · ' + d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
     drawCertificate(cv, {
       title: 'Zertifikat · Sertifika',
       subtitle: 'Selbstlern-Nachweis · Kendi kendine öğrenme belgesi',
@@ -2395,7 +2455,8 @@
       line1: de ? 'Almanca – ' + lv + ' (' + lvName.tr + ') seviyesini tamamladı' : 'hat Türkisch auf Niveau ' + lv + ' (' + lvName.de + ') abgeschlossen',
       line2: de ? 'hat Deutsch auf Niveau ' + lv + ' (' + lvName.de + ') abgeschlossen' : 'Türkçe – ' + lv + ' (' + lvName.tr + ') seviyesini tamamladı',
       level: lv, color: getComputedStyle(document.documentElement).getPropertyValue('--lvl-' + lv).trim() || '#12b886',
-      stats: cs.c + ' / ' + cs.n + (de ? ' alıştırma · ' : ' Aufgaben · ') + cs.wk + (de ? ' kelime oturdu' : ' Wörter sicher'),
+      // erworbenes Zertifikat nach einer Erweiterung: ohne Nenner (sonst stünde „120 / 490“ wie ein Teilerfolg darauf)
+      stats: (cs.live ? cs.c + ' / ' + cs.n : cs.c) + (de ? ' alıştırma · ' : ' Aufgaben · ') + cs.wk + (de ? ' kelime oturdu' : ' Wörter sicher'),
       date: dateStr,
       note1: 'Selbstlern-Nachweis – kein offizielles Sprachzertifikat (z. B. Goethe, telc, Yunus Emre).',
       note2: 'Kendi kendine öğrenme belgesidir – resmî bir dil sertifikası değildir (ör. Goethe, telc, Yunus Emre).'
@@ -2611,6 +2672,10 @@
     var cid = courseId(), need = DT.loader.neededLevels(prof(), cid, r, K.manifest);
     var fk = DT.catalog.levelKey(cid, focusLevel());   // Fokus-Niveau (Tagesmix, „Weiter“, Wortschatz) – aus Manifest berechenbar
     if (K.manifest[fk] && need.indexOf(fk) < 0) need.push(fk);
+    // A1 immer mitladen (wie vor Paket 0, als offene A1-Themen den Fokus auf A1 hielten): Grundlage für „Weiter“-Ersatz,
+    // Hinweise und den Teilausfall-Fall (A2 lädt nicht → App läuft mit A1 weiter statt Fehlerkarte)
+    var a1k = DT.catalog.levelKey(cid, 'A1');
+    if (K.manifest[a1k] && need.indexOf(a1k) < 0) need.unshift(a1k);
     return need;
   }
   function loadCard(kind) {

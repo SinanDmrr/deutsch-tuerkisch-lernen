@@ -101,8 +101,23 @@
     return ex;
   }
 
+  /* Neue Wörter für den Tagesmix (A1-Aufrüstung Paket 0): lists = neue Wörter je Niveau aufsteigend, die letzte Liste ist
+   * das Fokus-Niveau. Liegen darunter noch neue Wörter (z. B. ein später erweitertes A1), wechseln sie sich 1:1 mit dem
+   * Fokus-Niveau ab (Fokus zuerst) – statt dass erst alle unteren Wörter kommen. Ist eine Seite leer, kommt die andere. */
+  function mixNew(lists, n) {
+    lists = lists || []; if (n == null) n = Infinity;
+    var focus = (lists[lists.length - 1] || []).slice(), lower = [], out = [];
+    lists.slice(0, -1).forEach(function (l) { lower = lower.concat(l || []); });
+    var i = 0, j = 0;
+    while (out.length < n && (i < focus.length || j < lower.length)) {
+      if (i < focus.length) out.push(focus[i++]);
+      if (out.length < n && j < lower.length) out.push(lower[j++]);
+    }
+    return out;
+  }
+
   DT.vocab = {
-    hash: hash, rng: rng, shuffle: shuffle,
+    hash: hash, rng: rng, shuffle: shuffle, mixNew: mixNew,
     index: index, wordsOf: wordsOf, distractors: distractors, makeQuestion: makeQuestion, stripArticle: stripArticle
   };
 })(window.DT = window.DT || {});

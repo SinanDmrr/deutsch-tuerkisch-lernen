@@ -1395,6 +1395,154 @@ atest('loader: markLoaded (fest eingebundene Dateien) wird nicht nachgeladen', a
   eq(log.inject, [], 'nichts eingefügt'); eq(log.onLoad, [], 'kein erneutes Registrieren nötig');
 });
 
+/* ---------- A1-Aufrüstung Paket 0: Bestandsnutzer verlieren nichts, wenn A1 wächst (docs/a1-aufruesten.md §4) ----------
+ * Echte Inhalte A1+A2 laden, Profile auf dem heutigen Stand bauen, dann tools/fixtures/a1-extended-test.js
+ * (+300 Wörter, +4 Themen à 24 Aufgaben, ext:1) anwenden und vorher/nachher vergleichen. */
+const A1X_SRC = fs.readFileSync(path.join(__dirname, 'fixtures', 'a1-extended-test.js'), 'utf8');
+const LV_RE = /^[a-z]{2}-(a1|a2|b1|b2|c1|c2)(?=$|[-.#])/;
+// „Vorher“-Zustand: echte Erweiterungswörter (ext:1) werden zurückgehalten und erst in a1Extend wieder eingefügt;
+// ohne echte ext-Wörter simuliert die Fixture sie (nur Themen -91…-94 bleiben immer simuliert).
+function a1World() {
+  const W = contentCtx(['de-a1', 'de-a2', 'tr-a1', 'tr-a2']); W.__extWords = {};
+  ['de', 'tr'].forEach(cid => { const k = cid + '-a1', v = W.KOPRU.vocab[k] || []; W.__extWords[k] = v.filter(w => w.ext); W.KOPRU.vocab[k] = v.filter(w => !w.ext); });
+  return W;
+}
+function a1Extend(W) {
+  Object.keys(W.__extWords || {}).forEach(k => { if (W.__extWords[k].length) W.KOPRU.addVocab(k, W.__extWords[k]); W.__extWords[k] = []; });
+  vm.runInNewContext(A1X_SRC, { window: W });
+}
+// wie app.js focusRows()/focusOpts() – nur aus Inhalt + Profil berechnet
+function a1Rows(W, cid, p) {
+  const C = W.DT.catalog, isC = W.DT.check.isCountable, pr = (p.prog || {})[cid] || {}, sk = (p.skip || {})[cid] || {};
+  return C.topicsOf(W.KOPRU, cid).filter(x => (x.avail || x.lazy) && !x.kind).map(x => {
+    let n = 0, c = 0;
+    if (x.avail) x.data.exercises.forEach(e => { if (!isC(e)) return; n++; if (pr[e.id] && pr[e.id].s === 'c') c++; }); else n = x.n || 0;
+    return { id: x.id, level: x.level, n, c, skip: !!sk[x.id] };
+  });
+}
+function a1Opts(W, cid, p) {
+  const o = { cert: {}, answered: {} };
+  W.DT.catalog.LEVELS.forEach(lv => { if (DT.badges.certAt(p, cid, lv)) o.cert[lv] = true; });
+  Object.keys((p.prog || {})[cid] || {}).forEach(id => { const m = LV_RE.exec(id); if (m) o.answered[m[1].toUpperCase()] = true; });
+  return o;
+}
+function oldFocus(rows) {   // Regel vor Paket 0 (Regressionsvergleich)
+  for (const r of rows) if (r.c < r.n && !r.skip) return r.level;
+  return rows.reduce((top, r) => (['A1', 'A2'].indexOf(r.level) > ['A1', 'A2'].indexOf(top) ? r.level : top), 'A1');
+}
+function a1Profile(W, cid, opt) {
+  const C = W.DT.catalog, t0 = 1790000000000, p = { prog: { [cid]: {} }, srs: { [cid]: {} }, skip: { [cid]: {} }, badges: {} };
+  const tps = C.topicsOf(W.KOPRU, cid).filter(x => x.avail && !x.kind);
+  (opt.done || []).forEach(lv => C.topicsOf(W.KOPRU, cid).filter(x => x.avail).filter(x => x.level === lv).forEach(x => x.data.exercises.forEach(e => { if (W.DT.check.isCountable(e)) p.prog[cid][e.id] = { f: 'c', s: 'c', n: 1, t: t0 }; })));
+  (opt.doneTopics || []).forEach(id => tps.filter(x => x.id === id).forEach(x => x.data.exercises.forEach(e => { if (W.DT.check.isCountable(e)) p.prog[cid][e.id] = { f: 'c', s: 'c', n: 1, t: t0 }; })));
+  (opt.skipLv || []).forEach(lv => tps.filter(x => x.level === lv).forEach(x => { p.skip[cid][x.id] = true; }));
+  W.DT.vocab.wordsOf(W.KOPRU, cid, 'A1').slice(0, opt.words || 0).forEach(w => { p.srs[cid][w.id] = [3, T + 5, T - 1, 3, 0]; });
+  (opt.a2 || []).forEach(id => { p.prog[cid][id] = { f: 'c', s: 'c', n: 1, t: t0 }; });
+  return p;
+}
+function a1Cert(W, cid, p) {   // wie app.js certStatus('A1') (ohne übersprungene Themen im Nenner)
+  const C = W.DT.catalog, isC = W.DT.check.isCountable, pr = p.prog[cid], sk = p.skip[cid];
+  let n = 0, c = 0;
+  C.topicsOf(W.KOPRU, cid).forEach(x => { if (x.level !== 'A1' || !x.avail || sk[x.id]) return; x.data.exercises.forEach(e => { if (!isC(e)) return; n++; if (pr[e.id] && pr[e.id].s === 'c') c++; }); });
+  const ws = W.DT.vocab.wordsOf(W.KOPRU, cid, 'A1').map(w => w.id), st = DT.srs.stats(p, cid, ws);
+  const live = C.certCheck(C.CERT_RULES.A1, { c, n, wk: st.sicher, wn: ws.length }).ok, held = DT.badges.certAt(p, cid, 'A1');
+  return { live, held, ok: live || !!held, c, n, wk: st.sicher, wn: ws.length };
+}
+test('A1-Aufrüstung: Fixture erweitert A1 auf ≈ 650 Wörter und 16 Themen (je Kurs)', () => {
+  const W = a1World(), C = W.DT.catalog;
+  const before = cid => [W.DT.vocab.wordsOf(W.KOPRU, cid, 'A1').length, C.topicsOf(W.KOPRU, cid).filter(x => x.level === 'A1' && !x.kind).length];
+  const b = { de: before('de'), tr: before('tr') };
+  a1Extend(W); a1Extend(W);   // zweimal: darf nur einmal wirken
+  ['de', 'tr'].forEach(cid => {
+    const a = before(cid);
+    eq(a, [b[cid][0] + 300, b[cid][1] + 4], cid + ': +300 Wörter, +4 Themen (einmalig)');
+    ok(a[0] >= 640 && a[0] <= 660 && a[1] === 16, cid + ': ≈ 650 Wörter / 16 Themen');
+  });
+  eq(C.CERT_RULES.A1, { ex: 0.8, words: 0.7 }, 'CERT_RULES.A1 unverändert (keine neuen Pflichten)');
+});
+test('A1-Aufrüstung: erworbenes Zertifikat bleibt gültig, Datum = Abzeichen', () => {
+  ['de', 'tr'].forEach(cid => {
+    const W = a1World(), at = 1791000000000;
+    const p = a1Profile(W, cid, { done: ['A1'], words: 300 });
+    const pre = a1Cert(W, cid, p);
+    ok(pre.live && !pre.held, cid + ': heute live bestanden');
+    const fresh = DT.badges.award(p, cid, { cert: { A1: pre.ok } }, at);
+    ok(fresh.some(b => b.id === 'cert-A1') && p.badges[cid + ':cert-A1'] === at, cid + ': Abzeichen cert-A1 vergeben');
+    a1Extend(W);
+    const post = a1Cert(W, cid, p);
+    ok(!post.live, cid + ': Live-Rechnung nach Erweiterung schlechter (' + post.c + '/' + post.n + ', ' + post.wk + '/' + post.wn + ')');
+    ok(post.ok && post.held === at, cid + ': Zertifikat bleibt (held = Zeitstempel des Abzeichens)');
+    const again = DT.badges.award(p, cid, { cert: { A1: post.ok } }, at + 999);
+    ok(!again.some(b => b.id === 'cert-A1') && p.badges[cid + ':cert-A1'] === at, cid + ': kein neues Datum, Abzeichen unverändert');
+    // ohne Abzeichen (z. B. vor dem Update nie das Dashboard geöffnet) zählt nur die Live-Rechnung
+    const q = a1Profile(W, cid, { done: ['A1'], words: 300 });
+    ok(!a1Cert(W, cid, q).ok, cid + ': ohne Abzeichen kein geschenktes Zertifikat');
+  });
+  const W = a1World();
+  eq([DT.badges.certAt({ badges: { 'de:cert-A1': 5 } }, 'de', 'A1'), DT.badges.certAt({ badges: { 'de:cert-A1': 5 } }, 'tr', 'A1'),
+    DT.badges.certAt({}, 'de', 'A1'), DT.badges.certAt(null, 'de', 'A1'), DT.badges.certAt({ badges: { 'de:cert-A2': true } }, 'de', 'A2')], [5, 0, 0, 0, 1], 'certAt: Kurs getrennt, fehlend = 0, true = 1');
+});
+test('A1-Aufrüstung: Fokus-Niveau – niemand wird nach A1 zurückgeworfen', () => {
+  ['de', 'tr'].forEach(cid => {
+    const W = a1World(), C = W.DT.catalog, a2one = cid + '-a2-01.1';
+    const cases = {
+      'A1 bestanden (Abzeichen)': a1Profile(W, cid, { done: ['A1'], words: 300 }),
+      'A1 per Einstufung übersprungen': a1Profile(W, cid, { skipLv: ['A1'] }),
+      'A2 aktiv': a1Profile(W, cid, { done: ['A1'], words: 200, a2: [a2one] }),
+      'A2 aktiv, A1 nicht ganz fertig': a1Profile(W, cid, { doneTopics: [cid + '-a1-01', cid + '-a1-02'], a2: [a2one] }),
+      'A1 Anfänger (3 Themen)': a1Profile(W, cid, { doneTopics: [cid + '-a1-01', cid + '-a1-02', cid + '-a1-03'] }),
+      'neu': a1Profile(W, cid, {})
+    };
+    cases['A1 bestanden (Abzeichen)'].badges[cid + ':cert-A1'] = 1791000000000;
+    const before = {}; Object.keys(cases).forEach(k => { before[k] = C.focusLevel(a1Rows(W, cid, cases[k]), a1Opts(W, cid, cases[k])); });
+    eq(before, { 'A1 bestanden (Abzeichen)': 'A2', 'A1 per Einstufung übersprungen': 'A2', 'A2 aktiv': 'A2', 'A2 aktiv, A1 nicht ganz fertig': 'A2', 'A1 Anfänger (3 Themen)': 'A1', 'neu': 'A1' }, cid + ': Fokus heute');
+    // Regel (b) ändert heute nur „A2 aktiv, A1 nicht ganz fertig“ (bisher A1) – alle anderen wie vorher
+    ok(oldFocus(a1Rows(W, cid, cases['A2 aktiv'])) === 'A2' && oldFocus(a1Rows(W, cid, cases['A1 Anfänger (3 Themen)'])) === 'A1', cid + ': alte Regel stimmt heute überein');
+    a1Extend(W);
+    const after = {}; Object.keys(cases).forEach(k => { after[k] = C.focusLevel(a1Rows(W, cid, cases[k]), a1Opts(W, cid, cases[k])); });
+    eq(after, before, cid + ': Fokus nach Erweiterung unverändert');
+    eq(['A1 bestanden (Abzeichen)', 'A1 per Einstufung übersprungen', 'A2 aktiv'].map(k => oldFocus(a1Rows(W, cid, cases[k]))), ['A1', 'A1', 'A1'], cid + ': alte Regel hätte zurückgeworfen (Regressionsbeleg)');
+    // Gründe einzeln
+    eq(C.levelDone(a1Rows(W, cid, cases['A1 bestanden (Abzeichen)']), 'A1', a1Opts(W, cid, cases['A1 bestanden (Abzeichen)'])), 'cert', cid + ': Grund Zertifikat');
+    eq(C.levelDone(a1Rows(W, cid, cases['A2 aktiv']), 'A1', a1Opts(W, cid, cases['A2 aktiv'])), 'next', cid + ': Grund Antwort in A2');
+    eq(C.levelDone(a1Rows(W, cid, cases['A1 per Einstufung übersprungen']), 'A1', a1Opts(W, cid, cases['A1 per Einstufung übersprungen'])), 'share', cid + ': Grund 12/16 übersprungen = 75 %');
+    eq(C.levelDone(a1Rows(W, cid, cases['A1 Anfänger (3 Themen)']), 'A1', {}), '', cid + ': Anfänger: A1 offen');
+  });
+  const C = DT.catalog, r = (lv, n, c, skip) => ({ level: lv, n, c, skip: !!skip });
+  const rows = [r('A1', 10, 10), r('A1', 10, 10), r('A1', 10, 10), r('A1', 10, 0), r('A2', 10, 0)];
+  eq(C.focusLevel(rows, {}), 'A2', 'Grenze: 3 von 4 Themen = 75 % → erledigt');
+  eq(C.focusLevel(rows.slice(1).concat([r('A1', 10, 0)]), {}), 'A1', '2 von 4 = 50 % → A1 offen');
+  eq(C.focusLevel([r('A1', 10, 10), r('A2', 10, 10)], {}), 'A2', 'alles erledigt → höchstes Niveau');
+  eq(C.focusLevel([], {}), 'A1', 'leer → A1');
+});
+test('A1-Aufrüstung: Tagesmix – neue A1-Wörter abwechselnd mit dem Fokus-Niveau', () => {
+  const V = DT.vocab;
+  const a1 = Array.from({ length: 300 }, (_, i) => 'a1-' + i), a2 = Array.from({ length: 50 }, (_, i) => 'a2-' + i);
+  eq(V.mixNew([a1, a2], 6), ['a2-0', 'a1-0', 'a2-1', 'a1-1', 'a2-2', 'a1-2'], 'Fokus A2: 1:1, Fokus zuerst');
+  eq(V.mixNew([a1, a2], 5).filter(x => x.indexOf('a2') === 0).length, 3, 'ungerade Grenze: Fokus bekommt den Überhang');
+  eq(V.mixNew([a1, []], 3), ['a1-0', 'a1-1', 'a1-2'], 'Fokus-Niveau leer → untere Wörter');
+  eq(V.mixNew([[], a2], 3), ['a2-0', 'a2-1', 'a2-2'], 'unten nichts neu → nur Fokus (wie bisher)');
+  eq(V.mixNew([a1], 3), ['a1-0', 'a1-1', 'a1-2'], 'Fokus A1 → aufsteigend wie bisher');
+  eq(V.mixNew([['x'], ['y']], 10), ['y', 'x'], 'weniger als n vorhanden');
+  eq(V.mixNew([['x'], ['y']]).length, 2, 'ohne n: alle');
+  eq(V.mixNew([['b1'], ['b2'], ['f1', 'f2']], 4), ['f1', 'b1', 'f2', 'b2'], 'mehrere untere Niveaus aufsteigend');
+  // echte Inhalte: A2-Lernende mit 200 sicheren A1-Wörtern bekommen nach der Erweiterung weiter A2-Wörter
+  const W = a1World(); a1Extend(W);
+  const p = a1Profile(W, 'de', { words: 350 }), fresh = l => W.DT.vocab.wordsOf(W.KOPRU, 'de', l).filter(w => !DT.srs.get(p, 'de', w.id));
+  const mix = W.DT.vocab.mixNew([fresh('A1'), fresh('A2')], 8);
+  eq(mix.map(w => w.id.slice(0, 5)), ['de-a2', 'de-a1', 'de-a2', 'de-a1', 'de-a2', 'de-a1', 'de-a2', 'de-a1'], 'echter Inhalt: A2/A1 im Wechsel');
+  ok(mix.filter(w => w.id.indexOf('de-a1') === 0).every(w => w.ext === 1), 'die neuen A1-Wörter sind die Erweiterung (ext:1)');
+});
+test('A1-Aufrüstung: Grundstock/Erweiterung getrennt zählbar (ext:1, kein Speicherfeld)', () => {
+  const W = a1World(), cid = 'de', p = a1Profile(W, cid, { done: ['A1'], words: 300 }), json = JSON.stringify(p);
+  a1Extend(W);
+  const ws = W.DT.vocab.wordsOf(W.KOPRU, cid, 'A1'), st = DT.srs.stats(p, cid, ws.map(w => w.id));
+  const sp = W.DT.catalog.extSplit(ws.map(w => ({ ext: w.ext, done: !!DT.srs.get(p, cid, w.id) })));
+  eq([sp.base.n, sp.base.d, sp.ext.n, sp.ext.d], [ws.length - 300, 300, 300, 0], 'Wörter: Grundstock 300/350, Erweiterung 0/300');
+  ok(Math.round(st.sicher / ws.length * 100) < 50 && Math.round(sp.base.d / sp.base.n * 100) >= 85, 'Gesamt fällt unter 50 %, Grundstock bleibt ≥ 85 %');
+  eq(JSON.stringify(p), json, 'Profil unverändert (nichts gespeichert)');
+});
+
 (async () => {
   for (const [name, fn] of asyncTests) {
     current = name;

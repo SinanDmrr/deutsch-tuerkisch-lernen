@@ -267,5 +267,40 @@
     return res;
   }
 
-  DT.catalog = { SKILLS: SKILLS, skillKind: skillKind, skillOf: skillOf, CERT_RULES: CERT_RULES, certCheck: certCheck, hasRole: hasRole, dialogLines: dialogLines, roleExercises: roleExercises, checkRoleplay: checkRoleplay, isHeavy: isHeavy, writesOf: writesOf, writeLevel: writeLevel, LEVELS: LEVELS, register: register, topicsOf: topicsOf, levelKey: levelKey, levelLoaded: levelLoaded, levelSummary: levelSummary };
+  /* Fokus-Niveau (ADR-11.2, A1-Aufrüstung Paket 0) – nichts gespeichert, alles aus dem Fortschritt berechnet.
+   * rows: Grammatikthemen mit Inhalt in Lernreihenfolge [{ level, n, c, skip }]
+   * o: { cert: { A1: Zeitstempel|true }, answered: { A2: true } }  (Zertifikats-Abzeichen; Niveaus mit mindestens einer Antwort)
+   * Ein Niveau gilt als erledigt, wenn (a) sein Zertifikats-Abzeichen da ist, (b) im nächsthöheren Niveau schon geantwortet
+   * wurde oder (c) ≥ 75 % seiner Themen erledigt oder übersprungen sind. So werfen neue Themen/Aufgaben in einem
+   * erweiterten Niveau niemanden zurück, der schon weiter ist. Ergebnis: 'cert' | 'next' | 'share' | '' */
+  var FOCUS_SHARE = 0.75;
+  function levelDone(rows, lv, o) {
+    o = o || {};
+    if (o.cert && o.cert[lv]) return 'cert';
+    var nx = LEVELS[LEVELS.indexOf(lv) + 1];
+    if (nx && o.answered && o.answered[nx]) return 'next';
+    var n = 0, closed = 0;
+    (rows || []).forEach(function (r) { if (r.level !== lv) return; n++; if (r.skip || r.c >= r.n) closed++; });
+    return n && closed / n >= FOCUS_SHARE ? 'share' : '';
+  }
+  function focusLevel(rows, o) {
+    rows = rows || [];
+    var memo = {};
+    function done(lv) { if (!(lv in memo)) memo[lv] = levelDone(rows, lv, o); return memo[lv]; }
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i];
+      if (r.c < r.n && !r.skip && !done(r.level)) return r.level;
+    }
+    var top = 'A1'; rows.forEach(function (r) { if (LEVELS.indexOf(r.level) > LEVELS.indexOf(top)) top = r.level; });
+    return top;
+  }
+  /* Grundstock/Erweiterung (Inhaltsfeld ext:1 an neuen Wörtern, Aufgaben oder ganzen Themen – kein Speicherfeld).
+   * items: [{ ext, done }] → { base: { n, d }, ext: { n, d } } */
+  function extSplit(items) {
+    var out = { base: { n: 0, d: 0 }, ext: { n: 0, d: 0 } };
+    (items || []).forEach(function (x) { var b = x.ext ? out.ext : out.base; b.n++; if (x.done) b.d++; });
+    return out;
+  }
+
+  DT.catalog = { levelDone: levelDone, focusLevel: focusLevel, FOCUS_SHARE: FOCUS_SHARE, extSplit: extSplit, SKILLS: SKILLS, skillKind: skillKind, skillOf: skillOf, CERT_RULES: CERT_RULES, certCheck: certCheck, hasRole: hasRole, dialogLines: dialogLines, roleExercises: roleExercises, checkRoleplay: checkRoleplay, isHeavy: isHeavy, writesOf: writesOf, writeLevel: writeLevel, LEVELS: LEVELS, register: register, topicsOf: topicsOf, levelKey: levelKey, levelLoaded: levelLoaded, levelSummary: levelSummary };
 })(window.DT = window.DT || {});

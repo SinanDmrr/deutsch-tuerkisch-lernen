@@ -166,6 +166,7 @@ function lintNew(e) {
 function checkExercise(e, where) {
   useId(e.id, where);
   if (!e.e) warn('Erklärung (e) fehlt', e.id);
+  if (e.ext != null && e.ext !== 1) err('ext darf nur 1 sein (Erweiterung eines Niveaus, A1-Aufrüstung P0)', e.id);
   switch (e.t) {
     case 'mc': case 'listen':
       if (!Array.isArray(e.o) || !(e.a >= 0 && e.a < e.o.length)) err('ungültige Antwort', e.id);
@@ -212,6 +213,7 @@ Object.entries(K.vocab || {}).forEach(([key, list]) => {
     prefix(v.id, key + '.w', 'Wort in ' + key);
     if (v.id && String(v.id).startsWith(key + '.w') && !/^\d{3,}$/.test(String(v.id).slice(key.length + 2))) warn('Wort-ID sollte <kurs>-<niveau>.w<nnn> sein', v.id);
     if (!v.t || !v.n) err('Wort ohne t/n', v.id);
+    if (v.ext != null && v.ext !== 1) err('ext darf nur 1 sein (Erweiterung eines Niveaus, A1-Aufrüstung P0)', v.id);
     if (!v.ex || !v.exn) warn('Wort ohne Beispielsatz', v.id);
     if (key.startsWith('de-') && /^(der|die|das) /.test(v.t) === false && v.pos === 'n') err('Nomen ohne Artikel', v.id);
     // ab A2: ID-Muster <kurs>-a2.w<nnn> (genau dreistellig bis 999) und optionale Verb-Zusatzfelder
