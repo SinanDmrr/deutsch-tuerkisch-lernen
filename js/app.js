@@ -9,7 +9,7 @@
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var DT = window.DT;
   var SCHEMA = DT.storage.SCHEMA;    // Version des Speicherformats (Migrationen nur in js/core/storage.js)
-  var APP_VERSION = '2026-11-20.1';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-20.2';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -201,6 +201,19 @@
     certEx: ['Aufgaben: {p}\u00a0% (Ziel 80\u00a0%)', 'Alıştırmalar: %{p} (hedef %80)'],
     certWords: ['Wörter: {p}\u00a0% (Ziel 70\u00a0%)', 'Kelimeler: %{p} (hedef %70)'],
     certGet: ['Zertifikat holen', 'Sertifikanı al'],
+    certCondA2: ['80 % der Aufgaben richtig, in Grammatik, Lesen, Hören und Dialogen je mindestens 60 %, 70 % der Wörter sicher und 6 Schreibaufgaben geübt', 'Alıştırmaların %80’i doğru; dil bilgisi, okuma, dinleme ve diyaloglarda en az %60; kelimelerin %70’i oturmuş ve 6 yazma görevi tamamlanmış olmalı'],
+    certSkill: ['{s}: {p}\u00a0% (Ziel {z}\u00a0%)', '{s}: %{p} (hedef %{z})'],
+    certWrites: ['Schreiben: {d} von {z} geübt', 'Yazma: {z} görevden {d} tanesi tamam'],
+    certSoon: ['{lv}-Zertifikat: kommt, sobald {lv} fertig ist. Bis dahin zählt alles schon mit.', '{lv} sertifikası, {lv} tamamlanınca açılacak. O zamana kadar yaptığın her şey sayılıyor.'],
+    skillsTitle: ['Deine Fertigkeiten · {lv}', 'Becerilerin · {lv}'],
+    skillsNote: ['Nur deine eigenen Zahlen – kein Vergleich mit anderen. Sprechen ist freiwilliger Bonus.', 'Sadece senin rakamların – kimseyle karşılaştırma yok. Konuşma isteğe bağlı bir bonus.'],
+    skGrammar: ['Grammatik', 'Dil bilgisi'],
+    skRead: ['Lesen', 'Okuma'],
+    skListen: ['Hören', 'Dinleme'],
+    skDialog: ['Dialoge', 'Diyaloglar'],
+    skWrite: ['Schreiben', 'Yazma'],
+    skSpeak: ['Sprechen', 'Konuşma'],
+    skPracticed: ['{d} / {n} geübt', '{d} / {n} çalışıldı'],
     certNotYet: ['Noch nicht ganz – sobald du die Ziele erreichst, kannst du hier dein Zertifikat herunterladen.', 'Henüz değil – hedeflere ulaştığında sertifikanı buradan indirebilirsin.'],
     certIntro: ['Glückwunsch! Trag deinen Namen ein und lade dein Zertifikat als Bild herunter.', 'Tebrikler! Adını yaz ve sertifikanı resim olarak indir.'],
     certName: ['Name auf dem Zertifikat', 'Sertifikadaki isim'],
@@ -322,6 +335,15 @@
     speakAlmost: ['Fast! Hör dir die Aussprache noch einmal an und sprich langsam und deutlich.', 'Neredeyse! Telaffuzu bir kez daha dinle, yavaş ve net konuş.'],
     speakRetry: ['Das wurde noch nicht erkannt. Hör zuerst zu (🐢 hilft) und versuche es noch einmal.', 'Henüz algılanmadı. Önce dinle (🐢 yardımcı olur) ve tekrar dene.'],
     tryAgain: ['Nochmal sprechen', 'Tekrar konuş'],
+    respondOptional: ['Frei sprechen (freiwillig)', 'Serbest konuşma (isteğe bağlı)'],
+    respondHint: ['Antworte laut, so gut es geht – ohne Note. Diese Seite nimmt nichts auf und speichert keine Aufnahme.', 'Elinden geldiğince sesli cevap ver – not verilmez. Bu site ses kaydı almaz, hiçbir kayıt saklamaz.'],
+    respondChunks: ['Diese Wendungen helfen dir', 'İşine yarayacak kalıplar'],
+    respondMic: ['Mitlesen lassen (freiwillig)', 'Söylediğini yazıya dök (isteğe bağlı)'],
+    respondHeard: ['So hat dein Gerät dich verstanden (ohne Bewertung)', 'Cihazın seni böyle anladı (puanlanmaz)'],
+    respondDone: ['Ich habe geantwortet – Beispiel zeigen', 'Cevap verdim – örneği göster'],
+    respondFbTitle: ['Gut, dass du gesprochen hast! Vergleiche mit dem Beispiel.', 'Konuşman harika! Şimdi örnekle karşılaştır.'],
+    respondModel: ['So könnte man antworten', 'Şöyle cevap verilebilir'],
+    respondAgain: ['Noch einmal antworten', 'Bir kez daha cevap ver'],
     playDialog: ['Ganzen Dialog anhören', 'Tüm diyaloğu dinle'],
     translation: ['Übersetzung', 'Çeviri'],
     dialogTip: ['Tipp: Erst anhören und mitlesen, dann die Übersetzung einblenden. Mit 🔊 hörst du jede Zeile einzeln.', 'İpucu: Önce dinleyip takip et, sonra çeviriyi aç. 🔊 ile her satırı ayrı dinleyebilirsin.'],
@@ -1205,6 +1227,7 @@
       '</div>') +
       badgesStrip() +
       '<div class="card section"><div class="section-head"><h2>' + esc(t('levelProgress')) + '</h2><span class="muted small">' + esc(t('totalProgress', { lv: sld.live.join(', ') })) + ': <b>' + fmtPct(pct(s.c, s.n)) + '</b></span></div>' + levels + '</div>' +
+      skillsCard(skillsLevel(sld.live)) +
       writeCounterHtml() +
       probHtml;
   }
@@ -1422,7 +1445,7 @@
       var r = p[id], cls = r ? (r.s === 'c' ? ' c' : ' w') : '';
       if (player.mode !== 'all') cls = player.session[id] === true ? ' c' : (player.session[id] === false ? ' w' : '');
       if (id.indexOf('card:') === 0) cls += ' dot-new';
-      var isSpeak = EXI[id] && EXI[id].ex.t === 'speak';
+      var isSpeak = EXI[id] && (EXI[id].ex.t === 'speak' || EXI[id].ex.t === 'respond');
       if (isSpeak) cls += ' speak-dot';
       var sym = id.indexOf('card:') === 0 ? '★' : (/ c\b/.test(cls) ? '✓' : (/ w\b/.test(cls) ? '✗' : (isSpeak ? '🎤' : (i + 1))));
       var lab = esc(t('question')) + ' ' + (i + 1) + (/ c\b/.test(cls) ? ' – ' + esc(t('srDone')) : / w\b/.test(cls) ? ' – ' + esc(t('srNotYet')) : '');
@@ -1517,6 +1540,19 @@
         body += '<p class="muted small">' + esc(t('noMic')) + '</p>' +
           (checked ? '' : '<button class="btn" data-act="self-ok">✓ ' + esc(t('saidAloud')) + '</button>');
       }
+    } else if (ex.t === 'respond') {   // ADR-12.8: freies Sprechen, ungewertet, keine Aufnahme
+      qtext = md(ex.q || '');
+      hint = t('respondHint');
+      body = (ex.say ? '<div class="say-box" lang="' + target + '">' + md(ex.say) + '</div>' + audioBar(ex.say, true) : '') +
+        (ex.chunks && ex.chunks.length ? '<div class="rs-chunks"><span class="muted small">' + esc(t('respondChunks')) + ':</span> ' +
+          ex.chunks.map(function (x) { return '<span class="rs-chunk" lang="' + target + '">' + md(x) + '</span>'; }).join('') + '</div>' : '');
+      if (SR && !checked) {
+        if (c.micInfo) body += '<div class="callout tip mic-info"><b>🎤 ' + esc(t('micInfoTitle')) + '</b><br>' + esc(t('micInfoText')) +
+          ' <a href="#/legal">' + esc(t('legal')) + '</a><div class="btn-row" style="margin-top:10px"><button class="btn primary" data-act="mic-ok">' + esc(t('micInfoOk')) + '</button></div></div>';
+        else body += '<button class="btn mic-btn' + (c.listening ? ' on' : '') + '" data-act="mic">🎤 ' + esc(c.listening ? t('listening') : t('respondMic')) + '</button>';
+        if (c.micError) body += '<p class="small" style="color:var(--bad);margin-top:10px">' + esc(t(c.micError === 'not-allowed' || c.micError === 'service-not-allowed' ? 'micDenied' : (c.micError === 'language-not-supported' ? 'micNoLang' : 'micNoSpeech'))) + '</p>';
+      }
+      if (c.heard && !checked) body += '<p class="small rs-heard"><span class="muted">' + esc(t('respondHeard')) + ':</span> <b lang="' + target + '">' + esc(c.heard) + '</b></p>';
     } else if (ex.t === 'dictation') {
       qtext = md(ex.q || t('dictationQ'));
       if (ex.cs !== false) hint = t('strictNote');
@@ -1574,13 +1610,13 @@
       body = '<div class="callout warn">' + esc(t('audioMissing')) + '</div>';
       c.noAudio = true;
     }
-    var meta = '<div class="qmeta"><span>' + esc(t('question')) + ' ' + (player.idx + 1) + ' ' + esc(t('of')) + ' ' + player.queue.length + (ex.t === 'speak' ? ' · 🎤 ' + esc(t('speakOptional')) : '') + '</span>' +
+    var meta = '<div class="qmeta"><span>' + esc(t('question')) + ' ' + (player.idx + 1) + ' ' + esc(t('of')) + ' ' + player.queue.length + (ex.t === 'speak' ? ' · 🎤 ' + esc(t('speakOptional')) : ex.t === 'respond' ? ' · 💬 ' + esc(t('respondOptional')) : '') + '</span>' +
       (player.mode !== 'all' && player.mode !== 'review' && item.topic ? '<span>' + esc(item.topic.level + ' · ' + item.topic.title) + '</span>' : '') + '</div>';
     var fb = checked ? feedbackHtml(ex, res) : '';
     var isLast = player.idx >= player.queue.length - 1;
     var actions = '<div class="qactions">' +
       (checked ? '<span></span><button class="btn primary" data-act="next" id="next-btn">' + esc(isLast ? t('finish') : t('next')) + '</button>'
-        : '<button class="btn small" data-act="skip">' + esc(t('skip')) + '</button><button class="btn primary" data-act="check" id="check-btn"' + (canCheck(ex, c) ? '' : ' disabled') + '>' + esc(t('check')) + '</button>') +
+        : '<button class="btn small" data-act="skip">' + esc(t('skip')) + '</button><button class="btn primary" data-act="check" id="check-btn"' + (canCheck(ex, c) ? '' : ' disabled') + '>' + esc(t(ex.t === 'respond' ? 'respondDone' : 'check')) + '</button>') +
       '</div>';
 
     return dots + textPanel(item.topic && item.topic.data) + '<div class="card qcard">' + meta + (qtext ? '<div class="qtext">' + qtext + '</div>' : '') +
@@ -1591,6 +1627,7 @@
     if (ex.t === 'mc' || ex.t === 'listen') return c.sel !== null;
     if (ex.t === 'gap' || ex.t === 'dictation') return String(c.input).trim().length > 0;
     if (ex.t === 'speak') return !!c.heardAlts || !!c.selfOk;
+    if (ex.t === 'respond') return !c.listening;
     if (ex.t === 'order') return c.picked.length > 0;
     if (ex.t === 'match') return c.choice.every(function (x) { return x; });
     if (ex.t === 'cloze') return DT.check.clozeKeys(ex).every(function (n) { return String(c.gaps[n] == null ? '' : c.gaps[n]).trim().length > 0; });
@@ -1609,6 +1646,15 @@
   function feedbackHtml(ex, res) {
     var e = ex.e ? '<div class="fb-sec"><h4>' + esc(t('whyRight')) + '</h4><p>' + md(ex.e) + '</p></div>' : '';
     if (ex.role) return roleFeedback(ex, res, e);
+    if (res.respond) {
+      var tgt = course().target;
+      return '<div class="fb ok"><div class="fb-title">' + esc(t('respondFbTitle')) + '</div>' +
+        (res.given ? '<div class="fb-row"><span class="k">' + esc(t('recognized')) + ':</span><span lang="' + tgt + '">' + esc(res.given) + '</span></div>' : '') +
+        '<div class="fb-sec"><h4>' + esc(t('respondModel')) + '</h4>' + (ex.models || []).map(function (m, i) {
+          return '<div class="example">' + speakBtn(m) + '<div><div class="tgt" lang="' + tgt + '">' + md(m) + '</div>' + (ex.modelsN && ex.modelsN[i] ? '<div class="nat">' + md(ex.modelsN[i]) + '</div>' : '') + '</div></div>';
+        }).join('') + '</div>' + (ex.e ? '<div class="fb-sec"><p style="margin:0">' + md(ex.e) + '</p></div>' : '') +
+        '<div class="btn-row" style="margin-top:10px"><button class="btn" data-act="retry">💬 ' + esc(t('respondAgain')) + '</button></div></div>';
+    }
     if (res.ok) {
       return '<div class="fb ok"><div class="fb-title">' + esc(t('great')) + '</div>' + (ex.say ? '<p style="margin:0 0 6px"><b lang="' + course().target + '">' + md(ex.say) + '</b> ' + speakBtn(ex.say) + '</p>' : '') + (ex.e ? '<p style="margin:0">' + md(ex.e) + '</p>' : '') + '</div>';
     }
@@ -1694,7 +1740,7 @@
     var tp = topicById(id);
     if (!tp || !tp.avail) return '<div class="empty"><div class="big">🧭</div><p>' + esc(t('comingSoon')) + '</p><a class="btn" href="#/lessons">' + esc(t('backToLessons')) + '</a></div>';
     tab = tab || 'learn';
-    var s = topicStats(tp), wN = wrongIds(tp.id).length, spN = tp.data.exercises.filter(function (e) { return e.t === 'speak'; }).length;
+    var s = topicStats(tp), wN = wrongIds(tp.id).length, spN = tp.data.exercises.filter(function (e) { return e.t === 'speak' || e.t === 'respond'; }).length;
     var subtabs = [
       ['learn', tp.kind === 'dialog' ? '💬 ' + t('dialogTab') : tp.kind === 'text' ? (isListen(tp.data) ? '🎧 ' + t('listenTab') : '📄 ' + t('textTab')) : '📖 ' + t('explanation')],
       ['exercises', '✏️ ' + t('exercisesShort') + ' (' + s.c + '/' + s.n + (spN ? ' + ' + spN + ' 🎤' : '') + ')'],
@@ -2067,6 +2113,7 @@
       }).join('');
       return '<div class="card section"><div class="level-head"><span class="lvl lvl-' + lv + '">' + lv + '</span><h2>' + esc(levelName(lv)) + buildingBadge(lv) + '</h2>' +
         (s.n ? '<span class="muted small">' + esc(t('total')) + ': <b style="color:var(--ok)">' + fmtPct(pct(s.c, s.n)) + ' ' + esc(t('correct')) + '</b> · <b style="color:var(--bad)">' + fmtPct(pct(s.w, s.n)) + ' ' + esc(t('wrong')) + '</b> · ' + fmtPct(pct(s.o, s.n)) + ' ' + esc(t('open')) + '</span>' : '<span class="badge">' + esc(t('comingSoon')) + '</span>') + '</div>' +
+        (s.n ? skillBars(lv) : '') +
         '<div class="ov-row head"><span>' + esc(t('topic')) + '</span><span class="ov-bar"></span><span class="num">✓</span><span class="num">✗</span><span class="num">○</span></div>' + rows + '</div>';
     };
     var html = sl.live.map(levelCard).join('') + (sl.planned.length ? '<details class="planned-levels"><summary>' + esc(sl.label + ' · ' + t('plannedLevels')) + '</summary>' + sl.planned.map(levelCard).join('') + '</details>' : '');
@@ -2116,24 +2163,55 @@
   }
 
   /* ================= Abzeichen & Zertifikat (ADR-9) ================= */
-  function certStatus(lv) {
-    var cid = courseId(), pr = prog(), n = 0, c = 0;
+  /* Fertigkeiten eines Niveaus (DT.catalog.skillOf) – nur berechnet, nichts gespeichert. forCert: übersprungene Themen fallen heraus */
+  function skillsOf(lv, forCert) {
+    var cid = courseId();
+    return DT.catalog.skillOf(K, cid, lv, prog(), { skip: forCert ? (ensureProfile(prof()).skip[cid] || {}) : null, writeDone: function (id) { return writeStatus(id) === 'done'; } });
+  }
+  function certStatus(lv) {   // Regeln als Daten: DT.catalog.CERT_RULES / certCheck (ADR-11.6)
+    var cid = courseId(), pr = prog(), n = 0, c = 0, rule = DT.catalog.CERT_RULES[lv];
     levelTopics(lv).forEach(function (tp) {
       if (!tp.avail || isSkipped(tp.id)) return;          // per Einstufung übersprungene Themen fallen aus dem Nenner
       tp.data.exercises.forEach(function (ex) { if (!isCountable(ex)) return; n++; if (pr[ex.id] && pr[ex.id].s === 'c') c++; });
     });
     var words = DT.vocab.wordsOf(K, cid, lv).map(function (w) { return w.id; });
     var ws = DT.srs.stats(ensureProfile(prof()), cid, words);
-    var exOk = n > 0 && c / n >= 0.8, wOk = !words.length || ws.sicher / words.length >= 0.7;
-    return { c: c, n: n, wk: ws.sicher, wn: words.length, exPct: pct(c, n), wPct: pct(ws.sicher, words.length), ok: exOk && wOk, exOk: exOk, wOk: wOk };
+    var r = DT.catalog.certCheck(rule, { c: c, n: n, wk: ws.sicher, wn: words.length, skills: rule && rule.skill ? skillsOf(lv, true) : null });
+    return { c: c, n: n, wk: ws.sicher, wn: words.length, exPct: pct(c, n), wPct: pct(ws.sicher, words.length), ok: !!rule && r.ok, exOk: r.exOk, wOk: r.wOk, skills: r.skills, writes: r.writes, rule: rule };
+  }
+  var SKILL_ROWS = [['grammar', '📖', 'skGrammar'], ['read', '📄', 'skRead'], ['listen', '🎧', 'skListen'], ['dialog', '💬', 'skDialog'], ['write', '✍️', 'skWrite'], ['speak', '🎤', 'skSpeak']];
+  function skillLabel(k) { var r = SKILL_ROWS.filter(function (x) { return x[0] === k; })[0]; return r ? t(r[2]) : k; }
+  /* Fertigkeits-Balken je Niveau (A2-Konzept §8): gewertet = richtig/falsch wie bei Themen, Schreiben/Sprechen = geübt. Ohne Druck: keine Ziele, keine Warnungen */
+  function skillBars(lv) {
+    var sk = skillsOf(lv, false), rows = SKILL_ROWS.filter(function (r) { return sk[r[0]].n > 0; });
+    if (!rows.length) return '';
+    return '<div class="skills" role="list" aria-label="' + esc(t('skillsTitle', { lv: lv })) + '">' + rows.map(function (r) {
+      var x = sk[r[0]], prac = r[0] === 'write' || r[0] === 'speak';
+      var bar = prac ? '<span class="fill" style="width:' + pct(x.done, x.n) + '%"></span>'
+        : '<span class="ok" style="width:' + pct(x.c, x.n) + '%"></span><span class="bad" style="width:' + pct(x.w, x.n) + '%"></span>';
+      var num = prac ? t('skPracticed', { d: x.done, n: x.n }) : x.c + ' / ' + x.n;
+      return '<div class="sk-row" role="listitem"><span class="sk-l"><span aria-hidden="true">' + r[1] + '</span> ' + esc(t(r[2])) + '</span>' +
+        '<div class="bar thin" aria-hidden="true">' + bar + '</div><span class="sk-n small">' + esc(num) + (prac ? '' : ' <span class="muted">· ' + fmtPct(pct(x.c, x.n)) + '</span>') + '</span></div>';
+    }).join('') + '</div>';
+  }
+  function skillActive(sk) { return ['grammar', 'read', 'listen', 'dialog'].some(function (k) { return sk[k].c + sk[k].w > 0; }) || sk.speak.done > 0 || sk.write.done > 0; }
+  // Dashboard: ein Niveau – das Fokus-Niveau, wenn dort schon geübt wurde, sonst das höchste Niveau mit eigenem Fortschritt
+  function skillsLevel(live) {
+    var f = focusLevel(), act = live.filter(function (lv) { return skillActive(skillsOf(lv, false)); });
+    return act.indexOf(f) >= 0 ? f : act[act.length - 1] || null;
+  }
+  function skillsCard(lv) {
+    if (!lv) return '';
+    var bars = skillBars(lv);
+    return bars ? '<div class="card section"><div class="section-head"><h2>' + esc(t('skillsTitle', { lv: lv })) + '</h2><a href="#/overview">' + esc(t('overview')) + ' →</a></div>' + bars + '<p class="muted small" style="margin:8px 0 0">' + esc(t('skillsNote')) + '</p></div>' : '';
   }
   function badgeCtx() {
-    var p = ensureProfile(prof()), cid = courseId(), pr = prog(), ctx = { answered: 0, topicsDone: 0, dialogsDone: 0, dialogsAll: 0, fixed: 0 };
+    var p = ensureProfile(prof()), cid = courseId(), pr = prog(), ctx = { answered: 0, topicsDone: 0, dialogsDone: 0, dialogsAll: 0, fixed: 0 }, a2Topics = 0;
     allTopics().forEach(function (tp) {
       if (!tp.avail) return;
       var s = topicStats(tp); ctx.answered += s.answered;
-      if (tp.kind === 'dialog') ctx.dialogsAll++;
-      if (s.n && s.c === s.n) { if (tp.kind === 'dialog') ctx.dialogsDone++; else if (!tp.kind) ctx.topicsDone++; }
+      if (tp.kind === 'dialog' && tp.level === 'A1') ctx.dialogsAll++;   // ADR-11.6: nur A1, damit neue A2-Dialoge das Abzeichen nicht erschweren
+      if (s.n && s.c === s.n) { if (tp.kind === 'dialog') { if (tp.level === 'A1') ctx.dialogsDone++; } else if (!tp.kind) { ctx.topicsDone++; if (tp.level === 'A2') a2Topics++; } }
     });
     Object.keys(pr).forEach(function (id) { if (EXI[id] && pr[id].f === 'w' && pr[id].s === 'c') ctx.fixed++; });
     var words = DT.vocab.wordsOf(K, cid, 'A1').map(function (w) { return w.id; });
@@ -2141,7 +2219,11 @@
     var log = (p.daily && p.daily.log) || {};
     ctx.streak = DT.daily.streak(log, todayKey()).days;
     ctx.goalDays = Object.keys(log).filter(function (k) { return DT.daily.reached(log[k]); }).length;
-    ctx.cert = { A1: certStatus('A1').ok };
+    ctx.cert = { A1: certStatus('A1').ok, A2: levelComplete('A2') && certStatus('A2').ok };
+    // A2-Abzeichen: alles aus dem vorhandenen Fortschritt abgeleitet (kein neues Speicherfeld)
+    var sk2 = skillsOf('A2', false), w2 = DT.vocab.wordsOf(K, cid, 'A2').map(function (w) { return w.id; });
+    ctx.a2 = { topicsDone: a2Topics, writesDone: sk2.write.done, listenOk: sk2.listen.c, speakDone: sk2.speak.done,
+      wordsKnown: w2.length ? DT.srs.stats(p, cid, w2).sicher : 0, wordsTotal: w2.length, complete: levelComplete('A2') };
     return ctx;
   }
   function checkBadges(quiet) {   // am Sitzungsende und beim Dashboard (nicht bei jedem Render)
@@ -2155,24 +2237,35 @@
     }
     return fresh;
   }
-  function certBox() {
-    var cs = certStatus('A1');
-    return '<div class="cert-box"><div><b>🎓 ' + esc(t('certTitle', { lv: 'A1' })) + '</b><div class="muted small">' + esc(t('certCond')) + '</div></div>' +
-      '<div class="cert-bars"><div class="small">' + esc(t('certEx', { p: cs.exPct })) + '<div class="bar thin"><span class="' + (cs.exOk ? 'ok' : 'fill') + '" style="width:' + Math.min(100, Math.round(cs.exPct / 0.8)) + '%"></span></div></div>' +
-        (cs.wn ? '<div class="small">' + esc(t('certWords', { p: cs.wPct })) + '<div class="bar thin"><span class="' + (cs.wOk ? 'ok' : 'fill') + '" style="width:' + Math.min(100, Math.round(cs.wPct / 0.7)) + '%"></span></div></div>' : '') + '</div>' +
-      (cs.ok ? '<a class="btn primary" href="#/certificate/A1">🎓 ' + esc(t('certGet')) + '</a>' : '') + '</div>';
+  function certBar(label, ok, w) { return '<div class="small">' + esc(label) + '<div class="bar thin"><span class="' + (ok ? 'ok' : 'fill') + '" style="width:' + Math.max(0, Math.min(100, w)) + '%"></span></div></div>'; }
+  function certBox(lv) {
+    var cs = certStatus(lv), rule = cs.rule || {};
+    var skills = Object.keys(cs.skills || {}).filter(function (k) { return cs.skills[k].n; }).map(function (k) {
+      var x = cs.skills[k]; return certBar(t('certSkill', { s: skillLabel(k), p: x.p, z: x.need }), x.ok, Math.round(x.p / x.need * 100));
+    }).join('');
+    var wr = cs.writes && cs.writes.need ? certBar(t('certWrites', { d: Math.min(cs.writes.done, cs.writes.need), z: cs.writes.need }), cs.writes.ok, Math.round(cs.writes.done / cs.writes.need * 100)) : '';
+    return '<div class="cert-box"><div><b>🎓 ' + esc(t('certTitle', { lv: lv })) + '</b><div class="muted small">' + esc(t(rule.skill ? 'certCondA2' : 'certCond')) + '</div></div>' +
+      '<div class="cert-bars">' + certBar(t('certEx', { p: cs.exPct }), cs.exOk, Math.round(cs.exPct / (rule.ex || 0.8))) +
+        (cs.wn ? certBar(t('certWords', { p: cs.wPct }), cs.wOk, Math.round(cs.wPct / (rule.words || 0.7))) : '') + skills + wr + '</div>' +
+      (cs.ok ? '<a class="btn primary" href="#/certificate/' + lv + '">🎓 ' + esc(t('certGet')) + '</a>' : '') + '</div>';
+  }
+  /* ADR-11.6: Zertifikats-Box je freigegebenem Niveau; Niveaus im Aufbau nur als graue Zeile ohne Balken */
+  function certBoxes() {
+    return LEVELS.filter(function (lv) { return DT.catalog.CERT_RULES[lv] && (levelComplete(lv) || levelHas(lv)); }).map(function (lv) {
+      return levelComplete(lv) ? certBox(lv) : '<p class="muted small cert-soon">🎓 ' + esc(t('certSoon', { lv: lv })) + '</p>';
+    }).join('');
   }
   function badgesStrip() {   // kompakt fürs Dashboard
     var items = DT.badges.list(ensureProfile(prof()), courseId()), got = items.filter(function (x) { return x.at; });
     var ui = uiLang() === 'de' ? 0 : 1;
     return '<div class="card section"><div class="section-head"><h2>🏅 ' + esc(t('badges')) + ' <span class="muted small">' + got.length + ' / ' + items.length + '</span></h2><a href="#/overview">' + esc(t('badgesAll')) + ' →</a></div>' +
       (got.length ? '<div class="badge-strip">' + got.map(function (x) { return '<span class="bs" title="' + esc(x.def.title[ui]) + '">' + x.def.icon + '</span>'; }).join('') + '</div>'
-        : '<p class="muted small">' + esc(t('badgesNone')) + '</p>') + certBox() + '</div>';
+        : '<p class="muted small">' + esc(t('badgesNone')) + '</p>') + certBoxes() + '</div>';
   }
   function badgesCard() {
     var ui = uiLang() === 'de' ? 0 : 1, items = DT.badges.list(ensureProfile(prof()), courseId());
     var got = items.filter(function (x) { return x.at; }).length;
-    var cert = certBox();
+    var cert = certBoxes();
     return '<div class="card section" id="badges"><div class="section-head"><h2>🏅 ' + esc(t('badges')) + '</h2><span class="muted small">' + got + ' / ' + items.length + '</span></div>' +
       '<div class="badge-grid">' + items.map(function (x) {
         var d = x.def, title = d.title[ui], tip = x.at ? t('badgeGot', { d: new Date(x.at).toLocaleDateString(locale(uiLang())) }) : d.hint[ui];
@@ -2211,10 +2304,10 @@
   }
   function viewCertificate(lv) {
     lv = LEVELS.indexOf(lv) >= 0 ? lv : 'A1';
-    if (!levelComplete(lv)) return '<h1>🎓 ' + esc(t('certTitle', { lv: lv })) + '</h1><div class="card empty"><p>' + esc(levelHas(lv) ? t('certBuilding', { lv: lv }) : t('comingSoon')) + '</p></div>';
+    if (!levelComplete(lv) || !DT.catalog.CERT_RULES[lv]) return '<h1>🎓 ' + esc(t('certTitle', { lv: lv })) + '</h1><div class="card empty"><p>' + esc(levelHas(lv) ? t('certBuilding', { lv: lv }) : t('comingSoon')) + '</p></div>';
     var cs = certStatus(lv), p = prof(), cid = courseId(), de = cid === 'de';
     var head = '<div class="crumbs"><a href="#/dashboard">' + esc(t('dashboard')) + '</a></div><h1>🎓 ' + esc(t('certTitle', { lv: lv })) + '</h1>';
-    if (!cs.ok) return head + '<div class="card empty"><p>' + esc(t('certNotYet')) + '</p><p class="muted small">' + esc(t('certEx', { p: cs.exPct }) + ' · ' + t('certWords', { p: cs.wPct })) + '</p><a class="btn primary" href="#/dashboard">' + esc(t('continueLearning')) + ' →</a></div>';
+    if (!cs.ok) return head + '<div class="card empty"><p>' + esc(t('certNotYet')) + '</p>' + certBox(lv) + '<a class="btn primary" href="#/dashboard">' + esc(t('continueLearning')) + ' →</a></div>';
     setTimeout(function () { renderCertCanvas(lv); }, 0);
     return head + '<p class="muted">' + esc(t('certIntro')) + '</p>' +
       '<div class="card section"><div class="field"><label for="cert-name">' + esc(t('certName')) + '</label><input id="cert-name" class="input" maxlength="40" value="' + esc(p.name || '') + '" data-act="cert-name"></div>' +
@@ -2509,7 +2602,7 @@
     if (wta && wst && wta.getAttribute('data-id') === wst.id) wta.value = wst.text || '';   // per value, damit ein führender Zeilenumbruch bleibt
     if (player && !player.done && !player.checked) {
       var it = curEx();
-      if (it && it.ex.say && (it.ex.t === 'listen' || it.ex.t === 'dictation') && player.autoKey !== it.id + '@' + player.idx) {
+      if (it && it.ex.say && (it.ex.t === 'listen' || it.ex.t === 'dictation' || it.ex.t === 'respond') && player.autoKey !== it.id + '@' + player.idx) {
         player.autoKey = it.id + '@' + player.idx; setTimeout(function () { speak(it.ex.say, course().tts, { auto: true }); }, 250);
       }
       if (it && it.ex && it.ex.role && it.ex.ctx.length && player.autoKey !== it.id + '@' + player.idx) {   // letzte Kontextzeile spielt einmal automatisch
@@ -2628,7 +2721,8 @@
       case 'mic': if (player && !player.checked) {
         if (!db.micInfoSeen) { player.cur.micInfo = true; rerenderPlayerOnly(); break; }
         var pc = player.cur; pc.listening = true; pc.micError = null; rerenderPlayerOnly();
-        startListening(function (alts) { pc.listening = false; pc.heardAlts = alts; pc.heard = alts[0]; doCheck(); },
+        var rsp = curEx(), isResp = rsp && rsp.ex.t === 'respond';   // respond: erkannter Text wird nur angezeigt, nicht bewertet (ADR-12.8)
+        startListening(function (alts) { pc.listening = false; pc.heardAlts = alts; pc.heard = alts[0]; if (isResp) rerenderPlayerOnly(); else doCheck(); },
           function (err) { pc.listening = false; pc.micError = err; rerenderPlayerOnly(); });
       } break;
       case 'self-ok': if (player && !player.checked) { player.cur.selfOk = true; doCheck(); } break;

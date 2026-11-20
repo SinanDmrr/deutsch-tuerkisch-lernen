@@ -1169,6 +1169,94 @@ test('Wortschatz je Niveau (ADR-11.3)', () => {
   eq(V.index(KK)['de-a2.w001'].level, 'A2', 'index: Niveau A2');
 });
 
+/* ================= respond (ADR-12.8), Fertigkeiten, Zertifikat A2, A2-Abzeichen ================= */
+test('respond: ungewertet, Bewertung, Format-Prüfung', () => {
+  const C = DT.check, R = { id: 'de-a2-03.99', t: 'respond', say: 'Was hast du gemacht?', q: 'Antworte.', models: ['Ich habe gelesen.'], modelsN: ['Okudum.'], chunks: ['Ich habe …'], e: 'x' };
+  ok(!C.isCountable(R) && !C.isCountable({ t: 'speak' }) && !C.isCountable({ t: 'write' }), 'respond/speak/write zählen nicht');
+  ok(C.isCountable({ t: 'mc' }) && C.isCountable({ t: 'cloze' }) && C.isCountable({ t: 'listen' }), 'gewertete Typen zählen');
+  ok(C.isCountable(null) === false, 'isCountable(null) = false');
+  const r = C.evaluate(R, { heard: 'ich habe gelesen' }, 'de');
+  ok(r.ok === true && r.respond === true && r.given === 'ich habe gelesen' && r.correct === 'Ich habe gelesen.', 'evaluate: immer „geübt“, erkannter Text nur angezeigt');
+  eq(C.evaluate(R, {}, 'de').given, '', 'evaluate ohne Mikrofon: given leer');
+  eq(C.lint(R).errors, [], 'gültige respond-Aufgabe: keine Fehler');
+  eq(C.lint(R).warnings, [], 'gültige respond-Aufgabe: keine Hinweise');
+  const bad = (patch) => C.lint(Object.assign({}, R, patch)).errors.map(x => x[0]);
+  ok(bad({ q: '', say: undefined }).some(m => /Frage fehlt/.test(m)), 'ohne q und say → Fehler');
+  ok(bad({ models: [] }).some(m => /models/.test(m)) && bad({ models: undefined, modelsN: undefined }).some(m => /models/.test(m)), 'ohne models → Fehler');
+  ok(bad({ models: [''] }).some(m => /models/.test(m)), 'leere Musterantwort → Fehler');
+  ok(bad({ modelsN: ['a', 'b'] }).some(m => /modelsN/.test(m)), 'modelsN-Länge ≠ models → Fehler');
+  ok(bad({ chunks: 'x' }).some(m => /chunks/.test(m)), 'chunks keine Liste → Fehler');
+  ok(bad({ e: '' }).some(m => /\be\b/.test(m)), 'ohne e → Fehler');
+  ok(C.lint(Object.assign({}, R, { say: undefined })).warnings.some(m => /say/.test(m[0])), 'ohne say → Hinweis (nur q)');
+  ok(C.lint(Object.assign({}, R, { say: 'Um 8 Uhr?' })).warnings.some(m => /Ziffern/.test(m[0])), 'Ziffern in say → Hinweis');
+  eq(bad({ modelsN: undefined, chunks: undefined }), [], 'modelsN und chunks optional');
+});
+
+function skillFixture() {
+  const K = { courses: { de: { levels: { A1: [['de-a1-01', 'Thema', 'Konu']], A2: [['de-a2-01', 'Perfekt', 'Perfekt']] } } }, content: {}, dialogs: {}, texts: {}, writes: {} };
+  K.content['de-a1-01'] = { exercises: [{ id: 'de-a1-01.1', t: 'mc' }] };
+  K.content['de-a2-01'] = { exercises: [
+    { id: 'g1', t: 'mc' }, { id: 'g2', t: 'gap' }, { id: 'g3', t: 'listen' }, { id: 'g4', t: 'speak' }, { id: 'g5', t: 'respond' }] };
+  K.dialogs['de-a2-d01'] = { level: 'A2', title: 'D', sub: 'D', lines: [], questions: [{ id: 'd1', t: 'mc' }, { id: 'd2', t: 'mc' }] };
+  K.texts['de-a2-r01'] = { level: 'A2', kind: 'read', title: 'R', sub: 'R', questions: [{ id: 'r1', t: 'mc' }, { id: 'r2', t: 'gap' }] };
+  K.texts['de-a2-h01'] = { level: 'A2', kind: 'listen', title: 'H', sub: 'H', questions: [{ id: 'h1', t: 'mc' }] };
+  K.writes['de-a2-s01'] = { id: 'de-a2-s01', key: 'de-a2' }; K.writes['de-a2-s02'] = { id: 'de-a2-s02', key: 'de-a2' };
+  DT.catalog.register(K, {});
+  return K;
+}
+test('catalog: skillOf (Fertigkeiten je Niveau, nur berechnet)', () => {
+  const K = skillFixture(), CAT = DT.catalog;
+  const pr = { g1: { s: 'c' }, g2: { s: 'w' }, g3: { s: 'c' }, g4: { s: 'c' }, d1: { s: 'c' }, r1: { s: 'w' }, h1: { s: 'c' }, 'de-a2-s01': { s: 'c' }, 'de-a1-01.1': { s: 'c' } };
+  const before = JSON.stringify(pr);
+  const sk = CAT.skillOf(K, 'de', 'A2', pr);
+  eq(sk.grammar, { n: 2, c: 1, w: 1 }, 'Grammatik: mc+gap im Thema');
+  eq(sk.listen, { n: 2, c: 2, w: 0 }, 'Hören: listen im Thema + Hörtext-Frage');
+  eq(sk.read, { n: 2, c: 0, w: 1 }, 'Lesen: Lesetext-Fragen');
+  eq(sk.dialog, { n: 2, c: 1, w: 0 }, 'Dialoge');
+  eq(sk.speak, { n: 2, done: 1 }, 'Sprechen: speak + respond, geübt');
+  eq(sk.write, { n: 2, done: 1 }, 'Schreiben: Standard = prog richtig');
+  eq(CAT.skillOf(K, 'de', 'A2', pr, { writeDone: () => false }).write.done, 0, 'writeDone von außen (Status mit Text)');
+  eq(CAT.skillOf(K, 'de', 'A2', pr, { skip: { 'de-a2-01': true } }).grammar.n, 0, 'übersprungenes Thema fällt heraus');
+  eq(CAT.skillOf(K, 'de', 'A1', pr).grammar, { n: 1, c: 1, w: 0 }, 'A1 getrennt von A2');
+  eq(JSON.stringify(pr), before, 'prog unverändert (nichts gespeichert)');
+  eq(CAT.skillOf(K, 'de', 'B1', {}).grammar.n, 0, 'leeres Niveau → 0');
+});
+test('catalog: certCheck A1 (Regression) und A2 (ADR-11.6)', () => {
+  const CAT = DT.catalog, A1 = CAT.CERT_RULES.A1, A2 = CAT.CERT_RULES.A2;
+  eq(A1, { ex: 0.8, words: 0.7 }, 'A1-Regel unverändert');
+  ok(CAT.certCheck(A1, { c: 8, n: 10, wk: 7, wn: 10 }).ok, 'A1: 80 %/70 % genau auf der Grenze → ok');
+  ok(!CAT.certCheck(A1, { c: 7, n: 10, wk: 10, wn: 10 }).ok, 'A1: 70 % Aufgaben → nein');
+  ok(!CAT.certCheck(A1, { c: 0, n: 0, wk: 0, wn: 0 }).ok, 'A1: keine Aufgaben → nein');
+  ok(CAT.certCheck(A1, { c: 9, n: 10, wk: 0, wn: 0 }).ok, 'A1: ohne Wörter zählt nur Aufgaben (wie bisher)');
+  const sk = (g, r, l, d, wd, wn) => ({ grammar: { n: 10, c: g }, read: { n: 10, c: r }, listen: { n: 10, c: l }, dialog: { n: 10, c: d }, write: { n: wn, done: wd }, speak: { n: 5, done: 0 } });
+  const base = { c: 85, n: 100, wk: 70, wn: 100 };
+  ok(CAT.certCheck(A2, Object.assign({ skills: sk(6, 6, 6, 6, 6, 10) }, base)).ok, 'A2: alle Bereiche 60 %, 6/10 Schreiben, Sprechen egal → ok');
+  const low = CAT.certCheck(A2, Object.assign({ skills: sk(10, 10, 5, 10, 10, 10) }, base));
+  ok(!low.ok && !low.skills.listen.ok && low.skills.grammar.ok, 'A2: Hören 50 % → nein (nicht nur über Grammatik)');
+  eq(low.skills.listen, { p: 50, n: 10, need: 60, ok: false }, 'A2: Bereichsdetails');
+  ok(!CAT.certCheck(A2, Object.assign({ skills: sk(10, 10, 10, 10, 5, 10) }, base)).ok, 'A2: 5 Schreibaufgaben → nein');
+  eq(CAT.certCheck(A2, Object.assign({ skills: sk(10, 10, 10, 10, 3, 3) }, base)).writes, { done: 3, n: 3, need: 3, ok: true }, 'A2: weniger als 6 Schreibaufgaben vorhanden → alle nötig');
+  ok(!CAT.certCheck(A2, Object.assign({}, base, { c: 79, skills: sk(10, 10, 10, 10, 10, 10) })).ok, 'A2: 79 % gesamt → nein');
+  const noRead = sk(10, 0, 10, 10, 10, 10); noRead.read = { n: 0, c: 0 };
+  ok(CAT.certCheck(A2, Object.assign({ skills: noRead }, base)).ok, 'A2: Bereich ohne Aufgaben entfällt');
+  ok(!CAT.certCheck(A2, Object.assign({}, base)).ok, 'A2: ohne Fertigkeitszahlen keine Freigabe (Schreiben fehlt)');
+});
+test('badges: A2-Abzeichen (neue IDs, alte unverändert, aus Fortschritt abgeleitet)', () => {
+  const B = DT.badges, ids = B.LIST.map(b => b.id);
+  eq(ids.slice(0, 14), ['first-step', 'first-topic', 'topics-5', 'fixer-10', 'dialog-1', 'dialogs-all', 'words-50', 'words-150', 'words-a1', 'streak-3', 'streak-7', 'streak-30', 'goal-10', 'cert-A1'], 'bestehende IDs unverändert und in Reihenfolge');
+  eq(ids.length, new Set(ids).size, 'IDs eindeutig');
+  ['a2-topic-1', 'a2-write-1', 'a2-listen-10', 'a2-speak-5', 'words-a2', 'cert-A2'].forEach(id => ok(ids.includes(id), 'neu: ' + id));
+  ok(B.LIST.every(b => b.title.length === 2 && b.hint.length === 2 && b.title.every(Boolean) && b.hint.every(Boolean)), 'Titel/Hinweis DE+TR');
+  const p = { badges: {} };
+  eq(B.award(p, 'de', {}, 1).map(b => b.id), [], 'leerer Kontext (ohne a2) → nichts, keine Ausnahme');
+  const ctx = { a2: { topicsDone: 1, writesDone: 1, listenOk: 10, speakDone: 5, wordsKnown: 600, wordsTotal: 600, complete: false }, cert: { A1: false, A2: false } };
+  eq(B.award(p, 'de', ctx, 2).map(b => b.id), ['a2-topic-1', 'a2-write-1', 'a2-listen-10', 'a2-speak-5'], 'A2-Abzeichen; Wörter erst bei vollständigem A2');
+  ctx.a2.complete = true; ctx.cert.A2 = true;
+  eq(B.award(p, 'de', ctx, 3).map(b => b.id), ['words-a2', 'cert-A2'], 'nach Freigabe: alle Wörter + Zertifikat');
+  eq(p.badges['de:a2-topic-1'], 2, 'Zeitstempel bleibt (nie entzogen/überschrieben)');
+  eq(B.award(p, 'tr', { a2: { listenOk: 9 } }, 4).map(b => b.id), [], 'pro Kurs getrennt, Grenze 10');
+});
+
 (async () => {
   for (const [name, fn] of asyncTests) {
     current = name;

@@ -123,7 +123,7 @@ function checkSpelling(e) {
   });
 }
 
-// cloze/sort: Format-Prüfung liegt in js/core/check.js (DT.check.lint, rein und in tools/test-core.js getestet)
+// cloze/sort/respond: Format-Prüfung liegt in js/core/check.js (DT.check.lint, rein und in tools/test-core.js getestet)
 function lintNew(e) {
   const r = CHK.lint(e);
   r.errors.forEach(m => err(m[0], e.id, m[1] == null ? '' : m[1]));
@@ -156,7 +156,7 @@ function checkExercise(e, where) {
       const r = e.p.map(x => x[1]); if (new Set(r).size !== r.length) err('Zuordnung doppelt', e.id);
       break;
     }
-    case 'cloze': case 'sort': lintNew(e); break;
+    case 'cloze': case 'sort': case 'respond': lintNew(e); break;
     case 'speak': if (!e.say) err('speak ohne say', e.id); break;
     default: err('unbekannter Typ', e.t, e.id);
   }

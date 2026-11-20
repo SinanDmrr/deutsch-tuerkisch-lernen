@@ -329,6 +329,10 @@ a.topic-card:hover { border-color: var(--primary); transform: translateY(-1px); 
 .say-box { font-size: 1.35rem; font-weight: 700; padding: 14px 16px; background: var(--surface-2); border-radius: 12px; margin-bottom: 12px; border: 2px solid transparent; }
 .say-box.right { border-color: var(--ok); } .say-box.wrong { border-color: var(--bad); }
 .mic-btn { font-size: 1.05rem; padding: 12px 20px; }
+/* respond (ADR-12.8): Redemittel als ruhige Bausteine, erkannter Text nur zur Info */
+.rs-chunks { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 4px 0 14px; }
+.rs-chunk { padding: 4px 10px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border, var(--surface-3)); font-size: .95rem; }
+.rs-heard { margin-top: 10px; overflow-wrap: anywhere; }
 .mic-btn.on { background: var(--bad); color: #fff; border-color: var(--bad); animation: m-breathe 1s ease-in-out infinite; }
 .audio-bar { display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 16px; }
 .audio-main { font-size: 1.05rem; padding: 12px 20px; }
@@ -621,3 +625,14 @@ footer.foot { max-width: 1040px; margin: 0 auto; padding: 0 16px 40px; color: va
 .reset-box { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); }
 .check-row { display: flex; gap: 10px; align-items: center; cursor: pointer; min-height: 44px; }
 .check-row + p { margin-top: 2px; }
+
+/* Fertigkeits-Balken je Niveau (A2-Konzept §8) – nur eigene Zahlen */
+.skills { display: grid; gap: 8px; margin: 6px 0 12px; }
+.sk-row { display: grid; grid-template-columns: minmax(7.5rem, 10rem) 1fr minmax(5.5rem, auto); gap: 10px; align-items: center; }
+.sk-l { font-weight: 600; font-size: .95rem; white-space: nowrap; }
+.sk-n { text-align: right; white-space: nowrap; }
+.cert-soon { margin: 10px 0 0; }
+@media (max-width: 480px) {
+  .sk-row { grid-template-columns: 1fr auto; row-gap: 4px; }
+  .sk-row .bar { grid-column: 1 / -1; grid-row: 2; }
+}

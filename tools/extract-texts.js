@@ -23,6 +23,7 @@ const plain = s => String(s || '').replace(/\*\*|\*/g, '').trim();   // identisc
 function addEx(ex, set) {
   if ((ex.t === 'gap' || ex.t === 'order' || ex.t === 'dictation') && ex.a && ex.a[0]) set.add(plain(ex.a[0]));
   if (ex.say) set.add(plain(ex.say));
+  if (ex.t === 'respond') (ex.models || []).forEach(m => set.add(plain(m)));   // ADR-12.8: Musterantworten vorlesen
 }
 const out = {}, extraOut = {};
 // Stimm-Plätze je Sprache aus der Konfiguration (wie die App sie aus manifest.voices ableitet): female, male, dann Extra-Plätze

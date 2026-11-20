@@ -18,7 +18,7 @@
     { id: 'dialog-1', scope: 'course', icon: '💬', test: function (c) { return c.dialogsDone >= 1; },
       title: ['Erstes Gespräch', 'İlk sohbet'], hint: ['Beantworte alle Fragen zu einem Dialog richtig.', 'Bir diyaloğun bütün sorularını doğru cevapla.'] },
     { id: 'dialogs-all', scope: 'course', icon: '🗣️', test: function (c) { return c.dialogsAll > 0 && c.dialogsDone >= c.dialogsAll; },
-      title: ['Alltag gemeistert', 'Gündelik hayat cepte'], hint: ['Schließe alle Alltagsdialoge ab.', 'Bütün günlük diyalogları bitir.'] },
+      title: ['Alltag gemeistert', 'Gündelik hayat cepte'], hint: ['Schließe alle A1-Alltagsdialoge ab.', 'A1’in bütün günlük diyaloglarını bitir.'] },
     { id: 'words-50', scope: 'course', icon: '🧩', test: function (c) { return c.wordsKnown >= 50; },
       title: ['50 Wörter sicher', '50 kelime oturdu'], hint: ['Bringe 50 Wörter ins Fach „sicher“.', '50 kelimeyi “oturdu” kutusuna taşı.'] },
     { id: 'words-150', scope: 'course', icon: '🧠', test: function (c) { return c.wordsKnown >= 150; },
@@ -34,7 +34,20 @@
     { id: 'goal-10', scope: 'all', icon: '🎯', test: function (c) { return c.goalDays >= 10; },
       title: ['Zehn Zieltage', 'On hedef günü'], hint: ['Erreiche an 10 Tagen dein Tagesziel (egal wann).', '10 gün günlük hedefine ulaş (ne zaman olursa).'] },
     { id: 'cert-A1', scope: 'course', icon: '🎓', test: function (c) { return !!(c.cert && c.cert.A1); },
-      title: ['A1 abgeschlossen', 'A1 tamamlandı'], hint: ['Erfülle die Bedingungen für das A1-Zertifikat.', 'A1 sertifikasının koşullarını yerine getir.'] }
+      title: ['A1 abgeschlossen', 'A1 tamamlandı'], hint: ['Erfülle die Bedingungen für das A1-Zertifikat.', 'A1 sertifikasının koşullarını yerine getir.'] },
+    // A2 (Phase 5, A2-Konzept §9): sanft, nur aus dem eigenen Fortschritt abgeleitet; c.a2 liefert badgeCtx() in app.js
+    { id: 'a2-topic-1', scope: 'course', icon: '🌿', test: function (c) { return !!c.a2 && c.a2.topicsDone >= 1; },
+      title: ['Erstes A2-Thema', 'İlk A2 konusu'], hint: ['Löse alle Aufgaben eines A2-Themas richtig.', 'Bir A2 konusunun bütün alıştırmalarını doğru çöz.'] },
+    { id: 'a2-write-1', scope: 'course', icon: '✉️', test: function (c) { return !!c.a2 && c.a2.writesDone >= 1; },
+      title: ['Erste Nachricht geschrieben', 'İlk mesajını yazdın'], hint: ['Schreib deine erste A2-Nachricht und geh die Checkliste durch.', 'İlk A2 mesajını yaz ve kontrol listesini tamamla.'] },
+    { id: 'a2-listen-10', scope: 'course', icon: '👂', test: function (c) { return !!c.a2 && c.a2.listenOk >= 10; },
+      title: ['Gut zugehört', 'Kulağın alıştı'], hint: ['Beantworte 10 A2-Höraufgaben richtig.', '10 A2 dinleme sorusunu doğru cevapla.'] },
+    { id: 'a2-speak-5', scope: 'course', icon: '🎙️', test: function (c) { return !!c.a2 && c.a2.speakDone >= 5; },
+      title: ['Mutig gesprochen', 'Cesurca konuştun'], hint: ['Mach 5 A2-Sprechübungen – laut, in deinem Tempo.', '5 A2 konuşma alıştırması yap – sesli ve kendi hızında.'] },
+    { id: 'words-a2', scope: 'course', icon: '🎖️', test: function (c) { return !!c.a2 && c.a2.complete && c.a2.wordsTotal > 0 && c.a2.wordsKnown >= c.a2.wordsTotal; },
+      title: ['Alle A2-Wörter', 'Bütün A2 kelimeleri'], hint: ['Alle A2-Wörter sitzen sicher.', 'A2’nin bütün kelimeleri otursun.'] },
+    { id: 'cert-A2', scope: 'course', icon: '🎓', test: function (c) { return !!(c.cert && c.cert.A2); },
+      title: ['A2 abgeschlossen', 'A2 tamamlandı'], hint: ['Erfülle die Bedingungen für das A2-Zertifikat.', 'A2 sertifikasının koşullarını yerine getir.'] }
   ];
 
   function key(b, cid) { return b.scope === 'course' ? cid + ':' + b.id : b.id; }

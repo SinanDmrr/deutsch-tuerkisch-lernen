@@ -132,5 +132,70 @@
   // „Schwer“ (ADR-12.1): Fragen zu Lese-/Hörtexten gehören nicht in den 5-Minuten-Tagesmix
   function isHeavy(K, topicId) { var c = K.content && K.content[topicId]; return !!c && (c.kind === 'read' || c.kind === 'listen'); }
 
-  DT.catalog = { hasRole: hasRole, dialogLines: dialogLines, roleExercises: roleExercises, checkRoleplay: checkRoleplay, isHeavy: isHeavy, writesOf: writesOf, writeLevel: writeLevel, LEVELS: LEVELS, register: register, topicsOf: topicsOf };
+  /* Fertigkeiten je Niveau (ADR-12.9 skillOf, A2-Konzept §8) – nur aus vorhandenem Fortschritt berechnet, nichts wird gespeichert.
+   * Zuordnung einer Aufgabe: speak/respond → speak (geübt, Bonus); listen/dictation oder Hörtext → listen; Lesetext → read;
+   * Dialog/Rollenspiel → dialog; sonst grammar. Schreibaufgaben (K.writes) → write (geübt).
+   * pr = prog[kurs]; o.skip = { themenId: true } (per Einstufung übersprungen → fällt aus dem Nenner, wie beim Zertifikat);
+   * o.writeDone(id) → true, wenn die Schreibaufgabe „geübt“ ist (Standard: prog-Eintrag richtig).
+   * Ergebnis: { grammar|read|listen|dialog: { n, c, w }, speak|write: { n, done } } */
+  var SKILLS = ['grammar', 'read', 'listen', 'dialog', 'speak', 'write'];
+  function skillKind(ex, kind) {
+    if (!ex) return null;
+    if (ex.t === 'speak' || ex.t === 'respond') return 'speak';
+    if (ex.t === 'write') return 'write';
+    if (kind === 'listen' || ex.t === 'listen' || ex.t === 'dictation') return 'listen';
+    if (kind === 'read') return 'read';
+    if (kind === 'dialog') return 'dialog';
+    return 'grammar';
+  }
+  function skillOf(K, cid, lv, pr, o) {
+    o = o || {}; pr = pr || {};
+    var out = { grammar: { n: 0, c: 0, w: 0 }, read: { n: 0, c: 0, w: 0 }, listen: { n: 0, c: 0, w: 0 }, dialog: { n: 0, c: 0, w: 0 }, speak: { n: 0, done: 0 }, write: { n: 0, done: 0 } };
+    topicsOf(K, cid).forEach(function (tp) {
+      if (tp.level !== lv || !tp.avail || (o.skip && o.skip[tp.id])) return;
+      var kind = tp.data && tp.data.kind;
+      (tp.data.exercises || []).forEach(function (ex) {
+        var k = skillKind(ex, kind), r = pr[ex.id];
+        if (!k || k === 'write') return;
+        if (k === 'speak') { out.speak.n++; if (r && r.s === 'c') out.speak.done++; return; }
+        out[k].n++;
+        if (r) { if (r.s === 'c') out[k].c++; else out[k].w++; }
+      });
+    });
+    writesOf(K, cid, lv).forEach(function (w) {
+      out.write.n++;
+      if (o.writeDone ? o.writeDone(w.id) : !!(pr[w.id] && pr[w.id].s === 'c')) out.write.done++;
+    });
+    return out;
+  }
+
+  /* Zertifikatsregeln je Niveau (A2-Konzept §8, Punkt 11.6 der Abnahme):
+   *   ex = Anteil richtiger gewerteter Aufgaben, words = Anteil Wörter im Fach „sicher“,
+   *   skill = Mindestanteil je Bereich (Bereiche ohne Aufgaben entfallen), writes = Mindestzahl geübter Schreibaufgaben (höchstens alle).
+   * Sprechen ist bewusst keine Bedingung (browserabhängig, ADR-6). Freigabe nur für vollständige Niveaus (complete im Lehrplan, prüft der Aufrufer). */
+  var CERT_RULES = {
+    A1: { ex: 0.8, words: 0.7 },
+    A2: { ex: 0.8, words: 0.7, skill: { grammar: 0.6, read: 0.6, listen: 0.6, dialog: 0.6 }, writes: 6 }
+  };
+  // rule = CERT_RULES[lv]; st = { c, n, wk, wn, skills: skillOf(…) } → { ok, exOk, wOk, skills: { bereich: { p, n, need, ok } }, writes: { done, n, need, ok } | null }
+  function certCheck(rule, st) {
+    rule = rule || CERT_RULES.A1; st = st || {};
+    var sk = st.skills || {};
+    var res = { exOk: st.n > 0 && st.c / st.n >= rule.ex, wOk: !st.wn || st.wk / st.wn >= rule.words, skills: {}, writes: null };
+    var ok = res.exOk && res.wOk && !((rule.skill || rule.writes) && !st.skills);   // Regel mit Bereichen braucht Fertigkeitszahlen
+    Object.keys(rule.skill || {}).forEach(function (k) {
+      var x = sk[k] || { n: 0, c: 0 }, need = rule.skill[k], good = !x.n || x.c / x.n >= need;
+      res.skills[k] = { p: x.n ? Math.round(x.c / x.n * 100) : 0, n: x.n, need: Math.round(need * 100), ok: good };
+      if (!good) ok = false;
+    });
+    if (rule.writes) {
+      var wn = (sk.write && sk.write.n) || 0, wd = (sk.write && sk.write.done) || 0, wneed = Math.min(rule.writes, wn);
+      res.writes = { done: wd, n: wn, need: wneed, ok: wd >= wneed };
+      if (!res.writes.ok) ok = false;
+    }
+    res.ok = ok;
+    return res;
+  }
+
+  DT.catalog = { SKILLS: SKILLS, skillKind: skillKind, skillOf: skillOf, CERT_RULES: CERT_RULES, certCheck: certCheck, hasRole: hasRole, dialogLines: dialogLines, roleExercises: roleExercises, checkRoleplay: checkRoleplay, isHeavy: isHeavy, writesOf: writesOf, writeLevel: writeLevel, LEVELS: LEVELS, register: register, topicsOf: topicsOf };
 })(window.DT = window.DT || {});

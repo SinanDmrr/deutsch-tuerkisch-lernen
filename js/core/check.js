@@ -1,6 +1,6 @@
 /* Antwort-Bewertung (ADR-12.9) – rein, ohne DOM/localStorage, in Node testbar.
  * Aus js/app.js herausgelöst (reine Verschiebung, Verhalten unverändert):
- *   norm/strict/fold/levRatio = Text-Vergleich, evaluate = Bewertung je Übungstyp (mc, listen, gap, dictation, speak, order, match, cloze, sort).
+ *   norm/strict/fold/levRatio = Text-Vergleich, evaluate = Bewertung je Übungstyp (mc, listen, gap, dictation, speak, respond, order, match, cloze, sort).
  * Texte für Hinweise kommen über die Funktion tf(key) von außen (app.js übergibt t), damit hier keine Oberfläche steckt.
  *
  * Schreibaufgaben (gap, dictation) werden STRIKT verglichen: Groß-/Kleinschreibung und Satzzeichen zählen.
@@ -11,9 +11,10 @@
 (function (DT) {
   'use strict';
 
-  // Sprechübungen sind Bonus (ADR-6), Schreibaufgaben Selbstkontrolle ohne Note (ADR-13):
-  // beide zählen nicht in Prozente, Lücken und Wiederholung
-  function isCountable(ex) { return ex && ex.t !== 'speak' && ex.t !== 'write'; }
+  // Sprechübungen (speak, freies Sprechen respond) sind Bonus (ADR-6, ADR-12.8), Schreibaufgaben Selbstkontrolle ohne Note (ADR-13):
+  // sie zählen nicht in Prozente, Lücken und Wiederholung
+  var UNCOUNTED = { speak: 1, write: 1, respond: 1 };
+  function isCountable(ex) { return !!ex && !UNCOUNTED[ex.t]; }
 
   function locale(l) { return l === 'tr' ? 'tr-TR' : 'de-DE'; }
   function norm(s, lang, cs) {
@@ -98,7 +99,7 @@
     };
   }
 
-  // Format-Prüfung für cloze und sort (ADR-12.4/12.5) → { errors:[[Text, Detail?]], warnings:[…] }; vom Validator als Fehler/Hinweise ausgegeben
+  // Format-Prüfung für cloze, sort und respond (ADR-12.4/12.5/12.8) → { errors:[[Text, Detail?]], warnings:[…] }; vom Validator als Fehler/Hinweise ausgegeben
   function lint(e) {
     var errors = [], warnings = [];
     function err(m, d) { errors.push([m, d]); }
@@ -140,6 +141,19 @@
       e.cats.forEach(function (c, i) { if (!e.items.some(function (x) { return x[1] === i; })) err('sort: Kategorie ohne Element', c); });
       texts.forEach(function (x) { if (!e.why || !String(e.why[x] || '').trim()) err('sort: why fehlt für Element', x); });
       Object.keys(e.why || {}).forEach(function (k) { if (texts.indexOf(k) < 0) warn('sort: why-Schlüssel ohne Element', k); });
+    } else if (e.t === 'respond') {   // ADR-12.8: freies Sprechen, ungewertet, ohne Aufnahme
+      var txt = function (x) { return typeof x === 'string' && !!x.trim(); };
+      var list = function (x) { return Array.isArray(x) && x.length > 0 && x.every(txt); };
+      if (!txt(e.q) && !txt(e.say)) err('respond: Frage fehlt (q und/oder say)');
+      if (e.say != null && !txt(e.say)) err('respond: say muss ein nicht leerer Text sein');
+      if (!txt(e.say)) warn('respond: ohne say wird die Frage nicht vorgelesen (empfohlen)');
+      else if (/\d/.test(e.say)) warn('respond: Ziffern in say ausschreiben (Vorlesen)', e.say);
+      if (!list(e.models)) err('respond: models (≥ 1 Musterantwort) fehlt');
+      else if (e.models.length > 3) warn('respond: mehr als 3 Musterantworten', e.models.length);
+      if (e.modelsN != null && (!list(e.modelsN) || !Array.isArray(e.models) || e.modelsN.length !== e.models.length)) err('respond: modelsN muss genauso viele Übersetzungen haben wie models');
+      if (e.chunks != null && !list(e.chunks)) err('respond: chunks muss eine Liste nicht leerer Texte sein');
+      if (!txt(e.e)) err('respond: e (Erklärung) fehlt');
+      ['o', 'a', 'alt'].forEach(function (f) { if (e[f] != null) warn('respond: Feld wird nicht genutzt (ungewertet)', f); });
     }
     return { errors: errors, warnings: warnings };
   }
@@ -164,6 +178,8 @@
       (c.heardAlts || []).forEach(function (h) { var nh = norm(h, lang); targets.forEach(function (tg) { best = Math.max(best, levRatio(nh, tg)); }); });
       return { ok: best >= 0.8, given: c.heard, correct: ex.say, hint: best >= 0.6 ? tf('speakAlmost') : tf('speakRetry') };
     }
+    // respond (ADR-12.8): ungewertet – wer antwortet, hat geübt; erkannter Text wird nur angezeigt
+    if (ex.t === 'respond') return { ok: true, given: c.heard || '', correct: (ex.models || [])[0] || '', hint: null, respond: true };
     if (ex.t === 'order') {
       var sent = c.picked.map(function (i) { return ex.w[i]; }).join(' ');
       var ok2 = ex.a.some(function (a) { return norm(a, lang) === norm(sent, lang); });
