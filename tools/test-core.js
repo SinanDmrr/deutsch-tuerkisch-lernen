@@ -277,7 +277,7 @@ test('storage: Migration v1 → v3 (Fixture)', () => {
   const before = canon(V1);
   const r = storage.migrate(V1, T, TODAY_KEY), d = r.data;
   ok(canon(V1) === before, 'Eingabe unverändert (rein)');
-  ok(r.from === 1 && r.to === 3 && r.changed && !r.newer && d.v === 3, 'from 1 → to 3');
+  ok(r.from === 1 && r.to === 4 && r.changed && !r.newer && d.v === 4, 'from 1 → to 4');
   ok(checkProgKept(V1, d, mapKey) === 12, 'alle 12 prog-Einträge geprüft');
   ok('de-a1-02.4' in d.profiles.p1a2b3.prog.de && !('de-a1-02#3' in d.profiles.p1a2b3.prog.de), '„de-a1-02#3“ → „de-a1-02.4“');
   ok('manuell-ohne-raute' in d.profiles.q9z8y7.prog.tr, 'Schlüssel ohne # bleibt');
@@ -295,7 +295,7 @@ test('storage: Migration v1 → v3 (Fixture)', () => {
 });
 test('storage: Migration v2 → v3 (Fixture)', () => {
   const r = storage.migrate(V2, T, TODAY_KEY), d = r.data;
-  ok(r.from === 2 && d.v === 3, 'from 2');
+  ok(r.from === 2 && d.v === 4, 'from 2');
   ok(checkProgKept(V2, d, k => k) === 11, 'alle 11 prog-Einträge erhalten');
   ['app', 'theme', 'active', 'voices', 'voiceGender', 'micInfoSeen'].forEach(f => eq(d[f], V2[f], 'db.' + f + ' erhalten'));
   checkV3Shape(d);
@@ -324,14 +324,14 @@ test('storage: Migration idempotent', () => {
   eq(r.srs.de['de-a1-03.2'], [3, T + 7, T, 4, 1], 'vorhandener SRS-Eintrag nicht überschrieben');
   eq(r.daily, a.profiles.k4l5m6.daily, 'daily nicht neu berechnet');
 });
-test('storage: Daten von neuerer App (v:4) bleiben unverändert', () => {
-  const d4 = { v: 4, app: '2027-01-01.1', profiles: { x: { id: 'x', prog: { de: { 'de-a1-01.1': { s: 'w', t: 1 } } }, zukunft: [1, 2] } }, neuesFeld: true };
+test('storage: Daten von neuerer App (v:5) bleiben unverändert', () => {
+  const d4 = { v: 5, app: '2027-01-01.1', profiles: { x: { id: 'x', prog: { de: { 'de-a1-01.1': { s: 'w', t: 1 } } }, zukunft: [1, 2] } }, neuesFeld: true };
   const before = canon(d4), r = storage.migrate(d4, T);
   ok(r.newer === true && r.changed === false, 'Flag newer');
   ok(r.data === d4 && canon(d4) === before, 'gleiches Objekt, unverändert');
 });
 test('storage: Randfälle der Migration', () => {
-  eq(storage.migrate({ profiles: {} }, T).data, { profiles: {}, v: 3 }, 'keine Profile');
+  eq(storage.migrate({ profiles: {} }, T).data, { profiles: {}, v: 4 }, 'keine Profile');
   ok(storage.migrate(null, T).data === null, 'null bleibt null');
   const r = storage.migrate({ v: 2, profiles: { a: { id: 'a', name: 'A', course: 'de' } } }, T).data.profiles.a;
   ok(r.prog && r.srs.de && r.daily.log, 'Profil ohne prog bekommt Struktur');
@@ -383,7 +383,7 @@ test('storage: mergeProfile – Konflikte', () => {
 test('storage: Export v2 → Import = gleicher Stand', () => {
   const src = storage.migrate(V2, T).data.profiles.k4l5m6;
   const ex = storage.exportData(src, '2026-11-18.1', Date.UTC(2026, 10, 18, 12));
-  ok(ex.app === 'deutsch-tuerkce' && ex.v === 2 && ex.schema === 3 && ex.appVersion === '2026-11-18.1', 'Kopf');
+  ok(ex.app === 'deutsch-tuerkce' && ex.v === 2 && ex.schema === 4 && ex.appVersion === '2026-11-18.1', 'Kopf');
   ok(ex.exported === '2026-11-18T12:00:00.000Z', 'exported ISO');
   ex.profile.name = 'geändert'; ok(src.name === 'Leyla', 'Export ist eine Kopie');
   ex.profile.name = 'Leyla';
@@ -416,7 +416,7 @@ test('storage: Import ungültig / zu neu', () => {
   eq(storage.importData(cur, '{kaputt', T), { ok: false, error: 'format' }, 'kein JSON');
   eq(storage.importData(cur, { v: 2, profile: {} }, T), { ok: false, error: 'format' }, 'ohne prog');
   eq(storage.importData(cur, { v: 3, profile: { prog: {} } }, T), { ok: false, error: 'newer' }, 'Exportformat v3');
-  eq(storage.importData(cur, { v: 2, schema: 4, profile: { prog: {} } }, T), { ok: false, error: 'newer' }, 'Schema 4');
+  eq(storage.importData(cur, { v: 2, schema: 5, profile: { prog: {} } }, T), { ok: false, error: 'newer' }, 'Schema 5');
 });
 
 /* ================= storage: Speichern / Quota ================= */
@@ -449,12 +449,248 @@ test('storage: save – Quota-Simulation', () => {
   ok(ls.getItem('dt-backup') === null && ls.getItem('dt-backup-s2') !== null, 'nur dt-backup entfernt, dt-backup-s2 bleibt');
   ls = fakeStorage(100);
   ok(storage.save(ls, db) === false, 'zu klein → false (keine Ausnahme)');
-  const d4 = { v: 4, profiles: {} };
+  const d4 = { v: 5, profiles: {} };
   storage.save(fakeStorage(1e6), d4);
-  ok(d4.v === 4, 'v wird nie gesenkt');
+  ok(d4.v === 5, 'v wird nie gesenkt');
   const d2 = { v: 2, profiles: {} };
   storage.save(fakeStorage(1e6), d2);
-  ok(d2.v === 3, 'v mindestens SCHEMA');
+  ok(d2.v === 4, 'v mindestens SCHEMA');
+});
+
+/* ================= Schema 4: eigene Texte der Schreibaufgaben (ADR-13, Tests 1–12) ================= */
+const V3 = fixture('v3.json'), W4 = fixture('v4-writes.json'), WR = DT.writes;
+test('ADR-13/1: Migration v3 → v4 – alte Felder tief gleich, writes angelegt', () => {
+  const before = canon(V3), r = storage.migrate(V3, T, TODAY_KEY), d = r.data;
+  ok(canon(V3) === before, 'Eingabe unverändert (rein)');
+  ok(r.from === 3 && r.to === 4 && r.changed && !r.newer && d.v === 4, 'from 3 → to 4');
+  Object.keys(V3).filter(k => k !== 'v' && k !== 'profiles').forEach(k => eq(d[k], V3[k], 'db.' + k + ' unverändert'));
+  Object.keys(V3.profiles).forEach(pid => {
+    const o = V3.profiles[pid], n = d.profiles[pid];
+    Object.keys(o).forEach(f => eq(n[f], o[f], `${pid}.${f} tief gleich`));
+    eq(Object.keys(n).filter(f => !(f in o)), ['writes'], `${pid}: nur writes neu`);
+    eq(n.writes, { de: {}, tr: {} }, `${pid}: writes leer je Kurs`);
+  });
+  eq(d.profiles.u1v2w3.unbekanntesFeld, V3.profiles.u1v2w3.unbekanntesFeld, 'unbekanntes Feld bleibt');
+});
+test('ADR-13/2: zweimal migrieren = gleich', () => {
+  const a = storage.migrate(V3, T, TODAY_KEY).data, b = storage.migrate(a, T, TODAY_KEY);
+  ok(!b.changed, 'zweiter Lauf ändert nichts'); eq(b.data, a, 'gleich');
+  eq(storage.migrateProfile(copy(a.profiles.u1v2w3), 3, T), a.profiles.u1v2w3, 'migrateProfile(…, 3) auf v4-Profil = gleich');
+});
+test('ADR-13/3: v von alter App auf 3 gesenkt → vorhandene writes unverändert', () => {
+  const a = storage.migrate(V3, T, TODAY_KEY).data, down = copy(a);
+  down.v = 3;
+  down.profiles.u1v2w3.writes.de['de-a2-s01'] = { x: 'Mein Text', t: 5, n: 1, d: 'Entwurf', dt: 9 };
+  down.profiles.a9b8c7.writes = { tr: { 'tr-a2-s01': { d: 'x', dt: 1 } } };   // de fehlt (z. B. von Hand)
+  const r = storage.migrate(down, T + 3).data;
+  eq(r.profiles.u1v2w3.writes.de['de-a2-s01'], { x: 'Mein Text', t: 5, n: 1, d: 'Entwurf', dt: 9 }, 'Text unverändert');
+  eq(r.profiles.a9b8c7.writes, { tr: { 'tr-a2-s01': { d: 'x', dt: 1 } }, de: {} }, 'fehlender Kurs ergänzt, Rest bleibt');
+  ['prog', 'srs', 'daily', 'skip', 'place', 'badges'].forEach(f => eq(r.profiles.u1v2w3[f], a.profiles.u1v2w3[f], 'gleich: ' + f));
+});
+test('ADR-13/4: v1/v2-Fixtures laufen bis v4', () => {
+  [V1, V2].forEach((F, i) => {
+    const d = storage.migrate(F, T, TODAY_KEY).data;
+    ok(d.v === 4, `v${i + 1} → v4`);
+    Object.values(d.profiles).forEach(p => eq(p.writes, { de: {}, tr: {} }, `v${i + 1}: ${p.id} writes`));
+  });
+});
+test('ADR-13/5: Tests „neuere App“ laufen mit v:5 (siehe oben)', () => {
+  ok(storage.SCHEMA === 4, 'SCHEMA = 4');
+  ok(storage.migrate({ v: 5, profiles: {} }, T).newer === true, 'v:5 → newer');
+  ok(storage.migrate({ v: 4, profiles: {} }, T).newer === false, 'v:4 → nicht newer');
+});
+test('ADR-13/6: mergeProfile – pickWrite (auch Entwurf gegen Abgabe), kein Text geht verloren', () => {
+  const cur = W4.cur, inc = W4.inc, cb = canon(cur), ib = canon(inc);
+  const m = storage.mergeProfile(cur, inc), w = m.writes.de;
+  ok(canon(cur) === cb && canon(inc) === ib, 'Eingaben unverändert');
+  eq(w['de-a2-s01'], { x: 'Fassung Laptop', t: 2500, n: 2, x0: 'Fassung Handy 1', t0: 1000, xk: 'Fassung Handy 2', tk: 2000 }, 's01: neuere Abgabe gewinnt, erste bleibt, Verlierer → xk');
+  eq(w['de-a2-s02'], { x: 'Abgabe Laptop', t: 900, n: 1, xk: 'Entwurf Handy alt', tk: 500 }, 's02: Entwurf älter als Abgabe → kein Entwurf mehr, Text in xk gerettet');
+  eq(w['de-a2-s03'], { x: 'Abgabe Handy', t: 3000, n: 1, d: 'Entwurf Handy neu', dt: 3500, xk: 'Entwurf Laptop alt', tk: 2000 }, 's03: neuerer Entwurf bleibt, älterer gerettet');
+  eq(w['de-a2-s04'], cur.writes.de['de-a2-s04'], 's04: gleiche Fassung → keine Kopie');
+  eq(w['de-a2-s05'], { d: 'nur Laptop', dt: 100 }, 's05: nur auf einer Seite → übernommen');
+  eq(m.writes.tr, inc.writes.tr, 'tr ergänzt');
+  // Vollständigkeit: jeder Text beider Seiten steht im Ergebnis
+  const all = e => ['d', 'x', 'x0', 'xk'].flatMap(f => typeof e[f] === 'string' ? e[f].split(WR.SEP) : []);
+  [cur, inc].forEach(P => Object.keys(P.writes.de).forEach(id => all(P.writes.de[id]).forEach(x => ok(all(w[id]).includes(x), `${id}: „${x.slice(0, 20)}“ erhalten`))));
+  eq(storage.mergeProfile(m, m), m, 'Ergebnis mit sich selbst = unverändert');
+  eq(storage.mergeProfile(m, inc), m, 'erneutes Zusammenführen ändert nichts (idempotent)');
+  const twoK = WR.pick({ x: 'A', t: 5, xk: 'K1', tk: 3 }, { x: 'B', t: 9, xk: 'K2', tk: 4 });
+  eq([twoK.x, twoK.x0, twoK.xk.split(WR.SEP).sort()], ['B', 'A', ['K1', 'K2']], 'zwei xk-Seiten + Verlierer: A = erste Fassung, K1/K2 gerettet');
+  const three = WR.pick({ x: 'A2', t: 5, x0: 'A1', t0: 1, n: 2 }, { x: 'B', t: 9, n: 1 });
+  eq([three.x, three.x0, three.xk], ['B', 'A1', 'A2'], 'Verlierer (nicht erste Fassung) → xk');
+});
+test('ADR-13/7: Export → Import gibt die Texte gleich zurück', () => {
+  const src = storage.migrate(V3, T).data.profiles.u1v2w3;
+  src.writes.de['de-a2-s01'] = { x: 'Liebe Ayla,\n„danke“ – çok güzel!', t: 1794000000000, t0: 1793000000000, x0: 'erste', n: 2, d: 'neu', dt: 1794100000000 };
+  src.writes.tr['tr-a2-s02'] = { d: 'Merhaba, ğüşıöç İ', dt: 1794000000000 };
+  const ex = storage.exportData(src, '2026-11-19.5', Date.UTC(2026, 10, 19));
+  ok(ex.schema === 4, 'Export schema 4');
+  const fresh = storage.migrateProfile({ id: 'neu', prog: { de: {}, tr: {} } }, 1, T);
+  const r = storage.importData(fresh, JSON.stringify(ex), T, TODAY_KEY);
+  ok(r.ok, 'Import ok'); eq(r.profile.writes, src.writes, 'writes gleich');
+  eq(storage.importData(r.profile, ex, T, TODAY_KEY).profile, r.profile, 'zweiter Import ändert nichts');
+});
+test('ADR-13/8: Schema-3-Datei importieren – vorhandene writes bleiben', () => {
+  const cur = storage.migrate(V3, T).data.profiles.u1v2w3;
+  cur.writes.de['de-a2-s01'] = { x: 'mein Text', t: 7, t0: 7, n: 1 };
+  const file = { app: 'deutsch-tuerkce', v: 2, schema: 3, profile: copy(V3.profiles.a9b8c7) };
+  const r = storage.importData(cur, file, T, TODAY_KEY);
+  ok(r.ok, 'Import ok'); eq(r.profile.writes, cur.writes, 'writes unverändert');
+  eq(r.profile.prog.tr['tr-a1-02.4'], V3.profiles.a9b8c7.prog.tr['tr-a1-02.4'], 'Fortschritt der Datei übernommen');
+  const noW = copy(cur); delete noW.writes;
+  eq(storage.importData(noW, file, T, TODAY_KEY).profile.writes, { de: {}, tr: {} }, 'cur ohne writes (alt) → angelegt');
+});
+test('ADR-13/9: Datei mit schema 5 → newer', () => {
+  eq(storage.importData({ prog: {} }, { v: 2, schema: 5, profile: { prog: {}, writes: {} } }, T), { ok: false, error: 'newer' }, 'schema 5');
+});
+test('ADR-13/10: sanitizeIncoming – kürzt, verwirft Nicht-Strings, kappt Zeitstempel', () => {
+  const far = (T + 900) * 86400000, long = 'ä'.repeat(2000);
+  const file = { v: 2, schema: 4, profile: { prog: {}, writes: {
+    de: { 'de-a2-s01': { x: long, t: far, n: 2, d: 42, dt: 'x', x0: 'erste', t0: 5 }, 'de-a2-s02': { d: { boese: 1 } }, 'tr-a2-s01': { x: 'falscher Kurs' },
+      'de-a2-x01': { x: 'falsche ID' }, '__proto__': { x: 'p' }, 'de-a2-s03': 'kein Objekt', 'de-b1-s01': { xk: 'k' + WR.SEP + long, tk: 1 } },
+    tr: { 'tr-a2-s01': { d: 'ok', dt: 3 } }, en: { 'en-a2-s01': { x: 'x' } } } } };
+  const r = storage.importData({ prog: {} }, file, T, TODAY_KEY), w = r.profile.writes;
+  ok(r.ok, 'Import ok');
+  eq(Object.keys(w.de).sort(), ['de-a2-s01', 'de-b1-s01'], 'nur gültige IDs/Einträge mit Text');
+  eq(w.de['de-a2-s01'].x.length, 1500, 'Text auf 1 500 gekürzt');
+  ok(!('d' in w.de['de-a2-s01']) && !('dt' in w.de['de-a2-s01']), 'Nicht-String/Nicht-Zahl verworfen');
+  ok(w.de['de-a2-s01'].t <= (T + 2) * 86400000, 'Zeitstempel gekappt');
+  eq(w.de['de-b1-s01'].xk.split(WR.SEP).map(x => x.length), [1, 1500], 'xk je Teil gekürzt');
+  ok(!('en' in w), 'nur Kurse de/tr'); eq(w.tr, { 'tr-a2-s01': { d: 'ok', dt: 3 } }, 'tr gültig');
+  ok(!Object.prototype.hasOwnProperty.call(w.de, '__proto__') && ({}).x === undefined, 'kein Prototyp verbogen');
+});
+test('ADR-13/11: Budget-Grenze in put/submit', () => {
+  const p = { writes: { de: {}, tr: {} } };
+  let r = WR.put(p, 'de', 'de-a2-s01', 'x'.repeat(1600), 10);
+  ok(r.ok && r.changed && p.writes.de['de-a2-s01'].d.length === 1500, 'Feld auf 1 500 gekürzt');
+  ok(!WR.put(p, 'de', 'de-a2-s01', 'x'.repeat(1600), 11).changed, 'gleicher Text → keine Änderung');
+  for (let i = 2; i <= 67; i++) p.writes.tr['tr-a2-s' + String(i).padStart(2, '0')] = { x: 'y'.repeat(1500), t: 1 };
+  ok(WR.size(p) === 1500 * 67, 'size zählt alle Felder');
+  const before = canon(p);
+  r = WR.put(p, 'de', 'de-a2-s02', 'z'.repeat(100), 12);
+  ok(!r.ok && r.error === 'budget' && canon(p) === before, 'über 100 000 → nicht gespeichert, Profil unverändert');
+  ok(WR.submit(p, 'de', 'de-a2-s02', 'z'.repeat(1000), 12).error === 'budget', 'submit prüft Budget auch');
+  ok(WR.put(p, 'de', 'de-a2-s01', 'kurz', 13).ok, 'Verkleinern geht immer');
+  ok(WR.put(p, 'de', 'de-a2-s01', '', 14).ok && !p.writes.de['de-a2-s01'], 'leerer Entwurf → Eintrag entfernt');
+  // Abgabe: x0 genau einmal, n zählt, Entwurf weg
+  const q = { writes: { de: {}, tr: {} } };
+  WR.put(q, 'de', 'de-a2-s01', 'Entwurf', 1); WR.submit(q, 'de', 'de-a2-s01', 'erste', 2);
+  eq(q.writes.de['de-a2-s01'], { x: 'erste', t: 2, t0: 2, n: 1 }, 'erste Abgabe: kein x0 (gleich x)');
+  WR.submit(q, 'de', 'de-a2-s01', 'zweite', 3); WR.submit(q, 'de', 'de-a2-s01', 'dritte', 4);
+  eq(q.writes.de['de-a2-s01'], { x: 'dritte', t: 4, t0: 2, x0: 'erste', n: 3 }, 'x0 bleibt die erste Fassung');
+  WR.archiveCourse(q, 'de', 5);
+  ok(WR.isArchived(q.writes.de['de-a2-s01']) && WR.status(q.writes.de['de-a2-s01'], null) === '', 'nach Zurücksetzen: Archiv');
+  WR.submit(q, 'de', 'de-a2-s01', 'neu', 6);
+  ok(q.writes.de['de-a2-s01'].xk === 'dritte' && WR.status(q.writes.de['de-a2-s01'], null) === 'submitted', 'Archiv-Text gerettet, neue Abgabe aktuell');
+  eq(WR.countWords('Liebe Ayla, ich kann am 3. Mai leider nicht – sorry!'), 10, 'Wortzähler');
+  eq(WR.missingPoints({ hint: [['danke'], ['weil', 'leider'], ['lust']] }, 'Danke! Leider …', DT.check.fold), [2], 'vergessener Punkt (gefaltet)');
+});
+test('ADR-13/12: Quota-Rücknahme mit fakeStorage', () => {
+  const db = storage.migrate(V3, T).data, p = db.profiles.u1v2w3, base = JSON.stringify(db).length;
+  let ls = fakeStorage(base + 400);
+  let r = WR.commit(ls, db, '', p, 'de', 'de-a2-s01', () => WR.put(p, 'de', 'de-a2-s01', 'kurz', 1));
+  ok(r.ok && JSON.parse(ls.m['dt-data']).profiles.u1v2w3.writes.de['de-a2-s01'].d === 'kurz', 'passt → gespeichert');
+  const progBefore = canon(p.prog);
+  r = WR.commit(ls, db, '', p, 'de', 'de-a2-s01', () => WR.put(p, 'de', 'de-a2-s01', 'x'.repeat(1200), 2));
+  ok(!r.ok && r.error === 'rolledback', 'zu groß → zurückgenommen');
+  eq(p.writes.de['de-a2-s01'].d, 'kurz', 'Objekt zurückgenommen');
+  eq(JSON.parse(ls.m['dt-data']).profiles.u1v2w3.writes.de['de-a2-s01'].d, 'kurz', 'gespeicherter Stand = alter Text');
+  ok(canon(p.prog) === progBefore && canon(JSON.parse(ls.m['dt-data']).profiles.u1v2w3.prog) === progBefore, 'Fortschritt unverändert gespeichert');
+  ls = fakeStorage(50);
+  r = WR.commit(ls, db, '', p, 'de', 'de-a2-s01', () => WR.put(p, 'de', 'de-a2-s01', 'neu', 3));
+  ok(!r.ok && r.error === 'save' && p.writes.de['de-a2-s01'].d === 'kurz', 'auch Rücknahme scheitert → error save (Banner), Objekt zurück');
+});
+
+/* ---------- ADR-13 Review (Architekt): Nachbesserungen ---------- */
+test('ADR-13/R1: Text-Speichern verdrängt dt-backup nie, Fortschritt schon', () => {
+  const db = storage.migrate(V3, T).data, p = db.profiles.u1v2w3, len = JSON.stringify(db).length;
+  const ls = fakeStorage(len * 2 + 300);
+  ok(storage.save(ls, db), 'Ausgangsstand gespeichert');
+  ls.setItem('dt-backup', 'b'.repeat(len - 200));
+  const r = WR.commit(ls, db, '', p, 'de', 'de-a2-s01', () => WR.put(p, 'de', 'de-a2-s01', 'x'.repeat(1400), 1));
+  ok(!r.ok && r.error === 'rolledback', 'Text passt nicht → zurückgenommen');
+  ok(ls.getItem('dt-backup') !== null, 'dt-backup bleibt (Text darf Sicherung nicht verdrängen)');
+  ok(!WR.get(p, 'de', 'de-a2-s01'), 'Objekt zurückgenommen');
+  p.prog.de = p.prog.de || {}; p.prog.de['x.big'] = { s: 'c', t: 1, pad: 'p'.repeat(600) };
+  ok(storage.save(ls, db) === true && ls.getItem('dt-backup') === null, 'Fortschritt: dt-backup darf weichen');
+});
+test('ADR-13/R4: einzelne Fassungen löschen (removePart) und ganzen Text (remove)', () => {
+  const S = WR.SEP, mk = () => ({ writes: { de: { 'de-a2-s01': { x: 'neu', t: 9, x0: 'erst', t0: 1, xk: 'k1' + S + 'k2' + S + 'k3', tk: 5, n: 3 } }, tr: {} } });
+  let p = mk(), r = WR.removePart(p, 'de', 'de-a2-s01', 'xk', 1);
+  ok(r.ok && r.prev.xk.split(S).length === 3, 'ok + prev');
+  eq(p.writes.de['de-a2-s01'].xk, 'k1' + S + 'k3', 'xk-Teil 2 weg, Rest bleibt');
+  WR.removePart(p, 'de', 'de-a2-s01', 'xk', 0); WR.removePart(p, 'de', 'de-a2-s01', 'xk', 0);
+  ok(!('xk' in p.writes.de['de-a2-s01']) && !('tk' in p.writes.de['de-a2-s01']), 'letzter xk-Teil → xk/tk weg');
+  ok(!WR.removePart(p, 'de', 'de-a2-s01', 'xk', 0).ok, 'kein xk mehr → nicht ok');
+  ok(WR.removePart(p, 'de', 'de-a2-s01', 'x0').ok && !('x0' in p.writes.de['de-a2-s01']) && p.writes.de['de-a2-s01'].x === 'neu', 'x0 weg, x bleibt');
+  ok(!WR.removePart(p, 'de', 'de-a2-s01', 'x').ok && p.writes.de['de-a2-s01'].x === 'neu', 'aktuelle Abgabe nicht über removePart');
+  p = mk(); WR.restore(p, 'de', 'de-a2-s01', r.prev); eq(p.writes.de['de-a2-s01'], mk().writes.de['de-a2-s01'], 'restore(prev) stellt her');
+  p = { writes: { de: { 'de-a2-s02': { x: 'alt', t: 5, r: 7, n: 1 } }, tr: {} } };
+  ok(WR.removePart(p, 'de', 'de-a2-s02', 'x').ok && !p.writes.de['de-a2-s02'], 'archivierte Abgabe gelöscht, leerer Eintrag verschwindet');
+  p = mk(); ok(WR.remove(p, 'de', 'de-a2-s01') && !p.writes.de['de-a2-s01'], 'remove: ganzer Text weg');
+  ok(!WR.removePart(p, 'de', 'de-a2-s09', 'x0').ok, 'unbekannte ID → nicht ok');
+});
+test('ADR-13/R5: r robust gegen Uhrabweichung, prog konsistent', () => {
+  // Gerät B (Uhr 1 h vor) setzt den Kurs mit Texten zurück; Gerät A gibt danach (A-Zeit < r von B) neu ab
+  const H = 3600000, b = { x: 'alt', t: 1000, n: 1 };
+  WR.archiveCourse({ writes: { de: { 'de-a2-s01': b }, tr: {} } }, 'de', 5000 + H);
+  ok(b.r === 5000 + H, 'archiveCourse setzt r');
+  const fut = { writes: { de: { 'de-a2-s02': { x: 'zukunft', t: 9e9 } }, tr: {} } };
+  WR.archiveCourse(fut, 'de', 5000);
+  ok(WR.isArchived(fut.writes.de['de-a2-s02']), 'r >= t: Abgabe mit Zukunftszeit wird trotzdem archiviert');
+  const a = { x: 'neu von A', t: 5000 + 60000, n: 2 };
+  let m = WR.pick(a, b);
+  ok(m.x === 'neu von A' && WR.hasCurrent(m) && !('r' in m), 'neue Abgabe von A bleibt aktuell (r von B gilt nicht)');
+  ok(m.x0 === 'alt' && !('xk' in m), 'B-Fassung bleibt (als erste Fassung)');
+  m = WR.pick(b, a); ok(WR.hasCurrent(m) && m.x === 'neu von A', 'Reihenfolge egal');
+  m = WR.pick({ x: 'alt', t: 1000, n: 1 }, b);
+  ok(WR.isArchived(m) && m.r === b.r, 'dieselbe Abgabe (x und t) → r übernommen');
+  m = WR.pick(b, { x: 'alt', t: 1000, n: 1 }); ok(WR.isArchived(m), '… auch umgekehrt');
+  // submit nach übernommenem r (fremde Uhr vor): neue Abgabe ist aktuell
+  const p = { writes: { de: { 'de-a2-s01': copy(b) }, tr: {} } };
+  WR.submit(p, 'de', 'de-a2-s01', 'neuer Text', 5000);
+  const e = p.writes.de['de-a2-s01'];
+  ok(WR.hasCurrent(e) && !('r' in e) && e.x0 === 'alt', 'submit löscht r, alte Abgabe bleibt als erste Fassung');
+  // status: kein „geübt“ ohne aktuellen Text
+  eq(WR.status(b, { s: 'c', t: 1 }), '', 'archiviert + prog c → nicht „geübt“');
+  eq(WR.status(null, { s: 'c', t: 1 }), '', 'kein Text + prog c → nicht „geübt“');
+  eq(WR.status(a, { s: 'c', t: 1 }), 'done', 'aktuell + prog c → geübt');
+  // mergeProfile: A hatte „geübt“, B hat mit Texten zurückgesetzt → prog des archivierten Textes weg, Rest bleibt
+  const pa = { prog: { de: { 'de-a2-s01': { s: 'c', t: 2000 }, 'de-a2-s03': { s: 'c', t: 2000 }, 'x.1': { s: 'c', t: 2000 } } },
+    writes: { de: { 'de-a2-s01': { x: 'alt', t: 1000, n: 1 }, 'de-a2-s03': { x: 'drei', t: 1500, n: 1 } }, tr: {} } };
+  const pb = { prog: { de: {} }, writes: { de: { 'de-a2-s01': copy(b) }, tr: {} } };
+  const mp = storage.mergeProfile(pa, pb);
+  ok(!('de-a2-s01' in mp.prog.de), 'prog des archivierten Textes entfernt');
+  ok(mp.prog.de['de-a2-s03'] && mp.prog.de['x.1'], 'andere prog-Einträge bleiben');
+  ok(WR.isArchived(mp.writes.de['de-a2-s01']), 'Text archiviert, nicht gelöscht');
+  ok(!('de-a2-s01' in storage.mergeProfile(pb, pa).prog.de), 'auch umgekehrt');
+});
+test('ADR-13/R3: Import begrenzt xk-Teile (fremde Daten), leere/doppelte weg', () => {
+  const S = WR.SEP, parts = Array.from({ length: 60 }, (_, i) => 'Teil ' + i);
+  const out = WR.sanitize({ de: { 'de-a2-s01': { x: 'a', t: 1, xk: parts.concat(['Teil 0', ' ', '']).join(S) } } });
+  const xk = out.de['de-a2-s01'].xk.split(S);
+  ok(xk.length === WR.MAX_XK && xk[0] === 'Teil 0', 'höchstens MAX_XK Teile, neueste zuerst');
+  ok(new Set(xk).size === xk.length, 'keine Doppelten');
+  ok(!('xk' in WR.sanitize({ de: { 'de-a2-s01': { x: 'a', xk: S } } }).de['de-a2-s01']), 'nur leere Teile → xk weg');
+  ok(storage.TR_MAX_RAW > 0, 'TR_MAX_RAW für Dateigröße exportiert');
+});
+test('ADR-13/R7: sehr alter Tab stuft zurück → writes aus Sicherung zusammenführen', () => {
+  ok(storage.KEYS.schemaMax === 'dt-schema-max', 'Schlüssel dt-schema-max');
+  const bk = storage.migrate(V3, T).data;
+  bk.profiles.u1v2w3.writes.de['de-a2-s01'] = { x: 'gesichert', t: 5, n: 1 };
+  bk.profiles.u1v2w3.writes.tr['tr-a2-s02'] = { d: 'Entwurf', dt: 6 };
+  const down = copy(V3);                                  // alter Tab: v 3, ohne writes, neuerer Fortschritt
+  down.profiles.u1v2w3.prog.de = Object.assign({}, down.profiles.u1v2w3.prog.de, { 'neu.1': { s: 'c', t: 99 } });
+  const d = storage.migrate(down, T).data;
+  d.profiles.u1v2w3.writes.de['de-a2-s03'] = { d: 'nur hier', dt: 7 };
+  ok(storage.mergeWrites(d, bk) === Object.keys(bk.profiles).length, 'alle Profile der Sicherung');
+  eq(d.profiles.u1v2w3.writes.de['de-a2-s01'], { x: 'gesichert', t: 5, n: 1 }, 'Text aus Sicherung zurück');
+  eq(d.profiles.u1v2w3.writes.tr['tr-a2-s02'], { d: 'Entwurf', dt: 6 }, 'Entwurf aus Sicherung zurück');
+  eq(d.profiles.u1v2w3.writes.de['de-a2-s03'], { d: 'nur hier', dt: 7 }, 'vorhandener Text bleibt');
+  ok(d.profiles.u1v2w3.prog.de['neu.1'], 'neuerer Fortschritt des alten Tabs bleibt');
+  const again = copy(d); storage.mergeWrites(again, bk); eq(again, d, 'idempotent');
+  eq(storage.mergeWrites(d, null), 0, 'ohne Sicherung: nichts');
+  const solo = { profiles: { zz: { prog: {} } } }; storage.mergeWrites(solo, bk); eq(solo, { profiles: { zz: { prog: {} } } }, 'unbekannte Profile werden nicht angelegt');
 });
 
 test('„Kenne ich schon“ zählt erst nach einer echten Abfrage als sicher (QA M3)', () => {
@@ -577,9 +813,9 @@ test('storage: transferCode erkennt Link mit Satzzeichen dahinter', () => {
   eq(storage.transferCode('dt1.AbC\n-_9 '), 'dt1.AbC-_9', 'Umbruch im Code');
 });
 atest('storage: Übertragungscode von neuerer App wird abgelehnt (wie Datei)', async () => {
-  const code = 'dt0.' + b64u(JSON.stringify({ v: 2, schema: 4, profile: { prog: {} } }));
+  const code = 'dt0.' + b64u(JSON.stringify({ v: 2, schema: 5, profile: { prog: {} } }));
   const u = await storage.unpackTransfer(code);
-  eq(storage.importData(storage.migrate(V2, T).data.profiles.k4l5m6, u.data, T, TODAY_KEY), { ok: false, error: 'newer' }, 'Schema 4 → newer');
+  eq(storage.importData(storage.migrate(V2, T).data.profiles.k4l5m6, u.data, T, TODAY_KEY), { ok: false, error: 'newer' }, 'Schema 5 → newer');
 });
 
 /* ================= check / catalog (ADR-12.9, Schritt 2) =================

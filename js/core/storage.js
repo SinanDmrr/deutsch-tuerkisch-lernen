@@ -6,12 +6,15 @@
  * Schema-Verlauf:
  *   1 → 2  Fortschritt hing an der Position („thema#3“), jetzt an der festen Aufgaben-ID („thema.4“)
  *   2 → 3  pro Profil: srs, skip, place, badges, daily (Startwert aus Zeitstempeln), offene Fehler → SRS
+ *   3 → 4  pro Profil: leeres Feld writes = { de:{}, tr:{} } für eigene Texte der Schreibaufgaben (ADR-13), rein additiv
  */
 (function (DT) {
   'use strict';
-  var SCHEMA = 3;
+  var SCHEMA = 4;
   var COURSES = ['de', 'tr'];
-  var KEYS = { data: 'dt-data', backup: 'dt-backup', backupS2: 'dt-backup-s2' };
+  // schemaMax: höchstes Schema, das eine App in diesem Browser je geschrieben hat. Ist dt-data.v kleiner, hat ein sehr
+  // alter Tab (ohne newerData-Schutz) die Daten zurückgestuft → dt-backup nicht überschreiben, writes daraus retten.
+  var KEYS = { data: 'dt-data', backup: 'dt-backup', backupS2: 'dt-backup-s2', schemaMax: 'dt-schema-max' };
   var EXPORT_APP = 'deutsch-tuerkce';
   var LOG_GOAL = 10;                                      // Ziel für aus Zeitstempeln rekonstruierte Tage
 
@@ -75,6 +78,10 @@
         });
       });
     }
+    if (fromV < 4) {                       // idempotent, rein additiv (ADR-13): vorhandene Texte bleiben unverändert
+      p.writes = obj(p.writes) ? p.writes : {};
+      COURSES.forEach(function (c) { if (!obj(p.writes[c])) p.writes[c] = {}; });
+    }
     return p;
   }
 
@@ -126,10 +133,36 @@
     return (tb || 0) > (ta || 0) ? clone(b) : a;
   };
 
-  /** Zwei Profile zusammenführen (ADR-1). Rein, gibt ein neues Profil zurück. Beide sollten Schema 3 haben.
+  /** Nach dem Zusammenführen: „geübt“ (prog) einer Schreibaufgabe, deren Abgabe archiviert ist (anderes Gerät hat den
+   *  Kurs mit Texten zurückgesetzt), ist veraltet → entfernen. Sonst stünde „geübt“ ohne aktuellen Text da. VERÄNDERT p. */
+  function dropStalePractice(p) {
+    if (!obj(p.writes) || !obj(p.prog)) return;
+    each(p.writes, function (c, m) {
+      if (!obj(p.prog[c])) return;
+      each(m, function (id, e) { if (DT.writes.isArchived(e) && (id in p.prog[c])) delete p.prog[c][id]; });
+    });
+  }
+
+  /** Eigene Texte aus src (z. B. dt-backup) in die Profile von d übernehmen (je Profil-ID, DT.writes.pick).
+   *  Für den Fall, dass ein sehr alter Tab dt-data ohne writes zurückgeschrieben hat. VERÄNDERT d. → Zahl der Profile. */
+  function mergeWrites(d, src) {
+    var n = 0;
+    if (!obj(d) || !obj(d.profiles) || !obj(src) || !obj(src.profiles)) return 0;
+    each(src.profiles, function (pid, sp) {
+      var p = d.profiles[pid];
+      if (!obj(p) || !obj(sp) || !obj(sp.writes)) return;
+      p.writes = byCourse(obj(p.writes) ? p.writes : {}, sp.writes, function (a, b) { return mergeMap(a, b, DT.writes.pick); });
+      COURSES.forEach(function (c) { if (!obj(p.writes[c])) p.writes[c] = {}; });
+      n++;
+    });
+    return n;
+  }
+
+  /** Zwei Profile zusammenführen (ADR-1). Rein, gibt ein neues Profil zurück. Beide sollten Schema 4 haben.
    *  prog: neueres t gewinnt · srs: größeres last, bei Gleichstand mehr reps · daily.log: je Tag Maximum
    *  (Ziel des Tages aus cur) · daily.goal bleibt · skip/badges: Vereinigung, früherer Zeitstempel ·
-   *  place: neueres t · last: Maximum je Kurs · id/name/course/created bleiben · unbekannte Felder aus inc
+   *  place: neueres t · last: Maximum je Kurs · writes: DT.writes.pick je Kurs und ID (kein Text geht verloren, ADR-13) ·
+   *  id/name/course/created bleiben · unbekannte Felder aus inc
    *  werden übernommen, wenn cur sie nicht hat (nichts geht verloren). */
   function mergeProfile(cur, inc) {
     var out = clone(cur) || {};
@@ -140,6 +173,11 @@
     out.badges = mergeMap(out.badges, inc.badges, pickEarlier);
     out.place = mergeMap(out.place, inc.place, pickLater);
     out.last = mergeMap(out.last, inc.last, function (a, b) { return Math.max(a || 0, b || 0); });
+    // Eigene Texte: eigene Regel, sonst würde die Zeile „unbekannte Felder“ unten sie verwerfen, sobald beide Seiten writes haben
+    if (obj(inc.writes)) {
+      out.writes = byCourse(out.writes, inc.writes, function (a, b) { return mergeMap(a, b, DT.writes.pick); });
+      dropStalePractice(out);
+    }
     if (obj(inc.daily) || obj(out.daily)) {
       var d = obj(out.daily) ? out.daily : {}, di = obj(inc.daily) ? inc.daily : {};
       out.daily = { goal: d.goal || di.goal || LOG_GOAL, log: mergeMap(d.log, di.log, pickLog) };
@@ -197,6 +235,7 @@
       if (obj(r)) { if ('t' in r) { if (num(r.t)) r.t = cap(r.t); else delete r.t; } return r; }
       return r === true ? r : undefined;
     }) || {};
+    if ('writes' in inc) inc.writes = DT.writes.sanitize(inc.writes, cap);
     if ('last' in inc) inc.last = courses(inc.last, function (x) { return num(x) ? cap(x) : undefined; });
     if ('daily' in inc) {
       if (!obj(inc.daily)) delete inc.daily;
@@ -228,8 +267,9 @@
     } else {
       inc = migrateProfile(clone(d.profile), d.schema || SCHEMA, t);
     }
-    // cur auf Schema 3 sicherstellen (idempotent; ändert ein bereits migriertes Profil nicht)
-    var base = migrateProfile(clone(cur) || {}, 2, t);
+    // cur auf das aktuelle Schema sicherstellen (ADR-13): SCHEMA - 1 statt einer festen Zahl, damit bei jedem Schema-Wechsel
+    // der jeweils letzte Schritt (idempotent, ergänzt nur Fehlendes) mitläuft. Profile in der App sind schon migriert.
+    var base = migrateProfile(clone(cur) || {}, SCHEMA - 1, t);
     return { ok: true, profile: mergeProfile(base, sanitizeIncoming(inc, t)), from: fileV };
   }
 
@@ -309,13 +349,15 @@
   }
   /** Speicherstand schreiben (ADR-1): v nie senken, rev + 1. Schlägt das fehl, wird dt-backup (nicht
    *  dt-backup-s2) entfernt und erneut versucht. Gibt true/false zurück – der Aufrufer zeigt bei false
-   *  das Banner „Fortschritt wird nicht gespeichert“. */
-  function save(ls, db, appVersion) {
+   *  das Banner „Fortschritt wird nicht gespeichert“.
+   *  keepBackup = true (eigene Texte, ADR-13): dt-backup nie entfernen – nur Fortschritt darf die Sicherung verdrängen. */
+  function save(ls, db, appVersion, keepBackup) {
     db.v = Math.max(db.v || 0, SCHEMA);
     if (appVersion) db.app = appVersion;
     db.rev = (db.rev || 0) + 1;
     var s = JSON.stringify(db);
     if (trySet(ls, KEYS.data, s)) return true;
+    if (keepBackup) return false;
     try { ls.removeItem(KEYS.backup); } catch (e) { /* ignorieren */ }
     return trySet(ls, KEYS.data, s);
   }
@@ -331,6 +373,8 @@
     packTransfer: packTransfer,
     unpackTransfer: unpackTransfer,
     transferCode: transferCode,
+    TR_MAX_RAW: TR_MAX_RAW,
+    mergeWrites: mergeWrites,
     trySet: trySet,
     save: save
   };

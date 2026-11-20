@@ -11,8 +11,9 @@
 (function (DT) {
   'use strict';
 
-  // Sprechübungen sind Bonus (ADR-6): zählen nicht in Prozente, Lücken und Wiederholung
-  function isCountable(ex) { return ex && ex.t !== 'speak'; }
+  // Sprechübungen sind Bonus (ADR-6), Schreibaufgaben Selbstkontrolle ohne Note (ADR-13):
+  // beide zählen nicht in Prozente, Lücken und Wiederholung
+  function isCountable(ex) { return ex && ex.t !== 'speak' && ex.t !== 'write'; }
 
   function locale(l) { return l === 'tr' ? 'tr-TR' : 'de-DE'; }
   function norm(s, lang, cs) {

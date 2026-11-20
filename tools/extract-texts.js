@@ -67,6 +67,11 @@ Object.values(K.courses).forEach(c => {
     addLines(t.lines || [], c.target);
     (t.questions || []).forEach(q => addEx(q, set));
   });
+  Object.entries(K.writes || {}).forEach(([id, w]) => {   // Schreibaufgaben (ADR-13): Mustertext und Redemittel
+    if (!id.startsWith(c.id + '-')) return;
+    if (w.model) set.add(plain(w.model));
+    (w.chunks || []).forEach(x => set.add(plain(x)));
+  });
   set.delete('');
   out[c.target] = [...set].sort();
 });

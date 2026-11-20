@@ -81,6 +81,13 @@
       var x = K.texts[id];
       K.content[id] = { kind: x.kind === 'listen' ? 'listen' : 'read', text: x, exercises: x.questions || [] };
     });
+    // Schreibaufgaben (ADR-13): je Kurs+Niveau ein Pseudo-Thema „<kurs>-<niv>-write“ (Schreibwerkstatt). Übungs-ID = Aufgaben-ID.
+    // Bewusst NICHT in topicsOf (keine Prozente, kein Themen-Fortschritt); Liste über writesOf.
+    Object.keys(K.writes || {}).sort().forEach(function (id) {
+      var w = K.writes[id], tid = w.key + '-write', c = K.content[tid];
+      if (!c || c.kind !== 'write') c = K.content[tid] = { kind: 'write', exercises: [] };
+      if (c.exercises.indexOf(w) < 0) c.exercises.push(w);
+    });
     var EXI = {};
     Object.keys(K.content).forEach(function (tid) {
       (K.content[tid].exercises || []).forEach(function (ex, i) {
@@ -114,8 +121,16 @@
     return list;
   }
 
+  // Schreibaufgaben eines Kurses (optional nur ein Niveau), sortiert nach ID
+  function writesOf(K, cid, lv) {
+    return Object.keys(K.writes || {}).filter(function (id) {
+      return id.indexOf(cid + '-') === 0 && (!lv || id.split('-')[1] === lv.toLowerCase());
+    }).sort().map(function (id) { return K.writes[id]; });
+  }
+  function writeLevel(w) { return String(w && w.id || '').split('-')[1].toUpperCase(); }
+
   // „Schwer“ (ADR-12.1): Fragen zu Lese-/Hörtexten gehören nicht in den 5-Minuten-Tagesmix
   function isHeavy(K, topicId) { var c = K.content && K.content[topicId]; return !!c && (c.kind === 'read' || c.kind === 'listen'); }
 
-  DT.catalog = { hasRole: hasRole, dialogLines: dialogLines, roleExercises: roleExercises, checkRoleplay: checkRoleplay, isHeavy: isHeavy, LEVELS: LEVELS, register: register, topicsOf: topicsOf };
+  DT.catalog = { hasRole: hasRole, dialogLines: dialogLines, roleExercises: roleExercises, checkRoleplay: checkRoleplay, isHeavy: isHeavy, writesOf: writesOf, writeLevel: writeLevel, LEVELS: LEVELS, register: register, topicsOf: topicsOf };
 })(window.DT = window.DT || {});

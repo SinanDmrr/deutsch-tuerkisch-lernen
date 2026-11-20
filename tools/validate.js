@@ -68,8 +68,8 @@ Object.values(K.courses).forEach(c => (c.complete || []).forEach(lv => {
 
 // Bewertung und Katalog (ADR-12.9): reine Kernlogik – hier geladen, damit Syntax-/Ladefehler den Validator rot machen
 const coreCtx = { window: {}, console }; vm.createContext(coreCtx);
-['check.js', 'catalog.js', 'voices.js'].forEach(f => vm.runInContext(fs.readFileSync(path.join(root, 'js', 'core', f), 'utf8'), coreCtx, { filename: 'js/core/' + f }));
-if (!coreCtx.window.DT.check || !coreCtx.window.DT.catalog || !coreCtx.window.DT.voices) err('js/core/check.js, catalog.js bzw. voices.js definiert DT.check/DT.catalog/DT.voices nicht');
+['check.js', 'catalog.js', 'voices.js', 'writes.js'].forEach(f => vm.runInContext(fs.readFileSync(path.join(root, 'js', 'core', f), 'utf8'), coreCtx, { filename: 'js/core/' + f }));
+if (!coreCtx.window.DT.check || !coreCtx.window.DT.catalog || !coreCtx.window.DT.voices || !coreCtx.window.DT.writes) err('js/core/check.js, catalog.js, voices.js bzw. writes.js definiert DT.check/DT.catalog/DT.voices/DT.writes nicht');
 const CHK = coreCtx.window.DT.check || {};
 
 /* ---------- Schreibweise in Lücken/Diktaten (strikte Prüfung: Groß-/Kleinschreibung und Satzzeichen zählen) ---------- */
@@ -280,6 +280,78 @@ Object.entries(K.texts || {}).forEach(([id, t]) => {
   (t.questions || []).forEach((q, i) => checkExercise(q, id + '?' + i));
 });
 
+// Schreibaufgaben (ADR-13): Pflichtfelder, Mustertext, Checkliste, Wortgrenzen, IDs, Erklärsprache
+// ID-Regel nur an einer Stelle: DT.writes.ID_RE (js/core/writes.js) – dieselbe Regel nutzt sanitize beim Import
+const WRITE_RE = (coreCtx.window.DT.writes || {}).ID_RE || /^$/;   // de-a2-s01
+const REG = { de: ['du', 'Sie'], tr: ['sen', 'siz'] };
+const wCount = s => String(s || '').split(/[\s\/–—]+/).filter(w => /[0-9A-Za-zÀ-ɏ]/.test(w)).length;
+const TR_W = new Set(['ve', 'bir', 'bu', 'için', 'ile', 'çok', 'değil', 'gibi', 'ama', 'olur', 'mi', 'ne', 'sen', 'yani', 'daha', 'en', 'her', 'hem', 'olarak', 'cümle', 'fiil', 'sonra', 'önce']);
+const DE_W = new Set(['und', 'der', 'die', 'das', 'ist', 'nicht', 'mit', 'ein', 'eine', 'zu', 'auf', 'im', 'wenn', 'auch', 'du', 'für', 'den', 'dem', 'es', 'sich', 'oder', 'wie', 'dann', 'steht', 'immer']);
+// grobe Spracherkennung der Erklärtexte: zitierte Beispiele („…“, "…", **…**) zählen nicht
+function langScore(s) {
+  const t = String(s || '').replace(/„[^“”]*[“”]/g, ' ').replace(/"[^"]*"/g, ' ').replace(/\*\*[^*]*\*\*/g, ' ').replace(/\([^)]*\)/g, ' ');
+  const ws = t.toLocaleLowerCase('tr-TR').split(/[^a-zäöüßçğıişâîû]+/).filter(Boolean);
+  return { tr: (t.match(/[ıİşŞğĞ]/g) || []).length + ws.filter(w => TR_W.has(w)).length, de: (t.match(/[ßÄ]/g) || []).length + ws.filter(w => DE_W.has(w)).length };
+}
+let nWrite = 0;
+(K.writeDups || []).forEach(id => err('Schreibaufgabe: ID doppelt (zweimal in addWrites)', id));
+Object.entries(K.writes || {}).forEach(([id, w]) => {
+  nWrite++; useId(id, 'write');
+  const lbl = 'Schreibaufgabe:', E = (m, ...x) => err(lbl, m, id, ...x), W = (m, ...x) => warn(lbl, m, id, ...x);
+  if (!WRITE_RE.test(id) || !K.courses[id.split('-')[0]]) return E('ID ungültig (erwartet <kurs>-<niveau>-s<nn>, z. B. de-a2-s01)');
+  if (!KEY_RE.test(w.key || '')) E('addWrites: Schlüssel ungültig', w.key);
+  else if (!id.startsWith(w.key + '-s')) E(`ID passt nicht zur Datei (addWrites „${w.key}“)`);
+  const cid = id.split('-')[0], expl = K.courses[cid].ui;       // Erklärsprache = Oberflächensprache des Kurses
+  const s = x => typeof x === 'string' && x.trim();
+  ['title', 'sub', 'task', 'model', 'modeln', 'e'].forEach(f => { if (!s(w[f])) E(f + ' fehlt'); });
+  if (!s(w.scene)) W('scene (Szenario) fehlt');
+  if (!Array.isArray(w.points) || w.points.length < 2 || w.points.length > 4 || !w.points.every(s)) E('points braucht 2–4 Inhaltspunkte (Texte)');
+  if ((REG[cid] || []).indexOf(w.reg) < 0) E(`reg muss ${(REG[cid] || []).join(' oder ')} sein`, w.reg);
+  const wd = w.words || {};
+  if (!(Number.isInteger(wd.min) && Number.isInteger(wd.ziel) && wd.min > 0 && wd.min < wd.ziel)) E('words braucht { min, ziel } mit 0 < min < ziel', JSON.stringify(w.words));
+  if (w.chunks != null && (!Array.isArray(w.chunks) || !w.chunks.every(s))) E('chunks muss eine Liste von Texten sein');
+  if (w.hint != null && (!Array.isArray(w.hint) || !Array.isArray(w.points) || w.hint.length !== w.points.length || !w.hint.every(h => Array.isArray(h) && h.length && h.every(s)))) E('hint: je Inhaltspunkt eine Liste von Leitwörtern (Länge = points)');
+  if (!Array.isArray(w.check) || w.check.length < 2 || w.check.length > 6) E('check braucht 2–6 Punkte');
+  (w.check || []).forEach((c, i) => { if (!c || !s(c.k) || !s(c.e)) E('check: k und e nötig', i); });
+  if (!Array.isArray(w.mistakes) || w.mistakes.length < 2) E('mistakes braucht mindestens 2 typische Fehler');
+  (w.mistakes || []).forEach((x, i) => {
+    if (!x || !s(x.bad) || !s(x.good) || !s(x.why)) E('mistakes: bad, good und why nötig', i);
+    else if (x.bad.trim() === x.good.trim()) E('mistakes: bad = good', i);
+  });
+  // Hinweise: Länge des Mustertexts, Redemittel im Mustertext (… = beliebiger Teil)
+  if (s(w.model) && wd.min && wd.ziel) {
+    const n = wCount(w.model);
+    if (n < wd.min || n > wd.ziel * 1.5) W(`Mustertext hat ${n} Wörter (min ${wd.min}, Ziel ${wd.ziel}, höchstens ${Math.floor(wd.ziel * 1.5)})`);
+  }
+  if (s(w.model)) {
+    const body = CHK.fold(w.model);
+    (w.chunks || []).forEach(c => {
+      const parts = String(c).split('…').map(x => CHK.fold(x).trim()).filter(Boolean);
+      let at = 0;
+      const okIn = parts.every(p => { const k = body.indexOf(p, at); if (k < 0) return false; at = k + p.length; return true; });
+      if (!okIn) W('Redemittel kommt im Mustertext nicht vor', c);
+    });
+  }
+  // Erklärsprache: Aufgabe, Punkte, Übersetzung, Checkliste, Fehler-Erklärungen und e
+  const other = expl === 'tr' ? 'de' : 'tr';
+  const explTexts = [['task', w.task], ['modeln', w.modeln], ['e', w.e]]   // sub: eigene Sprachregel unten
+    .concat((w.points || []).map((x, i) => ['points[' + i + ']', x]))
+    .concat((w.check || []).flatMap((c, i) => [['check[' + i + '].k', c && c.k], ['check[' + i + '].e', c && c.e]]))
+    .concat((w.mistakes || []).map((x, i) => ['mistakes[' + i + '].why', x && x.why]));
+  explTexts.forEach(([f, x]) => {
+    if (!s(x)) return;
+    const sc = langScore(x);
+    if (wCount(x) >= 4 && sc[other] >= 2 && sc[expl] * 3 < sc[other]) E(`${f} ist nicht in der Erklärsprache (${expl === 'tr' ? 'Türkisch' : 'Deutsch'})`, String(x).slice(0, 50));
+  });
+  // Wie bei Dialogen: title in der Zielsprache des Kurses, sub in der anderen Sprache
+  // (Kurs de: title Deutsch, sub Türkisch · Kurs tr: title Türkisch, sub Deutsch)
+  const tL = cid === 'tr' ? 'tr' : 'de', sL = tL === 'tr' ? 'de' : 'tr', nm = { de: 'Deutsch', tr: 'Türkisch' };
+  const rule = `(Kurs ${cid}: title ${nm[tL]}, sub ${nm[sL]} – wie bei Dialogen)`;
+  const scT = langScore(w.title), scS = langScore(w.sub);
+  if (wCount(w.sub) >= 3 && scS[tL] >= 2 && scS[sL] * 3 < scS[tL]) E(`sub muss ${nm[sL]} sein ${rule}`, String(w.sub).slice(0, 50));
+  if (wCount(w.title) >= 3 && scT[sL] >= 2 && scT[tL] * 3 < scT[sL]) E(`title muss ${nm[tL]} sein ${rule}`, String(w.title).slice(0, 50));
+});
+
 let nDia = 0;
 Object.entries(K.dialogs || {}).forEach(([id, d]) => {
   nDia++; useId(id, 'dialog');
@@ -303,6 +375,6 @@ Object.entries(K.dialogs || {}).forEach(([id, d]) => {
 });
 
 console.log(`\nVersion: ${appVersion || '?'}${swVersion ? ' (sw.js ✓)' : ''} · Skripte: ${scripts.length}`);
-console.log(`Themen mit Inhalt: ${Object.keys(K.content).length} · Übungen: ${nEx} · Wörter: ${nVocab} · Dialoge: ${nDia} · Lesetexte: ${nTxt}`);
+console.log(`Themen mit Inhalt: ${Object.keys(K.content).length} · Übungen: ${nEx} · Wörter: ${nVocab} · Dialoge: ${nDia} · Lesetexte: ${nTxt} · Schreibaufgaben: ${nWrite}`);
 console.log(`${errors} Fehler, ${warnings} Hinweise`);
 process.exit(errors ? 1 : 0);

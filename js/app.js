@@ -9,7 +9,7 @@
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var DT = window.DT;
   var SCHEMA = DT.storage.SCHEMA;    // Version des Speicherformats (Migrationen nur in js/core/storage.js)
-  var APP_VERSION = '2026-11-19.4';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-20.1';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -363,6 +363,77 @@
     male: ['Männlich', 'Erkek'],
     notInstalled: ['Auf diesem Gerät nicht installiert', 'Bu cihazda yüklü değil'],
     genderMissing: ['Für dieses Geschlecht ist hier keine passende Stimme installiert – es wird die beste verfügbare genutzt.', 'Bu cinsiyet için uygun ses yüklü değil – mevcut en iyi ses kullanılıyor.'],
+    // Schreibwerkstatt (ADR-13)
+    writeTitle: ['Schreibwerkstatt', 'Yazma atölyesi'],
+    wordsShort: ['Wörter', 'kelime'],
+    writeTask: ['Deine Aufgabe', 'Görevin'],
+    writeNoGrade: ['Selbstkontrolle, keine Note: Du vergleichst deinen Text selbst mit dem Mustertext.', 'Kendini kontrol et, not yok: Metnini örnek metinle kendin karşılaştırırsın.'],
+    writeReg: ['Anrede', 'Hitap'],
+    writeRegDu: ['du (vertraut)', 'du (samimi)'],
+    writeRegSie: ['Sie (höflich)', 'Sie (resmî)'],
+    writeRegSen: ['sen (vertraut)', 'sen (samimi)'],
+    writeRegSiz: ['siz (höflich)', 'siz (resmî)'],
+    writeWordsGoal: ['Ziel: etwa {z} Wörter (mindestens {m})', 'Hedef: yaklaşık {z} kelime (en az {m})'],
+    writeChunks: ['Redemittel', 'Kalıplar'],
+    writeChunksHint: ['Antippen fügt den Baustein an der Schreibmarke ein. „…“ ersetzt du durch eigene Wörter.', 'Dokununca kalıp imlecin olduğu yere eklenir. „…“ yerine kendi kelimelerini yaz.'],
+    writeYourText: ['Dein Text', 'Senin metnin'],
+    writeCount: ['{n} / Ziel {z} (min. {m})', '{n} / hedef {z} (en az {m})'],
+    writeSaved: ['Entwurf gespeichert {t}', 'Taslak kaydedildi {t}'],
+    writeSavedAt: ['Entwurf vom {t}', 'Taslak: {t}'],
+    writeDone: ['Fertig', 'Bitti'],
+    writeBelowMin: ['Noch unter {m} Wörtern – du kannst trotzdem abgeben.', 'Henüz {m} kelimenin altında – yine de teslim edebilirsin.'],
+    writeCopy: ['Text kopieren', 'Metni kopyala'],
+    writeCopied: ['Text kopiert', 'Metin kopyalandı'],
+    writeHints: ['Hinweise', 'İpuçları'],
+    writeHintShort: ['Dein Text hat {n} Wörter – gewünscht sind mindestens {m}. Vielleicht fehlt noch ein Gedanke?', 'Metnin {n} kelime – en az {m} kelime olmalı. Belki bir düşünce eksik kalmıştır?'],
+    writeHintLong: ['Dein Text hat {n} Wörter – deutlich mehr als die {z} Wörter des Ziels. Kürzer ist hier oft klarer.', 'Metnin {n} kelime – hedefteki {z} kelimeden epey fazla. Burada kısa yazmak çoğu zaman daha anlaşılır.'],
+    writeHintOk: ['Länge passt: {n} Wörter.', 'Uzunluk uygun: {n} kelime.'],
+    writeMissing: ['Punkt „{p}“ vielleicht vergessen?', '„{p}“ maddesini unutmuş olabilir misin?'],
+    writeYours: ['Dein Text', 'Senin metnin'],
+    writeModel: ['Mustertext', 'Örnek metin'],
+    writeShowTr: ['Übersetzung', 'Çeviri'],
+    writeWhyModel: ['Warum so?', 'Neden böyle?'],
+    writeChecklist: ['Checkliste', 'Kontrol listesi'],
+    writeChecklistIntro: ['Lies deinen Text noch einmal und hake ab, was stimmt. Nicht sicher? Klapp die Erklärung auf.', 'Metnini bir kez daha oku ve doğru olanları işaretle. Emin değil misin? Açıklamayı aç.'],
+    writeWhy: ['Erklärung', 'Açıklama'],
+    writeMistakes: ['Typische Fehler', 'Sık yapılan hatalar'],
+    writePracticedBtn: ['Geübt', 'Çalıştım'],
+    writePracticed: ['Geübt', 'Çalışıldı'],
+    writeTickAll: ['„Geübt“ geht, sobald alle Punkte der Checkliste abgehakt sind.', 'Kontrol listesindeki tüm maddeleri işaretleyince „Çalıştım“ açılır.'],
+    writeRevise: ['Überarbeiten', 'Düzelt'],
+    writePracticedToast: ['Gut gemacht – als geübt markiert.', 'Aferin – çalışıldı olarak işaretlendi.'],
+    writeEarlier: ['Früher geschrieben am {d} – ansehen', '{d} tarihinde yazmıştın – göster'],
+    writeFirst: ['Deine erste Fassung', 'İlk hâli'],
+    writeRescued: ['Weitere Fassung (z. B. vom anderen Gerät)', 'Diğer hâli (ör. başka cihazdan)'],
+    writeVersions: ['Frühere Fassungen ansehen', 'Önceki hâllerini göster'],
+    writeDelVersion: ['Diese Fassung löschen', 'Metnin bu hâlini sil'],
+    confirmVersionDelete: ['Diese Fassung endgültig löschen?', 'Metnin bu hâli tamamen silinsin mi?'],
+    writeVersionDeleted: ['Fassung gelöscht (vorher gesichert).', 'Metnin bu hâli silindi (önce yedeklendi).'],
+    writeDelEntry: ['Diesen Text löschen (alle Fassungen)', 'Bu metni sil (tüm hâlleriyle)'],
+    confirmWriteDelete: ['Diesen Text mit allen Fassungen löschen?', 'Bu metin tüm hâlleriyle silinsin mi?'],
+    writeEntryDeleted: ['Text gelöscht (vorher gesichert).', 'Metin silindi (önce yedeklendi).'],
+    writeFull: ['Speicher für eigene Texte voll – Text kopieren, herunterladen oder alte Texte löschen. Dein Text bleibt hier im Feld.', 'Kendi metinlerin için yer doldu – metni kopyala, indir ya da eski metinleri sil. Metnin bu alanda duruyor.'],
+    writeNotSaved: ['Text nicht gespeichert – bitte kopieren. Dein Lernfortschritt ist sicher.', 'Metin kaydedilmedi – lütfen kopyala. Öğrenme ilerlemen güvende.'],
+    writeReadOnly: ['Gerade wird nichts gespeichert (siehe Hinweis oben) – bitte Text kopieren.', 'Şu an hiçbir şey kaydedilmiyor (yukarıdaki nota bak) – lütfen metni kopyala.'],
+    writeNotFound: ['Diese Schreibaufgabe gibt es in diesem Kurs nicht.', 'Bu yazma görevi bu kursta yok.'],
+    stDraft: ['Entwurf', 'Taslak'],
+    stSubmitted: ['Checkliste offen', 'Kontrol listesi açık'],
+    writeOpenTitle: ['Schreiben – offen', 'Yazma – yarım kalanlar'],
+    writeOpenIntro: ['Entwürfe und abgegebene Texte, deren Checkliste noch offen ist. Keine Fehlerliste – nur zum Weitermachen.', 'Taslakların ve kontrol listesi henüz bitmemiş metinlerin. Bu bir hata listesi değil – kaldığın yerden devam etmen için.'],
+    writeCounter: ['Schreiben: {d} von {n} geübt', 'Yazma: {n} görevden {d} tanesi çalışıldı'],
+    writeCounterDraft1: ['1 Entwurf', '1 taslak'],
+    writeCounterDrafts: ['{e} Entwürfe', '{e} taslak'],
+    storageUse: ['Speicher: {x} KB von ca. 5 MB, davon eigene Texte {y} KB', 'Bellek: yaklaşık 5 MB’ın {x} KB’ı dolu, bunun {y} KB’ı kendi metinlerin'],
+    myTextsDownload: ['Meine Texte herunterladen (.txt)', 'Metinlerimi indir (.txt)'],
+    myTextsDelete: ['Meine Texte dieses Kurses löschen', 'Bu kurstaki metinlerimi sil'],
+    confirmTextsDelete: ['Wirklich alle eigenen Texte dieses Kurses löschen?', 'Bu kurstaki tüm metinlerin silinsin mi?'],
+    myTextsNone: ['Noch keine eigenen Texte.', 'Henüz kendi metnin yok.'],
+    myTextsDeleted: ['Deine Texte dieses Kurses wurden gelöscht (vorher gesichert).', 'Bu kurstaki metinlerin silindi (önce yedeklendi).'],
+    resetAlsoTexts: ['Auch meine Texte dieses Kurses löschen', 'Bu kurstaki metinlerimi de sil'],
+    resetKeepsTexts: ['Deine eigenen Texte bleiben erhalten, wenn das Kästchen leer ist.', 'Kutu boş kalırsa kendi metinlerin silinmez.'],
+    confirmResetTexts: ['Fortschritt UND alle eigenen Texte dieses Kurses löschen?', 'Bu kurstaki ilerleme VE tüm metinlerin silinsin mi?'],
+    transferHasTexts: ['Der Code enthält auch deine eigenen Texte aus der Schreibwerkstatt.', 'Kod, yazma atölyesindeki kendi metinlerini de içerir.'],
+    writeImportOver: ['Übernommen. Hinweis: Deine eigenen Texte brauchen jetzt mehr Platz als vorgesehen – lösche bei Gelegenheit alte Texte.', 'Aktarıldı. Not: Kendi metinlerin artık öngörülenden fazla yer kaplıyor – fırsat bulunca eski metinleri sil.'],
     testSentence: ['Merhaba! Her gün biraz Türkçe öğreniyorum.', 'Guten Tag! Ich lerne jeden Tag ein bisschen Deutsch.']
   };
 
@@ -378,6 +449,8 @@
   function rawSet(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } }
   var storageBroken = false, readOnly = false, newerData = false, saveFailed = false, restoredFromBackup = false;
   var db = load();
+  // höchstes je von dieser App geschriebenes Schema merken (auch bei neuem/leerem Speicher) – siehe load(): „sehr alter Tab“
+  if (!newerData && +(rawGet(DT.storage.KEYS.schemaMax) || 0) < SCHEMA) rawSet(DT.storage.KEYS.schemaMax, String(SCHEMA));
   function emptyDb() { return { v: SCHEMA, app: APP_VERSION, theme: 'system', active: null, profiles: {} }; }
   function load() {
     var raw = rawGet(STORE), d = null, migrated = false;
@@ -403,7 +476,11 @@
     if (!d || !d.profiles) return emptyDb();
     if ((d.v || 1) > SCHEMA) { newerData = true; return d; }   // Daten einer neueren App-Version: nicht anfassen
     var src = raw || JSON.stringify(d);
-    if ((d.v || 1) < SCHEMA || d.app !== APP_VERSION) rawSet(BACKUP, src);  // Sicherung vor Änderungen
+    // Sehr alter Tab (ohne newerData-Schutz) hat zurückgestuft (v < höchstes je geschriebenes Schema): Sicherung NICHT
+    // überschreiben – sie enthält evtl. die eigenen Texte, die der alte Tab nicht kannte; diese werden unten zurückgeholt.
+    var smax = +(rawGet(DT.storage.KEYS.schemaMax) || 0), down = (d.v || 1) < smax, bkW = null;
+    if (down) { try { bkW = JSON.parse(rawGet(BACKUP) || 'null'); } catch (eB) { bkW = null; } }
+    else if ((d.v || 1) < SCHEMA || d.app !== APP_VERSION) rawSet(BACKUP, src);  // Sicherung vor Änderungen
     // Stand vor der Umstellung auf Schema 3 einmalig dauerhaft aufheben (wird nie überschrieben)
     if ((d.v || 1) < 3 && !rawGet(DT.storage.KEYS.backupS2)) rawSet(DT.storage.KEYS.backupS2, src);
     try { d = DT.storage.migrate(d, DT.time.dayNum(), DT.time.dayKey()).data; } catch (e) {
@@ -411,6 +488,7 @@
       readOnly = true; if (window.console) console.error('Migration fehlgeschlagen', e);
       try { return JSON.parse(raw || '{}').profiles ? JSON.parse(raw) : emptyDb(); } catch (e2) { return emptyDb(); }
     }
+    if (down && bkW) { try { DT.storage.mergeWrites(d, DT.storage.migrate(bkW, DT.time.dayNum(), DT.time.dayKey()).data); } catch (eW) { /* Sicherung unbrauchbar */ } }
     d.app = APP_VERSION;
     if (migrated || raw !== JSON.stringify(d)) rawSet(STORE, JSON.stringify(d));
     return d;
@@ -432,7 +510,14 @@
     if (e.key !== STORE || !e.newValue) return;
     try { var d = JSON.parse(e.newValue);
       if (d && d.profiles && (d.v || 1) > SCHEMA) { newerData = true; render(); return; }   // ADR-11/13: alter Tab darf neue Daten nie überschreiben
-      if (d && d.profiles && (d.v || 1) <= SCHEMA) { d = DT.storage.migrate(d, DT.time.dayNum(), DT.time.dayKey()).data; db = d; if (!db.profiles[db.active]) db.active = Object.keys(db.profiles)[0] || null; render(); } } catch (err) { /* ignore */ }
+      if (d && d.profiles && (d.v || 1) <= SCHEMA) {
+        // sehr alter Tab hat ohne writes zurückgestuft → eigene Texte aus dem Stand dieses Tabs behalten
+        var down = (d.v || 1) < SCHEMA;
+        d = DT.storage.migrate(d, DT.time.dayNum(), DT.time.dayKey()).data;
+        if (down) DT.storage.mergeWrites(d, db);
+        db = d; if (!db.profiles[db.active]) db.active = Object.keys(db.profiles)[0] || null;
+        if (wst) wst.last = null;   // Entwurf beim nächsten Speichern erneut prüfen (der andere Tab kann ihn ersetzt haben)
+        render(); } } catch (err) { /* ignore */ }
   });
   function askPersist() {
     try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) { /* ignore */ }
@@ -822,6 +907,7 @@
     p.srs = p.srs || { de: {}, tr: {} }; p.srs.de = p.srs.de || {}; p.srs.tr = p.srs.tr || {};
     p.daily = p.daily || { goal: 10, log: {} }; p.daily.log = p.daily.log || {};
     p.skip = p.skip || { de: {}, tr: {} }; p.place = p.place || {}; p.badges = p.badges || {};
+    DT.writes.ensure(p);                    // Schema 4: eigene Texte (ADR-13)
     return p;
   }
   var poolCache = {};
@@ -945,7 +1031,7 @@
   }
   function go(hash) { if (location.hash === hash) render(); else location.hash = hash; }
   window.addEventListener('hashchange', function () {
-    stopAudio(); render(); window.scrollTo(0, 0);
+    stopAudio(); render();   // render() sichert vorher den Entwurf (flushDraft) window.scrollTo(0, 0);
     var h = document.querySelector('#main h1');   // Screenreader/Tastatur: neue Seite ansagen
     if (h) { h.setAttribute('tabindex', '-1'); try { h.focus({ preventScroll: true }); } catch (e) { /* ignore */ } }
   });
@@ -1010,7 +1096,7 @@
   }
   function createProfile(name, cid) {
     var id = 'p' + Date.now().toString(36);
-    db.profiles[id] = { id: id, name: (name || '').trim(), course: cid, prog: { de: {}, tr: {} }, created: Date.now() };
+    db.profiles[id] = { id: id, name: (name || '').trim(), course: cid, prog: { de: {}, tr: {} }, writes: { de: {}, tr: {} }, created: Date.now() };
     db.active = id; save(); askPersist();
   }
 
@@ -1119,6 +1205,7 @@
       '</div>') +
       badgesStrip() +
       '<div class="card section"><div class="section-head"><h2>' + esc(t('levelProgress')) + '</h2><span class="muted small">' + esc(t('totalProgress', { lv: sld.live.join(', ') })) + ': <b>' + fmtPct(pct(s.c, s.n)) + '</b></span></div>' + levels + '</div>' +
+      writeCounterHtml() +
       probHtml;
   }
 
@@ -1148,6 +1235,7 @@
         '</div><div class="topic-grid">' + list.filter(function (x) { return !x.kind; }).map(topicCard).join('') + '</div>' +
         (list.some(function (x) { return x.kind === 'dialog'; }) ? '<h3 class="sub-head">💬 ' + esc(t('dialogsTitle')) + '</h3><div class="topic-grid">' + list.filter(function (x) { return x.kind === 'dialog'; }).map(topicCard).join('') + '</div>' : '') +
         (list.some(function (x) { return x.kind === 'text'; }) ? '<h3 class="sub-head">📄 ' + esc(t('textsTitle')) + '</h3><div class="topic-grid">' + list.filter(function (x) { return x.kind === 'text'; }).map(topicCard).join('') + '</div>' : '') +
+        writeSection(lv) +
         '</section>';
     };
     var html = sl.live.map(section).join('') + (sl.planned.length ? '<details class="planned-levels"' + (sl.planned.indexOf(focusLevel) >= 0 ? ' open' : '') + '><summary>' + esc(sl.label + ' · ' + t('plannedLevels')) + '</summary>' + sl.planned.map(section).join('') + '</details>' : '');
@@ -1726,6 +1814,199 @@
   }
 
   /* ================= Meine Lücken ================= */
+  /* ================= Schreibwerkstatt (ADR-13) =================
+   * Eigene Texte: profil.writes (js/core/writes.js). Keine Bewertung, keine Prozente; „geübt“ = prog[id].s === 'c'.
+   * Mustertext steht erst nach „Fertig“ im DOM. Entwurf: 1,5 s nach der letzten Eingabe, bei blur, Seitenwechsel,
+   * visibilitychange/pagehide und vor jedem Neu-Rendern. */
+  var WR = DT.writes, wst = null, wTimer = null;   // wst = { id, mode:'edit'|'done', text, last, checks:{}, showTr, msg }
+  function writeEntry(id) { var p = ensureProfile(prof()); return WR.get(p, courseId(), id); }
+  function writeStatus(id) { return WR.status(writeEntry(id), prog()[id]); }
+  function writeHasDraft(id) { var e = writeEntry(id); return !!(e && typeof e.d === 'string' && e.d.trim()); }   // auch Überarbeitung einer geübten Aufgabe
+  function writeHead(w) { return uiLang() === 'de' ? w.title : w.sub; }      // title = Deutsch, sub = Türkisch (wie Dialoge)
+  function writeSubline(w) { return uiLang() === 'de' ? w.sub : w.title; }
+  function writeList(lv) { return DT.catalog.writesOf(K, courseId(), lv); }
+  function writeCounts(list) {
+    var c = { n: list.length, done: 0, draft: 0, open: 0 };
+    list.forEach(function (w) { var s = writeStatus(w.id); if (s === 'done') c.done++; else if (s === 'submitted') c.open++; if (writeHasDraft(w.id)) c.draft++; });
+    return c;
+  }
+  function fmtStamp(ts, withDate) {
+    var d = new Date(ts || 0), loc = uiLang() === 'de' ? 'de-DE' : 'tr-TR';
+    try { return (withDate ? d.toLocaleDateString(loc, { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' ' : '') + d.toLocaleTimeString(loc, { hour: '2-digit', minute: '2-digit' }); } catch (e) { return ''; }
+  }
+  function regLabel(r) { return t({ du: 'writeRegDu', Sie: 'writeRegSie', sen: 'writeRegSen', siz: 'writeRegSiz' }[r] || 'writeReg'); }
+  function writeBadge(st) {
+    return st === 'done' ? '<span class="badge ok">✓ ' + esc(t('writePracticed')) + '</span>'
+      : st === 'submitted' ? '<span class="badge primary">' + esc(t('stSubmitted')) + '</span>'
+      : st === 'draft' ? '<span class="badge">✎ ' + esc(t('stDraft')) + '</span>'
+      : '<span class="badge primary">' + esc(t('newBadge')) + '</span>';
+  }
+  function writeCard(w, i) {
+    return '<a class="topic-card w-card" href="#/write/' + w.id + '"><span class="tc-num">' + DT.catalog.writeLevel(w) + ' · S' + (i + 1) + '</span>' +
+      '<span class="tc-title">' + esc(writeHead(w)) + '</span><span class="tc-sub">' + esc(writeSubline(w)) + '</span>' +
+      '<div class="tc-foot"><span>' + esc(w.reg) + ' · ' + w.words.min + '–' + w.words.ziel + ' ' + esc(t('wordsShort')) + '</span>' + writeBadge(writeStatus(w.id)) + '</div></a>';
+  }
+  function writeSection(lv) {
+    var wl = writeList(lv);
+    return wl.length ? '<h3 class="sub-head">✍️ ' + esc(t('writeTitle')) + '</h3><div class="topic-grid">' + wl.map(writeCard).join('') + '</div>' : '';
+  }
+  function writeCounterHtml() {
+    var all = writeList(); if (!all.length) return '';
+    var c = writeCounts(all), first = all.filter(function (w) { return writeStatus(w.id) !== 'done'; })[0] || all[0];
+    var drafts = c.draft ? ' · ' + (c.draft === 1 ? t('writeCounterDraft1') : t('writeCounterDrafts', { e: c.draft })) : '';
+    return '<a class="card section w-counter" href="#/write/' + first.id + '"><span aria-hidden="true">✍️</span><span><b>' + esc(t('writeCounter', { d: c.done, n: c.n })) + '</b>' + esc(drafts) + '</span><span class="muted">→</span></a>';
+  }
+  function writeOpenHtml() {
+    var list = writeList().filter(function (w) { return writeHasDraft(w.id) || writeStatus(w.id) === 'submitted'; });
+    if (!list.length) return '';
+    return '<div class="card section w-open"><h2>✍️ ' + esc(t('writeOpenTitle')) + '</h2><p class="muted small">' + esc(t('writeOpenIntro')) + '</p>' +
+      list.map(function (w) {
+        var lv = DT.catalog.writeLevel(w);
+        return '<a class="w-open-row" href="#/write/' + w.id + '"><span><span class="lvl lvl-' + lv + '">' + lv + '</span> <b>' + esc(writeHead(w)) + '</b></span>' + writeBadge(writeHasDraft(w.id) ? 'draft' : writeStatus(w.id)) + '</a>';
+      }).join('') + '</div>';
+  }
+  function writeCountText(w, n) { return t('writeCount', { n: n, z: w.words.ziel, m: w.words.min }); }
+  /** Speichern mit Rücknahme (ADR-13 §3): nie bei nur-lesend/neueren Daten; Fehler → Meldung statt Neu-Rendern */
+  function writeCommit(id, fn) {
+    if (readOnly || newerData || (storageBroken && !db.active)) return { ok: false, error: 'readonly' };
+    var r;
+    try { r = WR.commit(localStorage, db, APP_VERSION, ensureProfile(prof()), courseId(), id, fn); } catch (e) { r = { ok: false, error: 'save' }; }
+    if (r.ok) saveFailed = false; else if (r.error === 'save') saveFailed = true;
+    return r;
+  }
+  function writeErrMsg(r) { return r.error === 'budget' ? t('writeFull') : r.error === 'readonly' ? t('writeReadOnly') : t('writeNotSaved'); }
+  function setWriteMsg(msg, alert) {
+    if (wst) { wst.msg = msg; wst.msgAlert = !!alert; }
+    var el = document.getElementById('w-saved'); if (!el) return;
+    el.textContent = msg; el.classList.toggle('w-alert', !!alert);
+  }
+  function flushDraft() {
+    clearTimeout(wTimer); wTimer = null;
+    var ta = document.getElementById('w-text');
+    if (!ta || !wst || wst.mode !== 'edit' || ta.getAttribute('data-id') !== wst.id) return;
+    var id = wst.id, val = ta.value; wst.text = val;
+    if (val === wst.last) return;
+    var r = writeCommit(id, function () { return WR.put(prof(), courseId(), id, val, Date.now()); });
+    if (r.ok) wst.last = val;   // nur bei Erfolg – sonst wird beim nächsten Anlass erneut gespeichert
+    if (r.ok) { if (r.changed) setWriteMsg(val.trim() ? t('writeSaved', { t: fmtStamp(Date.now()) }) : '', false); }
+    else setWriteMsg(writeErrMsg(r), true);
+  }
+  function writeVersionsHtml(e) {
+    if (!e) return '';
+    var parts = [];
+    // [Überschrift, Text, archiviert?, Teil für WR.removePart, Index]
+    if (WR.isArchived(e)) parts.push([t('writeEarlier', { d: fmtStamp(e.t, true) }), e.x, true, 'x', 0]);
+    if (typeof e.x0 === 'string') parts.push([t('writeFirst') + (e.t0 ? ' · ' + fmtStamp(e.t0, true) : ''), e.x0, false, 'x0', 0]);
+    if (typeof e.xk === 'string') e.xk.split(WR.SEP).forEach(function (x, i) { parts.push([t('writeRescued'), x, false, 'xk', i]); });
+    if (!parts.length) return '';
+    var tgt = course().target;
+    return parts.map(function (x) {
+      return '<details class="card section w-archive"><summary>' + esc(x[2] ? x[0] : t('writeVersions') + ': ' + x[0]) + '</summary><div class="w-text" lang="' + tgt + '">' + esc(x[1]) + '</div>' +
+        '<div class="btn-row"><button type="button" class="btn small danger" data-act="w-del-part" data-part="' + x[3] + '" data-i="' + x[4] + '">🗑️ ' + esc(t('writeDelVersion')) + '</button></div></details>';
+    }).join('');
+  }
+  function writeModelCol(w) {
+    var tgt = course().target, sh = !!(wst && wst.showTr);
+    return '<div class="card w-col w-model"><div class="w-col-head"><h3>' + esc(t('writeModel')) + '</h3><div class="btn-row">' +
+      '<button class="btn small" data-act="play-say" data-say="' + esc(plain(w.model)) + '" aria-label="' + esc(t('listen') + ': ' + t('writeModel')) + '">🔊</button>' +
+      '<button class="btn small" data-act="w-tr" aria-pressed="' + sh + '">' + esc(t('writeShowTr')) + '</button></div></div>' +
+      '<div class="w-text" lang="' + tgt + '">' + esc(w.model) + '</div>' +
+      '<div class="w-text w-trans" lang="' + uiLang() + '"' + (sh ? '' : ' hidden') + '>' + esc(w.modeln) + '</div>' +
+      '<details class="w-why"><summary>' + esc(t('writeWhyModel')) + '</summary><p>' + md(w.e) + '</p></details></div>';
+  }
+  function viewWrite(id) {
+    var w = K.writes && K.writes[id];
+    if (!w || id.indexOf(courseId() + '-') !== 0) return '<h1>✍️ ' + esc(t('writeTitle')) + '</h1><div class="card empty"><p>' + esc(t('writeNotFound')) + '</p><a class="btn" href="#/lessons">' + esc(t('goLessons')) + '</a></div>';
+    var e = writeEntry(id), st = writeStatus(id), tgt = course().target, cur = WR.hasCurrent(e);
+    if (!wst || wst.id !== id) {
+      var start = e && typeof e.d === 'string' ? e.d : (cur ? e.x : '');
+      wst = { id: id, mode: (e && typeof e.d === 'string') || !cur ? 'edit' : 'done', text: start, last: start, checks: {}, showTr: false,
+        msg: e && e.d && e.dt ? t('writeSavedAt', { t: fmtStamp(e.dt, true) }) : '' };
+      if (st === 'done') w.check.forEach(function (_, i) { wst.checks[i] = true; });
+    }
+    var html = '<h1>✍️ ' + esc(writeHead(w)) + '</h1><p class="muted">' + esc(writeSubline(w)) + '</p>' +
+      '<p class="w-note small">ℹ️ ' + esc(t('writeNoGrade')) + '</p>' +
+      '<div class="card section w-task"><h2>' + esc(t('writeTask')) + '</h2><p>' + md(w.task) + '</p><ul class="w-points">' +
+        w.points.map(function (x) { return '<li>' + md(x) + '</li>'; }).join('') + '</ul>' +
+        '<div class="w-meta"><span class="badge primary" title="' + esc(t('writeReg')) + '">' + esc(t('writeReg')) + ': ' + esc(regLabel(w.reg)) + '</span> <span class="muted small">' + esc(t('writeWordsGoal', { z: w.words.ziel, m: w.words.min })) + '</span></div></div>';
+    if (wst.mode === 'edit') {
+      var n = WR.countWords(wst.text);
+      html += '<div class="card section w-editor">' +
+        ((w.chunks || []).length ? '<h2>' + esc(t('writeChunks')) + '</h2><p class="muted small" id="w-chunks-hint">' + esc(t('writeChunksHint')) + '</p><div class="w-chunks" role="group" aria-describedby="w-chunks-hint">' +
+          w.chunks.map(function (c, i) { return '<button type="button" class="chip" data-act="w-chunk" data-i="' + i + '" lang="' + tgt + '">' + esc(c) + '</button>'; }).join('') + '</div>' : '') +
+        '<label for="w-text" class="w-label"><b>' + esc(t('writeYourText')) + '</b></label>' +
+        '<textarea class="input w-area" id="w-text" data-id="' + id + '" rows="8" maxlength="' + WR.MAX_FIELD + '" lang="' + tgt + '" spellcheck="true" autocomplete="off" aria-describedby="w-count w-saved"></textarea>' +
+        charBar() +
+        '<div class="w-status"><span id="w-count" class="w-count">' + esc(writeCountText(w, n)) + '</span><span id="w-saved" class="small' + (wst.msgAlert ? ' w-alert' : ' muted') + '" role="status" aria-live="polite">' + esc(wst.msg || '') + '</span></div>' +
+        '<p id="w-min" class="muted small"' + (n && n < w.words.min ? '' : ' hidden') + '>' + esc(t('writeBelowMin', { m: w.words.min })) + '</p>' +
+        '<div class="btn-row"><button class="btn primary" id="w-done" data-act="w-done"' + (n ? '' : ' disabled') + '>✓ ' + esc(t('writeDone')) + '</button>' +
+        '<button class="btn" data-act="w-copy">📋 ' + esc(t('writeCopy')) + '</button></div></div>';
+      if (cur) html += '<div class="w-compare section">' + writeModelCol(w) + '</div>';   // nach „Überarbeiten“ bleibt der Mustertext sichtbar
+    } else {
+      var txt = e.x, cnt = WR.countWords(txt), miss = WR.missingPoints(w, txt, DT.check.fold);
+      var wh = cnt < w.words.min ? t('writeHintShort', { n: cnt, m: w.words.min }) : cnt > w.words.ziel * 1.5 ? t('writeHintLong', { n: cnt, z: w.words.ziel }) : t('writeHintOk', { n: cnt });
+      var all = w.check.every(function (_, i) { return wst.checks[i]; });
+      html += '<div class="card section w-hints" id="w-hints"><h2>' + esc(t('writeHints')) + '</h2><ul><li>' + esc(wh) + '</li>' +
+          miss.map(function (i) { return '<li>' + esc(t('writeMissing', { p: plain(w.points[i]) })) + '</li>'; }).join('') + '</ul></div>' +
+        '<div class="w-compare section"><div class="card w-col"><div class="w-col-head"><h3>' + esc(t('writeYours')) + '</h3><span class="muted small">' + esc(fmtStamp(e.t, true)) + '</span></div><div class="w-text" lang="' + tgt + '">' + esc(txt) + '</div></div>' + writeModelCol(w) + '</div>' +
+        '<div class="card section w-check"><h2>' + esc(t('writeChecklist')) + '</h2><p class="muted small">' + esc(t('writeChecklistIntro')) + '</p>' +
+          w.check.map(function (c, i) {
+            return '<div class="w-ck"><label><input type="checkbox" data-act="w-ck" data-i="' + i + '"' + (wst.checks[i] ? ' checked' : '') + (st === 'done' ? ' disabled' : '') + '><span>' + md(c.k) + '</span></label>' +
+              '<details><summary>' + esc(t('writeWhy')) + '</summary><p>' + md(c.e) + '</p></details></div>';
+          }).join('') + '</div>' +
+        '<div class="card section w-mist"><h2>' + esc(t('writeMistakes')) + '</h2>' +
+          w.mistakes.map(function (m) { return '<div class="w-m"><div><s lang="' + tgt + '">' + esc(m.bad) + '</s> <span aria-hidden="true">→</span> <b lang="' + tgt + '">' + esc(m.good) + '</b></div><p class="small">' + md(m.why) + '</p></div>'; }).join('') + '</div>' +
+        '<div class="btn-row section">' + (st === 'done' ? '<span class="badge ok w-done-badge">✓ ' + esc(t('writePracticed')) + '</span>'
+          : '<button class="btn primary" id="w-ok" data-act="w-practiced" aria-describedby="w-ok-hint"' + (all ? '' : ' disabled') + '>✓ ' + esc(t('writePracticedBtn')) + '</button>') +
+          '<button class="btn" data-act="w-revise">✏️ ' + esc(t('writeRevise')) + '</button><button class="btn" data-act="w-copy">📋 ' + esc(t('writeCopy')) + '</button></div>' +
+        (st === 'done' ? '' : '<p class="muted small" id="w-ok-hint">' + esc(t('writeTickAll')) + '</p>');
+    }
+    return html + writeVersionsHtml(e) +
+      (e ? '<div class="btn-row section"><button type="button" class="btn small danger" data-act="w-del-entry">🗑️ ' + esc(t('writeDelEntry')) + '</button></div>' : '');
+  }
+  function writeCopy() {
+    var ta = document.getElementById('w-text'), e = wst && writeEntry(wst.id), txt = ta ? ta.value : (e && e.x) || '';
+    if (!txt) return;
+    var done = function () { toast(t('writeCopied')); };
+    var fallback = function () {
+      var tmp = document.createElement('textarea'); tmp.value = txt; tmp.setAttribute('readonly', ''); tmp.style.position = 'fixed'; tmp.style.opacity = '0';
+      document.body.appendChild(tmp); tmp.select(); try { if (document.execCommand('copy')) done(); } catch (er) { /* Nutzer kopiert von Hand */ } tmp.remove();
+    };
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(txt).then(done, fallback); else fallback();
+  }
+  function writeInput(ta) {
+    if (!wst) return;
+    var w = K.writes[wst.id]; wst.text = ta.value;
+    var n = WR.countWords(ta.value), c = document.getElementById('w-count'), b = document.getElementById('w-done'), m = document.getElementById('w-min');
+    if (c) c.textContent = writeCountText(w, n);
+    if (b) b.disabled = !n;
+    if (m) { if (n && n < w.words.min) m.removeAttribute('hidden'); else m.setAttribute('hidden', ''); }
+    clearTimeout(wTimer); wTimer = setTimeout(flushDraft, 1500);
+  }
+  function writeTextsTxt(p) {
+    var out = [];
+    ['de', 'tr'].forEach(function (c) {
+      var m = (p.writes && p.writes[c]) || {};
+      Object.keys(m).sort().forEach(function (id) {
+        var e = m[id], w = K.writes[id], head = '=== ' + id + (w ? ' · ' + w.title + ' / ' + w.sub : '') + ' ===';
+        var blk = [head];
+        if (typeof e.x === 'string') blk.push('[' + fmtStamp(e.t, true) + ']\n' + e.x);
+        if (typeof e.x0 === 'string') blk.push('[' + t('writeFirst') + (e.t0 ? ' · ' + fmtStamp(e.t0, true) : '') + ']\n' + e.x0);
+        if (typeof e.xk === 'string') blk.push('[' + t('writeRescued') + ']\n' + e.xk);
+        if (typeof e.d === 'string') blk.push('[' + t('stDraft') + (e.dt ? ' · ' + fmtStamp(e.dt, true) : '') + ']\n' + e.d);
+        out.push(blk.join('\n\n'));
+      });
+    });
+    return out.join('\n\n\n');
+  }
+  function storageUseHtml() {
+    var tot = 0, wsz = 0;
+    try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k && k.indexOf('dt-') === 0) tot += (k.length + (localStorage.getItem(k) || '').length) * 2; } } catch (e) { /* ohne Zugriff: 0 */ }
+    Object.keys(db.profiles || {}).forEach(function (pid) { wsz += WR.size(db.profiles[pid]) * 2; });
+    var kb = function (b) { return Math.max(0, Math.round(b / 1024)).toLocaleString(uiLang() === 'de' ? 'de-DE' : 'tr-TR'); };
+    return '<p class="small" id="storage-use">💾 ' + esc(t('storageUse', { x: kb(tot), y: kb(wsz) })) + '</p>';
+  }
+
   function viewGaps() {
     var ids = wrongIds(), p = prog();
     var head = '<h1>🎯 ' + esc(t('gaps')) + '</h1><p class="muted">' + esc(t('gapsIntro')) + '</p>';
@@ -1759,7 +2040,7 @@
         return '<div class="problem"><a href="#/topic/' + x.tp.id + '/learn">' + esc(x.tp.title) + ' <span class="muted small">· ' + x.tp.level + '</span></a>' +
           '<div class="bar thin" title="' + esc(t('errorRate')) + '"><span class="fill" style="width:' + Math.round(x.rate * 100) + '%"></span></div><span class="small" style="text-align:right">' + fmtPct(Math.round(x.rate * 100)) + '</span></div>';
       }).join('') + '</div>' : '';
-    return head + list + probHtml;
+    return head + list + writeOpenHtml() + probHtml;
   }
   function viewPractice() {
     if (!player || player.key !== 'gaps') {
@@ -1791,7 +2072,7 @@
     var html = sl.live.map(levelCard).join('') + (sl.planned.length ? '<details class="planned-levels"><summary>' + esc(sl.label + ' · ' + t('plannedLevels')) + '</summary>' + sl.planned.map(levelCard).join('') + '</details>' : '');
     return '<div class="section-head"><h1>📊 ' + esc(t('overview')) + '</h1>' + legend + '</div><p class="muted">' + esc(t('overviewIntro')) + '</p>' +
       '<div class="card"><div class="section-head"><b>' + esc(t('totalProgress', { lv: splitLevels().live.join(', ') })) + '</b><span><b style="color:var(--ok)">' + tot.c + '</b> ✓ · <b style="color:var(--bad)">' + tot.w + '</b> ✗ · ' + tot.o + ' ○ / ' + tot.n + '</span></div>' +
-      '<div class="bar thick"><span class="ok" style="width:' + pct(tot.c, tot.n) + '%"></span><span class="bad" style="width:' + pct(tot.w, tot.n) + '%"></span></div></div>' + badgesCard() + html;
+      '<div class="bar thick"><span class="ok" style="width:' + pct(tot.c, tot.n) + '%"></span><span class="bad" style="width:' + pct(tot.w, tot.n) + '%"></span></div></div>' + writeCounterHtml() + badgesCard() + html;
   }
 
   /* ================= Einstellungen ================= */
@@ -1822,9 +2103,14 @@
         '<form class="inline-form" data-form="new-profile"><input class="input" name="name" maxlength="30" placeholder="' + esc(t('namePh')) + '" required><button class="btn" type="submit">+ ' + esc(t('newProfile')) + '</button></form></div>' +
       '<div class="card section"><h2>🔊 ' + esc(t('voiceTitle')) + '</h2>' + voiceSettingsHtml() + '</div>' +
       transferCardHtml() +
-      '<div class="card section"><h2>' + esc(t('data')) + '</h2><p class="muted small">' + esc(t('storageNote')) + '</p><div class="btn-row">' +
+      '<div class="card section"><h2>' + esc(t('data')) + '</h2><p class="muted small">' + esc(t('storageNote')) + '</p>' + storageUseHtml() + '<div class="btn-row">' +
         '<button class="btn" data-act="export">' + esc(t('exportBtn')) + '</button>' +
-        '<label class="btn" style="cursor:pointer">' + esc(t('importBtn')) + '<input type="file" accept="application/json,.json" data-act="import" hidden></label>' +
+        '<label class="btn" style="cursor:pointer">' + esc(t('importBtn')) + '<input type="file" accept="application/json,.json" data-act="import" hidden></label></div>' +
+        '<h3>✍️ ' + esc(t('writeTitle')) + '</h3><div class="btn-row">' +
+        '<button class="btn" data-act="w-download">' + esc(t('myTextsDownload')) + '</button>' +
+        '<button class="btn danger" data-act="w-delete">' + esc(t('myTextsDelete')) + '</button></div>' +
+        '<div class="reset-box"><label class="check-row"><input type="checkbox" id="reset-texts"> <span>' + esc(t('resetAlsoTexts')) + '</span></label>' +
+        '<p class="muted small">' + esc(t('resetKeepsTexts')) + '</p>' +
         '<button class="btn danger" data-act="reset-course">' + esc(t('resetCourse')) + '</button></div></div>' +
       '<div class="card section"><h2>⚖️ ' + esc(t('legal')) + '</h2><p class="muted small">' + esc(t('legalIntro')) + '</p><a class="btn" href="#/legal">' + esc(t('legalOpen')) + '</a></div>';
   }
@@ -2120,6 +2406,9 @@
         '<h3>' + esc(L('Was auf deinem Gerät gespeichert wird', 'Cihazında neler saklanır')) + '</h3><p>' +
           esc(L('Profilname, gewählter Kurs, deine Antworten und dein Fortschritt, der Wiederholungsplan, das Tagesziel und deine Einstellungen – im lokalen Speicher deines Browsers (localStorage, Einträge beginnen mit „dt-“). Diese Daten verlassen dein Gerät nicht; wir haben keinen Server, der sie empfängt. Löschen kannst du sie in den Einstellungen oder über die Browser-Einstellungen („Websitedaten löschen“). Eine Export-Datei entsteht nur, wenn du sie selbst herunterlädst.',
             'Profil adın, seçtiğin kurs, cevapların ve ilerlemen, tekrar planın, günlük hedefin ve ayarların – tarayıcının yerel belleğinde (localStorage, “dt-” ile başlayan kayıtlar). Bu veriler cihazından çıkmaz; bunları alan bir sunucumuz yok. Ayarlar’dan ya da tarayıcı ayarlarından (“site verilerini sil”) silebilirsin. Dışa aktarma dosyası yalnızca sen indirirsen oluşur.')) + '</p>' +
+        '<h3>' + esc(L('Deine eigenen Texte (Schreibwerkstatt)', 'Kendi metinlerin (yazma atölyesi)')) + '</h3><p>' +
+          esc(L('Was du in der Schreibwerkstatt schreibst, bleibt nur in diesem Browser (localStorage, unverschlüsselt). Es gibt keinen Upload und keine Auswertung. Deine Texte verlassen das Gerät nur, wenn du selbst etwas tust: Datei exportieren, Übertragungscode erzeugen (der Code steht hinter dem # im Link und wird nicht an einen Server gesendet, enthält aber deine Texte) oder Text kopieren. Gut zu wissen: Andere Seiten unter sinandmrr.github.io und andere Personen, die dasselbe Browserprofil nutzen, können technisch auf diesen Speicher zugreifen. Löschen kannst du deine Texte jederzeit in den Einstellungen.',
+            'Yazma atölyesinde yazdıkların yalnızca bu tarayıcıda kalır (localStorage, şifrelenmemiş). Hiçbir yere yüklenmez, incelenmez. Metinlerin cihazından ancak sen bir şey yaptığında çıkar: dosyayı dışa aktarırsan, aktarma kodu oluşturursan (kod bağlantıda # işaretinden sonra durur ve sunucuya gönderilmez, ama metinlerini içerir) ya da metni kopyalarsan. Bilmende fayda var: sinandmrr.github.io altındaki başka sayfalar ve aynı tarayıcı profilini kullanan başka kişiler teknik olarak bu belleğe erişebilir. Metinlerini Ayarlar’dan istediğin zaman silebilirsin.')) + '</p>' +
         '<h3>' + esc(L('Hosting', 'Barındırma')) + '</h3><p>' +
           esc(L('Die Seite liegt bei GitHub Pages (GitHub, Inc., USA). Laut GitHub wird beim Aufruf die IP-Adresse aus Sicherheitsgründen protokolliert. Darauf haben wir keinen Einfluss und keinen Zugriff.',
             'Site GitHub Pages’te (GitHub, Inc., ABD) barındırılıyor. GitHub’a göre siteye girildiğinde IP adresi güvenlik amacıyla kaydedilir. Bunun üzerinde bir etkimiz ya da erişimimiz yok.')) +
@@ -2146,6 +2435,7 @@
     if (r.page === 'words') return r.b ? '#/words/' + (r.lv || 'A1') + '/' + r.a : '#/words' + (r.lv ? '/' + r.lv : '');
     if (r.page === 'review') return '#/words';
     if (r.page === 'placement') return '#/lessons';
+    if (r.page === 'write') { var w0 = K.writes && K.writes[r.a]; return '#/lessons' + (w0 ? '/' + DT.catalog.writeLevel(w0) : ''); }
     if (r.page === 'legal') return '#/settings';
     return '#/dashboard';   // daily, certificate, …
   }
@@ -2153,6 +2443,7 @@
     return '<div class="backrow"><a class="back-btn" href="' + parentRoute(r) + '">‹ ' + esc(t('back')) + '</a></div>';
   }
   function render() {
+    flushDraft();   // Schreibwerkstatt: getippten Text vor jedem Neu-Rendern sichern (ADR-13)
     applyTheme();
     Object.keys(db.profiles || {}).forEach(function (id) { var pp = db.profiles[id]; if (pp && !K.courses[pp.course]) pp.course = 'de'; });
     if (!db.active || !db.profiles[db.active]) {
@@ -2178,9 +2469,11 @@
     // Player zurücksetzen, wenn man die Übungsansicht verlässt
     var inPlayer = (r.page === 'topic' && (r.b === 'exercises' || r.b === 'review')) || r.page === 'practice' || r.page === 'review' || r.page === 'daily' || (r.page === 'words' && r.b) || r.page === 'placement';
     if (!inPlayer) player = null;
+    if (r.page !== 'write') wst = null;
     switch (r.page) {
       case 'lessons': inner = viewLessons(r.a); break;
       case 'topic': inner = viewTopic(r.a, r.b); active = 'lessons'; break;
+      case 'write': inner = viewWrite(r.a); active = 'lessons'; break;
       case 'gaps': inner = viewGaps(); break;
       case 'words': inner = (!r.a || !(K.wordfields || []).some(function (f) { return f[0] === r.a; })) ? viewWords(r.lv) : (r.b === 'learn' || r.b === 'practice' ? viewWordSession(r.a, r.b, r.lv) : viewField(r.a, r.lv)); break;
       case 'review': inner = viewReview(); active = 'words'; break;
@@ -2193,7 +2486,7 @@
       case 'legal': inner = viewLegal(r.a === 'de' || r.a === 'tr' ? r.a : uiLang()); active = ''; break;
       default: inner = viewDashboard(); active = 'dashboard';
     }
-    if (['topic', 'words', 'review', 'daily', 'placement', 'certificate', 'legal'].indexOf(r.page) >= 0 && !(r.page === 'words' && !r.a)) inner = backButton(r) + inner;
+    if (['topic', 'write', 'words', 'review', 'daily', 'placement', 'certificate', 'legal'].indexOf(r.page) >= 0 && !(r.page === 'words' && !r.a)) inner = backButton(r) + inner;
     app.innerHTML = shell(active, inner);
     afterRender();
   }
@@ -2212,6 +2505,8 @@
     }
   }
   function afterRender() {
+    var wta = document.getElementById('w-text');
+    if (wta && wst && wta.getAttribute('data-id') === wst.id) wta.value = wst.text || '';   // per value, damit ein führender Zeilenumbruch bleibt
     if (player && !player.done && !player.checked) {
       var it = curEx();
       if (it && it.ex.say && (it.ex.t === 'listen' || it.ex.t === 'dictation') && player.autoKey !== it.id + '@' + player.idx) {
@@ -2256,11 +2551,15 @@
   });
   document.addEventListener('focusout', function (ev) {
     if (!isTypingField(ev.target)) return;
+    if (ev.target.id === 'w-text') flushDraft();   // Entwurf beim Verlassen des Felds sichern
     kbTimer = setTimeout(function () { if (!isTypingField(document.activeElement)) document.body.classList.remove('typing'); }, 150);
   });
   if (window.visualViewport) window.visualViewport.addEventListener('resize', function () { if (document.body.classList.contains('typing')) keepFieldVisible(); });
   // Sonderzeichen antippen nimmt dem Feld nicht den Fokus (sonst klappt die Tastatur zu und die Seite springt)
-  document.addEventListener('pointerdown', function (ev) { if (ev.target.closest && ev.target.closest('.charbar button')) ev.preventDefault(); });
+  document.addEventListener('pointerdown', function (ev) { if (ev.target.closest && ev.target.closest('.charbar button, .w-chunks button')) ev.preventDefault(); });
+  // Entwurf sichern, wenn die Seite in den Hintergrund geht oder geschlossen wird (ADR-13)
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flushDraft(); });
+  window.addEventListener('pagehide', flushDraft);
 
   /* ================= Events ================= */
   app.addEventListener('click', function (ev) {
@@ -2282,12 +2581,15 @@
       case 'set-course': switchCourse(el.getAttribute('data-v')); break;
       case 'mc': if (player && !player.checked) { player.cur.sel = +el.getAttribute('data-i'); rerenderPlayerOnly(); } break;
       case 'char': {
-        var inp = document.getElementById('gap-input') || (player && player.cur && player.cur.lastGap && document.getElementById('cloze-' + player.cur.lastGap)); if (!inp || inp.disabled || inp.tagName !== 'INPUT') break;
+        var inp = document.getElementById('gap-input') || document.getElementById('w-text') || (player && player.cur && player.cur.lastGap && document.getElementById('cloze-' + player.cur.lastGap));
+        if (!inp || inp.disabled || (inp.tagName !== 'INPUT' && inp.id !== 'w-text')) break;
         var ch = el.getAttribute('data-ch'), s0 = inp.selectionStart == null ? inp.value.length : inp.selectionStart, s1 = inp.selectionEnd == null ? inp.value.length : inp.selectionEnd;
+        if (inp.maxLength > 0 && inp.value.length - (s1 - s0) + ch.length > inp.maxLength) break;
         inp.value = inp.value.slice(0, s0) + ch + inp.value.slice(s1);
-        if (inp.id === 'gap-input') player.cur.input = inp.value; else player.cur.gaps[inp.getAttribute('data-gap')] = inp.value;
         inp.focus(); inp.setSelectionRange(s0 + ch.length, s0 + ch.length);
-        var cb = document.getElementById('check-btn'); if (cb) cb.disabled = !canCheck(curEx().ex, player.cur);
+        if (inp.id === 'w-text') { writeInput(inp); break; }
+        if (inp.id === 'gap-input') player.cur.input = inp.value; else player.cur.gaps[inp.getAttribute('data-gap')] = inp.value;
+        var cb = document.getElementById('check-btn'); if (cb && player) cb.disabled = !canCheck(curEx().ex, player.cur);
         break;
       }
       case 'sort': if (player && !player.checked) { player.cur.assign[+el.getAttribute('data-i')] = +el.getAttribute('data-c'); rerenderPlayerOnly(); } break;
@@ -2389,14 +2691,92 @@
       case 'dl-tr': { dialogShowTr = !dialogShowTr; var box = document.querySelector('.dialog'); if (box) box.classList.toggle('show-tr', dialogShowTr); el.setAttribute('aria-pressed', dialogShowTr); break; }
       case 'play-say': speak(el.getAttribute('data-say'), course().tts, { gender: el.getAttribute('data-g') || '', rate: el.getAttribute('data-slow') ? 0.72 : 1 }); break;
       case 'voice-test': { var sel = document.getElementById('voice-sel'); speak(t('testSentence'), course().tts, { voiceName: sel ? sel.value : null }); break; }
-      case 'reset-course': if (armed(el, t('confirmReset'))) {
-        backupNow(); var pr3 = ensureProfile(prof()), cr = courseId();
-        pr3.prog[cr] = {}; if (pr3.srs) pr3.srs[cr] = {}; if (pr3.skip) pr3.skip[cr] = {}; if (pr3.place) delete pr3.place[cr];
-        save(); player = null; render();
+      case 'reset-course': {
+        // ADR-13 §4: eigene Texte bleiben standardmäßig; nur mit Kästchen (und zweistufiger Bestätigung) mitlöschen
+        var rtx = document.getElementById('reset-texts'), wipeT = !!(rtx && rtx.checked);
+        // Kästchen nach dem ersten Klick geändert? → neu fragen (die Bestätigung gilt nur für das, was gefragt wurde)
+        if (el.getAttribute('data-armed') === '1' && el.getAttribute('data-wipe') !== String(wipeT)) el.removeAttribute('data-armed');
+        el.setAttribute('data-wipe', String(wipeT));
+        if (armed(el, t(wipeT ? 'confirmResetTexts' : 'confirmReset'))) {
+          backupNow(); var pr3 = ensureProfile(prof()), cr = courseId();
+          pr3.prog[cr] = {}; if (pr3.srs) pr3.srs[cr] = {}; if (pr3.skip) pr3.skip[cr] = {}; if (pr3.place) delete pr3.place[cr];
+          if (wipeT) DT.writes.removeCourse(pr3, cr); else DT.writes.archiveCourse(pr3, cr, Date.now());
+          save(); player = null; wst = null; render();
+        }
       } break;
+      case 'w-chunk': {
+        var wta = document.getElementById('w-text'), wk = wst && K.writes[wst.id], chunk = wk && (wk.chunks || [])[+el.getAttribute('data-i')];
+        if (!wta || !chunk) break;
+        var a0 = wta.selectionStart == null ? wta.value.length : wta.selectionStart, a1 = wta.selectionEnd == null ? a0 : wta.selectionEnd;
+        var before = wta.value.slice(0, a0), ins = (before && !/\s$/.test(before) ? ' ' : '') + chunk;
+        if (wta.value.length - (a1 - a0) + ins.length > wta.maxLength) break;
+        wta.value = before + ins + wta.value.slice(a1);
+        wta.focus();
+        var dots = ins.indexOf('…');   // erstes „…“ markieren: Weiterschreiben ersetzt es
+        if (dots >= 0) wta.setSelectionRange(a0 + dots, a0 + dots + 1); else wta.setSelectionRange(a0 + ins.length, a0 + ins.length);
+        writeInput(wta); break;
+      }
+      case 'w-done': {
+        var wtd = document.getElementById('w-text'); if (!wtd || !wst) break;
+        var wid = wst.id, wv = wtd.value; if (!DT.writes.countWords(wv)) break;
+        clearTimeout(wTimer);
+        var wr = writeCommit(wid, function () { return DT.writes.submit(prof(), courseId(), wid, wv, Date.now()); });
+        if (!wr.ok) { setWriteMsg(writeErrMsg(wr), true); toast(writeErrMsg(wr)); break; }
+        wst.mode = 'done'; wst.checks = {}; wst.text = wv; wst.last = wv; wst.msg = ''; wst.msgAlert = false;
+        render();
+        var hh = document.getElementById('w-hints'); if (hh) { hh.scrollIntoView({ block: 'start', behavior: 'smooth' }); hh.setAttribute('tabindex', '-1'); try { hh.focus({ preventScroll: true }); } catch (e) { /* ignore */ } }
+        break;
+      }
+      case 'w-revise': if (wst) {
+        var we = writeEntry(wst.id); wst.mode = 'edit'; wst.text = we && typeof we.d === 'string' ? we.d : (we && we.x) || ''; wst.last = wst.text; wst.msg = ''; wst.msgAlert = false;
+        render(); var wt2 = document.getElementById('w-text'); if (wt2) { wt2.focus(); wt2.setSelectionRange(wt2.value.length, wt2.value.length); }
+      } break;
+      case 'w-practiced': if (wst && K.writes[wst.id] && K.writes[wst.id].check.every(function (_, i) { return wst.checks[i]; })) {
+        record(wst.id, true); toast(t('writePracticedToast')); rerenderPlayerOnly();
+      } break;
+      case 'w-tr': {
+        if (!wst) break; wst.showTr = !wst.showTr; el.setAttribute('aria-pressed', wst.showTr);
+        var wtr = document.querySelector('.w-trans'); if (wtr) { if (wst.showTr) wtr.removeAttribute('hidden'); else wtr.setAttribute('hidden', ''); }
+        break;
+      }
+      case 'w-copy': writeCopy(); break;
+      case 'w-del-part': {         // einzelne Fassung löschen (ADR-13 §4): zweistufig, vorher Sicherung
+        if (!wst) break;
+        if (!armed(el, t('confirmVersionDelete'))) break;
+        flushDraft(); backupNow();
+        var dpId = wst.id, dpPart = el.getAttribute('data-part'), dpI = +el.getAttribute('data-i');
+        var dpR = writeCommit(dpId, function () { var x = WR.removePart(prof(), courseId(), dpId, dpPart, dpI); x.changed = x.ok; return x; });
+        if (!dpR.ok) { toast(dpR.error ? writeErrMsg(dpR) : t('writeNotSaved')); render(); break; }
+        toast(t('writeVersionDeleted')); render(); break;
+      }
+      case 'w-del-entry': {        // ganzen Text löschen: Eintrag und „geübt“ (sonst wäre eine neue Abgabe sofort „geübt“)
+        if (!wst || !writeEntry(wst.id)) break;
+        if (!armed(el, t('confirmWriteDelete'))) break;
+        flushDraft(); backupNow();
+        var deId = wst.id, deE = JSON.parse(JSON.stringify(writeEntry(deId)));
+        var deR = writeCommit(deId, function () { var x = WR.remove(prof(), courseId(), deId); return { ok: x, changed: x, prev: deE }; });
+        if (!deR.ok) { toast(writeErrMsg(deR)); render(); break; }
+        if (prog()[deId]) { delete prog()[deId]; save(); }
+        wst = null; toast(t('writeEntryDeleted')); render(); break;
+      }
+      case 'w-download': {
+        var wtxt = writeTextsTxt(ensureProfile(prof())); if (!wtxt) { toast(t('myTextsNone')); break; }
+        var aW = document.createElement('a'); aW.href = URL.createObjectURL(new Blob([wtxt], { type: 'text/plain;charset=utf-8' })); aW.download = 'meine-texte-metinlerim.txt';
+        document.body.appendChild(aW); aW.click(); setTimeout(function () { URL.revokeObjectURL(aW.href); aW.remove(); }, 500); break;
+      }
+      case 'w-delete': {
+        var pw = ensureProfile(prof()); if (!Object.keys(pw.writes[courseId()] || {}).length) { toast(t('myTextsNone')); break; }
+        if (armed(el, t('confirmTextsDelete'))) {
+          backupNow(); var pgW = prog();
+          Object.keys(pw.writes[courseId()]).forEach(function (wid) { delete pgW[wid]; });   // kein „geübt“ ohne Text
+          DT.writes.removeCourse(pw, courseId()); save(); wst = null; toast(t('myTextsDeleted')); render();
+        }
+        break;
+      }
     }
   });
   app.addEventListener('input', function (ev) {
+    if (ev.target.id === 'w-text') { writeInput(ev.target); return; }
     if (ev.target.id === 'cert-name') { var lvc = (parseHash().a || 'A1'); renderCertCanvas(lvc); return; }
     if (ev.target.getAttribute && ev.target.hasAttribute('data-gap') && player && player.cur) {
       player.cur.gaps[ev.target.getAttribute('data-gap')] = ev.target.value; player.cur.lastGap = ev.target.getAttribute('data-gap');
@@ -2416,6 +2796,11 @@
     if (el.matches('select[data-act="cloze"]') && player) {
       player.cur.gaps[el.getAttribute('data-i')] = el.value;
       var cb3 = document.getElementById('check-btn'); if (cb3) cb3.disabled = !canCheck(curEx().ex, player.cur);
+    }
+    if (el.matches('input[data-act="w-ck"]') && wst) {
+      wst.checks[+el.getAttribute('data-i')] = el.checked;
+      var wk2 = K.writes[wst.id], okb = document.getElementById('w-ok');
+      if (okb && wk2) okb.disabled = !wk2.check.every(function (_, i) { return wst.checks[i]; });
     }
     if (el.matches('input[data-act="import"]')) doImport(el.files && el.files[0]);
     if (el.matches('select[data-act="voice"]')) { db.voices = db.voices || {}; db.voices[course().tts] = el.value; save(); speak(t('testSentence'), course().tts, { voiceName: el.value }); }
@@ -2450,9 +2835,11 @@
   /* Zweistufige Bestätigung im Button selbst (confirm() ist in manchen Einbettungen blockiert) */
   function armed(el, question) {
     if (el.getAttribute('data-armed') === '1') return true;
-    el.setAttribute('data-armed', '1'); var old = el.innerHTML;
+    var old = el.hasAttribute('data-label') ? el.getAttribute('data-label') : el.innerHTML;   // ursprüngliche Beschriftung (auch bei erneutem Scharfschalten)
+    el.setAttribute('data-armed', '1'); el.setAttribute('data-label', old);
     el.innerHTML = '⚠️ ' + esc(question) + ' ' + esc(t('clickAgain'));
-    setTimeout(function () { if (el.isConnected) { el.removeAttribute('data-armed'); el.innerHTML = old; } }, 4000);
+    clearTimeout(el._armT);
+    el._armT = setTimeout(function () { if (el.isConnected) { el.removeAttribute('data-armed'); el.removeAttribute('data-label'); el.innerHTML = old; } }, 4000);
     return false;
   }
   function switchCourse(cid) {
@@ -2498,11 +2885,18 @@
   /** Ergebnis von importData übernehmen: erst Sicherung, dann zusammengeführtes Profil speichern. */
   function commitImport(r) {
     backupNow();
+    var before = db.profiles[db.active];
     db.profiles[db.active] = ensureProfile(r.profile);
-    save(); player = null; toast(t('imported')); render();
+    if (!save()) {                       // passt nicht in den Speicher → vorherigen Stand behalten, nichts halb übernehmen
+      db.profiles[db.active] = before; save(); toast(t('importFail')); render(); return false;
+    }
+    player = null; wst = null;
+    toast(t(DT.writes.size(r.profile) > DT.writes.MAX_TOTAL ? 'writeImportOver' : 'imported')); render();   // Import kürzt nie (ADR-13)
+    return true;
   }
   function doImport(file) {
     if (!file) return;
+    if (file.size > DT.storage.TR_MAX_RAW) { toast(t('importFail')); return; }   // gleiche Grenze wie beim Übertragungscode
     var rd = new FileReader();
     rd.onload = function () {
       try {
@@ -2518,7 +2912,7 @@
   var pendingTransfer = null;   // { data, n, d } – gefundener Stand wartet auf „Zusammenführen“
   function countEntries(profile) {
     var n = 0;
-    ['prog', 'srs'].forEach(function (f) {
+    ['prog', 'srs', 'writes'].forEach(function (f) {
       var m = profile && profile[f];
       if (m && typeof m === 'object') Object.keys(m).forEach(function (c) { n += (m[c] && typeof m[c] === 'object') ? Object.keys(m[c]).length : 1; });
     });
@@ -2526,7 +2920,7 @@
   }
   function countChanged(cur, merged) {   // wie viele Einträge würden neu oder aktueller
     var n = 0;
-    ['prog', 'srs'].forEach(function (f) {
+    ['prog', 'srs', 'writes'].forEach(function (f) {
       var A = (cur && cur[f]) || {}, B = (merged && merged[f]) || {};
       Object.keys(B).forEach(function (c) {
         var bm = B[c] || {}, am = A[c] || {};
@@ -2569,6 +2963,7 @@
       '<details class="guide"><summary class="btn">' + esc(t('guideToPc')) + '</summary>' + steps('guidePc') + '</details>' +
       '<details class="guide"><summary class="btn">' + esc(t('guideToPhone')) + '</summary>' + steps('guideLap') + '</details>' +
       '<p class="muted small">' + esc(t('guideNote')) + '</p><p class="muted small">' + esc(t('guideFile')) + '</p>' +
+      (DT.writes.size(prof()) ? '<p class="small">✍️ ' + esc(t('transferHasTexts')) + '</p>' : '') +
       '<div class="btn-row"><button class="btn primary" data-act="transfer-make">' + esc(t('transferMake')) + '</button></div>' +
       '<div id="transfer-out" aria-live="polite"></div>' +
       '<h3>' + esc(t('transferPaste')) + '</h3>' +
