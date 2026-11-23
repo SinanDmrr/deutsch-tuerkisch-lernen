@@ -1152,6 +1152,21 @@ test('texts: Hörtexte prüfen und registrieren', () => {
   const KK = ctx.window.KOPRU; if (KK) { KK.addText('tr-a2-h99', { level: 'A2' }); eq(KK.texts['tr-a2-h99'].kind, 'listen', 'addText: -h-ID ⇒ kind listen'); delete KK.texts['tr-a2-h99']; }
 });
 
+test('B1-Lehrplan (Paket 0b)', () => {
+  const cur = fs.readFileSync(path.join(root, 'js', 'curriculum.js'), 'utf8'), c2 = { window: {} }; vm.createContext(c2); vm.runInContext(cur, c2);
+  const KK = c2.window.KOPRU;
+  ['de', 'tr'].forEach(c => {
+    const ids = KK.courses[c].levels.B1.map(r => r[0]);
+    eq(ids.length, 17, c + ' B1: 17 Themen');
+    eq(ids.length, new Set(ids).size, c + ' B1: IDs eindeutig');
+    ok(ids.every(i => i.indexOf(c + '-b1-') === 0), c + ' B1: ID-Präfix');
+    ok(KK.courses[c].levels.B1.every(r => r.length === 3 && r[1] && r[2]), c + ' B1: Titel in beiden Sprachen');
+    ok(KK.courses[c].complete.indexOf('B1') < 0, c + ' B1: nicht freigegeben (im Aufbau)');
+  });
+  ok(KK.courses.de.levels.B1.every(r => r[0] !== 'de-b1-09'), 'de-b1-09 entfällt (n-Deklination in de-b1-06)');
+  const f = KK.wordfields.map(x => x[0]); ok(f.indexOf('society') >= 0 && f.indexOf('opinion') >= 0, 'Wortfelder society/opinion');
+});
+
 test('Wortschatz je Niveau (ADR-11.3)', () => {
   const cur = fs.readFileSync(path.join(root, 'js', 'curriculum.js'), 'utf8'), c2 = { window: {} }; vm.createContext(c2); vm.runInContext(cur, c2);
   const KK = c2.window.KOPRU, vc = vm.runInContext('(function(){return window})()', c2).DT;

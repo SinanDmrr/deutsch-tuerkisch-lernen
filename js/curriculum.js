@@ -26,7 +26,10 @@ window.KOPRU = {
     ['travel', 'Reisen & Urlaub', 'Seyahat ve tatil'],
     ['media', 'Medien & Kommunikation', 'Medya ve iletişim'],
     ['feel', 'Gefühle & Meinungen', 'Duygular ve görüşler'],
-    ['service', 'Dienstleistungen & Behörden', 'Hizmetler ve resmî işler']
+    ['service', 'Dienstleistungen & Behörden', 'Hizmetler ve resmî işler'],
+    // ab B1
+    ['society', 'Gesellschaft & Zusammenleben', 'Toplum ve birlikte yaşam'],
+    ['opinion', 'Meinung & Argumentation', 'Görüş ve tartışma']
   ],
   dialogs: {},   // Alltagsdialoge, z. B. dialogs['de-a1-d01'] = { level, title, lines, questions }
   addDialog: function (id, d) { d.id = id; this.dialogs[id] = d; },
@@ -91,17 +94,24 @@ window.KOPRU = {
           ['de-a2-16', 'Indirekte Fragen: ob, wo, wann …', 'Dolaylı sorular'],
           ['de-a2-09', 'Konjunktiv II: höflich bitten & Rat geben', 'Kibar rica ve tavsiye: hätte, könnte, sollte']
         ],
-        B1: [
-          ['de-b1-01', 'Präteritum', 'Hikâye geçmiş zaman'],
-          ['de-b1-02', 'Plusquamperfekt', 'Miş’li geçmişin geçmişi'],
-          ['de-b1-03', 'Relativsätze', 'İlgi cümleleri'],
-          ['de-b1-04', 'Passiv (Präsens & Präteritum)', 'Edilgen çatı'],
-          ['de-b1-05', 'Infinitiv mit „zu“', '“zu” ile mastar'],
-          ['de-b1-06', 'Genitiv', 'Tamlayan hâli'],
-          ['de-b1-07', 'Konnektoren: obwohl, trotzdem, deshalb', 'Bağlaçlar'],
-          ['de-b1-08', 'Konjunktiv II der Vergangenheit', 'Gerçekleşmemiş geçmiş'],
-          ['de-b1-09', 'n-Deklination', 'n-çekimi'],
-          ['de-b1-10', 'Verben mit Präpositionen', 'Edatlı fiiller']
+        B1: [   // Reihenfolge = Lernreihenfolge (docs/b1-konzept.md); IDs fest, unabhängig von der Position
+          ['de-b1-01', 'Präteritum aller Verben', 'Tüm fiillerde Präteritum'],   // Lernziel: Metinlerde anlatılan olayları okumak ve yazılı anlatmak
+          ['de-b1-11', 'Temporalsätze: als/wenn, während, bevor, nachdem, seit(dem), bis', 'Zaman cümleleri: als/wenn, während, bevor, nachdem …'],   // Lernziel: Olayların sırasını metinlerde bağlamak
+          ['de-b1-02', 'Plusquamperfekt', 'Plusquamperfekt (-mıştı)'],   // Lernziel: Daha önce olan olayı anlatmak (nachdem ich gegessen hatte)
+          ['de-b1-06', 'Genitiv & wegen, trotz, statt, während (inkl. n-Deklination)', 'Tamlayan hâli ve wegen, trotz, statt, während (n-çekimi dâhil)'],   // Lernziel: Yazı dilinde aitlik ve nedenleri ifade etmek; den Kollegen / dem Nachbarn
+          ['de-b1-15', 'Adjektivdeklination komplett & Partizip II als Adjektiv', 'Sıfat çekiminin tamamı ve sıfat olarak Partizip II'],   // Lernziel: wegen des schlechten Wetters, die reparierte Heizung
+          ['de-b1-03', 'Relativsätze I: Nominativ, Akkusativ, Dativ', 'İlgi cümleleri I (yalın, -i, -e hâli)'],   // Lernziel: Kişi ve nesneleri daha ayrıntılı tarif etmek
+          ['de-b1-10', 'Verben mit Präpositionen; worauf/darauf', 'Edatlı fiiller; worauf / darauf'],   // Lernziel: sich ärgern über, Ich warte darauf, dass …
+          ['de-b1-14', 'Relativsätze II: mit Präposition, dessen/deren, wo, was', 'İlgi cümleleri II (edatlı, dessen/deren, wo, was)'],   // Lernziel: die Firma, bei der ich arbeite; alles, was …
+          ['de-b1-05', 'Infinitiv mit zu; (nicht) brauchen zu', '“zu” ile mastar; (nicht) brauchen zu'],   // Lernziel: Ich habe vergessen, anzurufen
+          ['de-b1-12', 'Zweck & Art: um … zu, damit, ohne … zu, statt … zu, indem', 'Amaç ve tarz: um … zu, damit, ohne … zu, statt … zu, indem'],   // Lernziel: Amaçları, yolları ve alternatifleri anlatmak
+          ['de-b1-07', 'Gegengrund, Bedingung, Folge: obwohl, da, falls, sodass', 'Karşıt neden, koşul, sonuç: obwohl, da, falls, sodass'],   // Lernziel: Görüş savunmak, gerekçe göstermek
+          ['de-b1-16', 'Zweiteilige Konnektoren & je … desto', 'İkili bağlaçlar ve je … desto'],   // Lernziel: Metinleri düzenlemek ve bağlamak
+          ['de-b1-04', 'Passiv (Präsens, Präteritum, Perfekt, mit Modalverb) & lassen', 'Edilgen çatı (Präsens, Präteritum, Perfekt, modal fiille) ve lassen'],   // Lernziel: İşlemleri, kuralları ve talimatları anlatmak
+          ['de-b1-13', 'Konjunktiv II: irreale Wünsche & Bedingungen', 'Konjunktiv II: gerçek dışı dilek ve koşullar'],   // Lernziel: Wenn ich mehr Zeit hätte, …; Ich wünschte, …
+          ['de-b1-08', 'Konjunktiv II der Vergangenheit', 'Geçmişte gerçekleşmeyenler (Konjunktiv II Vergangenheit)'],   // Lernziel: Pişmanlık ve eleştiri: Du hättest anrufen sollen
+          ['de-b1-17', 'Häufige Nomen-Verb-Verbindungen', 'Sık kullanılan isim-fiil kalıpları'],   // Lernziel: eine Entscheidung treffen, Bescheid geben, in Frage kommen
+          ['de-b1-18', 'Wiedergeben & vermuten: sollen, laut, werden + wohl; Konjunktiv I erkennen', 'Aktarma ve tahmin: sollen, laut, werden + wohl; Konjunktiv I’i tanımak']   // Lernziel: Başkalarının sözlerini ve haberleri aktarmak
         ],
         B2: [
           ['de-b2-01', 'Passiv mit Modalverben', 'Modal fiilli edilgen'],
@@ -177,17 +187,24 @@ window.KOPRU = {
           ['tr-a2-10', 'Konverb -(y)Ip', 'Zarf-fiil -ip'],
           ['tr-a2-15', 'Gehörtes & Erzähltes: -mIş (Grundlagen)', 'Duyulan geçmiş zaman (temel)']
         ],
-        B1: [
-          ['tr-b1-01', '-mIş vertieft (-mIştI, Überraschung)', 'Duyulan geçmiş zaman (ileri)'],
-          ['tr-b1-02', 'Partizip -(y)An', 'Sıfat-fiil -en'],
-          ['tr-b1-03', 'Partizipien -DIk & -(y)AcAk', 'Sıfat-fiil -dik / -ecek'],
-          ['tr-b1-04', 'Konditional -sA', 'Şart kipi'],
-          ['tr-b1-05', 'Passiv', 'Edilgen çatı'],
-          ['tr-b1-06', 'Kausativ', 'Ettirgen çatı'],
-          ['tr-b1-07', 'Verbalnomen -mAk, -mA, -(y)Iş', 'İsim-fiiller'],
-          ['tr-b1-08', 'Gleichzeitigkeit -(y)ken', 'Zarf-fiil -ken'],
-          ['tr-b1-09', 'Temporalsätze -DIğIndA, -(y)IncA', 'Zaman bildiren yapılar'],
-          ['tr-b1-10', 'Indirekte Rede -DIğInI', 'Dolaylı anlatım']
+        B1: [   // Reihenfolge = Lernreihenfolge (docs/b1-konzept.md); IDs fest, unabhängig von der Position
+          ['tr-b1-11', 'Hintergrund in der Vergangenheit: -(I)yordu, -(y)AcAktI, -mAlIydI, -(I)rdI', 'Birleşik zamanlar (hikâye)'],   // Lernziel: Szene und Plan in der Vergangenheit: „Yağmur yağıyordu, eve gidecektim“
+          ['tr-b1-01', '-mIş vertieft (-mIştI, Überraschung, -(y)mIş am Nomen)', 'Duyulan geçmiş zaman (ileri)'],   // Lernziel: Vorzeitigkeit, Gehörtes, Überraschung („hastaymış“)
+          ['tr-b1-07', 'Verbalnomen -mAk, -mA (+ Possessiv), -(y)Iş', 'İsim-fiiller'],   // Lernziel: „Gelmeni istiyorum“, „okumayı seviyorum“
+          ['tr-b1-02', 'Partizip -(y)An', 'Sıfat-fiil -en'],   // Lernziel: „Gelen adam“, „burada çalışan kadın“ als Ersatz für Relativsätze
+          ['tr-b1-03', 'Partizipien -DIk & -(y)AcAk + Possessiv', 'Sıfat-fiil -dik / -ecek'],   // Lernziel: „okuduğum kitap“, „gideceğimiz yer“
+          ['tr-b1-10', 'Indirekte Rede: -DIğInI, -(y)AcAğInI, -mAsInI söylemek; diye', 'Dolaylı anlatım'],   // Lernziel: Aussagen und Bitten weitergeben
+          ['tr-b1-08', 'Gleichzeitigkeit -(y)ken', 'Zarf-fiil -ken'],   // Lernziel: „Yolda yürürken …“
+          ['tr-b1-09', 'wenn/als: -DIğIndA, -DIğI zaman, -(y)IncA', 'Zaman bildiren yapılar'],   // Lernziel: Zeitpunkte und Abfolgen ausdrücken
+          ['tr-b1-16', 'bis, je mehr, seit: -(y)IncAyA kadar, -DIkçA, -DIğIndAn beri', 'Zaman ve ölçü bildiren zarf-fiiller'],   // Lernziel: Dauer, Grenze und Steigerung
+          ['tr-b1-12', 'Art und Weise & „ohne“: -(y)ArAk, -mAdAn', 'Zarf-fiil -arak, -madan'],   // Lernziel: „Koşarak geldi“, „sormadan aldı“
+          ['tr-b1-13', 'Grund & Gegengrund: -DIğI için, -DIğIndAn, -mAsInA rağmen, -DIğI halde', 'Sebep ve karşıtlık'],   // Lernziel: Argumentieren in Nebensatzform
+          ['tr-b1-04', 'Bedingung -sA: eğer, -(y)sA am Nomen, -mAzsA, -sA bile', 'Şart kipi'],   // Lernziel: reale und mögliche Bedingungen
+          ['tr-b1-15', 'Wunsch & Vermutung: keşke -sA, -DIr, herhalde, galiba, olabilir', 'Dilek ve tahmin'],   // Lernziel: wünschen, bedauern, vermuten
+          ['tr-b1-05', 'Passiv -Il / -In', 'Edilgen çatı'],   // Lernziel: Regeln, Anleitungen und Nachrichten
+          ['tr-b1-17', 'Reflexiv & reziprok: -(I)n, -(I)ş', 'Dönüşlü ve işteş çatı'],   // Lernziel: „giyinmek, görüşmek, tanışmak“, Abgrenzung zum Passiv
+          ['tr-b1-06', 'Kausativ (häufige Verben)', 'Ettirgen çatı'],   // Lernziel: „Saçımı kestirdim“, „arabayı yıkattım“
+          ['tr-b1-14', 'Textkonnektoren: ancak, oysa, üstelik, ayrıca, yine de, dolayısıyla, kısacası', 'Metin bağlayıcıları']   // Lernziel: Meinungstexte gliedern
         ],
         B2: [
           ['tr-b2-01', '-(y)ArAk & -mAdAn', 'Zarf-fiiller'],

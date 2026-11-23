@@ -1,4 +1,4 @@
-/* Umfangs-Budget je Kurs und Niveau (docs/umfangs-budget.md): node tools/count-budget.js [a1|a2 ...]
+/* Umfangs-Budget je Kurs und Niveau (docs/umfangs-budget.md): node tools/count-budget.js [a1|a2|b1 ...]
  * Zählt Themen, gewertete Aufgaben, mc-Anteil, Wörter (phr), Dialoge/Wahlzeilen, Lese-/Hörtexte, Schreiben, Typen. Nur Lesen, Exit 0. */
 const fs = require('fs'), vm = require('vm'), path = require('path');
 const root = path.join(__dirname, '..');
@@ -9,7 +9,8 @@ const MF = ctx.window.KOPRU.manifest;
 Object.keys(MF).sort().forEach(k => (MF[k].files || []).forEach(f => fs.existsSync(path.join(root, 'js/content', f)) && run('js/content/' + f)));
 ['check.js', 'catalog.js'].forEach(f => run('js/core/' + f));
 const K = ctx.window.KOPRU, DT = ctx.window.DT, isC = DT.check.isCountable, CAT = DT.catalog;
-const BUD = { a1: { topics: 16, perTopic: 24, mc: 30, words: 650, phr: 20, dialogs: 10, reads: 12, listens: 10, writes: 10 } };
+const BUD = { a1: { topics: 16, perTopic: 24, mc: 30, words: 650, phr: 20, dialogs: 10, reads: 12, listens: 10, writes: 10 },
+  b1: { topics: 17, perTopic: 24, mc: 30, words: 675, phr: 20, dialogs: 10, reads: 12, listens: 10, writes: 10 } };   // B1: docs/b1-konzept.md + Umfangsbudget-Kürzung (DE 17 Themen); Lesetexte je 5 Fragen, Hörtexte je 4
 const levels = process.argv.slice(2).map(x => x.toLowerCase()); if (!levels.length) levels.push('a1', 'a2');
 const pct = (a, b) => b ? Math.round(100 * a / b) : 0;
 const flag = (v, t, tol) => Math.abs(v - t) <= t * tol ? 'ok' : (v < t ? 'ZU WENIG' : 'ZU VIEL');
@@ -46,4 +47,4 @@ for (const lv of levels) for (const c of ['de', 'tr']) {
 }
 const w = [8, 32, 0, 8, 9]; console.log(['Kurs'.padEnd(8), 'Kennzahl'.padEnd(32), 'Ist'.padEnd(22), 'Budget'.padEnd(8), 'Status'].join(' '));
 rows.forEach(r => console.log([String(r[0]).padEnd(8), String(r[1]).padEnd(32), String(r[2]).padEnd(22), String(r[3]).padEnd(8), r[4]].join(' ')));
-console.log('Budget gilt für A1 (±10 %); für andere Niveaus nur Vergleichswerte.');
+console.log('Budget gilt für A1 und B1 (±10 %); A2 vergleicht gegen A1-Werte.');

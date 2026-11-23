@@ -109,7 +109,7 @@ const CHK = coreCtx.window.DT.check || {};
 const UP = /^[A-ZÄÖÜÇĞİŞ]/, LOW = /^[a-zäöüßçğışı]/;
 const firstLetter = x => (String(x).match(/[A-Za-zÄÖÜäöüßÇĞİŞçğışıÂâÎîÛû]/) || [''])[0];
 const DE_NOUNS = new Set(), DE_POLITE = new Set(['Sie', 'Ihnen', 'Ihr', 'Ihre', 'Ihren', 'Ihrem', 'Ihrer', 'Ihres']);
-['de-a1', 'de-a2'].forEach(k => ((K.vocab || {})[k] || []).forEach(v => {
+['de-a1', 'de-a2', 'de-b1'].forEach(k => ((K.vocab || {})[k] || []).forEach(v => {
   if (v.pos !== 'n') return;
   [v.t, v.pl].forEach(x => { if (x) String(x).replace(/^(der|die|das)\s+/, '').split(/[\s/,]+/).forEach(w => { if (UP.test(w)) DE_NOUNS.add(w); }); });
 }));
@@ -184,6 +184,7 @@ function checkExercise(e, where) {
   useId(e.id, where);
   if (!e.e) warn('Erklärung (e) fehlt', e.id);
   if (e.ext != null && e.ext !== 1) err('ext darf nur 1 sein (Erweiterung eines Niveaus, A1-Aufrüstung P0)', e.id);
+  if (e.ext != null && /^[a-z]{2}-b1-/.test(String(e.id || ''))) err('ext ist ab B1 nicht vorgesehen (nur A1-Erweiterung)', e.id);
   switch (e.t) {
     case 'mc': case 'listen':
       if (!Array.isArray(e.o) || !(e.a >= 0 && e.a < e.o.length)) err('ungültige Antwort', e.id);
@@ -232,10 +233,11 @@ Object.entries(K.vocab || {}).forEach(([key, list]) => {
     if (v.id && String(v.id).startsWith(key + '.w') && !/^\d{3,}$/.test(String(v.id).slice(key.length + 2))) warn('Wort-ID sollte <kurs>-<niveau>.w<nnn> sein', v.id);
     if (!v.t || !v.n) err('Wort ohne t/n', v.id);
     if (v.ext != null && v.ext !== 1) err('ext darf nur 1 sein (Erweiterung eines Niveaus, A1-Aufrüstung P0)', v.id);
+    if (v.ext != null && /-b1$/.test(key)) err('ext ist ab B1 nicht vorgesehen', v.id);
     if (!v.ex || !v.exn) warn('Wort ohne Beispielsatz', v.id);
     if (key.startsWith('de-') && /^(der|die|das) /.test(v.t) === false && v.pos === 'n') err('Nomen ohne Artikel', v.id);
-    // ab A2: ID-Muster <kurs>-a2.w<nnn> (genau dreistellig bis 999) und optionale Verb-Zusatzfelder
-    if (/-a2$/.test(key) && v.id && !new RegExp('^' + key + '\\.w\\d{3}$').test(String(v.id))) err(`A2-Wort-ID muss ${key}.w<nnn> lauten`, v.id);
+    // ab A2: ID-Muster <kurs>-a2.w<nnn> bzw. <kurs>-b1.w<nnn> (genau dreistellig bis 999) und optionale Verb-Zusatzfelder
+    if (/-(a2|b1)$/.test(key) && v.id && !new RegExp('^' + key + '\\.w\\d{3}$').test(String(v.id))) err(`${key.slice(3).toUpperCase()}-Wort-ID muss ${key}.w<nnn> lauten`, v.id);
     if (v.topic && !(K.wordfields || []).some(f => f[0] === v.topic)) err('Wortfeld (topic) unbekannt', v.id, v.topic);
     const verbFields = key.startsWith('de-') ? ['pf', 'rek'] : ['ao', 'rek'];
     ['pf', 'ao', 'rek'].forEach(f => {
@@ -262,7 +264,7 @@ const stringsOf = o => typeof o === 'string' ? [o] : (o && typeof o === 'object'
 Object.keys(K.courses).forEach(cid => {
   const tr = cid === 'tr';
   // Zusammenhang je Niveau (A1, A2): Wort kommt in keinem Text/Dialog/Übung des Niveaus vor
-  ['a1', 'a2'].forEach(lv => {
+  ['a1', 'a2', 'b1'].forEach(lv => {
     const words = (K.vocab || {})[cid + '-' + lv] || [];
     if (!words.length) { console.log(`Info: Zusammenhangsprüfung ${lv.toUpperCase()} (${cid}) inaktiv – noch keine Wörter`); return; }
     let corpus = '';
@@ -276,11 +278,12 @@ Object.keys(K.courses).forEach(cid => {
   });
   // Abdeckung je Text: A1- + A2-Wortschatz + gloss. Nicht gezählt: Zahlen, Eigennamen (TR: Wörter mit Apostroph-Suffix, großgeschrieben mitten im Satz;
   // DE: großgeschriebenes Wort, das kein Nomen nach Artikel/Adjektiv ist, Sprechernamen, Unterschriften), Stoppwörter (tools/stopwords.js) gelten als bekannt.
-  const mk = () => ({ stems: new Set(), exact: new Set() }), SETS = { a1: mk(), a2: mk() }, STOP = require('./stopwords.js')[tr ? 'tr' : 'de'];
+  const mk = () => ({ stems: new Set(), exact: new Set() }), SETS = { a1: mk(), a2: mk(), b1: mk() }, STOP = require('./stopwords.js')[tr ? 'tr' : 'de'];
   const addStem = (stems, b) => { stems.add(b); if (tr && b.length >= 4) { stems.add(b.replace(/[aeıioöuü]$/, '')); stems.add(b.replace(/t$/, 'd').replace(/k$/, 'ğ').replace(/ç$/, 'c').replace(/p$/, 'b')); } };
   const addForm = (S, x) => normW(x).forEach(w => { S.exact.add(w); addStem(S.stems, stemOf(w, tr)); });
   // A1-Texte: nur A1-Wortschatz; A2-Texte: A1 + A2
-  ['a1', 'a2'].forEach(l => ((K.vocab || {})[cid + '-' + l] || []).forEach(v => [v.t, v.pl, v.pf, v.ao].forEach(x => { if (!x) return; addForm(SETS.a2, x); if (l === 'a1') addForm(SETS.a1, x); })));
+  // B1-Texte: A1 + A2 + B1 (docs/b1-konzept.md §8)
+  ['a1', 'a2', 'b1'].forEach(l => ((K.vocab || {})[cid + '-' + l] || []).forEach(v => [v.t, v.pl, v.pf, v.ao].forEach(x => { if (!x) return; addForm(SETS.b1, x); if (l !== 'b1') addForm(SETS.a2, x); if (l === 'a1') addForm(SETS.a1, x); })));
   const known = (w, gl, S) => S.exact.has(w) || STOP.has(w) || gl.has(w) || (() => { for (let i = Math.min(w.length, 12); i >= 3; i--) if (S.stems.has(w.slice(0, i))) return true; return false; })();
   const paras = t => [].concat(t.body || [], (t.items || []).map(i => i.t), (t.lines || []).map(l => l.t)).map(x => String(x).replace(/\*\*|\*/g, ''));
   const DE_DET = new Set(['der', 'die', 'das', 'den', 'dem', 'des', 'ein', 'eine', 'einen', 'einem', 'einer', 'eines', 'kein', 'keine', 'keinen', 'keinem', 'keiner', 'mein', 'meine', 'meinen', 'meinem', 'meiner', 'dein', 'deine', 'deinen', 'deinem', 'deiner', 'sein', 'seine', 'seinen', 'seinem', 'seiner', 'ihr', 'ihre', 'ihren', 'ihrem', 'ihrer', 'unser', 'unsere', 'unseren', 'unserem', 'euer', 'eure', 'dieser', 'diese', 'dieses', 'diesen', 'diesem', 'jeder', 'jede', 'jedes', 'jeden', 'jedem', 'alle', 'viele', 'einige', 'manche', 'welche', 'welcher', 'welches', 'im', 'am', 'zum', 'zur', 'vom', 'beim', 'ins', 'aufs', 'ans', 'in', 'an', 'auf', 'mit', 'von', 'zu', 'bei', 'nach', 'aus', 'für', 'über', 'unter', 'neben', 'zwischen', 'hinter', 'vor', 'durch', 'gegen', 'ohne', 'um', 'bis', 'seit', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn']);
@@ -314,13 +317,13 @@ Object.keys(K.courses).forEach(cid => {
   Object.entries(K.dialogs || {}).forEach(([id, d]) => { if (id.startsWith(cid + '-')) { (d.lines || []).forEach(l => normW(l.s || '').forEach(w => names.add(w))); tokenize(dlgAsText(d), names); } });
   const covItems = Object.entries(K.texts || {}).concat(Object.entries(K.dialogs || {}).map(([id, d]) => [id, dlgAsText(d)]));
   covItems.forEach(([id, t]) => {
-    const lv = id.startsWith(cid + '-a1-') ? 'a1' : id.startsWith(cid + '-a2-') ? 'a2' : null; if (!lv) return;
+    const lv = id.startsWith(cid + '-a1-') ? 'a1' : id.startsWith(cid + '-a2-') ? 'a2' : id.startsWith(cid + '-b1-') ? 'b1' : null; if (!lv) return;
     const toks = tokenize(t, names).filter(x => !x.name && !names.has(x.w) && x.w), gl = new Set(); Object.keys(t.gloss || {}).forEach(g => normW(g).forEach(w => gl.add(w)));
     if (!toks.length) return;
     const bad = toks.filter(x => !known(x.w, gl, SETS[lv])), pctCov = 100 * (1 - bad.length / toks.length), freq = {};
     bad.forEach(x => { freq[x.w] = (freq[x.w] || 0) + 1; });
     const top = Object.entries(freq).sort((x, y) => y[1] - x[1] || (x[0] < y[0] ? -1 : 1)).slice(0, 10).map(([w, n]) => n > 1 ? `${w} (${n}×)` : w);
-    if (pctCov < 95) warn(`Abdeckung ${id}: ${pctCov.toFixed(0)} % der Textwörter bekannt (${lv === 'a1' ? 'A1' : 'A1/A2'}-Wortschatz, gloss, ohne Namen/Zahlen/Funktionswörter); häufigste unbekannte: ` + top.join(', '));
+    if (pctCov < 95) warn(`Abdeckung ${id}: ${pctCov.toFixed(0)} % der Textwörter bekannt (${lv === 'a1' ? 'A1' : lv === 'b1' ? 'A1/A2/B1' : 'A1/A2'}-Wortschatz, gloss, ohne Namen/Zahlen/Funktionswörter); häufigste unbekannte: ` + top.join(', '));
   });
 });
 

@@ -9,7 +9,7 @@
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var DT = window.DT;
   var SCHEMA = DT.storage.SCHEMA;    // Version des Speicherformats (Migrationen nur in js/core/storage.js)
-  var APP_VERSION = '2026-11-23.4';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-23.6';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -48,6 +48,9 @@
     solveOpen: ['Offene Aufgaben lösen', 'Kalanları çöz'],
     gapsEmptyNew: ['Hier sammeln wir Aufgaben, die dir noch schwerfallen – im Moment ist nichts offen.', 'Zorlandığın alıştırmalar burada toplanır – şu an açık bir şey yok.'],
     plannedLevels: ['in Vorbereitung', 'hazırlanıyor'],
+    levelTabsLabel: ['Niveau wählen', 'Seviye seç'],
+    levelTabDone: ['alles gelöst', 'hepsi çözüldü'],
+    levelTabSoon: ['in Vorbereitung', 'hazırlanıyor'],
     placeOfferLink: ['Schon Vorkenntnisse? Einstufungstest', 'Biraz biliyor musun? Seviye testi'],
     voiceShort: ['Fast alles hörst du mit den Aufnahmen der Seite. Für einzelne Texte ohne Aufnahme bleibt es still.', 'Neredeyse her şeyi sitenin kayıtlarıyla dinlersin. Kaydı olmayan birkaç metin sessiz kalır.'],
     courseSwitched: ['Kurs gewechselt: {c}', 'Kurs değişti: {c}'],
@@ -1323,22 +1326,45 @@
       '<div class="bar thin"><span class="ok" style="width:' + pct(s.c, s.n) + '%"></span><span class="bad" style="width:' + pct(s.w, s.n) + '%"></span></div>' +
       '<div class="tc-foot"><span>' + s.c + ' / ' + s.n + ' ' + esc(t('correct')) + '</span>' + badge + '</div></a>';
   }
-  function viewLessons(focusLevel) {
-    var sl = splitLevels();
-    var section = function (lv) {
-      var list = levelTopics(lv), s = sumStats(list);
-      return '<section class="level-section" id="lv-' + lv + '"><div class="level-head"><span class="lvl lvl-' + lv + '">' + lv + '</span><h2>' + esc(levelName(lv)) + buildingBadge(lv) + '</h2>' +
-        (s.n ? '<div class="bar"><span class="fill-' + lv + '" style="width:' + pct(s.c, s.n) + '%"></span>' + (skippedOpenCount(list) ? '<span class="skip" style="width:' + pct(skippedOpenCount(list), s.n) + '%"></span>' : '') + '</div><b>' + fmtPct(pct(s.c, s.n)) + '</b>' : '<span class="badge">' + esc(t('comingSoon')) + '</span>') +
-        '</div>' + extNote(lv, 'ex') + '<div class="topic-grid">' + list.filter(function (x) { return !x.kind; }).map(topicCard).join('') + '</div>' +
-        (list.some(function (x) { return x.kind === 'dialog'; }) ? '<h3 class="sub-head">💬 ' + esc(t('dialogsTitle')) + '</h3><div class="topic-grid">' + list.filter(function (x) { return x.kind === 'dialog'; }).map(topicCard).join('') + '</div>' : '') +
-        (list.some(function (x) { return x.kind === 'text'; }) ? '<h3 class="sub-head">📄 ' + esc(t('textsTitle')) + '</h3><div class="topic-grid">' + list.filter(function (x) { return x.kind === 'text'; }).map(topicCard).join('') + '</div>' : '') +
-        writeSection(lv) +
-        '</section>';
-    };
-    var html = sl.live.map(section).join('') + (sl.planned.length ? '<details class="planned-levels"' + (sl.planned.indexOf(focusLevel) >= 0 ? ' open' : '') + '><summary>' + esc(sl.label + ' · ' + t('plannedLevels')) + '</summary>' + sl.planned.map(section).join('') + '</details>' : '');
-    setTimeout(function () { if (focusLevel) { var el = document.getElementById('lv-' + focusLevel); if (el) el.scrollIntoView({ block: 'start' }); } }, 0);
+  function lessonSection(lv) {
+    var list = levelTopics(lv), s = sumStats(list);
+    return '<section class="level-section" id="lv-' + lv + '"><div class="level-head"><span class="lvl lvl-' + lv + '">' + lv + '</span><h2>' + esc(levelName(lv)) + buildingBadge(lv) + '</h2>' +
+      (s.n ? '<div class="bar"><span class="fill-' + lv + '" style="width:' + pct(s.c, s.n) + '%"></span>' + (skippedOpenCount(list) ? '<span class="skip" style="width:' + pct(skippedOpenCount(list), s.n) + '%"></span>' : '') + '</div><b>' + fmtPct(pct(s.c, s.n)) + '</b>' : '<span class="badge">' + esc(t('comingSoon')) + '</span>') +
+      '</div>' + extNote(lv, 'ex') + '<div class="topic-grid">' + list.filter(function (x) { return !x.kind; }).map(topicCard).join('') + '</div>' +
+      (list.some(function (x) { return x.kind === 'dialog'; }) ? '<h3 class="sub-head">💬 ' + esc(t('dialogsTitle')) + '</h3><div class="topic-grid">' + list.filter(function (x) { return x.kind === 'dialog'; }).map(topicCard).join('') + '</div>' : '') +
+      (list.some(function (x) { return x.kind === 'text'; }) ? '<h3 class="sub-head">📄 ' + esc(t('textsTitle')) + '</h3><div class="topic-grid">' + list.filter(function (x) { return x.kind === 'text'; }).map(topicCard).join('') + '</div>' : '') +
+      writeSection(lv) + '</section>';
+  }
+  // Reiterwahl nur flüchtig (sessionStorage, eigener dt-ui-Schlüssel) – nie in dt-data
+  function uiTabKey() { return 'dt-ui-lessons-tab-' + courseId(); }
+  function rememberTab(lv) { try { if (LEVELS.indexOf(lv) >= 0) sessionStorage.setItem(uiTabKey(), lv); } catch (e) { /* ignore */ } }
+  function recallTab() { try { var v = sessionStorage.getItem(uiTabKey()); return LEVELS.indexOf(v) >= 0 ? v : ''; } catch (e) { return ''; } }
+  function levelTabs(sel) {
+    return '<div class="lv-tabs" role="tablist" aria-label="' + esc(t('levelTabsLabel')) + '">' + LEVELS.map(function (lv) {
+      var s = sumStats(levelTopics(lv)), has = s.n > 0, p = pct(s.c, s.n), done = has && s.c >= s.n;
+      var info = !has ? '' : done ? ' ✓' : ' · ' + fmtPct(p);
+      var tip = !has ? t('levelTabSoon') : done ? t('levelTabDone') : fmtPct(p);
+      return '<button type="button" role="tab" class="lv-tab' + (has ? '' : ' soon') + (lv === sel ? ' on' : '') + '" id="lvtab-' + lv + '" data-act="lv-tab" data-lv="' + lv + '" aria-selected="' + (lv === sel) + '" aria-controls="lv-panel" tabindex="' + (lv === sel ? 0 : -1) + '" title="' + esc(tip) + '">' +
+        '<span class="lv-tab-n">' + lv + '</span><span class="lv-tab-p">' + info.replace(/^ · /, '') + '</span><span class="sr-only"> ' + esc(tip) + '</span></button>';
+    }).join('') + '</div>';
+  }
+  function showLevelTab(lv, focusTab) {
+    var panel = document.getElementById('lv-panel'); if (!panel || LEVELS.indexOf(lv) < 0) return;
+    rememberTab(lv);
+    panel.innerHTML = lessonSection(lv); panel.setAttribute('aria-labelledby', 'lvtab-' + lv);
+    [].forEach.call(document.querySelectorAll('.lv-tab'), function (b) {
+      var on = b.getAttribute('data-lv') === lv; b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); b.tabIndex = on ? 0 : -1;
+      if (on) { if (focusTab) b.focus(); try { b.scrollIntoView({ block: 'nearest', inline: 'center' }); } catch (e) { /* ignore */ } }
+    });
+    try { history.replaceState(null, '', '#/lessons/' + lv); } catch (e) { /* ignore */ }   // Deep-Link bleibt aktuell, ohne neuen Render
+  }
+  function viewLessons(hashLevel) {
+    var sel = LEVELS.indexOf(hashLevel) >= 0 ? hashLevel : (recallTab() || focusLevel());
+    if (LEVELS.indexOf(sel) < 0) sel = LEVELS[0];
+    rememberTab(sel);
     return '<h1>' + esc(t('lessons')) + '</h1><p class="muted">' + flag(courseId()) + ' ' + esc(course().label) + ' · ' + esc(course().sublabel) +
-      ' · <a href="#/placement">🧭 ' + esc(t('placeTitle')) + '</a></p>' + html;
+      ' · <a href="#/placement">🧭 ' + esc(t('placeTitle')) + '</a></p>' + levelTabs(sel) +
+      '<div id="lv-panel" role="tabpanel" aria-labelledby="lvtab-' + sel + '">' + lessonSection(sel) + '</div>';
   }
 
   /* ================= Thema: Erklärung ================= */
@@ -2786,7 +2812,7 @@
     if (r.page !== 'write') wst = null;
     switch (r.page) {
       case 'lessons': inner = viewLessons(r.a); break;
-      case 'topic': inner = viewTopic(r.a, r.b); active = 'lessons'; break;
+      case 'topic': inner = viewTopic(r.a, r.b); active = 'lessons'; var tpR = topicById(r.a); if (tpR) rememberTab(tpR.level); break;
       case 'write': inner = viewWrite(r.a); active = 'lessons'; break;
       case 'gaps': inner = viewGaps(); break;
       case 'words': inner = (!r.a || !(K.wordfields || []).some(function (f) { return f[0] === r.a; })) ? viewWords(r.lv) : (r.b === 'learn' || r.b === 'practice' ? viewWordSession(r.a, r.b, r.lv) : viewField(r.a, r.lv)); break;
@@ -2820,6 +2846,7 @@
     }
   }
   function afterRender() {
+    var tbEl = document.querySelector('.topbar'); if (tbEl) document.documentElement.style.setProperty('--topbar-h', tbEl.offsetHeight + 'px');
     var wta = document.getElementById('w-text');
     if (wta && wst && wta.getAttribute('data-id') === wst.id) wta.value = wst.text || '';   // per value, damit ein führender Zeilenumbruch bleibt
     if (player && !player.done && !player.checked) {
@@ -3006,6 +3033,7 @@
       }
       case 'dl-play': { var tpd = topicById(parseHash().a); if (tpd) playDialog(tpd, !!el.getAttribute('data-slow')); break; }
       case 'dl-tr': { dialogShowTr = !dialogShowTr; var box = document.querySelector('.dialog'); if (box) box.classList.toggle('show-tr', dialogShowTr); el.setAttribute('aria-pressed', dialogShowTr); break; }
+      case 'lv-tab': showLevelTab(el.getAttribute('data-lv'), false); break;
       case 'play-say': speak(el.getAttribute('data-say'), course().tts, { gender: el.getAttribute('data-g') || '', rate: el.getAttribute('data-slow') ? 0.72 : 1 }); break;
       case 'voice-test': { var sel = document.getElementById('voice-sel'); speak(t('testSentence'), course().tts, { voiceName: sel ? sel.value : null }); break; }
       case 'reset-course': {
@@ -3123,6 +3151,12 @@
     if (el.matches('select[data-act="voice"]')) { db.voices = db.voices || {}; db.voices[course().tts] = el.value; save(); speak(t('testSentence'), course().tts, { voiceName: el.value }); }
   });
   app.addEventListener('keydown', function (ev) {
+    if (ev.target.getAttribute && ev.target.getAttribute('role') === 'tab' && ev.target.classList.contains('lv-tab')) {   // Pfeiltasten in der Reiter-Leiste
+      var ti = LEVELS.indexOf(ev.target.getAttribute('data-lv')), tn = -1;
+      if (ev.key === 'ArrowRight') tn = (ti + 1) % LEVELS.length; else if (ev.key === 'ArrowLeft') tn = (ti + LEVELS.length - 1) % LEVELS.length;
+      else if (ev.key === 'Home') tn = 0; else if (ev.key === 'End') tn = LEVELS.length - 1;
+      if (tn >= 0) { ev.preventDefault(); showLevelTab(LEVELS[tn], true); }
+    }
     if (ev.key === 'Enter' && ev.target.id === 'gap-input') { ev.preventDefault(); doCheck(); }
     if (ev.key === 'Enter' && ev.target.hasAttribute && ev.target.hasAttribute('data-gap')) {   // Lückentext: Enter → nächste Lücke, bei der letzten prüfen
       ev.preventDefault();
