@@ -171,4 +171,177 @@ K.addText('tr-b1-h03', {
   ]
 });
 
+K.addText('tr-b1-r04', {
+  level: 'B1', kind: 'read', scene: 'okul', genre: 'artikel',
+  title: "Mahalle kütüphanesi yeniden açıldı", sub: "Die Stadtteilbibliothek ist wieder eröffnet",
+  body: [
+    "Şehrimizin en eski kütüphanesi, iki yıl süren yenileme çalışmasından sonra dün yeniden açıldı. Belediye başkanının açıklamasına göre, kütüphanede şimdi on bin kitap var ve bunların çoğunu mahalle sakinleri bağışladı.",
+    "Açılışa katılan okuyucular, eski kütüphanede çalışan memurlarla uzun uzun sohbet etti. Kütüphane müdürü, çocuklar için haftada iki gün masal saati düzenleyeceğini söyledi. Sessizce çalışmak isteyenler için ayrı bir okuma salonu da var. Gençlerin kullanabileceği bilgisayarlar ve ücretsiz internet de hizmete girdi.",
+    "Yaşlı bir okuyucu, çocukluğunda ilk kez bu kütüphaneden kitap aldığını anlattı. “O zaman burada okuduğum her kitap bana yeni bir dünya açardı” dedi.",
+    "Kütüphane pazartesiden cumartesiye kadar sabah dokuzdan akşam altıya kadar açık olacak. Yeni üye olmak isteyenlerden kimliklerini getirmeleri rica ediliyor.",
+    "Çocuk bölümünde yüzlerce resimli kitap bulunuyor. Okuldan çıkan çocukların öğleden sonra ödevlerini burada yapabilmesi için küçük masalar da kondu. Belediye, kütüphaneye gelen her çocuğa ilk gün ücretsiz bir kitap çantası verecek."
+  ],
+  gloss: { "bağışladı": "hat gespendet", "kimliklerini": "ihre Ausweise", "rica ediliyor": "es wird gebeten", "yenileme": "Renovierung", "sakinleri": "Bewohner", "çalışmasından": "aus der Arbeit", "açılışa": "zur Eröffnung", "açardı": "öffnete (immer)", "okuma salonu": "Lesesaal", "resimli": "bebildert", "kondu": "wurden hingestellt", "kitap çantası": "Büchertasche", "aldığını": "dass er (ein Buch) nahm", "ayrı": "separat", "açıldı": "wurde eröffnet", "bölümünde": "in der Abteilung", "etti": "führte (Gespräch)", "hizmete": "in Betrieb", "sohbet": "Plauderei", "çoğunu": "die meisten davon", "şehrimizin": "unserer Stadt" },
+  questions: [
+    { id: "tr-b1-r04.q1", t: "mc", q: "Was ist am Vortag passiert?", o: ["Die älteste Bibliothek der Stadt wurde nach zwei Jahren Renovierung wieder eröffnet.", "Eine neue Schule wurde gebaut.", "Die Bibliothek wurde geschlossen.", "Der Bürgermeister hat seine Bücher gespendet."], a: 0,
+      why: { 1: "Von einer Schule ist nicht die Rede.", 2: "Sie wurde nicht geschlossen, sondern *yeniden açıldı* (wieder eröffnet).", 3: "Gespendet haben die Bewohner des Viertels." },
+      e: "*… iki yıl süren yenileme çalışmasından sonra dün yeniden açıldı.* Das Partizip *süren* (-(y)An) ersetzt „die zwei Jahre dauerte“." },
+    { id: "tr-b1-r04.q2", t: "mc", q: "Wer hat die meisten Bücher gestiftet?", o: ["Die Bewohner des Viertels", "Der Bürgermeister", "Die Schulen", "Ein Verlag"], a: 0,
+      why: { 1: "Der Bürgermeister hat die Zahlen genannt (*açıkladı*), nicht gespendet.", 2: "Schulen werden nicht erwähnt.", 3: "Ein Verlag wird nicht erwähnt." },
+      e: "*bunların çoğunu mahalle sakinleri bağışladı* = die meisten davon haben die Bewohner gespendet." },
+    { id: "tr-b1-r04.q3", t: "gap", q: "Kütüphane müdürü masal saati ___ söyledi. (düzenlemek – Der Leiter sagte, dass er eine Märchenstunde veranstalten wird.)", a: ["düzenleyeceğini"],
+      wrong: { "düzenlediğini": "Das hieße „er habe veranstaltet“ (Vergangenheit). Im Text geht es um die Zukunft.", "düzenleyeceğimi": "-imi = „ich“. Der Leiter spricht von sich: -ini.", "düzenleceğini": "*düzenle-* endet auf Vokal → Puffer-**y**: düzenle**y**eceğini." },
+      e: "düzenle- + **y** + **eceğ** + **i** + **ni** = **düzenleyeceğini**. Indirekte Rede mit Zukunft: -(y)AcAğInI söylemek." },
+    { id: "tr-b1-r04.q4", t: "mc", q: "Was erzählte der ältere Besucher?", o: ["Er hatte in seiner Kindheit zum ersten Mal hier ein Buch ausgeliehen.", "Er hat die Bibliothek gegründet.", "Er arbeitete dort als Bibliothekar.", "Er lernte hier lesen."], a: 0,
+      why: { 1: "Davon steht nichts im Text.", 2: "Er war Leser, nicht Angestellter.", 3: "Er sagt nur, dass er hier zum ersten Mal ein Buch genommen hat." },
+      e: "*çocukluğunda ilk kez bu kütüphaneden kitap aldığını anlattı* = er erzählte, dass er in seiner Kindheit zum ersten Mal ein Buch von hier mitnahm." },
+    { id: "tr-b1-r04.q5", t: "mc", q: "Wann ist die Bibliothek geöffnet?", o: ["Montag bis Samstag, von neun bis achtzehn Uhr", "Täglich, von neun bis achtzehn Uhr", "Montag bis Freitag, von acht bis siebzehn Uhr", "Nur am Wochenende"], a: 0,
+      why: { 1: "Sonntags bleibt sie geschlossen: *pazartesiden cumartesiye kadar*.", 2: "Sie öffnet um neun und schließt um sechs, und Samstag gehört dazu.", 3: "Am Wochenende ist nur Samstag offen; die Woche ist auch offen." },
+      e: "*pazartesiden cumartesiye kadar sabah dokuzdan akşam altıya kadar* = Montag bis Samstag, von neun morgens bis sechs abends." }
+  ]
+});
+
+K.addText('tr-b1-r05', {
+  level: 'B1', kind: 'read', scene: 'ev', genre: 'nachricht',
+  title: "Üst kattaki komşu", sub: "Der Nachbar von oben (Forumsbeitrag)",
+  body: [
+    "Merhaba arkadaşlar, bir konuda tavsiyenize ihtiyacım var. Üst katımda oturan komşu her gece geç saatlere kadar müzik dinliyor. Geçen hafta kapısını çaldım ve gürültüden rahatsız olduğumu söyledim. O da bunu bilmediğini, bundan sonra daha dikkatli olacağını söyledi.",
+    "İlk iki gün sessizdi, ama sonra yine başladı. Dün akşam apartman yöneticisiyle konuştum. Yönetici, komşuya bir mektup yazacağını söyledi; ayrıca bütün daire sahiplerinin kurallara uymasını istediğini belirtti.",
+    "Açıkçası bu durum beni yoruyor, çünkü sabah erken kalkmam gerekiyor. Dün gece saat ikide müzik hâlâ çalıyordu. Komşuma tekrar gitmek mi, yoksa yöneticinin cevabını beklemek mi daha doğru olur, bilemiyorum. Kimseyle de kavga etmek istemiyorum. Gürültüyü kaydetmemi öneren arkadaşlarım da var, ama bu bana biraz fazla geliyor. Yaşlı bir komşum, böyle durumlarda sabırlı olan insanların sonunda kazandığını söylüyor.",
+    "Sizce ne yapmalıyım? Sizin yaşadığınız benzer bir olay var mı? Şimdiden teşekkürler!"
+  ],
+  gloss: { "rahatsız": "gestört, unwohl", "daire sahiplerinin": "der Wohnungseigentümer", "kaydetmemi": "dass ich aufnehme", "kavga": "Streit", "uymasını": "dass sie sich halten (an)", "kapısını": "seine Tür", "çaldım": "ich klopfte", "fazla": "zu viel" },
+  questions: [
+    { id: "tr-b1-r05.q1", t: "mc", q: "Was stört den Verfasser?", o: ["Der Nachbar von oben hört nachts laut Musik.", "Der Nachbar nebenan hat einen Hund.", "Im Treppenhaus ist es schmutzig.", "Der Hausverwalter schreibt zu viele Briefe."], a: 0,
+      why: { 1: "Ein Hund wird nicht erwähnt.", 2: "Vom Treppenhaus steht nichts im Text.", 3: "Der Verwalter will helfen." },
+      e: "*Üst katımda oturan komşu* = der Nachbar, der über mir wohnt (Partizip *oturan*). *geç saatlere kadar müzik dinliyor* = er hört bis spät in die Nacht Musik." },
+    { id: "tr-b1-r05.q2", t: "mc", q: "Was hat der Nachbar beim Gespräch an der Tür gesagt?", o: ["Er habe nicht gewusst, dass es stört, und werde aufpassen.", "Er hat sich geweigert, leiser zu sein.", "Er hat sich bei der Polizei beschwert.", "Er zog am nächsten Tag aus."], a: 0,
+      why: { 1: "Im Gegenteil: Er hat versprochen, dass er sich Mühe geben wird.", 2: "Von der Polizei ist nicht die Rede.", 3: "Er wohnt weiterhin dort." },
+      e: "*bunu bilmediğini, daha dikkatli olacağını söyledi* = Er sagte, er habe es nicht gewusst und werde vorsichtiger sein." },
+    { id: "tr-b1-r05.q3", t: "gap", q: "Yönetici, komşuya bir mektup ___ söyledi. (yazmak – Der Verwalter sagte, er werde dem Nachbarn einen Brief schreiben.)", a: ["yazacağını"],
+      wrong: { "yazdığını": "Das hieße „er habe geschrieben“. Der Brief liegt noch in der Zukunft.", "yazacağımı": "-ımı = „ich“. Der Verwalter spricht über sich: -ını.", "yazacakını": "k wird vor Vokal zu **ğ**: yaza**cağ**ını." },
+      e: "yaz- + **acağ** + **ı** + **nı** = **yazacağını**." },
+    { id: "tr-b1-r05.q4", t: "mc", q: "Was wünscht sich der Verwalter von den Eigentümern?", o: ["Dass sie sich an die Regeln halten.", "Dass sie mehr Miete zahlen.", "Dass sie umziehen.", "Dass sie ihm schreiben."], a: 0,
+      why: { 1: "Von Miete ist nicht die Rede.", 2: "Umzug wird nicht gefordert.", 3: "Er schreibt dem Nachbarn, nicht umgekehrt." },
+      e: "*bütün daire sahiplerinin kurallara uymasını istediğini belirtti* = er betonte, dass er will, dass alle Eigentümer die Regeln befolgen." },
+    { id: "tr-b1-r05.q5", t: "mc", q: "Was meint der/die ältere Nachbar(in)?", o: ["Geduldige Menschen gewinnen am Ende.", "Man soll sofort die Polizei rufen.", "Man soll selbst laute Musik hören.", "Man soll umziehen."], a: 0,
+      why: { 1: "Davon sagt sie nichts.", 2: "Das würde den Streit nur verschärfen und wird nicht genannt.", 3: "Umziehen wird nicht vorgeschlagen." },
+      e: "*sabırlı olan insanların sonunda kazandığını söylüyor* = sie sagt, dass die Geduldigen am Ende gewinnen." }
+  ]
+});
+
+K.addText('tr-b1-r06', {
+  level: 'B1', kind: 'read', scene: 'aile', genre: 'email',
+  title: "Yeni şehirden mektup", sub: "Ein Brief aus der neuen Stadt",
+  body: [
+    "Sevgili Burak,",
+    "Nasılsın? Yeni şehre taşınalı iki ay oldu, sonunda sana yazmaya zaman buldum. Burada tanıştığım insanlar çok sıcakkanlı. Komşum bana mahallenin en iyi fırınını gösterdi; her sabah oradan aldığım ekmek harika.",
+    "İş yerindeki arkadaşlarımın söylediğine göre, kış aylarında kar çok yağıyormuş. O yüzden şimdiden kalın bir mont aldım. Geçen hafta bir arkadaşım beni dağa götürdü. Orada gördüğüm manzarayı hiç unutmayacağım!",
+    "Annem aradığında burada çok mutlu olduğumu söyledim, ama itiraf edeyim, bazen seni ve eski arkadaşlarımı özlüyorum. Bana gelmeyi düşündüğünü söylemiştin; bir ara gelirsen seni gezdirmek isterim. Yaşadığım ev küçük ama çok aydınlık.",
+    "Hafta sonları şehrin eski mahallelerinde yürüyüş yapmayı seviyorum. Orada gördüğüm tarihî evler çok etkileyici. Geçen cumartesi tanıştığım yaşlı bir hanım, bana bu mahalledeki herkesin birbirini tanıdığını anlattı. Bu yüzden kendimi hiç yalnız hissetmiyorum. Pazar günleri de pazara gidip taze sebze alıyorum.",
+    "Cevabını bekliyorum.",
+    "Sevgiler, Elif"
+  ],
+  gloss: { "sıcakkanlı": "herzlich, freundlich", "aydınlık": "hell", "taşınalı": "seit ich umgezogen bin", "yağıyormuş": "es schneit wohl", "itiraf edeyim": "ich gebe zu", "gezdirmek": "herumführen", "söylemiştin": "du hattest gesagt", "buldum": "ich fand", "gösterdi": "zeigte", "unutmayacağım": "ich werde nicht vergessen", "götürdü": "brachte (hin)", "orada": "dort", "aldığım": "das ich kaufe", "alıyorum": "ich kaufe", "aylarında": "in den Monaten", "gidip": "hingehen und", "oradan": "von dort", "şehre": "in die Stadt", "şehrin": "der Stadt" },
+  questions: [
+    { id: "tr-b1-r06.q1", t: "mc", q: "Seit wann wohnt Elif in der neuen Stadt?", o: ["Seit zwei Monaten", "Seit zwei Jahren", "Seit zwei Wochen", "Seit einem Jahr"], a: 0,
+      why: { 1: "*iki yıl* wären zwei Jahre, im Text steht *iki ay*.", 2: "*iki hafta* wären zwei Wochen.", 3: "Ein Jahr wird nicht erwähnt." },
+      e: "*Yeni şehre taşınalı iki ay oldu.* = Seit dem Umzug sind zwei Monate vergangen." },
+    { id: "tr-b1-r06.q2", t: "mc", q: "Was hat der Nachbar ihr gezeigt?", o: ["Die beste Bäckerei des Viertels", "Den Weg zur Arbeit", "Das Rathaus", "Einen Park"], a: 0,
+      why: { 1: "Den Weg zur Arbeit erwähnt der Brief nicht.", 2: "Das Rathaus wird nicht erwähnt.", 3: "Einen Park erwähnt der Brief nicht." },
+      e: "*Komşum bana mahallenin en iyi fırınını gösterdi.* = „Mein Nachbar hat mir die beste Bäckerei des Viertels gezeigt.“" },
+    { id: "tr-b1-r06.q3", t: "gap", q: "İş yerindeki arkadaşlarımın söylediğine ___ , kışın kar çok yağıyormuş. (Laut meinen Kollegen soll es im Winter viel schneien.)", a: ["göre"],
+      wrong: { "rağmen": "*rağmen* heißt „trotz“. Für „laut“ brauchst du *göre*.", "için": "*için* heißt „für/weil“, nicht „laut“.", "kadar": "*kadar* heißt „bis/so viel wie“." },
+      e: "*söylediğine göre* = laut dem, was sie sagten. *göre* verlangt den Dativ (-ine)." },
+    { id: "tr-b1-r06.q4", t: "mc", q: "Was hat Elif ihrer Mutter am Telefon gesagt?", o: ["Dass sie hier sehr glücklich ist.", "Dass sie wieder zurückkommt.", "Dass sie ihren Job verloren hat.", "Dass sie krank ist."], a: 0,
+      why: { 1: "Von Rückkehr ist nicht die Rede.", 2: "Von Jobverlust ist nicht die Rede.", 3: "Von Krankheit ist nicht die Rede." },
+      e: "*burada çok mutlu olduğumu söyledim* = ich sagte, dass ich hier sehr glücklich bin. Possessiv -um = ich." },
+    { id: "tr-b1-r06.q5", t: "mc", q: "Was möchte Elif von Burak?", o: ["Dass er sie besucht und sie ihm die Stadt zeigt.", "Dass er ihr Geld schickt.", "Dass er auch umzieht.", "Dass er ihre Mutter anruft."], a: 0,
+      why: { 1: "Von Geld ist nicht die Rede.", 2: "Sie freut sich auf einen Besuch, nicht auf einen Umzug.", 3: "Sie erwähnt keinen Anruf bei der Mutter." },
+      e: "*bir ara gelirsen seni gezdirmek isterim* = wenn du irgendwann kommst, würde ich dich gern herumführen." }
+  ]
+});
+
+K.addText('tr-b1-h04', {
+  level: 'B1', kind: 'listen', scene: 'hava', genre: 'radio',
+  title: "Akşam haberleri", sub: "Radionachrichten am Abend", plays: 2,
+  lines: [
+    { s: 'Spiker', g: 'f', t: "Dinleyicilerimize iyi akşamlar. Meteoroloji yetkililerinin açıklamasına göre, yarın ülkenin kuzeyinde yoğun kar yağışı bekleniyor. Yetkililer, sürücülerin yola çıkmadan önce yol durumunu kontrol etmesini istedi. Kar nedeniyle bazı otobüs seferlerinin iptal edildiğini bildirdiler. Okulların tatil olup olmayacağına yarın sabah karar verilecek. Bu arada şehir merkezinde görev yapan belediye ekipleri, yolları açık tutmak için bütün gece çalışacak. Belediye başkanı, yolların açık kalması için yeterli tuz ve araç olduğunu söyledi. Hava durumunu bir sonraki haber bülteninde yeniden vereceğiz. Sevgili dinleyiciler, dışarı çıkacaksanız sıcak giyinin.", n: "Guten Abend, liebe Hörerinnen und Hörer. Laut Angaben der Meteorologen wird morgen im Norden des Landes starker Schneefall erwartet. Die Verantwortlichen baten die Autofahrer, vor der Abfahrt die Straßenlage zu prüfen. Sie gaben bekannt, dass wegen des Schnees einige Busverbindungen gestrichen wurden. Ob die Schulen frei haben, wird morgen früh entschieden. Währenddessen werden die städtischen Teams, die in der Innenstadt arbeiten, die ganze Nacht arbeiten, um die Straßen frei zu halten. Der Bürgermeister sagte, es gebe genug Salz und Fahrzeuge, damit die Straßen frei bleiben. Das Wetter geben wir in der nächsten Nachrichtensendung erneut durch. Liebe Hörer, wenn Sie nach draußen gehen, ziehen Sie sich warm an." }
+  ],
+  gloss: { "meteoroloji": "Wetterdienst", "yoğun": "stark, dicht", "kar yağışı": "Schneefall", "sürücülerin": "der Fahrer", "bülten": "Nachrichtensendung", "iptal edildiğini": "dass es gestrichen wurde", "seferlerinin": "ihrer Verbindungen", "karar verilecek": "es wird entschieden", "giyinin": "ziehen Sie sich an", "bülteninde": "in der Sendung", "dışarı": "nach draußen", "etmesini": "dass er tut", "kuzeyinde": "im Norden", "olmayacağına": "ob es nicht sein wird", "olup": "sein und", "ülkenin": "des Landes", "tuz": "Salz", "araç": "Fahrzeug", "yeterli": "genug" },
+  questions: [
+    { id: "tr-b1-h04.q1", t: "mc", q: "Was wird für morgen erwartet?", o: ["Starker Schneefall im Norden", "Regen im Süden", "Sonne im ganzen Land", "Sturm am Meer"], a: 0,
+      why: { 1: "Es geht um den Norden und um Schnee, nicht um Regen.", 2: "Das Gegenteil ist der Fall.", 3: "Von Sturm ist nicht die Rede." },
+      e: "*yarın ülkenin kuzeyinde yoğun kar yağışı bekleniyor* = morgen wird im Norden starker Schneefall erwartet." },
+    { id: "tr-b1-h04.q2", t: "mc", q: "Worum bitten die Verantwortlichen die Fahrer?", o: ["Vor der Abfahrt die Straßenlage zu prüfen", "Zu Hause zu bleiben", "Langsamer zu fahren", "Eine Genehmigung zu holen"], a: 0,
+      why: { 1: "Sie sagen nicht, dass man zu Hause bleiben muss.", 2: "Von langsamerem Fahren spricht die Meldung nicht.", 3: "Von einer Genehmigung ist nicht die Rede." },
+      e: "*sürücülerin yola çıkmadan önce yol durumunu kontrol etmesini istedi* = Sie baten, dass die Fahrer vor der Abfahrt die Straßenlage kontrollieren." },
+    { id: "tr-b1-h04.q3", t: "mc", q: "Was ist noch nicht entschieden?", o: ["Ob die Schulen frei haben", "Ob die Busse fahren", "Ob die Straßen geräumt werden", "Ob das Wetter schlecht wird"], a: 0,
+      why: { 1: "Einige Busverbindungen wurden schon gestrichen.", 2: "Die Teams arbeiten die ganze Nacht.", 3: "Starker Schneefall wird erwartet." },
+      e: "*Okulların tatil olup olmayacağına yarın sabah karar verilecek.* = Ob die Schulen frei haben, wird morgen früh entschieden." },
+    { id: "tr-b1-h04.q4", t: "mc", q: "Was empfiehlt die Sprecherin zum Schluss?", o: ["Sich warm anzuziehen", "Zu Hause zu bleiben", "Das Auto stehen zu lassen", "Die Heizung anzumachen"], a: 0,
+      why: { 1: "Das empfiehlt sie nicht.", 2: "Davon ist keine Rede.", 3: "Davon ist keine Rede." },
+      e: "*dışarı çıkacaksanız sıcak giyinin* = wenn Sie hinausgehen, ziehen Sie sich warm an." }
+  ]
+});
+
+K.addText('tr-b1-h05', {
+  level: 'B1', kind: 'listen', scene: 'ofis', genre: 'gespraech',
+  title: "Toplantı nasıl geçti?", sub: "Wie war die Besprechung?", plays: 2,
+  lines: [
+    { s: 'Ayşe', g: 'f', t: "Toplantı nasıl geçti? Müdür ne dedi?", n: "Wie war die Besprechung? Was hat der Chef gesagt?" },
+    { s: 'Cem', g: 'm', t: "Gelecek ay yeni bir proje başlatacağımızı söyledi. Ekibin büyüyeceğini de belirtti.", n: "Er sagte, dass wir nächsten Monat ein neues Projekt starten. Er betonte auch, dass das Team größer wird." },
+    { s: 'Ayşe', g: 'f', t: "Peki, bana bir şey sordu mu?", n: "Hat er mich etwas gefragt?" },
+    { s: 'Cem', g: 'm', t: "Evet, senin raporu bitirip bitirmediğini sordu. Ben de yarın bitireceğini söyledim.", n: "Ja, er fragte, ob du den Bericht fertig hast. Ich habe gesagt, dass du ihn morgen fertig machst." },
+    { s: 'Ayşe', g: 'f', t: "Teşekkürler! Aslında dün bitirmiştim, ama göndermeyi unutmuşum. Hemen gönderiyorum.", n: "Danke! Eigentlich hatte ich ihn gestern fertig gemacht, aber ich habe wohl vergessen, ihn zu schicken. Ich schicke ihn sofort." },
+    { s: 'Cem', g: 'm', t: "Güzel. Bir de müdür herkesin cuma günü erken gelmesini istedi.", n: "Gut. Außerdem will der Chef, dass alle am Freitag früh kommen." },
+    { s: 'Ayşe', g: 'f', t: "Peki. Başka bir şey var mı?", n: "Gut. Gibt es sonst noch etwas?" },
+    { s: 'Cem', g: 'm', t: "Evet, yarın öğle yemeğini birlikte yiyeceğimizi söyledi. Ben saat on ikiyi öneriyorum, çünkü müdür öğleden sonra başka bir toplantıya gidecekmiş.", n: "Ja, er sagte, dass wir morgen zusammen zu Mittag essen werden. Ich schlage zwölf Uhr vor, denn der Chef soll nachmittags zu einer anderen Besprechung gehen." },
+    { s: 'Ayşe', g: 'f', t: "Harika! Hemen restorana telefon edeyim.", n: "Prima! Ich rufe sofort im Restaurant an." }
+  ],
+  gloss: { "başlatacağımızı": "dass wir starten werden", "büyüyeceğini": "dass es größer wird", "bitirip": "fertig machen und", "göndermeyi": "das Schicken", "peki": "also gut", "edeyim": "ich rufe an", "gidecekmiş": "geht wohl/angeblich", "restorana": "ins Restaurant", "yiyeceğimizi": "dass wir essen werden", "gelmesini": "dass sie kommen" },
+  questions: [
+    { id: "tr-b1-h05.q1", t: "mc", q: "Was hat der Chef über den nächsten Monat gesagt?", o: ["Ein neues Projekt startet.", "Das Büro wird umziehen.", "Es gibt Urlaub für alle.", "Die Firma schließt."], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Davon ist nicht die Rede.", 3: "Davon ist nicht die Rede." },
+      e: "*Gelecek ay yeni bir proje başlatacağımızı söyledi.* = Er sagte, dass wir nächsten Monat ein neues Projekt starten. -(y)AcAğImIzI = „dass wir … werden“." },
+    { id: "tr-b1-h05.q2", t: "mc", q: "Was fragte der Chef über Ayşe?", o: ["Ob sie den Bericht fertig hat", "Ob sie krank ist", "Ob sie umziehen will", "Ob sie am Freitag kommt"], a: 0,
+      why: { 1: "Krankheit wurde nicht erwähnt.", 2: "Von Umzug ist nicht die Rede.", 3: "Das Kommen am Freitag war Teil einer anderen Aufforderung." },
+      e: "*raporu bitirip bitirmediğini sordu* = er fragte, ob sie den Bericht fertig hat (-Ip -mAdIk)." },
+    { id: "tr-b1-h05.q3", t: "mc", q: "Warum hat Ayşe den Bericht noch nicht geschickt?", o: ["Sie hat vergessen, ihn abzuschicken.", "Sie war krank.", "Er war noch nicht fertig.", "Sie hatte keine Zeit."], a: 0,
+      why: { 1: "Krankheit wird nicht erwähnt.", 2: "Sie sagt, dass sie ihn gestern fertig hatte.", 3: "Davon sagt sie nichts." },
+      e: "*dün bitirmiştim, ama göndermeyi unutmuşum* = gestern hatte ich ihn fertig, aber ich habe vergessen, ihn zu schicken." },
+    { id: "tr-b1-h05.q4", t: "mc", q: "Was möchte der Chef am Freitag?", o: ["Dass alle früh kommen.", "Dass alle zu Hause arbeiten.", "Dass niemand kommt.", "Dass alle länger bleiben."], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Er will, dass alle kommen.", 3: "Gesagt wurde „früh kommen“, nicht „länger bleiben“." },
+      e: "*herkesin cuma günü erken gelmesini istedi* = er wollte, dass alle am Freitag früh kommen (-mAsInI)." }
+  ]
+});
+
+K.addText('tr-b1-h06', {
+  level: 'B1', kind: 'listen', scene: 'sokak', genre: 'interview',
+  title: "Gönüllü olmak", sub: "Ehrenamtlich arbeiten (Interview)", plays: 2,
+  lines: [
+    { s: 'Gazeteci', g: 'f', t: "Bu derneğin gönüllüsü olalı kaç yıl oldu?", n: "Wie viele Jahre sind Sie schon freiwillig in diesem Verein?" },
+    { s: 'Bay Kemal', g: 'm', t: "Beş yıl oldu. Başlangıçta sadece hafta sonları gelirdim, şimdi hemen hemen her gün buradayım. Derneğimiz, ihtiyacı olan ailelere yemek ve giysi veriyor.", n: "Fünf Jahre. Am Anfang kam ich nur am Wochenende, jetzt bin ich fast jeden Tag hier. Unser Verein gibt bedürftigen Familien Essen und Kleidung." },
+    { s: 'Gazeteci', g: 'f', t: "Sizi bu işe iten şey neydi?", n: "Was hat Sie zu dieser Arbeit gebracht?" },
+    { s: 'Bay Kemal', g: 'm', t: "Çocukken komşularımız bize çok yardım etmişti. Büyüyünce bunun karşılığını vermek istedim. Yardım ettiğimiz insanların mutlu olduğunu görmek bana büyük güç veriyor. Herkesin bir şeyler yapabileceğine inanıyorum.", n: "Als Kind haben uns unsere Nachbarn viel geholfen. Als ich groß war, wollte ich etwas zurückgeben. Zu sehen, dass die Menschen, denen wir helfen, glücklich sind, gibt mir große Kraft. Ich glaube, dass jeder etwas tun kann." },
+    { s: 'Gazeteci', g: 'f', t: "Gönüllü olmak isteyenlere ne söylersiniz?", n: "Was sagen Sie denen, die ehrenamtlich arbeiten wollen?" },
+    { s: 'Bay Kemal', g: 'm', t: "Önce küçük başlasınlar derim. Bir saat bile olsa gelsinler, çünkü her yardım değerlidir.", n: "Ich sage, sie sollen klein anfangen. Selbst wenn es nur eine Stunde ist, sollen sie kommen, denn jede Hilfe ist wertvoll." }
+  ],
+  gloss: { "ihtiyacı olan": "bedürftig", "giysi": "Kleidung", "karşılığını": "die Gegenleistung", "iten": "(an)treibende(r)", "güç": "Kraft", "gönüllüsü olalı": "seit er Freiwilliger ist", "derim": "ich sage", "değerlidir": "ist wertvoll", "etmişti": "hatte getan", "ettiğimiz": "(denen) wir helfen", "işe": "zur Arbeit", "neydi": "was war", "olsa": "selbst wenn es ist" },
+  questions: [
+    { id: "tr-b1-h06.q1", t: "mc", q: "Wie lange arbeitet Herr Kemal schon ehrenamtlich?", o: ["Fünf Jahre", "Zwei Jahre", "Zehn Jahre", "Ein Jahr"], a: 0,
+      why: { 1: "Zwei Jahre wäre *iki yıl*.", 2: "Zehn Jahre wäre *on yıl*.", 3: "Ein Jahr wäre *bir yıl*." },
+      e: "*Beş yıl oldu.* = Es sind fünf Jahre." },
+    { id: "tr-b1-h06.q2", t: "mc", q: "Wie hat sich seine Arbeit verändert?", o: ["Früher kam er nur am Wochenende, jetzt fast täglich.", "Früher kam er täglich, jetzt nur am Wochenende.", "Er arbeitet nur noch von zu Hause.", "Er ist inzwischen der Vorsitzende."], a: 0,
+      why: { 1: "Es ist umgekehrt.", 2: "Er ist fast jeden Tag im Verein.", 3: "Von einem Vorsitz ist nicht die Rede." },
+      e: "*Başlangıçta sadece hafta sonları gelirdim, şimdi hemen hemen her gün buradayım.* -(I)rdI = Gewohnheit früher." },
+    { id: "tr-b1-h06.q3", t: "mc", q: "Warum hat er mit der Arbeit angefangen?", o: ["Weil ihm als Kind Nachbarn geholfen hatten und er etwas zurückgeben wollte.", "Weil er arbeitslos war.", "Weil seine Familie heute Hilfe braucht.", "Weil ein Freund ihn gefragt hat."], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Er spricht nur davon, dass ihm früher Nachbarn halfen; von heutiger Not seiner Familie sagt er nichts.", 3: "Davon ist nicht die Rede." },
+      e: "*Çocukken komşularımız bize çok yardım etmişti. Büyüyünce bunun karşılığını vermek istedim.* -mIştI = Vorzeitigkeit." },
+    { id: "tr-b1-h06.q4", t: "mc", q: "Was gibt ihm Kraft?", o: ["Zu sehen, dass die Menschen glücklich sind", "Das Gehalt", "Die Anerkennung der Presse", "Ein langer Urlaub"], a: 0,
+      why: { 1: "Er arbeitet ehrenamtlich, bekommt also kein Gehalt.", 2: "Davon sagt er nichts.", 3: "Davon sagt er nichts." },
+      e: "*Yardım ettiğimiz insanların mutlu olduğunu görmek bana büyük güç veriyor.* = Zu sehen, dass die Menschen, denen wir helfen, glücklich sind, gibt mir Kraft." }
+  ]
+});
+
 })(window.KOPRU);
