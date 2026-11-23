@@ -48,8 +48,8 @@ K.add('tr-a1-01', {
     { id: "tr-a1-01.7", t: "mc", q: "Welche Buchstaben gibt es im Türkischen NICHT?", o: ["q, w, x", "ç, ş, ğ", "ö, ü, ı", "c, j, v"], a: 0,
       why: { 1: "Das sind typisch türkische Buchstaben.", 2: "Die gibt es alle im Türkischen.", 3: "Gibt es auch: cami, jeton, ev." },
       e: "Türkisch hat **kein q, w, x** (und auch kein ä oder ß)." },
-    { id: "tr-a1-01.8", t: "mc", q: "Wie spricht man das v in „ev“ (Haus) aus?", o: ["wie deutsches f", "wie deutsches w"], a: 1,
-      why: { 0: "Im Deutschen ist v oft f (Vater) – im Türkischen nie." },
+    { id: "tr-a1-01.8", t: "gap", q: "Das v in „ev“ (Haus) spricht man wie das deutsche ___ (ein Buchstabe).", a: ["w"],
+      wrong: { "f": "Im Deutschen ist v oft f (Vater) – im Türkischen nie.", "v": "Gefragt ist der **deutsche** Buchstabe mit gleichem Klang: Das türkische v klingt wie unser w („ew“)." },
       e: "Türkisches **v = w** → „ew“." },
     { id: "tr-a1-01.9", t: "speak", say: "Kışın sıcak çay içeriz.",
       e: "„Im Winter trinken wir heißen Tee.“ Das **ı** in *kışın* und *sıcak* ist ein dumpfes i: Lippen breit, Zunge weiter hinten – etwa wie das e in *bitte*. Achte auf drei verschiedene Laute: **ş** = sch (*kışın* ≈ „kı-schın“), **c** = dsch (*sıcak* ≈ „sı-dschak“), **ç** = tsch (*çay* ≈ „tschai“, *içeriz* ≈ „i-tsche-ris“ mit stimmhaftem s). Typischer Fehler: ı wie ein helles i sprechen („kischin“) – dann klingt es fremd." },
@@ -96,7 +96,13 @@ K.add('tr-a1-01', {
       modelsN: ["Hallo! Mein Name ist Elif. Ich bin aus Deutschland. Freut mich.", "Hi! Ich bin Murat. Ich bin aus Deutschland."],
       e: "Du darfst deinen echten Namen nennen, mit Vornamen reicht. Achte auf das **ı** in *adım* (dumpf, ohne Punkt) und bei Namen wie *Ayşe* das **ş** (sch). Deine Antwort darf ganz anders sein – Hauptsache, du sprichst." },
     { id: "tr-a1-01.24", t: "order", ext: 1, q: "Bilde die Frage: „Ist der Tee heiß?“", w: ["mı", "sıcak", "Çay"], a: ["Çay sıcak mı"],
-      e: "Die Fragepartikel **mı** steht nach dem Wort, nach dem du fragst. Nach *sıcak* (letzter Vokal a) heißt sie **mı** mit ı ohne Punkt. Mehr dazu in Thema 6." }
+      e: "Die Fragepartikel **mı** steht nach dem Wort, nach dem du fragst. Nach *sıcak* (letzter Vokal a) heißt sie **mı** mit ı ohne Punkt. Mehr dazu in Thema 6." },
+    { id: "tr-a1-01.25", t: "gap", ext: 1, q: "Zucker (gesprochen „scheker“): ___", a: ["şeker"],
+      wrong: { "seker": "Ohne Häkchen ist s ein scharfes s wie in *Haus*. Für **sch** brauchst du ş.", "çeker": "ç klingt „tsch“. In „scheker“ hörst du nur **sch** – das ist ş.", "sheker": "Im Türkischen schreibt man **sch** mit einem einzigen Buchstaben: ş." },
+      e: "**ş = sch**: şeker ≈ „scheker“. Das Häkchen (die Cedille) gehört zum Buchstaben und darf nie wegfallen." },
+    { id: "tr-a1-01.26", t: "gap", ext: 1, q: "Berg (gesprochen „daa“): ___", a: ["dağ"],
+      wrong: { "dag": "Das Wort hat ein **weiches g**: Es wird nicht gesprochen, sondern dehnt den Vokal davor – dafür gibt es ğ.", "dak": "Das k wäre hart zu hören. In „daa“ hörst du nur einen gedehnten Vokal: ğ.", "dach": "Das türkische ğ klingt nie wie ch – es ist stumm." },
+      e: "**ğ** (weiches g) ist stumm und dehnt den Vokal davor: dağ ≈ „daa“. Es steht nie am Wortanfang." }
   ]
 });
 
@@ -277,7 +283,11 @@ K.add('tr-a1-03', {
       chunks: ["Türkçe biraz …", "Çok …", "Ama …"],
       models: ["Türkçe biraz zor, ama çok güzel.", "Türkçe kolay. Ben her gün çalışıyorum."],
       modelsN: ["Türkisch ist etwas schwer, aber sehr schön.", "Türkisch ist leicht. Ich lerne jeden Tag."],
-      e: "In der Frage siehst du die Vokalharmonie: z**o**r → **mu**, kol**a**y → **mı**. Aus *zor* und *kolay* kannst du eigene Sätze bauen. Die Wörter *biraz* („ein bisschen“) und *çok* („sehr“) stehen vor dem Adjektiv. Deine Antwort darf ganz anders sein – Hauptsache, du sprichst." }
+      e: "In der Frage siehst du die Vokalharmonie: z**o**r → **mu**, kol**a**y → **mı**. Aus *zor* und *kolay* kannst du eigene Sätze bauen. Die Wörter *biraz* („ein bisschen“) und *çok* („sehr“) stehen vor dem Adjektiv. Deine Antwort darf ganz anders sein – Hauptsache, du sprichst." },
+    { id: "tr-a1-03.25", t: "order", ext: 1, q: "Bilde die Frage: „Ist die große Tür offen?“", w: ["mı", "Büyük", "açık", "kapı"], a: ["Büyük kapı açık mı"],
+      e: "Die Fragepartikel steht ganz am Ende und richtet sich nach dem Wort **direkt davor**: *açık* endet auf **ı** → **mı**. Nicht nach *kapı* oder *büyük* (ü → mü)!" },
+    { id: "tr-a1-03.26", t: "order", ext: 1, q: "Bilde die Frage: „Ist der Lehrer müde?“", w: ["mu", "yorgun", "Öğretmen"], a: ["Öğretmen yorgun mu"],
+      e: "*yorgun* hat als letzten Vokal **u** → **mu**. Das Wort *öğretmen* davor (letzter Vokal e) spielt keine Rolle: Entscheidend ist immer das Wort unmittelbar vor mI." }
   ]
 });
 
@@ -453,7 +463,11 @@ K.add('tr-a1-05', {
       chunks: ["İyiyim, …", "… yorgunum", "… değilim", "Çok mutluyum."],
       models: ["İyiyim, teşekkürler. Yorgun değilim.", "Biraz yorgunum, ama mutluyum."],
       modelsN: ["Mir geht es gut, danke. Ich bin nicht müde.", "Ich bin ein bisschen müde, aber glücklich."],
-      e: "Mit Adjektiv + Personalendung sagst du, wie du dich fühlst: *yorgunum*, *mutluyum*. Verneint wird mit *değil*: *yorgun değilim*. Beachte das Puffer-y nach Vokal (mutlu**y**um). Deine Antwort darf ganz anders sein – Hauptsache, du sprichst." }
+      e: "Mit Adjektiv + Personalendung sagst du, wie du dich fühlst: *yorgunum*, *mutluyum*. Verneint wird mit *değil*: *yorgun değilim*. Beachte das Puffer-y nach Vokal (mutlu**y**um). Deine Antwort darf ganz anders sein – Hauptsache, du sprichst." },
+    { id: "tr-a1-05.25", t: "order", ext: 1, q: "Bilde den Satz: „Ich bin nicht müde.“", w: ["değilim", "yorgun", "Ben"], a: ["Ben yorgun değilim"],
+      e: "Verneinung: Adjektiv + **değil** + Personalendung. Die Endung (-im) hängt an *değil*, nicht an *yorgun*: yorgun değil**im**. Das Verb „sein“ gibt es nicht, deshalb steht *değilim* am Ende." },
+    { id: "tr-a1-05.26", t: "order", ext: 1, q: "Bilde den Satz: „Wir sind heute sehr müde.“", w: ["yorgunuz", "çok", "Biz", "bugün"], a: ["Biz bugün çok yorgunuz", "Bugün biz çok yorgunuz"],
+      e: "*yorgun* endet auf einen Konsonanten, deshalb heißt „wir sind“ hier **-uz** (Vokalharmonie: u) ohne Puffer-y: yorgun**uz**. Die Personalendung steht am Satzende; *çok* (sehr) steht direkt vor dem Adjektiv." }
   ]
 });
 
@@ -543,7 +557,11 @@ K.add('tr-a1-06', {
       chunks: ["Ben … (Herkunft)", "… ’de oturuyorum.", "… yaşındayım."],
       models: ["Ben Almanyalıyım. Köln’de oturuyorum.", "Almanyalıyım. Berlin’de oturuyorum. Yirmi sekiz yaşındayım."],
       modelsN: ["Ich komme aus Deutschland. Ich wohne in Köln.", "Ich bin aus Deutschland. Ich wohne in Berlin. Ich bin achtundzwanzig Jahre alt."],
-      e: "Die drei Fragewörter *nereli*, *nerede* und *kaç* wirst du oft hören. Bei der Antwort hängt an den Ortsnamen ein **Apostroph** und die Endung -de/-da: *Köln’de*, *Berlin’de*. Das Verb *oturuyorum* steht am Satzende. Deine Antwort darf ganz anders sein – Hauptsache, du sprichst." }
+      e: "Die drei Fragewörter *nereli*, *nerede* und *kaç* wirst du oft hören. Bei der Antwort hängt an den Ortsnamen ein **Apostroph** und die Endung -de/-da: *Köln’de*, *Berlin’de*. Das Verb *oturuyorum* steht am Satzende. Deine Antwort darf ganz anders sein – Hauptsache, du sprichst." },
+    { id: "tr-a1-06.25", t: "order", ext: 1, q: "Bilde die Frage: „Wo wohnst du?“", w: ["oturuyorsun", "nerede", "Sen"], a: ["Sen nerede oturuyorsun"],
+      e: "Das Fragewort steht dort, wo im Antwortsatz die Information stehen würde – direkt vor dem Verb. Das Verb *oturuyorsun* bleibt am Ende: *Sen nerede oturuyorsun?* – *Ben Bonn’da oturuyorum.*" },
+    { id: "tr-a1-06.26", t: "order", ext: 1, q: "Bilde die Frage: „Sind Sie müde?“", w: ["musunuz", "yorgun", "Siz"], a: ["Siz yorgun musunuz"],
+      e: "Bei der höflichen Anrede hängt die Endung **-sunuz** an mI: yorgun **mu-sunuz**. Das mI richtet sich nach *yorgun* (u → mu) und steht getrennt geschrieben hinter dem Adjektiv." }
   ]
 });
 
@@ -630,7 +648,11 @@ K.add('tr-a1-07', {
       chunks: ["Bir kardeşim var.", "Annem …", "Babam …", "Kardeşim yok."],
       models: ["Evet, bir kardeşim var. Annem öğretmen.", "Hayır, kardeşim yok. Annem ve babam çalışıyor."],
       modelsN: ["Ja, ich habe ein Geschwisterkind. Meine Mutter ist Lehrerin.", "Nein, ich habe keine Geschwister. Meine Mutter und mein Vater arbeiten."],
-      e: "„Haben“ sagst du mit Possessivendung + *var/yok*: *kardeşim var* (ich habe ein Geschwisterkind), *kardeşim yok* (ich habe keins). Familienwörter wie *annem* und *babam* bekommen nach Vokal nur -m. Deine Antwort darf ganz anders sein – Hauptsache, du sprichst." }
+      e: "„Haben“ sagst du mit Possessivendung + *var/yok*: *kardeşim var* (ich habe ein Geschwisterkind), *kardeşim yok* (ich habe keins). Familienwörter wie *annem* und *babam* bekommen nach Vokal nur -m. Deine Antwort darf ganz anders sein – Hauptsache, du sprichst." },
+    { id: "tr-a1-07.25", t: "order", ext: 1, q: "Bilde den Satz: „Das ist mein Buch.“", w: ["kitabım", "Bu", "benim"], a: ["Bu benim kitabım"],
+      e: "kitap + **-ım** = kita**b**ım: Das p wird vor dem Vokal der Endung weich (Konsonantenerweichung). *benim* davor ist optional und betont nur „**mein**“." },
+    { id: "tr-a1-07.26", t: "order", ext: 1, q: "Bilde den Satz: „Ihr Haus ist sehr groß.“ (das Haus von ihm/ihr)", w: ["büyük", "evi", "çok", "Onun"], a: ["Onun evi çok büyük"],
+      e: "ev endet auf einen Konsonanten, daher heißt „sein/ihr“ **-i**: ev**i**. *Onun* davor ist das Pronomen (sein/ihr). Das Adjektiv *büyük* steht am Ende, *çok* (sehr) direkt davor." }
   ]
 });
 
@@ -802,7 +824,11 @@ K.add('tr-a1-09', {
       chunks: ["… ’da / ’de oturuyorum.", "… ’da / ’de çalışıyorum.", "Her gün … gidiyorum."],
       models: ["Bonn’da oturuyorum. Köln’de çalışıyorum.", "Berlin’de oturuyorum. Her gün işe gidiyorum."],
       modelsN: ["Ich wohne in Bonn. Ich arbeite in Köln.", "Ich wohne in Berlin. Jeden Tag gehe ich zur Arbeit."],
-      e: "Zu jedem Ort gehört die richtige Endung: *wo?* → -da/-de (*Bonn’da*, *Köln’de*), *wohin?* → -a/-e (*işe*). Bei Namen steht der Apostroph. Deine Antwort darf ganz anders sein – Hauptsache, du sprichst." }
+      e: "Zu jedem Ort gehört die richtige Endung: *wo?* → -da/-de (*Bonn’da*, *Köln’de*), *wohin?* → -a/-e (*işe*). Bei Namen steht der Apostroph. Deine Antwort darf ganz anders sein – Hauptsache, du sprichst." },
+    { id: "tr-a1-09.26", t: "order", ext: 1, q: "Bilde den Satz: „Ich komme aus Deutschland.“", w: ["geliyorum", "Almanya’dan", "Ben"], a: ["Ben Almanya’dan geliyorum"],
+      e: "„Woher?“ → Ablativ **-dan**; bei Eigennamen steht der **Apostroph**: Almanya’dan. Das Verb *geliyorum* steht am Satzende." },
+    { id: "tr-a1-09.27", t: "order", ext: 1, q: "Bilde den Satz: „Die Kinder sind heute im Park.“", w: ["parkta", "bugün", "Çocuklar"], a: ["Çocuklar bugün parkta", "Bugün çocuklar parkta"],
+      e: "„Wo?“ → Lokativ. Nach **k** (einem harten Konsonanten) wird **d → t**: park**ta**, nicht „parkda“. Ein Verb „sind“ fehlt im Türkischen – der Satz endet mit dem Ort." }
   ]
 });
 
@@ -983,7 +1009,11 @@ K.add('tr-a1-11', {
       chunks: ["… yaşındayım.", "Şimdi saat …", "… buçuk."],
       models: ["Yirmi altı yaşındayım. Şimdi saat üç.", "Kırk yaşındayım. Saat beş buçuk."],
       modelsN: ["Ich bin sechsundzwanzig Jahre alt. Jetzt ist es drei Uhr.", "Ich bin vierzig Jahre alt. Es ist halb sechs (5:30)."],
-      e: "Alter: Zahl + *yaşındayım*. Uhrzeit: *Saat* + Zahl, bei halben Stunden *buçuk*. Du darfst auch eine andere Zahl oder Zeit nennen. Deine Antwort darf ganz anders sein – Hauptsache, du sprichst." }
+      e: "Alter: Zahl + *yaşındayım*. Uhrzeit: *Saat* + Zahl, bei halben Stunden *buçuk*. Du darfst auch eine andere Zahl oder Zeit nennen. Deine Antwort darf ganz anders sein – Hauptsache, du sprichst." },
+    { id: "tr-a1-11.25", t: "order", ext: 1, q: "Sag die Uhrzeit: „Es ist halb vier.“ (3:30)", w: ["buçuk", "Saat", "üç"], a: ["Saat üç buçuk"],
+      e: "Halbe Stunden: **Zahl + buçuk** (üç buçuk = „drei und halb“) . Im Deutschen nennt man die nächste Stunde (halb vier), im Türkischen die angefangene: üç buçuk." },
+    { id: "tr-a1-11.26", t: "order", ext: 1, q: "Schreibe die Zahl 345 in Wörtern.", w: ["beş", "yüz", "kırk", "Üç"], a: ["Üç yüz kırk beş"],
+      e: "Türkisch baut Zahlen **von groß nach klein**: 3 · 100, 40, 5 → *üç yüz kırk beş*. Kein „und“ dazwischen, und *yüz* bleibt im Singular (kein „üç yüzler“)." }
   ]
 });
 

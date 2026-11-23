@@ -152,11 +152,11 @@ window.KOPRU = {
           ['tr-a1-13', 'bu, şu, o & burada, şurada, orada', 'İşaret sözcükleri'],
           ['tr-a1-09', 'Ortsfälle: -da, -a, -dan', 'Bulunma, yönelme, ayrılma hâli'],
           ['tr-a1-10', 'Präsens -iyor', 'Şimdiki zaman'],
+          ['tr-a1-16', 'Verneinung im Überblick: değil, yok, -mI-', 'Olumsuzluk: değil, yok, -mA-'],
           ['tr-a1-11', 'Zahlen & Uhrzeit', 'Sayılar ve saat'],
           ['tr-a1-14', 'Tageszeiten, Wochentage & Alltag', 'Günün bölümleri ve haftanın günleri'],
           ['tr-a1-15', 'Fragen: kaç, ne kadar, hangi', 'Kaç, ne kadar, hangi'],
-          ['tr-a1-12', 'Akkusativ -(y)I', 'Belirtme hâli'],
-          ['tr-a1-16', 'Verneinung im Überblick: değil, yok, -mI-', 'Olumsuzluk: değil, yok, -mA-']
+          ['tr-a1-12', 'Akkusativ -(y)I', 'Belirtme hâli']
         ],
         A2: [   // Reihenfolge = Lernreihenfolge (docs/a2-konzept.md); IDs sind fest und unabhängig von der Position
           ['tr-a2-01', 'Vergangenheit -dI', 'Görülen geçmiş zaman'],

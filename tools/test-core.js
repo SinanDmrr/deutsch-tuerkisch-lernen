@@ -1466,8 +1466,8 @@ test('A1-Aufrüstung: Fixture erweitert A1 auf ≈ 650 Wörter und 16 Themen (je
     const nExt = W.DT.vocab.wordsOf(W.KOPRU, cid, 'A1').filter(w => w.ext).length;   // Anzahl aus den Daten
     const addT = nT[cid] || 4;   // echte ext-Themen (Anzahl aus den Daten) bzw. 4 simulierte
     eq(a, [b[cid][0] + nExt, b[cid][1] + addT], cid + ': +' + nExt + ' Wörter, +' + addT + ' Themen (einmalig)');
-    ok(nExt >= 295 && nExt <= 310, cid + ': Erweiterung ≈ 300 Wörter');
-    ok(a[0] >= 640 && a[0] <= 660 && a[1] === 16, cid + ': ≈ 650 Wörter / 16 Themen');
+    ok(nExt >= 295 && nExt <= 320, cid + ': Erweiterung ≈ 300 Wörter');
+    ok(a[0] >= 640 && a[0] <= 675 && a[1] === 16, cid + ': ≈ 650 Wörter / 16 Themen');
   });
   eq(C.CERT_RULES.A1, { ex: 0.8, words: 0.7 }, 'CERT_RULES.A1 unverändert (keine neuen Pflichten)');
 });

@@ -64,11 +64,12 @@ K.addText('de-a1-r03', {
   level: 'A1', kind: 'read', scene: 'einkauf', genre: 'hinweis',
   title: 'Einkaufszettel', sub: 'Alışveriş listesi',
   body: [
-    'Einkaufen:',
+    'Einkaufen für das Wochenende:',
     '1 Kilo Äpfel – 2 Liter Milch – Brot – 6 Eier – Käse – 1 Flasche Wasser – 1 Kilo Reis – 2 Tomaten',
-    'Nicht vergessen: Zucker!'
+    'Nicht vergessen: Zucker!',
+    'Bitte heute noch einkaufen. Der Supermarkt ist ja in der Nähe. Danke!'
   ],
-  gloss: { 'Einkaufen': 'alışveriş', 'Äpfel': 'elmalar (Apfel)', 'Eier': 'yumurtalar (Ei)' },
+  gloss: { 'Einkaufen': 'alışveriş', 'Wochenende': 'hafta sonu', 'in der Nähe': 'yakında', 'Äpfel': 'elmalar (Apfel)', 'Eier': 'yumurtalar (Ei)' },
   questions: [
     { id: 'de-a1-r03.q1', t: 'mc', q: 'Kaç litre süt gerekiyor?', o: ['1 litre', '2 litre', '6 litre'], a: 1,
       why: { 0: '1 *Kilo* elma içindir, süt için değil.', 2: '6 sayısı yumurta (*Eier*) içindir.' },
@@ -83,7 +84,10 @@ K.addText('de-a1-r03', {
       why: { 1: 'Miktarlar yanlış: 1 kilo elma, 2 litre süt; yumurta ve şeker de eksik.', 2: '6 sayısı yumurtadır, elma değil; süt “2 litre”, “2 şişe” değil.', 3: 'Liste çok daha uzun.' },
       e: 'Sprachmittlung: sayıyı doğru ürüne bağla: *1 Kilo Äpfel*, *2 Liter Milch*, *6 Eier*, *1 Flasche Wasser*.' },
     { id: 'de-a1-r03.q5', t: 'match', q: 'Miktar ve ürünü eşleştir:', p: [['1 Kilo', 'Äpfel'], ['2 Liter', 'Milch'], ['6', 'Eier'], ['1 Flasche', 'Wasser']],
-      e: 'Ölçü + ürün: *ein Kilo Äpfel*, *zwei Liter Milch*, *eine Flasche Wasser*.' }
+      e: 'Ölçü + ürün: *ein Kilo Äpfel*, *zwei Liter Milch*, *eine Flasche Wasser*.' },
+    { id: 'de-a1-r03.q6', t: 'mc', q: 'Alışveriş ne zaman yapılmalı?', o: ['Bugün', 'Yarın', 'Pazartesi'], a: 0,
+      why: { 1: 'Metinde *morgen* (yarın) yok; *heute* (bugün) var.', 2: 'Pazartesiden söz edilmiyor.' },
+      e: '*Bitte heute noch einkaufen.* → *heute* = bugün, *noch* = “bugün içinde”. Liste hafta sonu için, ama alışveriş bugün.' }
   ]
 });
 
@@ -231,7 +235,9 @@ K.addText('de-a1-r09', {
     'Praxis: Rosenweg 12, Bonn',
     'Telefon: 0228 123456',
     'Montag bis Freitag: 8 bis 12 Uhr',
-    'Termin: bitte anrufen! Samstag und Sonntag: zu.'
+    'Termin: bitte anrufen! Samstag und Sonntag: zu.',
+    'Wir sprechen Deutsch und Türkisch.',
+    'Wir sind gern für Sie da.'
   ],
   gloss: { 'Praxis': 'muayenehane', 'zu': 'kapalı', 'Rosenweg': 'Gül Yolu (sokak adı)', 'Telefon': 'telefon' },
   questions: [
@@ -248,7 +254,10 @@ K.addText('de-a1-r09', {
       why: { 1: 'Cumartesi muayenehane kapalı (*zu*).', 2: 'Kartta *Ärztin* (kadın) ve *Bonn* var.', 3: 'Saatler sabah (8–12).' },
       e: 'Sprachmittlung: ad, saat ve telefon numarası aktarılır; numarayı olduğu gibi söyle.' },
     { id: 'de-a1-r09.q5', t: 'match', q: 'Bilgiyi eşleştir:', p: [['Beruf', 'Ärztin'], ['Stadt', 'Bonn'], ['Straße', 'Rosenweg 12'], ['Telefon', '0228 123456']],
-      e: '*der Beruf* = meslek, *die Stadt* = şehir, *die Straße* = sokak, *das Telefon* = telefon.' }
+      e: '*der Beruf* = meslek, *die Stadt* = şehir, *die Straße* = sokak, *das Telefon* = telefon.' },
+    { id: 'de-a1-r09.q6', t: 'mc', q: 'Muayenehanede hangi diller konuşuluyor?', o: ['Almanca ve Türkçe', 'Almanca ve İngilizce', 'Sadece Almanca'], a: 0,
+      why: { 1: 'İngilizce metinde geçmiyor; *Türkisch* yazıyor.', 2: '*Deutsch und Türkisch* = iki dil; sadece Almanca değil.' },
+      e: '*Wir sprechen Deutsch und Türkisch.* → *und* = ve; *sprechen* = konuşmak (burada “biz”).' }
   ]
 });
 
@@ -282,8 +291,10 @@ K.addText('de-a1-r11', {
   title: 'E-Mail vom Amt', sub: 'Resmî daireden e-posta',
   body: [
     'Guten Tag Frau Kaya,',
-    'Ihr Termin: Montag, 3. März, um 10 Uhr. Bitte bringen Sie Ihren Pass mit. Bitte kommen Sie in Zimmer 12.',
-    'Freundliche Grüße, Herr Braun'
+    'Ihr Termin: Montag, 3. März, um 10 Uhr. Bitte bringen Sie Ihren Pass mit. Bitte kommen Sie in Zimmer 12. Bitte kommen Sie nicht zu spät.',
+    'Haben Sie eine Frage? Dann rufen Sie uns an.',
+    'Freundliche Grüße',
+    'Thomas Braun'
   ],
   gloss: { 'Freundliche Grüße': 'saygılarımla' },
   questions: [
@@ -296,12 +307,15 @@ K.addText('de-a1-r11', {
     { id: 'de-a1-r11.q3', t: 'mc', q: 'Hangi odaya gidilecek?', o: ['10 numaralı odada', '12 numaralı odada', '3 numaralı odada'], a: 1,
       why: { 0: '10 randevu saatidir.', 2: '3 tarihtir (3. Mart).' },
       e: '*Bitte kommen Sie in Zimmer 12.* Oda numarası, saat ve tarih aynı cümlede olabilir; hangisinin ne olduğunu anla.' },
-    { id: 'de-a1-r11.q4', t: 'mc', q: 'Annen e-postayı anlamıyor. Ona ne dersin?', o: ['Pazartesi, 3 Mart, saat 10’da randevun var. Pasaportunu getir. 12 numaralı odaya git.', 'Pazartesi saat 12’de ofise git; pasaport gerekmiyor.', '3 Mart’ta doktora gideceksin.', 'Herr Braun seni arayacak.'], a: 0,
-      why: { 1: 'Saat 10, 12 değil; pasaport gerekiyor.', 2: 'Doktordan söz yok; bu bir resmî daire (*Amt*) randevusu.', 3: 'Aramadan söz yok; e-posta bilgilendirme.' },
+    { id: 'de-a1-r11.q4', t: 'mc', q: 'Annen e-postayı anlamıyor. Ona ne dersin?', o: ['Pazartesi, 3 Mart, saat 10’da randevun var. Pasaportunu getir. 12 numaralı odaya git. Geç kalma.', 'Pazartesi saat 12’de ofise git; pasaport gerekmiyor.', '3 Mart’ta doktora gideceksin.', 'Herr Braun seni arayacak.'], a: 0,
+      why: { 1: 'Saat 10, 12 değil; pasaport gerekiyor.', 2: 'Doktordan söz yok; bu bir resmî daire (*Amt*) randevusu.', 3: 'Seni o aramayacak: metinde *Dann rufen Sie uns an* var. Sorun olursa sen onları ararsın.' },
       e: 'Sprachmittlung: zaman, getirilecek belge ve yer – üç bilgi.' },
-    { id: 'de-a1-r11.q5', t: 'mc', q: 'E-postayı kim yazıyor?', o: ['Frau Kaya', 'Herr Braun', 'Frau Braun'], a: 1,
-      why: { 0: 'Frau Kaya e-postanın **alıcısı** (Guten Tag Frau Kaya).', 2: 'Metinde *Herr* (bay) Braun yazıyor.' },
-      e: 'Başta alıcı, sonda gönderen yazılır: *Frau Kaya* (alıcı), *Herr Braun* (gönderen).' }
+    { id: 'de-a1-r11.q5', t: 'mc', q: 'E-postayı kim yazıyor?', o: ['Frau Kaya', 'Thomas Braun', 'Frau Braun'], a: 1,
+      why: { 0: 'Frau Kaya e-postanın **alıcısı** (Guten Tag Frau Kaya).', 2: 'İmzada *Thomas Braun* yazıyor; Frau Braun değil.' },
+      e: 'Başta alıcı, sonda gönderen yazılır: *Frau Kaya* (alıcı), *Thomas Braun* (gönderen, *Freundliche Grüße*’den sonra ayrı satırda).' },
+    { id: 'de-a1-r11.q6', t: 'gap', q: 'Bitte kommen Sie nicht zu ___.', a: ['spät'],
+      wrong: { 'früh': '*früh* = erken. Metinde “geç kalmayın” deniyor: *nicht zu spät*.', 'spat': 'Ä’yı unutma: *spät* (ä ile yazılır).' },
+      e: '*nicht zu spät* = çok geç değil / geç kalmayın. *zu* + sıfat = “fazla …”.' }
   ]
 });
 
@@ -312,9 +326,12 @@ K.addText('de-a1-r12', {
     'Bus 12 nach Bonn – Haltestelle Marktplatz',
     'Montag bis Freitag: 7:15 – 7:45 – 8:15 – 8:45',
     'Samstag: 8:00 – 9:00 – 10:00',
-    'Sonntag: kein Bus'
+    'Sonntag: kein Bus',
+    'Fahrzeit: 20 Minuten',
+    'Die Fahrkarte kaufen Sie im Bus.',
+    'Am Sonntag fahren Sie bitte mit dem Zug.'
   ],
-  gloss: { 'Marktplatz': 'pazar yeri meydanı' },
+  gloss: { 'Marktplatz': 'pazar yeri meydanı', 'Fahrzeit': 'yolculuk süresi', 'Fahrkarte': 'bilet' },
   questions: [
     { id: 'de-a1-r12.q1', t: 'mc', q: 'Pazar günü otobüs var mı?', o: ['Evet, saat 8’de', 'Hayır, yok', 'Evet, her saat başı'], a: 1,
       why: { 0: 'Saat 8:00 cumartesi içindir.', 2: 'Her saat başı sadece cumartesi (8, 9, 10).' },
@@ -329,7 +346,10 @@ K.addText('de-a1-r12', {
       why: { 1: 'Cuma hafta içidir (*Montag bis Freitag*); otobüs var.', 2: '9:00 sadece cumartesi saatleri arasında.', 3: '8, 9 ve 10 cumartesi tarifesidir.' },
       e: 'Sprachmittlung: *Montag bis Freitag* cuma dahil: 7:15, 7:45, 8:15, 8:45.' },
     { id: 'de-a1-r12.q5', t: 'match', q: 'Eşleştir:', p: [['Montag bis Freitag', '7:15 – 7:45 – 8:15 – 8:45'], ['Samstag', '8:00 – 9:00 – 10:00'], ['Sonntag', 'kein Bus']],
-      e: '*von … bis* ve gün adı: üç farklı sefer düzeni.' }
+      e: '*von … bis* ve gün adı: üç farklı sefer düzeni.' },
+    { id: 'de-a1-r12.q6', t: 'mc', q: 'Bileti nereden alırsın?', o: ['Otobüste', 'Durakta', 'Postanede'], a: 0,
+      why: { 1: 'Durak (*Haltestelle*) bilet yeri olarak geçmiyor.', 2: 'Postaneden söz edilmiyor.' },
+      e: '*Die Fahrkarte kaufen Sie im Bus.* → *im Bus* = otobüste; *die Fahrkarte* = bilet.' }
   ]
 });
 

@@ -260,19 +260,20 @@ const normW = x => String(x).replace(/['’]/g, '').replace(/İ/g, 'i').toLowerC
 const stemOf = (w, tr) => { const b = tr ? w.replace(/(mek|mak)$/, '') : w.replace(/(en|n|e)$/, ''); return b.length >= 3 ? b : w; };
 const stringsOf = o => typeof o === 'string' ? [o] : (o && typeof o === 'object') ? Object.values(o).flatMap(stringsOf) : [];
 Object.keys(K.courses).forEach(cid => {
-  const tr = cid === 'tr', a2 = (K.vocab || {})[cid + '-a2'] || [];
-  if (!a2.length) { console.log(`Info: Abdeckungs-/Zusammenhangsprüfung A2 (${cid}) inaktiv – noch keine A2-Wörter`); return; }
-  // Zusammenhang: Text aller A2-Inhalte des Kurses
-  let corpus = '';
-  Object.entries(K.texts || {}).forEach(([id, t]) => { if (id.startsWith(cid + '-a2-')) corpus += ' ' + stringsOf(t).join(' '); });
-  Object.entries(K.dialogs || {}).forEach(([id, d]) => { if (id.startsWith(cid + '-a2-')) corpus += ' ' + stringsOf(d).join(' '); });
-  Object.entries(K.content || {}).forEach(([id, d]) => { if (id.startsWith(cid + '-a2-')) corpus += ' ' + stringsOf(d).join(' '); });
-  corpus = ' ' + normW(corpus).join(' ');
-  const lonely = a2.filter(v => {
-    const toks = normW(String(v.t).replace(/^(der|die|das|sich)\s+/i, '')).filter(w => w.length >= 3 || normW(v.t).length === 1);
-    return !toks.some(w => corpus.includes(w.length >= 4 ? ' ' + stemOf(w, tr) : ' ' + w + ' ') );
+  const tr = cid === 'tr';
+  // Zusammenhang je Niveau (A1, A2): Wort kommt in keinem Text/Dialog/Übung des Niveaus vor
+  ['a1', 'a2'].forEach(lv => {
+    const words = (K.vocab || {})[cid + '-' + lv] || [];
+    if (!words.length) { console.log(`Info: Zusammenhangsprüfung ${lv.toUpperCase()} (${cid}) inaktiv – noch keine Wörter`); return; }
+    let corpus = '';
+    [K.texts, K.dialogs, K.content].forEach(src => Object.entries(src || {}).forEach(([id, t]) => { if (id.startsWith(cid + '-' + lv + '-')) corpus += ' ' + stringsOf(t).join(' '); }));
+    corpus = ' ' + normW(corpus).join(' ');
+    const lonely = words.filter(v => {
+      const toks = normW(String(v.t).replace(/^(der|die|das|sich)\s+/i, '')).filter(w => w.length >= 3 || normW(v.t).length === 1);
+      return !toks.some(w => corpus.includes(w.length >= 4 ? ' ' + stemOf(w, tr) : ' ' + w + ' '));
+    });
+    if (lonely.length) warn(`${lonely.length} von ${words.length} ${lv.toUpperCase()}-Wörtern (${cid}) kommen in keinem ${lv.toUpperCase()}-Text/-Dialog/-Übung vor, z. B.: ` + lonely.slice(0, 15).map(v => v.t).join(', '));
   });
-  if (lonely.length) warn(`${lonely.length} von ${a2.length} A2-Wörtern (${cid}) kommen in keinem A2-Text/-Dialog/-Übung vor, z. B.: ` + lonely.slice(0, 15).map(v => v.t).join(', '));
   // Abdeckung je Text: A1- + A2-Wortschatz + gloss. Nicht gezählt: Zahlen, Eigennamen (TR: Wörter mit Apostroph-Suffix, großgeschrieben mitten im Satz;
   // DE: großgeschriebenes Wort, das kein Nomen nach Artikel/Adjektiv ist, Sprechernamen, Unterschriften), Stoppwörter (tools/stopwords.js) gelten als bekannt.
   const mk = () => ({ stems: new Set(), exact: new Set() }), SETS = { a1: mk(), a2: mk() }, STOP = require('./stopwords.js')[tr ? 'tr' : 'de'];
@@ -306,10 +307,13 @@ Object.keys(K.courses).forEach(cid => {
     });
     return out;
   };
+  // Dialoge als Textobjekte: Sprecherzeilen + richtige Wahlzeile (o[a]); falsche Optionen enthalten absichtlich Fehler
+  const dlgAsText = d => ({ lines: (d.lines || []).map(l => ({ t: l.me ? (l.o || [])[l.a] : l.t })).filter(l => l.t) });
   const names = new Set();
   Object.entries(K.texts || {}).forEach(([id, t]) => { if (id.startsWith(cid + '-')) { (t.lines || []).forEach(l => normW(l.s || '').forEach(w => names.add(w))); tokenize(t, names); } });
-  Object.entries(K.dialogs || {}).forEach(([id, d]) => { if (id.startsWith(cid + '-')) (d.lines || []).forEach(l => normW(l.s || '').forEach(w => names.add(w))); });
-  Object.entries(K.texts || {}).forEach(([id, t]) => {
+  Object.entries(K.dialogs || {}).forEach(([id, d]) => { if (id.startsWith(cid + '-')) { (d.lines || []).forEach(l => normW(l.s || '').forEach(w => names.add(w))); tokenize(dlgAsText(d), names); } });
+  const covItems = Object.entries(K.texts || {}).concat(Object.entries(K.dialogs || {}).map(([id, d]) => [id, dlgAsText(d)]));
+  covItems.forEach(([id, t]) => {
     const lv = id.startsWith(cid + '-a1-') ? 'a1' : id.startsWith(cid + '-a2-') ? 'a2' : null; if (!lv) return;
     const toks = tokenize(t, names).filter(x => !x.name && !names.has(x.w) && x.w), gl = new Set(); Object.keys(t.gloss || {}).forEach(g => normW(g).forEach(w => gl.add(w)));
     if (!toks.length) return;

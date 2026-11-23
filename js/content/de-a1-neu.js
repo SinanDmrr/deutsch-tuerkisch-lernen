@@ -300,7 +300,9 @@ K.add('de-a1-15', {
       chunks: ["Ich spiele gern …", "Ich lese gern …", "Ich mag …", "Ich mag keinen / keine …"],
       models: ["Ich spiele gern Fußball und ich lese gern. Ich mag Tee, aber ich mag keinen Fisch."],
       modelsN: ["Futbol oynamayı ve kitap okumayı severim. Çayı severim ama balık sevmem."],
-      e: "Eylem → **gern** (*Ich spiele gern …*). İsim → **mag** (*Ich mag Tee*). İsimle olumsuz → **kein-** (*Ich mag keinen Fisch*). Fiil her zaman 2. sırada. Senin cevabın örnekten farklı olabilir – önemli olan anlaşılır konuşman." }
+      e: "Eylem → **gern** (*Ich spiele gern …*). İsim → **mag** (*Ich mag Tee*). İsimle olumsuz → **kein-** (*Ich mag keinen Fisch*). Fiil her zaman 2. sırada. Senin cevabın örnekten farklı olabilir – önemli olan anlaşılır konuşman." },
+    {"id":"de-a1-15.25","t":"gap","q":"Meine Schwester ___ Schokolade. (mögen)","a":["mag"],"wrong":{"mögen":"*mögen* sadece wir ve sie/Sie (çoğul) ile; **sie** burada tek kişi (kız kardeşim) → **mag**.","mögt":"*mögt* sadece **ihr** ile kullanılır.","magst":"*magst* sadece **du** ile; üçüncü tekil şahıs → **mag**."},"e":"er/sie/es → **mag** (ich mag = sie mag). Bir şeyi (isim) sevmek için **mögen**: Meine Schwester mag Schokolade.","ext":1},
+    {"id":"de-a1-15.26","t":"order","q":"Cümleyi kur: “Biz müzik dinlemeyi severiz.”","w":["gern","Wir","Musik","hören"],"a":["Wir hören gern Musik","Musik hören wir gern","Gern hören wir Musik"],"e":"Eylemi sevmek → fiil + **gern**. Fiil 2. sırada: Wir **hören** gern Musik. “Wir mögen hören Musik” denmez.","ext":1}
   ])
 });
 

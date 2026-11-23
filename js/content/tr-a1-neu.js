@@ -99,7 +99,13 @@ K.add('tr-a1-13', {
       chunks: ["Burada bir … var.", "Orada bir … var.", "… büyük / küçük."],
       models: ["Burada bir masa var. Orada bir pencere var. Pencere büyük.", "Burada bir koltuk var. Orada bir televizyon var."],
       modelsN: ["Hier gibt es einen Tisch. Dort gibt es ein Fenster. Das Fenster ist groß.", "Hier gibt es einen Sessel. Dort gibt es einen Fernseher."],
-      e: "Mit **burada … var** und **orada … var** beschreibst du deinen Raum. Der Gegenstand steht vor *var*, *bir* davor: *Burada bir masa var.* Deine Antwort darf ganz anders sein – Hauptsache, du sprichst.", ext: 1 }
+      e: "Mit **burada … var** und **orada … var** beschreibst du deinen Raum. Der Gegenstand steht vor *var*, *bir* davor: *Burada bir masa var.* Deine Antwort darf ganz anders sein – Hauptsache, du sprichst.", ext: 1 },
+    { id: "tr-a1-13.25", t: "mc", ext: 1, q: "„O ev büyük.“ bedeutet:", o: ["Er/Sie ist ein großes Haus.", "Jenes Haus ist groß.", "Das große Haus ist dort."], a: 1,
+      why: { 0: "Steht **o** allein, heißt es „er/sie/es“. Hier folgt aber das Nomen *ev*: dann ist o ein Zeigewort („jener“).", 2: "„dort“ wäre *orada*. Im Satz gibt es kein Ortswort – *o* ist hier nur das Zeigewort vor dem Nomen." },
+      e: "**o** vor einem Nomen = „jener/jene/jenes“: *o ev* = jenes Haus. Ohne Nomen heißt es „er/sie/es“: *O öğretmen.* = Er/Sie ist Lehrer/in. Der Zusammenhang entscheidet." },
+    { id: "tr-a1-13.26", t: "gap", ext: 1, q: "___ bir park var. (Dort – weit weg – gibt es einen Park.)", a: ["Orada"],
+      wrong: { "o": "*o* steht vor einem Nomen („jener“) oder heißt „er/sie“. Für den **Ort** „dort“ braucht man *orada*.", "şurada": "*şurada* = „da“ (du zeigst darauf, mittlere Entfernung). „Weit weg“ ist *orada*.", "burada": "*burada* = „hier“ (nah bei dir). Der Park ist aber weit weg: *orada*." },
+      e: "Orte: **burada** (hier), **şurada** (da), **orada** (dort). Sie folgen dem Zeigewort: bu → burada, şu → şurada, o → orada." }
   ]
 });
 
@@ -197,7 +203,13 @@ K.add('tr-a1-14', {
       chunks: ["Sabahları …", "Saat …-de/-da kalkıyorum.", "Akşamları …", "Hafta sonu …"],
       models: ["Sabahları saat yedide kalkıyorum. Kahvaltı yapıyorum. Sonra işe gidiyorum.", "Hafta sonu geç kalkıyorum. Akşamları evdeyim, film izliyorum."],
       modelsN: ["Morgens stehe ich um sieben auf. Ich frühstücke. Dann gehe ich zur Arbeit.", "Am Wochenende stehe ich spät auf. Abends bin ich zu Hause und schaue einen Film."],
-      e: "Zeitangabe zuerst (*sabahları*, *saat yedide*, *hafta sonu*), das Verb steht am Ende. Für Gewohnheiten genügt die **-iyor**-Zeit aus Thema 10. Deine Antwort darf ganz anders sein – Hauptsache, du sprichst.", ext: 1 }
+      e: "Zeitangabe zuerst (*sabahları*, *saat yedide*, *hafta sonu*), das Verb steht am Ende. Für Gewohnheiten genügt die **-iyor**-Zeit aus Thema 10. Deine Antwort darf ganz anders sein – Hauptsache, du sprichst.", ext: 1 },
+    { id: "tr-a1-14.25", t: "mc", ext: 1, q: "„Um wie viel Uhr stehst du auf?“", o: ["Saat kaçta kalkıyorsun?", "Saat kaç kalkıyorsun?", "Saat kaçda kalkıyorsun?"], a: 0,
+      why: { 1: "*Saat kaç?* fragt nur „Wie spät ist es?“. Für „**um** wie viel Uhr“ braucht *kaç* die Lokativendung.", 2: "Nach **ç** (hart) wird aus -da ein **-ta**: kaç**ta**. Merksatz: FıSTıKÇı ŞaHaP." },
+      e: "„Um wie viel Uhr?“ = **Saat kaçta …?** (kaç + **-ta**, weil ç ein harter Konsonant ist). Die Antwort hat dieselbe Endung: *Saat yedide.* (Um sieben.)" },
+    { id: "tr-a1-14.26", t: "gap", ext: 1, q: "abends (immer wieder): akşam___ çay içiyorum.", a: ["ları"],
+      wrong: { "lar": "*akşamlar* sind einfach „Abende“ (Plural). Für „abends, regelmäßig“ braucht es -**ları**.", "leri": "Der letzte Vokal von akşam ist **a** (hinterer Vokal) → -ları, nicht -leri.", "da": "Für „abends (regelmäßig)“ sagt man nicht *akşamda*, sondern akşam**ları**." },
+      e: "**-lArI** an einer Tageszeit = regelmäßig: sabah**ları**, akşam**ları**, gece**leri**. Nach a, ı, o, u → -ları; nach e, i, ö, ü → -leri." }
   ]
 });
 
@@ -388,7 +400,13 @@ K.add('tr-a1-16', {
       chunks: ["Hayır, çalışmıyorum.", "Evet, … günü çalışıyorum.", "Hafta sonu … yok."],
       models: ["Hayır, çalışmıyorum. Hafta sonu evdeyim. Sabahları geç kalkıyorum.", "Evet, cumartesi günü çalışıyorum. Pazar günü çalışmıyorum, evdeyim."],
       modelsN: ["Nein, ich arbeite nicht. Am Wochenende bin ich zu Hause. Morgens stehe ich spät auf.", "Ja, am Samstag arbeite ich. Am Sonntag arbeite ich nicht, ich bin zu Hause."],
-      e: "Auf „arbeitest du?“ antwortest du mit *Evet, çalışıyorum* oder *Hayır, çalışmıyorum*. Die Verneinung **-mI-** steht zwischen Stamm und -yor. Deine Antwort darf ganz anders sein – Hauptsache, du sprichst.", ext: 1 }
+      e: "Auf „arbeitest du?“ antwortest du mit *Evet, çalışıyorum* oder *Hayır, çalışmıyorum*. Die Verneinung **-mI-** steht zwischen Stamm und -yor. Deine Antwort darf ganz anders sein – Hauptsache, du sprichst.", ext: 1 },
+    { id: "tr-a1-16.25", t: "mc", ext: 1, q: "Man fragt dich: „Gelmiyor musun?“ (Kommst du nicht?). Du kommst doch. Welche Antwort ist eindeutig?", o: ["Geliyorum, tabii!", "Evet.", "Hayır."], a: 0,
+      why: { 1: "*Evet* kann „ja, ich komme nicht“ **oder** „doch“ bedeuten – bei verneinten Fragen ist es nicht eindeutig.", 2: "*Hayır* wird oft als „doch“ verstanden, aber nicht immer – es kann auch „nein, ich komme nicht“ heißen. Nicht eindeutig." },
+      e: "Bei verneinten Fragen wiederholst du am besten das **Verb**: *Geliyorum!* (Ich komme doch.) oder *Gelmiyorum.* (Ich komme nicht.) So gibt es keine Missverständnisse." },
+    { id: "tr-a1-16.26", t: "gap", ext: 1, q: "İşe git___yorum. (Ich gehe nicht zur Arbeit.)", a: ["mi"],
+      wrong: { "mı": "Die Vokalharmonie richtet sich nach dem letzten Vokal des Stammes: g**i**t → **mi**. „mı“ steht nach a/ı.", "mu": "mu steht nach o/u. Der Stamm *git* hat ein **i** → mi.", "di": "*-di* gehört zur Vergangenheit. Die Verneinung vor -yor ist -**mI**-." },
+      e: "Verneinung: Stamm + **-mI-** + -yor. Der Vokal folgt dem Stamm: git → git**mi**yorum (das t bleibt, weil kein Vokal folgt), gel → gel**mi**yorum, yap → yap**mı**yorum." }
   ]
 });
 
