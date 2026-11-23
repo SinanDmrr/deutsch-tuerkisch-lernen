@@ -344,4 +344,174 @@ K.addText('tr-b1-h06', {
   ]
 });
 
+K.addText('tr-b1-r07', {
+  level: 'B1', kind: 'read', scene: 'okul', genre: 'artikel',
+  title: "Yeni bir dil öğrenmek için ipuçları", sub: "Ratgeber: So lernt man eine Sprache",
+  body: [
+    "Yeni bir dil öğrenmek başlangıçta zor görünür, ama doğru yöntemle bu süreç çok daha kolay olur. Size birkaç ipucu vereyim.",
+    "Önce her gün düzenli çalışın. Günde yarım saat bile olsa, sık sık tekrar etmek uzun süre ara vermekten daha verimlidir. Yeni kelimeleri yalnızca listeden ezberlemeyin; cümle içinde kullanın. Böylece kelimeler aklınızda daha kolay kalır.",
+    "İkinci olarak, çok dinleyin ve konuşun. Film izleyerek ve şarkı dinleyerek dilin ritmine alışırsınız. Konuştukça özgüveniniz artar. Hata yapmaktan korkmadan konuşmaya çalışın, çünkü kimse sizden mükemmel olmanızı beklemiyor.",
+    "Son olarak sabırlı olun. Bazen ilerleme hissetmezsiniz, ama zamanla her şey yerine oturur. Yürüyüş yaparken bile kulaklıkla bir podcast dinleyebilirsiniz. Sınav yaklaşırken telaşlanmayın; hazırlığınızı küçük aşamalara bölün. Bir an önce başlayın, çünkü başlangıç en zor kısımdır.",
+    "Gün içinde küçük fırsatlar da yaratabilirsiniz. Markette alışveriş yaparken ürün adlarını Türkçe okuyun, otobüste duyduğunuz cümleleri içinizden tekrar edin. Böyle küçük denemeler zamanla büyük ilerleme getirir. Ayrıca arkadaşlarınızla Türkçe konuşmak için her hafta biraz vakit ayırın."
+  ],
+  gloss: { "aklınızda": "in Ihrem Kopf", "bölün": "teilen Sie", "böylece": "so, dadurch", "ezberlemeyin": "lernen Sie nicht auswendig", "hissetmezsiniz": "Sie spüren nicht",  "listeden": "aus der Liste", "mükemmel": "perfekt", "olmanızı": "dass Sie sind", "olsa": "auch wenn es ist", "podcast": "Podcast", "ritmine": "seinem Rhythmus" },
+  questions: [
+    { id: "tr-b1-r07.q1", t: "mc", q: "Was ist laut Text effizienter?", o: ["Oft zu wiederholen, auch wenn es nur eine halbe Stunde täglich ist", "Einmal pro Woche mehrere Stunden zu lernen", "Nur Wortlisten auswendig zu lernen", "Nur zu lesen und nicht zu sprechen"], a: 0,
+      why: { 1: "Davon ist nicht die Rede; der Text empfiehlt tägliches, regelmäßiges Lernen.", 2: "Der Text rät ausdrücklich davon ab: Wörter soll man im Satz benutzen.", 3: "Der Text empfiehlt, viel zu hören und zu sprechen." },
+      e: "*Günde yarım saat bile olsa, sık sık tekrar etmek uzun süre ara vermekten daha verimlidir.*" },
+    { id: "tr-b1-r07.q2", t: "mc", q: "Wie soll man neue Wörter lernen?", o: ["Im Satz benutzen", "Nur aus der Liste auswendig lernen", "Nur schreiben, nie sprechen", "Erst nach der Prüfung wiederholen"], a: 0,
+      why: { 1: "Genau das rät der Text ab: *yalnızca listeden ezberlemeyin*.", 2: "Davon sagt der Text nichts.", 3: "Davon sagt der Text nichts." },
+      e: "*Cümle içinde kullanın.* Dann bleiben die Wörter leichter im Kopf." },
+    { id: "tr-b1-r07.q3", t: "gap", q: "Çok konuş___ özgüveniniz artar. (Je mehr man spricht, desto mehr wächst das Selbstvertrauen.)", a: ["tukça"],
+      wrong: { "tıkça": "Letzter Vokal von *konuş-* ist **u** → -tukça.", "dukça": "*konuş-* endet auf **ş** (stimmlos) → d wird **t**.", "unca": "-(y)IncA = „sobald“. Für „je mehr“ braucht man -DIkçA." },
+      e: "konuş- + **tuk** + **ça** = **konuştukça** (je mehr man spricht)." },
+    { id: "tr-b1-r07.q4", t: "mc", q: "Was rät der Text, wenn die Prüfung näher rückt?", o: ["Die Vorbereitung in kleine Schritte aufteilen", "Alles am letzten Tag lernen", "Nicht mehr lernen", "Nur noch Filme schauen"], a: 0,
+      why: { 1: "Der Text rät, nicht in Hektik zu geraten.", 2: "Davon ist nicht die Rede.", 3: "Filme werden nur als Übung im Alltag genannt, nicht als Prüfungsvorbereitung." },
+      e: "*Hazırlığınızı küçük aşamalara bölün.*" },
+    { id: "tr-b1-r07.q5", t: "mc", q: "Was ist laut Text der schwierigste Teil?", o: ["Der Anfang", "Das Ende", "Die Prüfung", "Die Wiederholung"], a: 0,
+      why: { 1: "Vom Ende ist nicht die Rede.", 2: "Die Prüfung wird nur kurz erwähnt.", 3: "Wiederholung wird als nützlich beschrieben." },
+      e: "*Başlangıç en zor kısımdır.*" }
+  ]
+});
+
+K.addText('tr-b1-r08', {
+  level: 'B1', kind: 'read', scene: 'ev', genre: 'email',
+  title: "Taşınma günü", sub: "E-Mail an eine Freundin: Der Umzugstag",
+  body: [
+    "Merhaba Deniz,",
+    "Cumartesi günü taşınıyorum! Nakliyeciler sabah dokuzda gelecek, ama ben sen gelinceye kadar kimseyi içeri almak istemiyorum, çünkü önce kutuların yerini birlikte planlamak istiyorum. Mümkünse saat sekizde bana uğrar mısın?",
+    "Eski evden çıkmadan önce bütün odaları bir kez daha kontrol edeceğim; geçen sefer anahtarı bile unutmuştum. Kapıyı kapatmadan önce elektriği de kapatacağım.",
+    "Sen geldiğinde birlikte kahvaltı yaparız. Mutfakta artık çay bile kalmadı, ama fırından simit alırım. Taşınma günü zaman çok hızlı geçiyor, bu yüzden hazırlığımı erken bitirdim. Eşyaları sırayla arabaya taşıyacağız. Yorulduğumuzda mola verir, öğleden sonra pizza sipariş ederiz.",
+    "Bu şehre geleli beş yıl oldu, ama yeni mahalleyi henüz tanımıyorum. Yerleştikçe kendimi daha rahat hissedeceğimi umuyorum. Yardım edersen çok sevinirim. Cevabını bekliyorum.",
+    "Yeni evin anahtarını emlakçıdan öğleden önce alacağım. Akşama kadar her şeyi bitirirsek ilk geceyi rahat geçiririz. Komşularım da yardım etmek istedi, ama onlara fazla zahmet vermek istemiyorum.",
+    "Sevgiler, Selin"
+  ],
+  gloss: { "alırım": "ich hole", "edeceğim": "ich werde tun", "hissedeceğimi": "dass ich mich fühlen werde", "içeri": "hinein", "kutuların": "der Kisten", "nakliyeciler": "Umzugshelfer", "pizza": "Pizza", "umuyorum": "ich hoffe", "yorulduğumuzda": "wenn wir müde werden", "şehre": "in die Stadt" },
+  questions: [
+    { id: "tr-b1-r08.q1", t: "mc", q: "Warum soll Deniz früh kommen?", o: ["Selin will niemanden hineinlassen, bevor die Freundin da ist, denn sie will zuerst gemeinsam planen, wo die Kisten hinkommen.", "Sie soll die Umzugsfirma bezahlen.", "Sie soll den Schlüssel abgeben.", "Sie soll das Auto fahren."], a: 0,
+      why: { 1: "Von Bezahlung ist nicht die Rede.", 2: "Selin selbst hat den Schlüssel; er wird nur als Beispiel für das letzte Mal erwähnt.", 3: "Vom Autofahren ist nicht die Rede." },
+      e: "*sen gelinceye kadar kimseyi içeri almak istemiyorum* = ich will niemanden hereinlassen, bis du kommst." },
+    { id: "tr-b1-r08.q2", t: "mc", q: "Was will Selin vor dem Verlassen der alten Wohnung tun?", o: ["Alle Zimmer prüfen und den Strom ausschalten", "Die Wände streichen", "Die Nachbarn besuchen", "Den Schlüssel verstecken"], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Davon ist nicht die Rede.", 3: "Davon ist nicht die Rede." },
+      e: "*bütün odaları kontrol edeceğim … elektriği de kapatacağım.*" },
+    { id: "tr-b1-r08.q3", t: "gap", q: "Sen ___ birlikte kahvaltı yaparız. (gelmek – Wenn du kommst, frühstücken wir zusammen.)", a: ["geldiğinde", "geldiğin zaman", "gelince"],
+      wrong: { "geldiğimde": "-im = „ich“. Hier kommt aber „du“ (*Sen*): -in.", "gelinceye": "Mit -yA kadar würde es „bis“ heißen.", "gelirken": "-ken = „während“, nicht „als/wenn“ nacheinander." },
+      e: "gel- + **diğ** + **in** + **de** = **geldiğinde**. Auch *geldiğin zaman* und *gelince* sind möglich." },
+    { id: "tr-b1-r08.q4", t: "mc", q: "Wie lange wohnt Selin schon in der Stadt?", o: ["Seit fünf Jahren", "Seit fünf Monaten", "Seit fünf Wochen", "Seit einem Jahr"], a: 0,
+      why: { 1: "Monate wären *ay*.", 2: "Wochen wären *hafta*.", 3: "Ein Jahr wäre *bir yıl*." },
+      e: "*Bu şehre geleli beş yıl oldu.* = Es sind fünf Jahre." },
+    { id: "tr-b1-r08.q5", t: "mc", q: "Was hofft Selin?", o: ["Dass sie sich wohler fühlt, je mehr sie sich einlebt", "Dass sie bald wieder umziehen kann", "Dass die Nachbarn leise sind", "Dass Deniz bei ihr einzieht"], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Davon ist nicht die Rede.", 3: "Davon ist nicht die Rede." },
+      e: "*Yerleştikçe kendimi daha rahat hissedeceğimi umuyorum.*" }
+  ]
+});
+
+K.addText('tr-b1-r09', {
+  level: 'B1', kind: 'read', scene: 'sokak', genre: 'artikel',
+  title: "Bisikletle şehir turu", sub: "Blogbeitrag: Eine Stadtrundfahrt mit dem Fahrrad",
+  body: [
+    "Geçen ay bir bisiklet aldım, ama şehri ilk kez geçen hafta sonu bisikletle gezdim. Almadan önce uzun süre düşündüm, çünkü şehirde trafik çok yoğun. Ama sonunda karar verdim ve hiç pişman değilim.",
+    "Sabah erkenden yola çıktım. Nehir boyunca yavaş yavaş pedal çevirerek eski mahalleye ulaştım. Pedal çevirdikçe yorgunluk unutuluyor ve insan giderek daha rahat nefes alıyor. Yolda sık sık durup fotoğraf çektim.",
+    "Öğle vakti küçük bir kafede mola verdim. Garson bana yerel bir tatlı önerdi ve ben de ilk kez denedim. Yemek yedikten sonra yeniden yola çıktım.",
+    "Bisiklet aldığımdan beri arabayı neredeyse hiç kullanmıyorum. Hem zaman kazanıyorum hem de şehri daha iyi tanıyorum. Yürüyerek ulaşamayacağınız yerlere kolayca gidebiliyorsunuz. Bir şeyi unutmayın: kaskı takmadan yola çıkmayın! Güvenlik her şeyden önemli.",
+    "Akşama doğru eve dönerken biraz yorulmuştum, ama çok mutluydum. Gelecek ay arkadaşlarımla uzun bir hafta sonu turuna çıkmayı planlıyoruz. Siz de bir gün deneyin; belki bu işi çok seversiniz."
+  ],
+  gloss: { "pedal": "Pedal", "şehri": "die Stadt", "aldığımdan": "seit ich gekauft habe", "almadan": "ohne zu kaufen", "nefes alıyor": "atmet", "gidebiliyorsunuz": "Sie können hingehen", "kafede": "im Café", "takmadan": "ohne aufzusetzen", "vakti": "Zeit", "yoğun": "dicht", "çevirdikçe": "je mehr man dreht", "çevirerek": "drehend" },
+  questions: [
+    { id: "tr-b1-r09.q1", t: "mc", q: "Warum hat der Autor lange über den Kauf nachgedacht?", o: ["Weil der Verkehr in der Stadt sehr dicht ist", "Weil das Fahrrad zu teuer war", "Weil er nicht radeln konnte", "Weil es regnete"], a: 0,
+      why: { 1: "Vom Preis ist nicht die Rede.", 2: "Davon ist nicht die Rede.", 3: "Vom Regen ist nicht die Rede." },
+      e: "*çünkü şehirde trafik çok yoğun*" },
+    { id: "tr-b1-r09.q2", t: "mc", q: "Was passiert, je mehr er in die Pedale tritt?", o: ["Die Müdigkeit wird vergessen und er atmet leichter", "Er wird immer müder", "Er verliert den Weg", "Er hält an und isst"], a: 0,
+      why: { 1: "Das Gegenteil wird beschrieben.", 2: "Davon ist nicht die Rede.", 3: "Die Pause kommt erst mittags." },
+      e: "*Pedal çevirdikçe yorgunluk unutuluyor.*" },
+    { id: "tr-b1-r09.q3", t: "gap", q: "Bisiklet aldığım___ beri arabayı neredeyse hiç kullanmıyorum. (Seit ich das Fahrrad gekauft habe, benutze ich kaum noch das Auto.)", a: ["dan"],
+      wrong: { "da": "-DA heißt „als/wenn“. Für „seit“ braucht man den Ablativ -DAn.", "dan beri": "*beri* steht schon im Satz.", "den": "Letzter Vokal von *aldığım* ist **ı** → -dan." },
+      e: "aldığım + **dan** + beri = **seit ich … gekauft habe**." },
+    { id: "tr-b1-r09.q4", t: "mc", q: "Was tat der Autor nach dem Essen?", o: ["Er fuhr weiter", "Er fuhr nach Hause", "Er rief einen Freund an", "Er schlief"], a: 0,
+      why: { 1: "Er fuhr erst abends nach Hause.", 2: "Davon ist nicht die Rede.", 3: "Davon ist nicht die Rede." },
+      e: "*Yemek yedikten sonra yeniden yola çıktım.*" },
+    { id: "tr-b1-r09.q5", t: "mc", q: "Welchen Rat gibt er am Ende?", o: ["Nicht ohne Helm losfahren", "Das Auto verkaufen", "Nur nachts fahren", "Immer zu zweit fahren"], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Davon ist nicht die Rede.", 3: "Davon ist nicht die Rede." },
+      e: "*Kaskı takmadan yola çıkmayın!* -mAdAn = ohne zu." }
+  ]
+});
+
+K.addText('tr-b1-h07', {
+  level: 'B1', kind: 'listen', scene: 'ofis', genre: 'anrufbeantworter',
+  title: "Araba henüz hazır değil", sub: "Nachricht auf dem Anrufbeantworter", plays: 2,
+  lines: [
+    { s: 'Emre', g: 'm', t: "Merhaba, ben Emre, oto servisten arıyorum. Arabanız henüz hazır değil, çünkü parça gelmeden tamir bitmiyor. Parçayı dün sipariş ettik, ama kargo henüz gelmedi.", n: "Hallo, hier ist Emre von der Werkstatt. Ihr Auto ist noch nicht fertig, denn ohne das Ersatzteil wird die Reparatur nicht fertig. Wir haben das Teil gestern bestellt, aber die Lieferung ist noch nicht da." },
+    { s: 'Emre', g: 'm', t: "Parça gelince hemen işe başlayacağız. Araba en geç çarşambaya kadar hazır olur. Arabayı almaya gelmeden önce mutlaka beni arayın, çünkü akşamları dükkânı erken kapatıyoruz.", n: "Sobald das Teil da ist, fangen wir sofort an. Das Auto ist spätestens bis Mittwoch fertig. Rufen Sie mich unbedingt an, bevor Sie das Auto abholen, denn abends schließen wir den Laden früh." },
+    { s: 'Emre', g: 'm', t: "Fiyat konusunda endişelenmeyin; size önceden söylediğim gibi olacak. Bıraktığınızda söylediğiniz fren sesi sorunu da çözüldü. Yalnızca küçük bir yağ değişikliği yapmamız gerekiyor, ama bunu sizin onayınızla yapacağız. Mesajı dinleyince bana kısa bir mesaj da gönderebilirsiniz, çünkü sizden haber bekliyorum. İyi günler, görüşürüz.", n: "Wegen des Preises machen Sie sich keine Sorgen; es bleibt, wie ich es Ihnen vorher gesagt habe. Das Bremsgeräusch, das Sie bei der Abgabe erwähnt haben, ist auch behoben. Wir müssen nur noch einen kleinen Ölwechsel machen, aber das tun wir mit Ihrer Zustimmung. Sie können mir nach dem Abhören auch eine kurze Nachricht schicken, denn ich warte auf Nachricht von Ihnen. Einen schönen Tag." }
+  ],
+  gloss: { "almaya": "abzuholen", "arıyorum": "ich rufe an", "dükkânı": "den Laden", "ettik": "wir haben getan", "işe": "an die Arbeit", "oto": "Auto-" },
+  questions: [
+    { id: "tr-b1-h07.q1", t: "mc", q: "Warum ist das Auto noch nicht fertig?", o: ["Ein Ersatzteil ist noch nicht angekommen", "Der Mechaniker ist krank", "Der Kunde hat den Preis nicht bezahlt", "Die Werkstatt ist geschlossen"], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Vom Bezahlen ist nicht die Rede.", 3: "Davon ist nicht die Rede." },
+      e: "*parça gelmeden tamir bitmiyor* = ohne das Teil wird die Reparatur nicht fertig." },
+    { id: "tr-b1-h07.q2", t: "mc", q: "Bis wann ist das Auto spätestens fertig?", o: ["Bis Mittwoch", "Bis Montag", "Bis Freitag", "Bis zum Wochenende"], a: 0,
+      why: { 1: "Montag wäre *pazartesi*.", 2: "Freitag wäre *cuma*.", 3: "Davon ist nicht die Rede." },
+      e: "*en geç çarşambaya kadar* = spätestens bis Mittwoch." },
+    { id: "tr-b1-h07.q3", t: "mc", q: "Was soll die Kundin/der Kunde vor dem Abholen tun?", o: ["Anrufen", "Eine E-Mail schreiben", "Das Teil kaufen", "Gar nichts"], a: 0,
+      why: { 1: "Es wird um einen Anruf gebeten.", 2: "Die Werkstatt bestellt das Teil.", 3: "Er bittet ausdrücklich um einen Anruf." },
+      e: "*gelmeden önce mutlaka beni arayın*" },
+    { id: "tr-b1-h07.q4", t: "mc", q: "Warum soll man vorher anrufen?", o: ["Weil die Werkstatt abends früh schließt", "Weil das Auto weit weg steht", "Weil der Preis sich ändert", "Weil Emre im Urlaub ist"], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Der Preis bleibt, wie er war.", 3: "Davon ist nicht die Rede." },
+      e: "*akşamları dükkânı erken kapatıyoruz*" }
+  ]
+});
+
+K.addText('tr-b1-h08', {
+  level: 'B1', kind: 'listen', scene: 'sokak', genre: 'gespraech',
+  title: "Yeni iş", sub: "Gespräch über die neue Arbeitsstelle", plays: 2,
+  lines: [
+    { s: 'Ayşe', g: 'f', t: "Cem, yeni işin nasıl? İşe başlayalı kaç hafta oldu?", n: "Cem, wie ist deine neue Arbeit? Wie viele Wochen ist es her, dass du angefangen hast?" },
+    { s: 'Cem', g: 'm', t: "Üç hafta oldu. Yeni ofise geldiğimden beri her sabah işe yürüyerek gidiyorum. Yürürken müzik dinliyorum, böylece güne daha enerjik başlıyorum. Üstelik ofisteki arkadaşlar çok sıcakkanlı. Öğle arasında hep birlikte yemek yiyoruz ve ben yavaş yavaş herkesi tanıyorum.", n: "Drei Wochen. Seit ich im neuen Büro bin, gehe ich jeden Morgen zu Fuß zur Arbeit. Beim Gehen höre ich Musik, so beginne ich den Tag energiegeladener. Außerdem sind die Kollegen im Büro sehr herzlich. In der Mittagspause essen wir immer zusammen, und ich lerne nach und nach alle kennen." },
+    { s: 'Ayşe', g: 'f', t: "Harika! Ben yeni işime alışana kadar çok yoruldum, hatta ilk haftalarda akşamları hemen uyuyordum. Ama çalıştıkça işler kolaylaşıyor.", n: "Toll! Ich war auch sehr müde, bis ich mich an meine neue Arbeit gewöhnt hatte, in den ersten Wochen schlief ich abends sofort ein. Aber je mehr man arbeitet, desto leichter wird es." },
+    { s: 'Cem', g: 'm', t: "Aynen öyle. Geçen hafta ofisine uğradım, ama toplantıdaydın. Bir dahaki sefere haber vermeden gelmeyeceğim.", n: "Genau. Letzte Woche bin ich in deinem Büro vorbeigekommen, aber du warst in einer Besprechung. Beim nächsten Mal komme ich nicht, ohne Bescheid zu sagen." },
+    { s: 'Ayşe', g: 'f', t: "Çıkmadan önce bana yaz, birlikte öğle yemeğine gideriz. Sen gelene kadar masamı toplarım.", n: "Schreib mir, bevor du losgehst, dann gehen wir zusammen zu Mittag essen. Ich räume meinen Tisch auf, bis du kommst." }
+  ],
+  gloss: { "işe": "zur Arbeit", "böylece": "so, dadurch", "gideriz": "wir gehen", "işime": "an meine Arbeit", "işin": "deine Arbeit", "yoruldum": "ich wurde müde", "öyle": "so" },
+  questions: [
+    { id: "tr-b1-h08.q1", t: "mc", q: "Wie lange arbeitet Cem schon im neuen Büro?", o: ["Drei Wochen", "Drei Monate", "Drei Tage", "Drei Jahre"], a: 0,
+      why: { 1: "Monate wären *ay*.", 2: "Tage wären *gün*.", 3: "Jahre wären *yıl*." },
+      e: "*Üç hafta oldu.* = Es sind drei Wochen." },
+    { id: "tr-b1-h08.q2", t: "mc", q: "Wie kommt Cem zur Arbeit?", o: ["Zu Fuß", "Mit dem Bus", "Mit dem Fahrrad", "Mit dem Auto"], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Davon ist nicht die Rede.", 3: "Davon ist nicht die Rede." },
+      e: "*işe yürüyerek gidiyorum* = ich gehe zu Fuß zur Arbeit." },
+    { id: "tr-b1-h08.q3", t: "mc", q: "Was tut Cem beim Gehen?", o: ["Musik hören", "Telefonieren", "Zeitung lesen", "Frühstücken"], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Davon ist nicht die Rede.", 3: "Davon ist nicht die Rede." },
+      e: "*Yürürken müzik dinliyorum.*" },
+    { id: "tr-b1-h08.q4", t: "mc", q: "Was soll Cem tun, bevor er das nächste Mal kommt?", o: ["Ayşe schreiben", "Einen Termin ausmachen", "Blumen kaufen", "Nichts"], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Davon ist nicht die Rede.", 3: "Ayşe bittet ihn ausdrücklich, ihr zu schreiben." },
+      e: "*Çıkmadan önce bana yaz.*" }
+  ]
+});
+
+K.addText('tr-b1-h09', {
+  level: 'B1', kind: 'listen', scene: 'ev', genre: 'interview',
+  title: "İyi uyumak için", sub: "Interview mit einem Schlafexperten", plays: 2,
+  lines: [
+    { s: 'Sunucu', g: 'f', t: "Bugün uyku uzmanı Doktor Kaya bizimle. İyi uyumak için ne yapmalıyız?", n: "Heute ist der Schlafexperte Doktor Kaya bei uns. Was sollen wir tun, um gut zu schlafen?" },
+    { s: 'Uzman', g: 'm', t: "Önce her gün aynı saatte yatmalıyız. Yatmadan önce telefona bakmamak çok önemli, çünkü ekran ışığı uykuyu geciktirir. Akşam yemeğini de çok geç yemeyin. Öğleden sonra çay ve kahve içmemeye çalışın. Odanız sessiz ve serin olursa daha kolay uyursunuz.", n: "Zuerst sollten wir jeden Tag zur selben Uhrzeit ins Bett gehen. Vor dem Schlafen nicht aufs Handy zu schauen ist sehr wichtig, denn das Bildschirmlicht verzögert den Schlaf. Essen Sie auch nicht zu spät zu Abend. Versuchen Sie, nachmittags keinen Tee und Kaffee zu trinken. Wenn Ihr Zimmer ruhig und kühl ist, schlafen Sie leichter ein." },
+    { s: 'Sunucu', g: 'f', t: "Spor yapmak yardımcı olur mu?", n: "Hilft Sport?" },
+    { s: 'Uzman', g: 'm', t: "Evet. Gün boyunca yürüyerek ya da bisiklete binerek hareket ederseniz, geceleri daha rahat uyursunuz. Ama yatmadan hemen önce ağır spor yapmayın. Düzenli uyudukça gün içinde daha verimli çalışırsınız. Uykusuzluk sürekli devam ederse mutlaka doktora gidin; bu konuda utanmayın, çünkü pek çok insan aynı sorunu yaşıyor.", n: "Ja. Wenn Sie sich tagsüber zu Fuß oder mit dem Fahrrad bewegen, schlafen Sie nachts ruhiger. Aber machen Sie kurz vor dem Schlafen keinen schweren Sport. Je regelmäßiger Sie schlafen, desto effizienter arbeiten Sie am Tag. Wenn die Schlaflosigkeit ständig anhält, gehen Sie unbedingt zum Arzt; schämen Sie sich dafür nicht, denn viele Menschen haben dasselbe Problem." }
+  ],
+  gloss: { "yatmadan": "bevor man ins Bett geht", "geciktirir": "verzögert", "uykusuzluk": "Schlaflosigkeit", "yürüyerek": "zu Fuß gehend", "binerek": "fahrend", "uyudukça": "je regelmäßiger man schläft" },
+  questions: [
+    { id: "tr-b1-h09.q1", t: "mc", q: "Warum soll man vor dem Schlafen nicht aufs Handy schauen?", o: ["Das Bildschirmlicht verzögert den Schlaf", "Das Handy ist zu laut", "Man verbraucht zu viel Strom", "Das Handy macht müde"], a: 0,
+      why: { 1: "Von Lärm ist nicht die Rede.", 2: "Davon ist nicht die Rede.", 3: "Das Gegenteil: es hält wach." },
+      e: "*ekran ışığı uykuyu geciktirir*" },
+    { id: "tr-b1-h09.q2", t: "mc", q: "Wie hilft Bewegung am Tag?", o: ["Man schläft nachts ruhiger", "Man braucht weniger Schlaf", "Man wird hungriger", "Man träumt mehr"], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Davon ist nicht die Rede.", 3: "Davon ist nicht die Rede." },
+      e: "*geceleri daha rahat uyursunuz*" },
+    { id: "tr-b1-h09.q3", t: "mc", q: "Wovor warnt der Experte?", o: ["Vor schwerem Sport kurz vor dem Schlafen", "Vor Sport am Morgen", "Vor Spaziergängen", "Vor Kaffee am Morgen"], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Bewegung am Tag wird empfohlen.", 3: "Davon ist nicht die Rede." },
+      e: "*yatmadan hemen önce ağır spor yapmayın*" },
+    { id: "tr-b1-h09.q4", t: "mc", q: "Was soll man tun, wenn die Schlaflosigkeit ständig anhält?", o: ["Zum Arzt gehen", "Mehr Kaffee trinken", "Früher aufstehen", "Nichts tun"], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Davon ist nicht die Rede.", 3: "Er rät dringend zum Arzt." },
+      e: "*mutlaka doktora gidin*" }
+  ]
+});
+
 })(window.KOPRU);

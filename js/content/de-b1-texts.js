@@ -342,4 +342,182 @@ K.addText('de-b1-h06', {
   ]
 });
 
+
+K.addText('de-b1-r07', {
+  level: 'B1', kind: 'read', genre: 'artikel',
+  title: 'Besser lernen: vier Tipps für Ihren Alltag', sub: 'Daha iyi öğrenmek: günlük hayat için dört ipucu',
+  body: [
+    'Wer eine Sprache lernen möchte, braucht vor allem Geduld. Viele Menschen hoffen darauf, schnell Erfolg zu haben, und geben nach wenigen Wochen auf. Dabei hängt der Fortschritt weniger vom Talent ab als von der Gewohnheit.',
+    'Der erste Tipp: Üben Sie jeden Tag zehn Minuten, anstatt einmal pro Woche zwei Stunden zu lernen. Kurze Einheiten kann man leichter planen, und das Gehirn behält mehr.',
+    'Der zweite Tipp: Verbessern Sie Ihren Wortschatz, indem Sie Wörter nicht einzeln, sondern in ganzen Sätzen lernen. So merken Sie sich gleich, mit welcher Präposition ein Verb verwendet wird, zum Beispiel „sich auf etwas freuen“ oder „an einem Kurs teilnehmen“.',
+    'Der dritte Tipp: Sprechen Sie, ohne Angst vor Fehlern zu haben. Fehler gehören dazu. Wer nur still lernt, um keine Fehler zu machen, lernt langsamer.',
+    'Der letzte Tipp: Suchen Sie sich ein Ziel, auf das Sie sich freuen können, etwa eine Reise oder ein Gespräch mit Freunden. Ein klares Ziel hilft Ihnen, nicht aufzugeben.'
+  ],
+  gloss: { 'Tipp': 'ipucu', 'anstatt': '-mek yerine', 'indem': '-erek', 'merken': 'aklında tutmak', 'Gespräch': 'sohbet', 'letzte': 'son', 'etwa': 'örneğin', 'allem': 'her şey (vor allem: özellikle)', 'pro': 'başına', 'Einheiten': 'birimler, dersler', 'Gehirn': 'beyin', 'behält': 'aklında tutar (behalten)', 'Talent': 'yetenek', 'Gewohnheit': 'alışkanlık', 'aufzugeben': 'pes etmek (aufgeben)', 'Geduld': 'sabır' },
+  questions: [
+    { id: 'de-b1-r07.q1', t: 'mc', q: 'Metne göre ilerleme neye bağlı?', o: ['Alışkanlığa', 'Yeteneğe', 'Yaşa', 'Paraya'], a: 0,
+      why: { 1: 'Metne göre ilerleme yetenekten çok alışkanlığa bağlı (*weniger … als …*).', 2: 'Yaştan söz edilmiyor.', 3: 'Paradan söz edilmiyor.' },
+      e: '*Der Fortschritt hängt weniger vom Talent ab als von der Gewohnheit.* – *abhängen von + Dat.*: *vom* = von dem.' },
+    { id: 'de-b1-r07.q2', t: 'gap', q: 'Verbessern Sie Ihren Wortschatz, ___ Sie Wörter in ganzen Sätzen lernen.', a: ['indem'],
+      wrong: { 'damit': '*damit* amaç bildirir; burada yöntem anlatılıyor (-erek): **indem**.', 'dass': '*dass* “ki” bağlacıdır; yöntem için **indem**.', 'um': '*um* ile *zu-Infinitiv* gelir; burada özne + fiil olan yan cümle var.' },
+      e: '**indem** = yöntem (-erek, -mekle): *indem Sie … lernen* – fiil yan cümlede sonda.' },
+    { id: 'de-b1-r07.q3', t: 'mc', q: 'Kelimeleri neden bütün cümleler içinde öğrenmeli?', o: ['Fiilin hangi edatla kullanıldığını hemen öğrenmek için.', 'Cümleler daha kısa olduğu için.', 'Sınavda cümle sorulduğu için.', 'Sözlük kullanmamak için.'], a: 0,
+      why: { 1: 'Cümlelerin kısa olduğundan söz edilmiyor.', 2: 'Sınavdan söz edilmiyor.', 3: 'Sözlükten söz edilmiyor.' },
+      e: '*So merken Sie sich gleich, mit welcher Präposition ein Verb verwendet wird.* – *sich freuen auf*, *teilnehmen an*.' },
+    { id: 'de-b1-r07.q4', t: 'match', q: 'İpucunu içeriğiyle eşleştir:', p: [['Erster Tipp', 'jeden Tag zehn Minuten üben'], ['Zweiter Tipp', 'Wörter in ganzen Sätzen lernen'], ['Dritter Tipp', 'ohne Angst sprechen'], ['Letzter Tipp', 'sich ein Ziel suchen']],
+      e: 'Dört ipucu sırayla: kısa ve düzenli çalışmak, cümle içinde kelime öğrenmek, hatadan korkmadan konuşmak, hedef belirlemek.' },
+    { id: 'de-b1-r07.q5', t: 'cloze', q: 'Cümleleri tamamla:', text: 'Wer nur still lernt, {1} keine Fehler zu machen, lernt langsamer. Üben Sie täglich, {2} einmal pro Woche lange zu lernen.',
+      gaps: {
+        '1': { a: ['um'], o: ['um', 'ohne', 'damit'], wrong: { 'ohne': '*ohne … zu* “-meden” demektir; hatasız kalmak **amaç**, o yüzden *um … zu*.', 'damit': '*damit* yan cümle ister; burada *zu-Infinitiv* var → **um … zu**.' } },
+        '2': { a: ['anstatt'], o: ['anstatt', 'ohne', 'um'], wrong: { 'ohne': '*ohne … zu* “-meden”; burada “-mek yerine” anlamı var → **anstatt**.', 'um': '*um … zu* amaç içindir; burada “haftada bir kez uzun çalışmak yerine” anlamı var → **anstatt**.' } }
+      },
+      e: '*um … zu* = amaç (aynı özne). *(an)statt … zu* = -mek yerine.' }
+  ]
+});
+
+K.addText('de-b1-r08', {
+  level: 'B1', kind: 'read', genre: 'email',
+  title: 'Anfrage zum Abendkurs', sub: 'Akşam kursu hakkında bilgi talebi',
+  body: [
+    'Betreff: Anfrage zum Abendkurs Deutsch B1',
+    'Sehr geehrte Damen und Herren,',
+    'ich interessiere mich für Ihren Abendkurs Deutsch B1, der im Oktober beginnt. Ich arbeite tagsüber in einem Supermarkt und habe vor, meine Sprachkenntnisse zu verbessern, um später eine Ausbildung zu machen. Deshalb habe ich einige Fragen.',
+    'Zuerst möchte ich wissen, an welchen Tagen der Kurs stattfindet. Außerdem frage ich mich, ob ich zu Beginn einen Einstufungstest machen muss. Ich habe zwei Jahre lang einen Kurs besucht, kann aber kein Zertifikat vorlegen. Gibt es die Möglichkeit, den Kurs zunächst einmal als Gast zu besuchen, ohne sofort die gesamte Gebühr zu bezahlen?',
+    'Ich würde mich freuen, wenn Sie mir bis nächste Woche antworten könnten, damit ich mich rechtzeitig anmelden kann. Vielen Dank im Voraus für Ihre Mühe.',
+    'Mit freundlichen Grüßen',
+    'Lena Brandt'
+  ],
+  gloss: { 'Einstufungstest': 'seviye tespit sınavı', 'Zertifikat': 'sertifika', 'vorlegen': 'ibraz etmek', 'Gebühr': 'ücret', 'stattfindet': 'gerçekleşir (stattfinden)', 'Sprachkenntnisse': 'dil becerileri, dil seviyesi', 'Gast': 'misafir, dinleyici', 'tagsüber': 'gündüzleri' },
+  questions: [
+    { id: 'de-b1-r08.q1', t: 'mc', q: 'Lena bu e-postayı neden yazıyor?', o: ['Akşam kursu hakkında bilgi almak için.', 'Kurs ücretini geri istemek için.', 'Bir kurs öğretmeninden şikâyet etmek için.', 'İş başvurusu yapmak için.'], a: 0,
+      why: { 1: 'Henüz kayıtlı değil; ücret iadesinden söz edilmiyor.', 2: 'Şikâyet yok; kibar bir bilgi talebi.', 3: 'İş başvurusu değil, kurs hakkında soru soruyor.' },
+      e: '*Ich interessiere mich für Ihren Abendkurs … Deshalb habe ich einige Fragen.* – resmî bilgi talebi.' },
+    { id: 'de-b1-r08.q2', t: 'mc', q: 'Lena şu anda ne iş yapıyor?', o: ['Gündüzleri bir süpermarkette çalışıyor.', 'Bir dil okulunda öğretmenlik yapıyor.', 'Üniversitede okuyor.', 'Bir işi yok.'], a: 0,
+      why: { 1: 'Öğretmen değil; kurs katılımcısı olmak istiyor.', 2: 'Üniversiteden söz edilmiyor.', 3: '*Ich arbeite tagsüber in einem Supermarkt* – çalışıyor.' },
+      e: '*tagsüber* = gündüzleri. *Ich arbeite tagsüber in einem Supermarkt.*' },
+    { id: 'de-b1-r08.q3', t: 'gap', q: 'Sie lernt Deutsch, ___ später eine Ausbildung zu machen.', a: ['um'],
+      wrong: { 'damit': '*damit* yan cümle ister; *zu machen* ile **um … zu**.', 'ohne': '*ohne … zu* “-meden” demektir; burada amaç var.', 'statt': '*statt … zu* “-mek yerine”; burada amaç var.' },
+      e: 'Aynı özne + amaç → **um … zu**: *um später eine Ausbildung zu machen.*' },
+    { id: 'de-b1-r08.q4', t: 'gap', q: 'Lena interessiert sich ___ den Abendkurs.', a: ['für'],
+      wrong: { 'auf': '*auf* ile *warten, sich freuen* kullanılır.', 'an': '*Interesse an* isimdir; fiilde (*sich interessieren*) **für**.', 'über': '*über* ile *sprechen, diskutieren* kullanılır.' },
+      e: '*sich interessieren **für** + Akk.*: *für den Abendkurs*.' },
+    { id: 'de-b1-r08.q5', t: 'mc', q: 'Hangi soruyu **sormuyor**?', o: ['Kursun öğretmeni kim?', 'Kurs hangi günlerde yapılıyor?', 'Başta seviye tespit sınavı gerekiyor mu?', 'Kursa önce misafir olarak katılabilir mi?'], a: 0,
+      why: { 1: 'Bunu soruyor: *an welchen Tagen der Kurs stattfindet*.', 2: 'Bunu soruyor: *ob ich … einen Einstufungstest machen muss*.', 3: 'Bunu soruyor: *den Kurs zunächst als Gast zu besuchen*.' },
+      e: 'Üç soru metinde var (günler, seviye sınavı, misafir olarak katılmak); öğretmeni sormuyor.' }
+  ]
+});
+
+K.addText('de-b1-r09', {
+  level: 'B1', kind: 'read', genre: 'artikel',
+  title: 'Mein Monat ohne Handy am Abend', sub: 'Akşamları telefonsuz bir ayım',
+  body: [
+    'Seit einem Monat lege ich mein Handy nach zwanzig Uhr weg. Ich habe damit angefangen, weil ich mich über meine Müdigkeit geärgert habe. Abends habe ich oft stundenlang im Internet gelesen, ohne etwas Wichtiges zu finden. Statt zu schlafen, habe ich Videos angesehen.',
+    'Am Anfang war es schwierig. Es fiel mir schwer, das Handy nicht zu nehmen. Ich habe mir Mühe gegeben, mich abzulenken, indem ich ein Buch gelesen oder mit meiner Mitbewohnerin gespielt habe. Heute freue ich mich schon auf die Abende ohne Bildschirm.',
+    'Das Ergebnis: Ich schlafe besser und bin morgens nicht mehr so müde. Meine Mitbewohnerin, deren Handy früher auch immer auf dem Tisch lag, macht inzwischen mit. Alles, was ich vermisse, sind die Nachrichten von Freunden. Deshalb habe ich ihnen gesagt, dass sie mich anrufen sollen, wenn es wichtig ist.',
+    'Mein Tipp: Fangen Sie klein an. Versuchen Sie es eine Woche lang, und entscheiden Sie dann, ob sich der Aufwand lohnt.'
+  ],
+  gloss: { 'indem': '-erek', 'fiel': 'geldi (schwerfallen)', 'lag': 'duruyordu (liegen)', 'lege': 'kenara bırakıyorum (weglegen)', 'Tipp': 'ipucu', 'Müdigkeit': 'yorgunluk', 'Mitbewohnerin': 'ev arkadaşı (kadın)', 'Bildschirm': 'ekran', 'abzulenken': 'oyalanmak (sich ablenken)', 'vermisse': 'özlüyorum (vermissen)', 'Aufwand': 'emek, çaba', 'geärgert': 'sinirlendim (sich ärgern)', 'inzwischen': 'bu arada, şimdilerde' },
+  questions: [
+    { id: 'de-b1-r09.q1', t: 'mc', q: 'Yazar akşamları neden telefonu bırakmaya karar verdi?', o: ['Yorgunluğuna sinirlendiği için.', 'Telefonu bozulduğu için.', 'Ev arkadaşı istediği için.', 'İşi yüzünden.'], a: 0,
+      why: { 1: 'Telefonun bozulmasından söz edilmiyor.', 2: 'Ev arkadaşı sonradan katıldı; başlatan yazar.', 3: 'İşten söz edilmiyor.' },
+      e: '*Ich habe mich über meine Müdigkeit geärgert.* – *sich ärgern über + Akk.*' },
+    { id: 'de-b1-r09.q2', t: 'gap', q: 'Ich habe mich ___ meine Müdigkeit geärgert.', a: ['über'],
+      wrong: { 'auf': '*auf* ile *warten, sich freuen* kullanılır; *sich ärgern* için **über**.', 'für': '*für* ile *sich interessieren* kullanılır.', 'vor': '*vor* ile *Angst haben* kullanılır.' },
+      e: '*sich ärgern **über** + Akk.*: *über meine Müdigkeit*.' },
+    { id: 'de-b1-r09.q3', t: 'cloze', q: 'Cümleleri tamamla:', text: 'Ich lenke mich ab, {1} ich ein Buch lese. Ich freue mich schon {2} die nächsten Abende ohne Bildschirm.',
+      gaps: {
+        '1': { a: ['indem'], o: ['indem', 'damit', 'ohne'], wrong: { 'damit': '*damit* amaç bildirir; burada yöntem: kitap okuyarak → **indem**.', 'ohne': '*ohne* “-meden”; burada “okuyarak” anlamı var.' } },
+        '2': { a: ['auf'], o: ['auf', 'über', 'für'], wrong: { 'über': '*über* olmuş şeyler içindir; henüz gelmemiş akşamlar için **auf**.', 'für': '*für* kişi içindir (*sich freuen für dich*); henüz gelmemiş akşamlar için **auf**.' } }
+      },
+      e: '*indem* = yöntem. *sich freuen auf* = gelecekteki şeye sevinmek.' },
+    { id: 'de-b1-r09.q4', t: 'mc', q: 'Ev arkadaşı ne yapıyor?', o: ['Kendisi de telefonu akşamları bırakıyor.', 'Yazara telefonunu geri vermesini söylüyor.', 'Ona kitap hediye ediyor.', 'Yeni bir daireye taşınıyor.'], a: 0,
+      why: { 1: 'Böyle bir şey yazmıyor; ev arkadaşı **katılıyor**.', 2: 'Kitap hediyesinden söz edilmiyor.', 3: 'Taşınmaktan söz edilmiyor.' },
+      e: '*Meine Mitbewohnerin, deren Handy früher auch immer auf dem Tisch lag, macht inzwischen mit.* – *deren*: dişil sahip.' },
+    { id: 'de-b1-r09.q5', t: 'gap', q: 'Alles, ___ ich vermisse, sind die Nachrichten von Freunden.', a: ['was'],
+      wrong: { 'das': '*alles* sonrası **was** gelir.', 'dass': '*dass* “ki” bağlacıdır; relatif zamir **was**.', 'wo': '*wo* yer içindir.' },
+      e: '*alles, nichts, etwas, das Beste* + **was**: *Alles, was ich vermisse, …*' }
+  ]
+});
+
+K.addText('de-b1-h07', {
+  level: 'B1', kind: 'listen', genre: 'radio', plays: 2,
+  title: 'Alltag leicht gemacht: Zeit sparen', sub: 'Günlük hayat kolay: zaman kazanmak',
+  lines: [
+    { s: 'Moderator', g: 'm', t: 'Willkommen bei „Alltag leicht gemacht“. Heute geht es um das Thema Zeit. Frau Lorenz, wie kann man im Alltag Zeit sparen?', n: '„Günlük hayat kolay“a hoş geldiniz. Bugün konumuz zaman. Lorenz Hanım, gündelik hayatta nasıl zaman kazanılır?' },
+    { s: 'Frau Lorenz', g: 'f', t: 'Ich empfehle, am Abend eine Liste zu schreiben, damit man am Morgen nicht lange überlegen muss. Außerdem lohnt es sich, Wege zusammenzulegen. Statt dreimal in die Stadt zu fahren, erledigt man alles an einem Tag.', n: 'Akşamdan bir liste yazmanızı öneririm; böylece sabah uzun uzun düşünmek zorunda kalmazsınız. Ayrıca yolları birleştirmek işe yarar. Şehre üç kez gitmek yerine her şey tek günde halledilir.' },
+    { s: 'Moderator', g: 'm', t: 'Und was ist mit dem Handy?', n: 'Peki ya telefon?' },
+    { s: 'Frau Lorenz', g: 'f', t: 'Viele Menschen ärgern sich über verlorene Zeit, ohne etwas dagegen zu tun. Schalten Sie Benachrichtigungen aus, um sich besser zu konzentrieren. Und nehmen Sie sich bewusst Zeit für Pausen.', n: 'Birçok insan kaybedilen zamana sinirleniyor ama buna karşı bir şey yapmıyor. Daha iyi odaklanmak için bildirimleri kapatın. Ve molalar için bilinçli olarak zaman ayırın.' }
+  ],
+  gloss: { 'Alltag': 'günlük hayat', 'Thema': 'konu', 'statt': '-mek yerine', 'Benachrichtigungen': 'bildirimler', 'erledigt': 'halleder (erledigen)', 'Wege': 'yollar, işler', 'zusammenzulegen': 'birleştirmek (zusammenlegen)', 'Liste': 'liste', 'empfehle': 'öneririm (empfehlen)', 'konzentrieren': 'odaklanmak' },
+  questions: [
+    { id: 'de-b1-h07.q1', t: 'mc', q: 'Frau Lorenz akşam ne yapmayı öneriyor?', o: ['Bir liste yazmayı', 'Erken yatmayı', 'Telefonu kapatmayı', 'Alışveriş yapmayı'], a: 0,
+      why: { 1: 'Erken yatmaktan söz edilmiyor.', 2: 'Telefon sonra geliyor; akşam için değil, bildirimler için.', 3: 'Alışveriş önerilmiyor.' },
+      e: '*Ich empfehle, am Abend eine Liste zu schreiben, damit man am Morgen nicht lange überlegen muss.* – *damit* amaç.' },
+    { id: 'de-b1-h07.q2', t: 'mc', q: 'Yolları birleştirmek ne demek?', o: ['Şehre üç kez gitmek yerine her şeyi tek günde halletmek', 'Şehirde yürümek', 'Her gün aynı yolu kullanmak', 'Toplu taşımaya binmek'], a: 0,
+      why: { 1: 'Yürümekten söz edilmiyor.', 2: 'Her gün aynı yoldan söz edilmiyor.', 3: 'Toplu taşımadan söz edilmiyor.' },
+      e: '*Statt dreimal in die Stadt zu fahren, erledigt man alles an einem Tag.* – *statt … zu* = -mek yerine.' },
+    { id: 'de-b1-h07.q3', t: 'listen', say: 'Schalten Sie Benachrichtigungen aus, um sich besser zu konzentrieren.', q: 'Cümleyi dinle. Ne anlama geliyor?', o: ['Daha iyi odaklanmak için bildirimleri kapatın.', 'Odaklandığınız için bildirimleri kapatın.', 'Bildirimleri kapatmadan odaklanın.', 'Bildirimleri açın ki odaklanabilesiniz.'], a: 0,
+      why: { 1: 'Sebep değil **amaç**: *um … zu*.', 2: '*ohne … zu* olurdu; duyduğun *um … zu*.', 3: '*ausschalten* = kapatmak; açmak değil.' },
+      e: '*um sich besser zu konzentrieren* = daha iyi odaklanmak için (amaç). *zu* Infinitiv’in önünde.' },
+    { id: 'de-b1-h07.q4', t: 'gap', q: 'Viele Menschen ärgern sich ___ verlorene Zeit.', a: ['über'],
+      wrong: { 'auf': '*auf* ile *warten, sich freuen* kullanılır.', 'für': '*für* ile *sich interessieren* kullanılır.' },
+      e: '*sich ärgern über + Akk.*: *über verlorene Zeit*.' }
+  ]
+});
+
+K.addText('de-b1-h08', {
+  level: 'B1', kind: 'listen', genre: 'gespraech', plays: 2,
+  title: 'Eine Wanderung am Samstag', sub: 'Cumartesi bir yürüyüş',
+  lines: [
+    { s: 'Tom', g: 'm', t: 'Hast du Lust, am Samstag mit mir zu wandern? Ich habe vor, den Weg zu gehen, von dem ich dir erzählt habe.', n: 'Cumartesi benimle yürüyüşe çıkmak ister misin? Sana anlattığım yolu yürümeyi planlıyorum.' },
+    { s: 'Nora', g: 'f', t: 'Gern. Aber es hängt vom Wetter ab. Ich habe keine Lust, im Regen zu laufen.', n: 'Memnuniyetle. Ama hava durumuna bağlı. Yağmurda yürümek hiç istemem.' },
+    { s: 'Tom', g: 'm', t: 'Laut Wetterbericht bleibt es trocken. Die Freunde, mit denen ich letztes Jahr dort war, kommen auch mit. Wir treffen uns um acht am Bahnhof.', n: 'Hava durumuna göre kuru kalacak. Geçen yıl orada birlikte olduğum arkadaşlar da geliyor. Sekizde istasyonda buluşuyoruz.' },
+    { s: 'Nora', g: 'f', t: 'Um acht? Es fällt mir schwer, am Wochenende so früh aufzustehen. Aber ich freue mich darauf. Ich nehme Brote mit, damit wir unterwegs nicht hungrig sind.', n: 'Sekizde mi? Hafta sonu bu kadar erken kalkmak bana zor geliyor. Ama şimdiden dört gözle bekliyorum. Yolda aç kalmayalım diye ekmek getiriyorum.' },
+    { s: 'Tom', g: 'm', t: 'Super, du brauchst nicht viel mitzubringen. Ich kümmere mich um die Getränke.', n: 'Süper, çok şey getirmene gerek yok. İçeceklerle ben ilgilenirim.' }
+  ],
+  gloss: { 'wandern': 'yürüyüş yapmak', 'Wetterbericht': 'hava durumu raporu', 'unterwegs': 'yolda', 'Brote': 'ekmekler, sandviçler', 'hungrig': 'aç', 'mitzubringen': 'getirmek (mitbringen)', 'trocken': 'kuru' },
+  questions: [
+    { id: 'de-b1-h08.q1', t: 'mc', q: 'Nora’nın kararı neye bağlı?', o: ['Havaya', 'Tom’un işine', 'Arkadaşların gelmesine', 'Tren saatine'], a: 0,
+      why: { 1: 'Tom’un işinden söz edilmiyor.', 2: 'Arkadaşlar zaten geliyor; Nora’nın şartı hava.', 3: 'Tren saatinden söz edilmiyor.' },
+      e: '*Es hängt vom Wetter ab.* – *abhängen von + Dat.*: *vom* = von dem.' },
+    { id: 'de-b1-h08.q2', t: 'mc', q: 'Nerede ve ne zaman buluşuyorlar?', o: ['Sekizde istasyonda', 'Sekizde parkta', 'Dokuzda istasyonda', 'Yedide Nora’nın evinde'], a: 0,
+      why: { 1: 'Park değil, istasyon: *am Bahnhof*.', 2: 'Dokuz değil, sekiz: *um acht*.', 3: 'Nora’nın evinden söz edilmiyor.' },
+      e: '*Wir treffen uns um acht am Bahnhof.*' },
+    { id: 'de-b1-h08.q3', t: 'listen', say: 'Ich nehme Brote mit, damit wir unterwegs nicht hungrig sind.', q: 'Cümleyi dinle. Nora neden ekmek getiriyor?', o: ['Yolda aç kalmasınlar diye.', 'Tom ekmek getirmediği için.', 'Akşam yemeği için.', 'Arkadaşlara hediye etmek için.'], a: 0,
+      why: { 1: 'Tom’un getirmediğinden söz edilmiyor; Tom içecekleri getiriyor.', 2: 'Akşam yemeğinden söz edilmiyor.', 3: 'Hediyeden söz edilmiyor.' },
+      e: '*damit wir unterwegs nicht hungrig sind* – amaç cümlesi; fiil sonda.' },
+    { id: 'de-b1-h08.q4', t: 'gap', q: 'Nora freut sich ___, dass sie am Samstag wandern gehen. (henüz gelecekte)', a: ['darauf'],
+      wrong: { 'darüber': '*sich freuen über* olmuş şey içindir; yürüyüş henüz gelecekte → **darauf**.', 'dafür': '*dafür* ← für; *sich freuen* için auf → darauf.', 'davon': '*davon* ← von; *sich freuen* için auf → darauf.' },
+      e: '*sich freuen auf* → **darauf** + *dass*-cümlesi.' }
+  ]
+});
+
+K.addText('de-b1-h09', {
+  level: 'B1', kind: 'listen', genre: 'interview', plays: 2,
+  title: 'Mit dem Fahrrad zur Arbeit', sub: 'İşe bisikletle',
+  lines: [
+    { s: 'Reporterin', g: 'f', t: 'Herr Kramer, Sie fahren seit zehn Jahren jeden Tag mit dem Fahrrad zur Arbeit. Warum?', n: 'Kramer Bey, on yıldır her gün işe bisikletle gidiyorsunuz. Neden?' },
+    { s: 'Herr Kramer', g: 'm', t: 'Ich wollte Geld sparen, und ich habe schnell gemerkt, dass ich mich besser fühle. Statt im Stau zu stehen, bin ich in zwanzig Minuten im Büro.', n: 'Tasarruf etmek istedim ve kendimi daha iyi hissettiğimi çabuk fark ettim. Trafikte beklemek yerine yirmi dakikada ofisteyim.' },
+    { s: 'Reporterin', g: 'f', t: 'Haben Sie keine Angst vor dem Verkehr?', n: 'Trafikten korkmuyor musunuz?' },
+    { s: 'Herr Kramer', g: 'm', t: 'Doch, anfangs schon. Man muss aufpassen und auf die Autos achten. Ich fahre nur auf Straßen, auf denen es einen Radweg gibt. Außerdem trage ich immer einen Helm, um mich zu schützen.', n: 'Evet, başta korkuyordum. Dikkat etmek ve arabalara dikkat etmek gerekiyor. Sadece bisiklet yolu olan caddelerde sürüyorum. Ayrıca kendimi korumak için hep kask takıyorum.' },
+    { s: 'Reporterin', g: 'f', t: 'Was raten Sie Anfängern?', n: 'Yeni başlayanlara ne tavsiye edersiniz?' },
+    { s: 'Herr Kramer', g: 'm', t: 'Fangen Sie langsam an, indem Sie zuerst am Wochenende fahren. Und vergessen Sie nicht, das Licht zu prüfen, bevor Sie losfahren.', n: 'Önce hafta sonları sürerek yavaş başlayın. Ve yola çıkmadan önce ışığı kontrol etmeyi unutmayın.' }
+  ],
+  gloss: { 'bevor': '-meden önce', 'indem': '-erek', 'statt': '-mek yerine', 'raten': 'tavsiye etmek', 'gemerkt': 'fark ettim (merken)', 'Stau': 'trafik sıkışıklığı', 'Radweg': 'bisiklet yolu', 'Helm': 'kask', 'schützen': 'korumak', 'Anfängern': 'yeni başlayanlara (Anfänger)', 'prüfen': 'kontrol etmek', 'anfangs': 'başlangıçta', 'losfahren': 'yola çıkmak', 'Verkehr': 'trafik' },
+  questions: [
+    { id: 'de-b1-h09.q1', t: 'mc', q: 'Herr Kramer neden bisikletle işe gitmeye başladı?', o: ['Tasarruf etmek istedi.', 'Arabası bozuldu.', 'Doktoru önerdi.', 'Şirket zorunlu tuttu.'], a: 0,
+      why: { 1: 'Arabadan söz edilmiyor.', 2: 'Doktordan söz edilmiyor.', 3: 'Şirketten söz edilmiyor.' },
+      e: '*Ich wollte Geld sparen, und ich habe schnell gemerkt, dass ich mich besser fühle.*' },
+    { id: 'de-b1-h09.q2', t: 'mc', q: 'Bisikletle ofise ne kadar sürede varıyor?', o: ['Yirmi dakikada', 'On dakikada', 'Yarım saatte', 'Bir saatte'], a: 0,
+      why: { 1: 'On değil, yirmi dakika.', 2: 'Yarım saat söylenmiyor.', 3: 'Bir saat söylenmiyor.' },
+      e: '*Statt im Stau zu stehen, bin ich in zwanzig Minuten im Büro.* – *statt … zu* = -mek yerine.' },
+    { id: 'de-b1-h09.q3', t: 'gap', q: 'Ich fahre nur auf Straßen, auf ___ es einen Radweg gibt.', a: ['denen'],
+      wrong: { 'die': '*auf* + çoğul Dativ (nerede?) → **denen**; *die* değil.', 'den': 'Relatif zamirde Dativ çoğul **denen** olur (*den* artikel).', 'dem': '*dem* tekil; *Straßen* çoğul.' },
+      e: '*Straßen, auf denen es einen Radweg gibt* – *auf* + Dativ çoğul → **denen**.' },
+    { id: 'de-b1-h09.q4', t: 'listen', say: 'Ich trage immer einen Helm, um mich zu schützen.', q: 'Cümleyi dinle. Ne anlama geliyor?', o: ['Kendimi korumak için hep kask takıyorum.', 'Kask takmadan sürüyorum.', 'Kask takmak yerine yavaş sürüyorum.', 'Kaskı beni koruduğu için seviyorum.'], a: 0,
+      why: { 1: '*ohne … zu* olurdu; duyduğun *um … zu*.', 2: '*statt … zu* olurdu; duyduğun *um … zu*.', 3: 'Cümlede sevmekten söz edilmiyor; amaç var.' },
+      e: '*um mich zu schützen* = kendimi korumak için (amaç). Dönüşlü zamir *mich* *zu*’dan önce.' }
+  ]
+});
+
 })(window.KOPRU);
