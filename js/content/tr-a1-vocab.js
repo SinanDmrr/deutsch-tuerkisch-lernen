@@ -696,4 +696,12 @@ K.addVocab('tr-a1', [
   { id: "tr-a1.w649", ext: 1, t: "hiç kimse", pos: "x", n: "niemand", ex: "Evde hiç kimse yok.", exn: "Zu Hause ist niemand.", topic: "small" },
   { id: "tr-a1.w650", ext: 1, t: "neresi", pos: "x", n: "welcher Ort; wo", ex: "Burası neresi?", exn: "Was ist das hier für ein Ort?", topic: "small" }
 ]);
+/* ---------- Ergänzung nach Gegenlesen: tr-a1.w651 … w655 ---------- */
+K.addVocab('tr-a1', [
+  { id: "tr-a1.w651", ext: 1, t: "tane", pos: "x", n: "Stück (Zählwort)", ex: "İki tane elma istiyorum.", exn: "Ich möchte zwei Äpfel.", topic: "numbers", note: "Nach Zahlen bleibt das Nomen im Singular: iki tane elma, nicht „elmalar“. „tane“ ist hier ein Zählwort und kann oft auch wegfallen." },
+  { id: "tr-a1.w652", ext: 1, t: "müsait", pos: "adj", n: "frei; verfügbar (Zeit, Platz)", ex: "Yarın müsait misin?", exn: "Hast du morgen Zeit?", topic: "adj", note: "Gesprochen wird „müsait“ oft für „Zeit haben“: müsait değilim = ich habe keine Zeit." },
+  { id: "tr-a1.w653", ext: 1, t: "Almanya", pos: "n", n: "Deutschland", ex: "Almanya’da yaşıyorum.", exn: "Ich wohne in Deutschland.", topic: "city", note: "Ländernamen sind Eigennamen: groß schreiben und vor Endungen einen Apostroph setzen (Almanya’da, Almanya’dan)." },
+  { id: "tr-a1.w654", ext: 1, t: "Sevgiler", pos: "phr", n: "Liebe Grüße", ex: "Görüşürüz, sevgiler!", exn: "Bis bald, liebe Grüße!", topic: "greet", note: "Grußformel am Ende einer Nachricht unter Freunden und Familie; im Plural, weil es wörtlich „Liebesgrüße“ heißt." },
+  { id: "tr-a1.w655", ext: 1, t: "Ellerinize sağlık", pos: "phr", n: "Danke für das Essen (wörtlich: Gesundheit euren Händen)", ex: "Yemek çok güzel, ellerinize sağlık!", exn: "Das Essen ist sehr gut, vielen Dank dem Koch!", topic: "food", note: "Lob an die Person, die gekocht hat. Unter Freunden sagt man „Ellerine sağlık“ (du)." }
+]);
 })(window.KOPRU);

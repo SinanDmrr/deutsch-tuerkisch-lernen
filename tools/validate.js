@@ -257,11 +257,12 @@ Object.keys(K.courses).forEach(cid => {
   if (lonely.length) warn(`${lonely.length} von ${a2.length} A2-Wörtern (${cid}) kommen in keinem A2-Text/-Dialog/-Übung vor, z. B.: ` + lonely.slice(0, 15).map(v => v.t).join(', '));
   // Abdeckung je Text: A1- + A2-Wortschatz + gloss. Nicht gezählt: Zahlen, Eigennamen (TR: Wörter mit Apostroph-Suffix, großgeschrieben mitten im Satz;
   // DE: großgeschriebenes Wort, das kein Nomen nach Artikel/Adjektiv ist, Sprechernamen, Unterschriften), Stoppwörter (tools/stopwords.js) gelten als bekannt.
-  const stems = new Set(), exact = new Set(), STOP = require('./stopwords.js')[tr ? 'tr' : 'de'];
-  const addStem = b => { stems.add(b); if (tr && b.length >= 4) { stems.add(b.replace(/[aeıioöuü]$/, '')); stems.add(b.replace(/t$/, 'd').replace(/k$/, 'ğ').replace(/ç$/, 'c').replace(/p$/, 'b')); } };
-  const addForm = x => normW(x).forEach(w => { exact.add(w); addStem(stemOf(w, tr)); });
-  ['a1', 'a2'].forEach(l => ((K.vocab || {})[cid + '-' + l] || []).forEach(v => { addForm(v.t); if (v.pl) addForm(v.pl); if (v.pf) addForm(v.pf); if (v.ao) addForm(v.ao); }));
-  const known = (w, gl) => exact.has(w) || STOP.has(w) || gl.has(w) || (() => { for (let i = Math.min(w.length, 12); i >= 3; i--) if (stems.has(w.slice(0, i))) return true; return false; })();
+  const mk = () => ({ stems: new Set(), exact: new Set() }), SETS = { a1: mk(), a2: mk() }, STOP = require('./stopwords.js')[tr ? 'tr' : 'de'];
+  const addStem = (stems, b) => { stems.add(b); if (tr && b.length >= 4) { stems.add(b.replace(/[aeıioöuü]$/, '')); stems.add(b.replace(/t$/, 'd').replace(/k$/, 'ğ').replace(/ç$/, 'c').replace(/p$/, 'b')); } };
+  const addForm = (S, x) => normW(x).forEach(w => { S.exact.add(w); addStem(S.stems, stemOf(w, tr)); });
+  // A1-Texte: nur A1-Wortschatz; A2-Texte: A1 + A2
+  ['a1', 'a2'].forEach(l => ((K.vocab || {})[cid + '-' + l] || []).forEach(v => [v.t, v.pl, v.pf, v.ao].forEach(x => { if (!x) return; addForm(SETS.a2, x); if (l === 'a1') addForm(SETS.a1, x); })));
+  const known = (w, gl, S) => S.exact.has(w) || STOP.has(w) || gl.has(w) || (() => { for (let i = Math.min(w.length, 12); i >= 3; i--) if (S.stems.has(w.slice(0, i))) return true; return false; })();
   const paras = t => [].concat(t.body || [], (t.items || []).map(i => i.t), (t.lines || []).map(l => l.t)).map(x => String(x).replace(/\*\*|\*/g, ''));
   const DE_DET = new Set(['der', 'die', 'das', 'den', 'dem', 'des', 'ein', 'eine', 'einen', 'einem', 'einer', 'eines', 'kein', 'keine', 'keinen', 'keinem', 'keiner', 'mein', 'meine', 'meinen', 'meinem', 'meiner', 'dein', 'deine', 'deinen', 'deinem', 'deiner', 'sein', 'seine', 'seinen', 'seinem', 'seiner', 'ihr', 'ihre', 'ihren', 'ihrem', 'ihrer', 'unser', 'unsere', 'unseren', 'unserem', 'euer', 'eure', 'dieser', 'diese', 'dieses', 'diesen', 'diesem', 'jeder', 'jede', 'jedes', 'jeden', 'jedem', 'alle', 'viele', 'einige', 'manche', 'welche', 'welcher', 'welches', 'im', 'am', 'zum', 'zur', 'vom', 'beim', 'ins', 'aufs', 'ans', 'in', 'an', 'auf', 'mit', 'von', 'zu', 'bei', 'nach', 'aus', 'für', 'über', 'unter', 'neben', 'zwischen', 'hinter', 'vor', 'durch', 'gegen', 'ohne', 'um', 'bis', 'seit', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn']);
   // Tokens eines Textes: { w: normalisiert, name: Eigenname/Zahl (nicht zählen) }
@@ -291,13 +292,13 @@ Object.keys(K.courses).forEach(cid => {
   Object.entries(K.texts || {}).forEach(([id, t]) => { if (id.startsWith(cid + '-')) { (t.lines || []).forEach(l => normW(l.s || '').forEach(w => names.add(w))); tokenize(t, names); } });
   Object.entries(K.dialogs || {}).forEach(([id, d]) => { if (id.startsWith(cid + '-')) (d.lines || []).forEach(l => normW(l.s || '').forEach(w => names.add(w))); });
   Object.entries(K.texts || {}).forEach(([id, t]) => {
-    if (!id.startsWith(cid + '-a2-')) return;
+    const lv = id.startsWith(cid + '-a1-') ? 'a1' : id.startsWith(cid + '-a2-') ? 'a2' : null; if (!lv) return;
     const toks = tokenize(t, names).filter(x => !x.name && !names.has(x.w) && x.w), gl = new Set(); Object.keys(t.gloss || {}).forEach(g => normW(g).forEach(w => gl.add(w)));
     if (!toks.length) return;
-    const bad = toks.filter(x => !known(x.w, gl)), pctCov = 100 * (1 - bad.length / toks.length), freq = {};
+    const bad = toks.filter(x => !known(x.w, gl, SETS[lv])), pctCov = 100 * (1 - bad.length / toks.length), freq = {};
     bad.forEach(x => { freq[x.w] = (freq[x.w] || 0) + 1; });
     const top = Object.entries(freq).sort((x, y) => y[1] - x[1] || (x[0] < y[0] ? -1 : 1)).slice(0, 10).map(([w, n]) => n > 1 ? `${w} (${n}×)` : w);
-    if (pctCov < 95) warn(`Abdeckung ${id}: ${pctCov.toFixed(0)} % der Textwörter bekannt (A1/A2-Wortschatz, gloss, ohne Namen/Zahlen/Funktionswörter); häufigste unbekannte: ` + top.join(', '));
+    if (pctCov < 95) warn(`Abdeckung ${id}: ${pctCov.toFixed(0)} % der Textwörter bekannt (${lv === 'a1' ? 'A1' : 'A1/A2'}-Wortschatz, gloss, ohne Namen/Zahlen/Funktionswörter); häufigste unbekannte: ` + top.join(', '));
   });
 });
 
@@ -311,7 +312,10 @@ Object.entries(K.texts || {}).forEach(([id, t]) => {
   const r = TX.check(id, t);
   const lbl = t.kind === 'listen' ? 'Hörtext:' : 'Lesetext:';
   r.errors.forEach(m => err(lbl, m, id));
-  r.warnings.forEach(m => warn(lbl, m, id));
+  // Längen-Richtwert nach Niveau: A1 Lesen 25–90, Hören 20–70 (ab A2 wie in texts.js: 60–180 / 30–120)
+  const isA1 = /^[a-z]+-a1-/.test(id);
+  r.warnings.forEach(m => { if (isA1 && /^Länge /.test(m)) return; warn(lbl, m, id); });
+  if (isA1) { const n = TX.wordCount(t), lo = t.kind === 'listen' ? 20 : 25, hi = t.kind === 'listen' ? 70 : 90; if (n && (n < lo || n > hi)) warn(lbl, `Länge ${n} Wörter (Richtwert A1 ${lo}–${hi})`, id); }
   (t.questions || []).forEach((q, i) => checkExercise(q, id + '?' + i));
 });
 

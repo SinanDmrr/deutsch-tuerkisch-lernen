@@ -1455,7 +1455,9 @@ test('A1-Aufrüstung: Fixture erweitert A1 auf ≈ 650 Wörter und 16 Themen (je
   a1Extend(W); a1Extend(W);   // zweimal: darf nur einmal wirken
   ['de', 'tr'].forEach(cid => {
     const a = before(cid);
-    eq(a, [b[cid][0] + 300, b[cid][1] + 4], cid + ': +300 Wörter, +4 Themen (einmalig)');
+    const nExt = W.DT.vocab.wordsOf(W.KOPRU, cid, 'A1').filter(w => w.ext).length;   // Anzahl aus den Daten
+    eq(a, [b[cid][0] + nExt, b[cid][1] + 4], cid + ': +' + nExt + ' Wörter, +4 Themen (einmalig)');
+    ok(nExt >= 295 && nExt <= 310, cid + ': Erweiterung ≈ 300 Wörter');
     ok(a[0] >= 640 && a[0] <= 660 && a[1] === 16, cid + ': ≈ 650 Wörter / 16 Themen');
   });
   eq(C.CERT_RULES.A1, { ex: 0.8, words: 0.7 }, 'CERT_RULES.A1 unverändert (keine neuen Pflichten)');
@@ -1538,7 +1540,8 @@ test('A1-Aufrüstung: Grundstock/Erweiterung getrennt zählbar (ext:1, kein Spei
   a1Extend(W);
   const ws = W.DT.vocab.wordsOf(W.KOPRU, cid, 'A1'), st = DT.srs.stats(p, cid, ws.map(w => w.id));
   const sp = W.DT.catalog.extSplit(ws.map(w => ({ ext: w.ext, done: !!DT.srs.get(p, cid, w.id) })));
-  eq([sp.base.n, sp.base.d, sp.ext.n, sp.ext.d], [ws.length - 300, 300, 300, 0], 'Wörter: Grundstock 300/350, Erweiterung 0/300');
+  const nExt = ws.filter(w => w.ext).length;
+  eq([sp.base.n, sp.base.d, sp.ext.n, sp.ext.d], [ws.length - nExt, 300, nExt, 0], 'Wörter: Grundstock 300/' + (ws.length - nExt) + ', Erweiterung 0/' + nExt);
   ok(Math.round(st.sicher / ws.length * 100) < 50 && Math.round(sp.base.d / sp.base.n * 100) >= 85, 'Gesamt fällt unter 50 %, Grundstock bleibt ≥ 85 %');
   eq(JSON.stringify(p), json, 'Profil unverändert (nichts gespeichert)');
 });

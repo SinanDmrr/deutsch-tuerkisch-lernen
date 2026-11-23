@@ -698,4 +698,12 @@ K.addVocab('de-a1', [
   { id: "de-a1.w649", ext: 1, t: "ohne", pos: "x", n: "-sız; -siz; olmadan", ex: "Ich trinke Tee ohne Zucker.", exn: "Çayı şekersiz içerim.", topic: "small", note: "Akuzatif ister: ohne den Mann. Artikelsiz isimle: ohne Zucker (şeker olmadan)." },
   { id: "de-a1.w650", ext: 1, t: "nach", pos: "x", n: "-den sonra; -e (şehre)", ex: "Nach dem Essen trinke ich Tee.", exn: "Yemekten sonra çay içerim.", topic: "small", note: "Zaman: nach dem Kurs. Yön (şehir/ülke): nach Berlin. Her zaman Dativ." }
 ]);
+
+/* ---------- Ergänzung nach Gegenlesen: w651 ff. ---------- */
+K.addVocab('de-a1', [
+  { id: "de-a1.w651", ext: 1, t: "die Gesundheitskarte", pl: "die Gesundheitskarten", pos: "n", n: "sağlık kartı (sigorta kartı)", ex: "Bitte bringen Sie Ihre Gesundheitskarte mit.", exn: "Lütfen sağlık kartınızı yanınızda getirin.", topic: "body", note: "Bileşik isim: Gesundheit (sağlık) + Karte; artikel son kelimeden gelir: die Karte → die Gesundheitskarte." },
+  { id: "de-a1.w652", ext: 1, t: "die Bestellung", pl: "die Bestellungen", pos: "n", n: "sipariş", ex: "Ich hole die Bestellung um drei Uhr ab.", exn: "Siparişi saat üçte alıyorum.", topic: "food", note: "-ung ile biten isimler hep dişildir: die Bestellung, die Wohnung, die Zeitung." },
+  { id: "de-a1.w653", ext: 1, t: "ansehen", pos: "v", n: "bakmak; (gidip) görmek, incelemek", ex: "Ich sehe mir die Wohnung am Samstag an.", exn: "Daireye cumartesi günü bakıyorum.", topic: "verbs", note: "Ayrılabilen fiil: ich sehe … an. Çekimli kısım ikinci sırada, „an“ sonda. „sehen“ gibi çekilir: du siehst … an." },
+  { id: "de-a1.w654", ext: 1, t: "Sehr geehrte Damen und Herren", pos: "phr", n: "Sayın yetkililer (resmî mektup hitabı)", ex: "Sehr geehrte Damen und Herren, ich möchte einen Kurs buchen.", exn: "Sayın yetkililer, bir kurs için kayıt yaptırmak istiyorum.", topic: "greet", note: "Tanımadığın kişilere ya da bir kuruma yazarken kullanılır; sonuna virgül konur, sonraki cümle küçük harfle başlar." }
+]);
 })(window.KOPRU);
