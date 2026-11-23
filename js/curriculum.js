@@ -60,14 +60,18 @@ window.KOPRU = {
           ['de-a1-02', 'Begrüßung & Vorstellung', 'Selamlaşma ve tanışma'],
           ['de-a1-03', 'Personalpronomen & „sein“', 'Şahıs zamirleri ve “sein”'],
           ['de-a1-04', 'Artikel: der, die, das', 'Artikeller'],
+          ['de-a1-13', 'Plural der Nomen', 'İsimlerde çoğul'],
           ['de-a1-05', 'Verben im Präsens', 'Fiil çekimi (Präsens)'],
           ['de-a1-06', 'Satzbau & Fragen', 'Cümle yapısı ve sorular'],
           ['de-a1-07', 'Akkusativ', 'Belirtme hâli (-i hâli)'],
+          ['de-a1-14', 'Woher, wo, wohin: feste Wendungen', 'Nereden, nerede, nereye: kalıplar'],
           ['de-a1-08', 'Verneinung: nicht & kein', 'Olumsuzluk'],
           ['de-a1-09', 'Zahlen & Uhrzeit', 'Sayılar ve saat'],
           ['de-a1-10', 'Possessivartikel', 'İyelik: mein, dein …'],
+          ['de-a1-16', 'Adjektive, Farben, sehr & zu', 'Sıfatlar, renkler, sehr ve zu'],
           ['de-a1-11', 'Modalverben', 'Modal fiiller'],
-          ['de-a1-12', 'Trennbare Verben', 'Ayrılabilen fiiller']
+          ['de-a1-12', 'Trennbare Verben', 'Ayrılabilen fiiller'],
+          ['de-a1-15', 'Vorlieben: gern, mögen, möchten', 'Sevmek: gern, mögen, möchten']
         ],
         A2: [   // Reihenfolge = Lernreihenfolge (docs/a2-konzept.md); IDs sind fest und unabhängig von der Position
           ['de-a2-03', 'Perfekt I: haben/sein, ge-…-t/-en', 'Geçmiş zaman I (Perfekt)'],
@@ -145,10 +149,14 @@ window.KOPRU = {
           ['tr-a1-06', 'Fragen: mI & Fragewörter', 'Soru eki ve soru kelimeleri'],
           ['tr-a1-07', 'Possessivsuffixe', 'İyelik ekleri'],
           ['tr-a1-08', 'var & yok', 'Var / yok'],
+          ['tr-a1-13', 'bu, şu, o & burada, şurada, orada', 'İşaret sözcükleri'],
           ['tr-a1-09', 'Ortsfälle: -da, -a, -dan', 'Bulunma, yönelme, ayrılma hâli'],
           ['tr-a1-10', 'Präsens -iyor', 'Şimdiki zaman'],
           ['tr-a1-11', 'Zahlen & Uhrzeit', 'Sayılar ve saat'],
-          ['tr-a1-12', 'Akkusativ -(y)I', 'Belirtme hâli']
+          ['tr-a1-14', 'Tageszeiten, Wochentage & Alltag', 'Günün bölümleri ve haftanın günleri'],
+          ['tr-a1-15', 'Fragen: kaç, ne kadar, hangi', 'Kaç, ne kadar, hangi'],
+          ['tr-a1-12', 'Akkusativ -(y)I', 'Belirtme hâli'],
+          ['tr-a1-16', 'Verneinung im Überblick: değil, yok, -mI-', 'Olumsuzluk: değil, yok, -mA-']
         ],
         A2: [   // Reihenfolge = Lernreihenfolge (docs/a2-konzept.md); IDs sind fest und unabhängig von der Position
           ['tr-a2-01', 'Vergangenheit -dI', 'Görülen geçmiş zaman'],

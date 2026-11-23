@@ -284,7 +284,7 @@ K.addText('de-a2-r10', {
       why: { 1: '*bis zum ersten Kurstag* = ilk kurs gününe **kadar**, sonra değil.', 2: 'Metinde 80 euro **tek seferde** havale edilir (*überweisen*), her derste nakit yok.', 3: 'Böyle bir süre yok; son gün ilk kurs günü.' },
       e: '*bis zum* + Dativ = …e kadar: *bis zum ersten Kurstag.* *überweisen* = banka havalesi yapmak.' },
     { id: 'de-a2-r10.q4', t: 'gap', q: 'Selin hat ___ vor tiefem Wasser.', a: ['Angst'],
-      wrong: { 'angst': 'Almancada tüm isimler **büyük** yazılır: *die Angst*.', 'Ängste': '*Angst haben* kalıbında tekil kullanılır; çoğul *Ängste* burada uymaz.' },
+      wrong: { 'Ängste': '*Angst haben* kalıbında tekil kullanılır; çoğul *Ängste* burada uymaz.' },
       e: '*Angst haben vor* + Dativ. Nomen büyük yazılır. *vor tiefem Wasser* (Dativ).' },
     { id: 'de-a2-r10.q5', t: 'mc', q: 'Kuzenin kursa gidecek. Ona ne söylersin? Yanında ne getirmeli?', o: ['Büyük bir havlu ve bone; yüzmeden önce duş almalı.', 'Sadece mayo; duş almak gerekmiyor.', 'Havlu getirmesin, kursta veriliyor.', 'Bone ve gözlük; duş sonra alınır.'], a: 0,
       why: { 1: '*Vor dem Schwimmen muss man duschen* → duş **zorunlu**.', 2: 'Havlu ve bone **getirilmeli** (*Mitbringen*).', 3: 'Gözlükten söz edilmiyor ve duş **önce** alınır.' },
@@ -414,8 +414,8 @@ K.addText('de-a2-h03', {
       e: '*Am Freitag sind wir nur am Vormittag da.* *der Vormittag* = öğleden önce. *nur* = sadece.' },
     { id: 'de-a2-h03.q2', t: 'cloze', q: 'Mesajı tamamla:', text: 'Die Praxis ist von Montag bis {1} den ganzen Tag da. Am {2} nur am Vormittag.',
       gaps: {
-        1: { a: ['Donnerstag'], wrong: { 'donnerstag': 'Haftanın günleri isimdir: Almancada **büyük** yazılır.', 'Freitag': 'Cuma günü sadece öğleden önce açıktır.' } },
-        2: { a: ['Freitag'], wrong: { 'freitag': 'Haftanın günleri isimdir: Almancada **büyük** yazılır.', 'Samstag': 'Cumartesiden söz edilmiyor; cuma günü kısa çalışılıyor.' } }
+        1: { a: ['Donnerstag'], wrong: { 'Freitag': 'Cuma günü sadece öğleden önce açıktır.' } },
+        2: { a: ['Freitag'], wrong: { 'Samstag': 'Cumartesiden söz edilmiyor; cuma günü kısa çalışılıyor.' } }
       },
       e: 'Haftanın günleri büyük yazılır: *Donnerstag, Freitag*. Mesaj: pzt–per bütün gün (öğle arasıyla), cuma sadece öğleden önce.' },
     { id: 'de-a2-h03.q3', t: 'mc', q: 'Randevu için ne yapılmalı?', o: ['Görüşme saatlerinde tekrar aramalı ya da e-posta yazmalı', 'Hemen hastaneye gitmeli', 'Bu akşam muayenehaneye uğramalı'], a: 0,
@@ -438,7 +438,7 @@ K.addText('de-a2-h04', {
       why: { 1: 'Paul hastalıktan söz etmiyor.', 2: 'Paul canının istemediğini söylemiyor; patronu daha uzun çalışmasını istemiş.' },
       e: '*weil ich … nicht … kommen kann* = çünkü … gelemiyorum. *Mein Chef hat gesagt, ich muss länger arbeiten.*' },
     { id: 'de-a2-h04.q2', t: 'gap', q: 'Paul muss morgen länger ___.', a: ['arbeiten'],
-      wrong: { 'arbeitet': '*muss* gibi modal fiilden sonra fiil **mastar** olur ve cümle sonunda durur: *muss … arbeiten*.', 'Arbeiten': 'Fiil burada küçük yazılır; sadece isim (*die Arbeit*) büyük yazılır.' },
+      wrong: { 'arbeitet': '*muss* gibi modal fiilden sonra fiil **mastar** olur ve cümle sonunda durur: *muss … arbeiten*.' },
       e: 'Modal fiil + mastar (sonda): *Ich muss länger arbeiten.* Türkçe: “Daha uzun çalışmam gerek.”' },
     { id: 'de-a2-h04.q3', t: 'listen', say: 'Wollen wir am Samstag um zehn Uhr im Park laufen?', q: 'Cümleyi dinle. Paul ne öneriyor?', o: ['Wollen wir am Samstag um zehn Uhr im Park laufen?', 'Wollen wir am Sonntag um zehn Uhr im Park laufen?', 'Wollen wir am Samstag um zwölf Uhr im Park laufen?'], a: 0,
       why: { 1: '*Sonntag* (pazar) ile *Samstag* (cumartesi) kulağa benzer; Paul **Samstag** diyor.', 2: '*zwölf* (12) ile *zehn* (10) farklı sayılardır; Paul **zehn** diyor, yani saat on.' },
@@ -514,7 +514,7 @@ K.addText('de-a2-h07', {
       e: '*kein … mehr* = artık … yok: *Leider haben wir kein Käsebrötchen mehr.*' },
     { id: 'de-a2-h07.q2', t: 'cloze', q: 'Siparişi tamamla:', text: 'Mia nimmt einen Kaffee mit {1} und ein Brötchen mit {2}.',
       gaps: {
-        1: { a: ['Milch'], wrong: { 'Zucker': 'Şekerden söz edilmiyor.', 'milch': 'İsimler **büyük** yazılır: *die Milch*.' } },
+        1: { a: ['Milch'], wrong: { 'Zucker': 'Şekerden söz edilmiyor.' } },
         2: { a: ['Marmelade'], wrong: { 'Schinken': 'Mia jambonlu olanı almıyor.', 'Käse': 'Peynirli küçük ekmek bitmiş.' } }
       },
       e: 'Mia *Kaffee mit Milch* sipariş eder, sonra *Brötchen mit Marmelade* alır (peynirli bitti).' },
@@ -570,7 +570,7 @@ K.addText('de-a2-h09', {
       why: { 1: 'Futbolu sadece **hafta sonu** arkadaşlarıyla oynuyor.', 2: 'Okumayı seviyor, ama “her gün bir saat” yürüyüş için söyleniyor.' },
       e: '*Jeden Tag eine Stunde* = her gün bir saat (zaman için Akkusativ). *spazieren gehen* = yürüyüşe çıkmak.' },
     { id: 'de-a2-h09.q2', t: 'gap', q: 'Er geht jeden Tag eine ___ spazieren.', a: ['Stunde'],
-      wrong: { 'stunde': 'İsimler **büyük** yazılır: *die Stunde*.', 'Minute': 'Herr Brandt *eine Stunde* (bir saat) der, bir dakika değil.' },
+      wrong: { 'Minute': 'Herr Brandt *eine Stunde* (bir saat) der, bir dakika değil.' },
       e: '*eine Stunde* = bir saat (*die Stunde, -n*). İsim büyük yazılır.' },
     { id: 'de-a2-h09.q3', t: 'match', q: 'Eşleştir:', p: [['jeden Tag', 'spazieren gehen'], ['am Wochenende', 'Freunde treffen'], ['am Sonntagabend', 'einen Film sehen'], ['lieber', 'ein Buch lesen']],
       e: 'Zaman ifadeleri (*jeden Tag, am Wochenende, am Sonntagabend*) neyin ne zaman olduğunu gösterir.' },

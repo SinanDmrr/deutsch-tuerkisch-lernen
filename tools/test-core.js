@@ -1403,12 +1403,19 @@ const LV_RE = /^[a-z]{2}-(a1|a2|b1|b2|c1|c2)(?=$|[-.#])/;
 // „Vorher“-Zustand: echte Erweiterungswörter (ext:1) werden zurückgehalten und erst in a1Extend wieder eingefügt;
 // ohne echte ext-Wörter simuliert die Fixture sie (nur Themen -91…-94 bleiben immer simuliert).
 function a1World() {
-  const W = contentCtx(['de-a1', 'de-a2', 'tr-a1', 'tr-a2']); W.__extWords = {};
-  ['de', 'tr'].forEach(cid => { const k = cid + '-a1', v = W.KOPRU.vocab[k] || []; W.__extWords[k] = v.filter(w => w.ext); W.KOPRU.vocab[k] = v.filter(w => !w.ext); });
+  const W = contentCtx(['de-a1', 'de-a2', 'tr-a1', 'tr-a2']); W.__extWords = {}; W.__extTopics = {};
+  ['de', 'tr'].forEach(cid => {
+    const k = cid + '-a1', v = W.KOPRU.vocab[k] || [];
+    W.__extWords[k] = v.filter(w => w.ext); W.KOPRU.vocab[k] = v.filter(w => !w.ext);
+    // ebenso echte ext-Themen (Zeilen der Niveau-Liste) zurückhalten
+    const lv = W.KOPRU.courses[cid].levels.A1, isExt = r => W.KOPRU.content[r[0]] && W.KOPRU.content[r[0]].ext;
+    W.__extTopics[cid] = lv.filter(isExt); W.KOPRU.courses[cid].levels.A1 = lv.filter(r => !isExt(r));
+  });
   return W;
 }
 function a1Extend(W) {
   Object.keys(W.__extWords || {}).forEach(k => { if (W.__extWords[k].length) W.KOPRU.addVocab(k, W.__extWords[k]); W.__extWords[k] = []; });
+  Object.keys(W.__extTopics || {}).forEach(cid => { W.__extTopics[cid].forEach(r => W.KOPRU.courses[cid].levels.A1.push(r)); W.__extTopics[cid] = []; });
   vm.runInNewContext(A1X_SRC, { window: W });
 }
 // wie app.js focusRows()/focusOpts() – nur aus Inhalt + Profil berechnet
@@ -1451,12 +1458,14 @@ function a1Cert(W, cid, p) {   // wie app.js certStatus('A1') (ohne übersprunge
 test('A1-Aufrüstung: Fixture erweitert A1 auf ≈ 650 Wörter und 16 Themen (je Kurs)', () => {
   const W = a1World(), C = W.DT.catalog;
   const before = cid => [W.DT.vocab.wordsOf(W.KOPRU, cid, 'A1').length, C.topicsOf(W.KOPRU, cid).filter(x => x.level === 'A1' && !x.kind).length];
-  const b = { de: before('de'), tr: before('tr') };
+  const extTopics = cid => W.__extTopics[cid].length;   // zurückgehaltene echte ext-Themen
+  const b = { de: before('de'), tr: before('tr') }, nT = { de: extTopics('de'), tr: extTopics('tr') };
   a1Extend(W); a1Extend(W);   // zweimal: darf nur einmal wirken
   ['de', 'tr'].forEach(cid => {
     const a = before(cid);
     const nExt = W.DT.vocab.wordsOf(W.KOPRU, cid, 'A1').filter(w => w.ext).length;   // Anzahl aus den Daten
-    eq(a, [b[cid][0] + nExt, b[cid][1] + 4], cid + ': +' + nExt + ' Wörter, +4 Themen (einmalig)');
+    const addT = nT[cid] || 4;   // echte ext-Themen (Anzahl aus den Daten) bzw. 4 simulierte
+    eq(a, [b[cid][0] + nExt, b[cid][1] + addT], cid + ': +' + nExt + ' Wörter, +' + addT + ' Themen (einmalig)');
     ok(nExt >= 295 && nExt <= 310, cid + ': Erweiterung ≈ 300 Wörter');
     ok(a[0] >= 640 && a[0] <= 660 && a[1] === 16, cid + ': ≈ 650 Wörter / 16 Themen');
   });

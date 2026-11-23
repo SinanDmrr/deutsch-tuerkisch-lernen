@@ -163,6 +163,23 @@ function lintNew(e) {
   r.warnings.forEach(m => warn(m[0], e.id, m[1] == null ? '' : m[1]));
 }
 
+/* wrong-Schlüssel, der sich von einer Lösung nur in Groß-/Kleinschreibung/Satzzeichen unterscheidet (Hinweis, kein Fehler):
+ * checkGap (js/core/check.js) vergleicht wrong-Schlüssel mit norm() – die Eingabe „Wasser“ statt „wasser“ löst dann den wrong-Text
+ * statt caseHint/punctHint aus. Bildet das Verhalten nach: gleiche norm(), aber nicht strict-gleich (strict-gleich = Fehler „wrong == Antwort“). */
+const WRONG_SHADOW = { total: 0, by: {} };
+function wrongShadow(e, g) {
+  g = g || e; // g = Lücke eines cloze (gaps[n]); sonst die Aufgabe selbst
+  if (!g.wrong || !Array.isArray(g.a) || e.cs === false || g.cs === false || !CHK.norm || !CHK.strict) return;
+  const m = /^([a-z]{2})-(a1|a2|b1|b2|c1|c2)/.exec(String(e.id || '')); if (!m) return;
+  const lang = m[1];
+  Object.keys(g.wrong).forEach(k => {
+    if (!g.a.some(a => CHK.norm(a, lang, false) === CHK.norm(k, lang, false) && CHK.strict(a) !== CHK.strict(k))) return;
+    warn('wrong-Schlüssel unterscheidet sich von einer Lösung nur in Groß-/Kleinschreibung/Satzzeichen (Hinweis greift bei anderem Fehler)', e.id, (g === e ? '' : 'Lücke ' + Object.keys(e.gaps).find(n => e.gaps[n] === g) + ' ') + '„' + k + '“');
+    const key = m[1] + ' ' + m[2].toUpperCase() + (e.ext ? ' ext' : '');
+    WRONG_SHADOW.total++; WRONG_SHADOW.by[key] = (WRONG_SHADOW.by[key] || 0) + 1;
+  });
+}
+
 function checkExercise(e, where) {
   useId(e.id, where);
   if (!e.e) warn('Erklärung (e) fehlt', e.id);
@@ -179,6 +196,7 @@ function checkExercise(e, where) {
       // wrong-Schlüssel dürfen keine richtige Lösung sein (strikt; bei cs:false auch ohne Groß-/Kleinschreibung)
       if (e.wrong) Object.keys(e.wrong).forEach(k => { if (e.a.some(a => e.cs === false ? a.toLowerCase() === k.toLowerCase() : (CHK.strict || String)(a) === (CHK.strict || String)(k))) err('wrong == Antwort', e.id, k); });
       if (e.cs === true) warn('cs:true ist jetzt Standard und kann entfallen', e.id);
+      wrongShadow(e);
       checkSpelling(e);
       break;
     case 'order': {
@@ -190,7 +208,7 @@ function checkExercise(e, where) {
       const r = e.p.map(x => x[1]); if (new Set(r).size !== r.length) err('Zuordnung doppelt', e.id);
       break;
     }
-    case 'cloze': case 'sort': case 'respond': lintNew(e); break;
+    case 'cloze': case 'sort': case 'respond': lintNew(e); if (e.t === 'cloze' && e.gaps && typeof e.gaps === 'object') Object.keys(e.gaps).forEach(n => wrongShadow(e, e.gaps[n])); break;
     case 'speak': if (!e.say) err('speak ohne say', e.id); break;
     default: err('unbekannter Typ', e.t, e.id);
   }
@@ -415,5 +433,6 @@ Object.entries(K.dialogs || {}).forEach(([id, d]) => {
 
 console.log(`\nVersion: ${appVersion || '?'}${swVersion ? ' (sw.js ✓)' : ''} · Skripte: ${scripts.length}`);
 console.log(`Themen mit Inhalt: ${Object.keys(K.content).length} · Übungen: ${nEx} · Wörter: ${nVocab} · Dialoge: ${nDia} · Lesetexte: ${nTxt} · Schreibaufgaben: ${nWrite}`);
+if (WRONG_SHADOW.total) console.log("wrong-Schlüssel-Schatten (nur Schreibweise anders als Lösung): " + WRONG_SHADOW.total + " – " + Object.keys(WRONG_SHADOW.by).sort().map(k => k + ": " + WRONG_SHADOW.by[k]).join(", "));
 console.log(`${errors} Fehler, ${warnings} Hinweise`);
 process.exit(errors ? 1 : 0);

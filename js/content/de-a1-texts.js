@@ -55,7 +55,7 @@ K.addText('de-a1-r02', {
       why: { 1: 'Pirinç ve tavuk zaten buzdolabında; pişirmesi istenmiyor.', 2: 'Böyle bir istek yok; Ayşe kendisi eve geliyor.', 3: 'Doktordan söz edilmiyor.' },
       e: '*Kannst du bitte Brot und Milch kaufen?* = “Ekmek ve süt alabilir misin lütfen?” Rica *Kannst du …?* ile yapılır, fiil sonda (*kaufen*).' },
     { id: 'de-a1-r02.q5', t: 'gap', q: 'Im Kühlschrank sind Reis und ___.', a: ['Hähnchen'],
-      wrong: { 'hähnchen': 'Almancada isimler **büyük** harfle yazılır: *das Hähnchen*.', 'Fisch': 'Balık değil, tavuk (*Hähnchen*) yazıyor.' },
+      wrong: { 'Fisch': 'Balık değil, tavuk (*Hähnchen*) yazıyor.' },
       e: '*Reis und Hähnchen* = pirinç ve tavuk.' }
   ]
 });
@@ -74,7 +74,7 @@ K.addText('de-a1-r03', {
       why: { 0: '1 *Kilo* elma içindir, süt için değil.', 2: '6 sayısı yumurta (*Eier*) içindir.' },
       e: '*2 Liter Milch* = 2 litre süt. *Liter*, *Kilo*, *Euro* sayıdan sonra çoğul almaz: *2 Liter*. Ama dişil birimler alır: *2 Flaschen*.' },
     { id: 'de-a1-r03.q2', t: 'gap', q: 'Wir brauchen sechs ___.', a: ['Eier'],
-      wrong: { 'Ei': 'Altı tane var, yani **çoğul**: *die Eier*; tekil *das Ei*.', 'eier': 'İsimler **büyük** harfle yazılır: *Eier*.' },
+      wrong: { 'Ei': 'Altı tane var, yani **çoğul**: *die Eier*; tekil *das Ei*.' },
       e: '*das Ei, die Eier* – 6 yumurta: *6 Eier*.' },
     { id: 'de-a1-r03.q3', t: 'mc', q: 'Neyi unutmamak gerekiyor?', o: ['Peyniri', 'Şekeri', 'Suyu'], a: 1,
       why: { 0: '*Käse* listede var ama “unutma” satırında değil.', 2: '*Wasser* listede var ama “unutma” satırında değil.' },
@@ -108,7 +108,7 @@ K.addText('de-a1-r04', {
       why: { 1: 'Zaman ve saat yanlış: *heute Abend* ve *acht Uhr*.', 2: 'Lisa evde değil, sinemaya gidiyor.', 3: 'Geçmişten söz edilmiyor; *Ich gehe* şimdiki/yakın zaman.' },
       e: 'Sprachmittlung: soru (*Hast du Zeit?*), plan (*Kino*), saat (*acht*) ve davet (*Kommst du mit?*) aktarılır.' },
     { id: 'de-a1-r04.q5', t: 'gap', q: 'Lisa fragt: Hast du heute Abend ___?', a: ['Zeit'],
-      wrong: { 'zeit': '*Zeit* bir isimdir: **büyük** yazılır.', 'Uhr': '*Uhr* saat demektir; “vaktin var mı” için *Zeit* kullanılır.' },
+      wrong: { 'Uhr': '*Uhr* saat demektir; “vaktin var mı” için *Zeit* kullanılır.' },
       e: '*Hast du Zeit?* = Vaktin var mı?' }
   ]
 });
@@ -155,7 +155,7 @@ K.addText('de-a1-r06', {
       why: { 1: '*Sonntag* metinde geçmiyor.', 2: '*Freitag* metinde geçmiyor; saat 18 (*achtzehn*), 8 değil.' },
       e: '*am Samstag … um 18 Uhr* = cumartesi günü saat 18’de.' },
     { id: 'de-a1-r06.q2', t: 'gap', q: 'Marco hat am Samstag ___.', a: ['Geburtstag'],
-      wrong: { 'geburtstag': 'İsimler **büyük** harfle yazılır: *der Geburtstag*.', 'Hunger': '*Hunger* = açlık. Doğum günü *Geburtstag*.' },
+      wrong: { 'Hunger': '*Hunger* = açlık. Doğum günü *Geburtstag*.' },
       e: '*Ich habe Geburtstag.* = Benim doğum günüm. Türkçedeki “doğum günüm var” gibi *haben* kullanılır.' },
     { id: 'de-a1-r06.q3', t: 'mc', q: 'Ne yiyecekler?', o: ['Çorba ve pilav', 'Pizza ve pasta', 'Balık ve patates'], a: 1,
       why: { 0: 'Çorba ve pilav metinde yok.', 2: 'Balık ve patates metinde yok.' },
@@ -164,7 +164,7 @@ K.addText('de-a1-r06', {
       why: { 1: 'Gün ve içecek yanlış; metinde Pazar ve çay yok.', 2: 'Sinemadan söz yok; davet Marco’nun evine.', 3: 'Henüz kutlama olmadı; bu bir davet.' },
       e: 'Sprachmittlung: tarih, saat, yemek ve adres birlikte aktarılır. *Kommst du …?* = “Gelir misin?”' },
     { id: 'de-a1-r06.q5', t: 'gap', q: 'Marco wohnt im ___ 5.', a: ['Rosenweg'],
-      wrong: { 'Rosenstraße': 'Metinde *Rosenweg* yazıyor, *Rosenstraße* değil.', 'rosenweg': 'Özel isimler **büyük** harfle başlar: *Rosenweg*.' },
+      wrong: { 'Rosenstraße': 'Metinde *Rosenweg* yazıyor, *Rosenstraße* değil.' },
       e: 'Adres: sokak adı + numara: *Rosenweg 5*. Almancada numara sokak adından **sonra** gelir.' }
   ]
 });
@@ -185,7 +185,7 @@ K.addText('de-a1-r07', {
       why: { 1: 'Saat 9’da salı günü *Mathe* var.', 2: 'Pazartesi saat 8’de *Deutsch* var.' },
       e: '*Dienstag: 8 Uhr Musik.* Salı = *der Dienstag*.' },
     { id: 'de-a1-r07.q2', t: 'gap', q: 'Am ___ ist kein Unterricht.', a: ['Donnerstag'],
-      wrong: { 'Donnerstag.': 'Noktayı yazma, sadece kelime: *Donnerstag*.', 'Mittwoch': 'Çarşamba günü ders var: Almanca ve İngilizce.' },
+      wrong: { 'Mittwoch': 'Çarşamba günü ders var: Almanca ve İngilizce.' },
       e: '*kein Unterricht* = ders yok. *kein* + isim: olumsuzluk (*nicht* değil).' },
     { id: 'de-a1-r07.q3', t: 'mc', q: 'Spor dersi hangi günler?', o: ['Pazartesi ve cuma', 'Salı ve çarşamba', 'Sadece pazartesi'], a: 0,
       why: { 1: 'Salı günü müzik ve matematik, çarşamba günü Almanca ve İngilizce var.', 2: 'Cuma günü de spor (*Sport*) var.' },
@@ -239,7 +239,7 @@ K.addText('de-a1-r09', {
       why: { 0: '*Lehrerin* = kadın öğretmen. Kartta *Ärztin* yazıyor.', 2: '*Köchin* = kadın aşçı. Kartta *Ärztin* yazıyor.' },
       e: '*die Ärztin* = kadın doktor, *der Arzt* = erkek doktor. Kadın meslek adı çoğunlukla **-in** ile biter.' },
     { id: 'de-a1-r09.q2', t: 'gap', q: 'Die Praxis ist in ___.', a: ['Bonn'],
-      wrong: { 'bonn': 'Şehir adları **büyük** harfle başlar: *Bonn*.', 'Berg': '*Berg* soyadıdır, şehir değil.' },
+      wrong: { 'Berg': '*Berg* soyadıdır, şehir değil.' },
       e: '*in Bonn* = Bonn’da. Şehir adından önce *in* kullanılır.' },
     { id: 'de-a1-r09.q3', t: 'mc', q: 'Muayenehane hangi saatlerde açık?', o: ['Pazartesi–cuma 8–12', 'Her gün 8–12', 'Pazartesi–cuma 12–18'], a: 0,
       why: { 1: 'Cumartesi ve pazar kapalı (*Samstag und Sonntag: zu*).', 2: 'Saatler 8–12, öğleden sonra değil.' },
@@ -264,7 +264,7 @@ K.addText('de-a1-r10', {
       why: { 0: 'Güneş Münih’te (*München*).', 2: 'Kar Berlin’de, hafta sonu.' },
       e: '*In Hamburg regnet es.* → *der Regen* / *regnen* = yağmur / yağmur yağmak.' },
     { id: 'de-a1-r10.q2', t: 'gap', q: 'In München scheint die ___.', a: ['Sonne'],
-      wrong: { 'sonne': 'İsimler **büyük** harfle yazılır: *die Sonne*.', 'Mond': '*der Mond* = ay (gökyüzünde). Metinde güneş var.' },
+      wrong: { 'Mond': '*der Mond* = ay (gökyüzünde). Metinde güneş var.' },
       e: '*die Sonne scheint* = güneş parlıyor / güneşli.' },
     { id: 'de-a1-r10.q3', t: 'mc', q: 'Hangi şehir bugün sıcak (15 derece)?', o: ['Hamburg', 'München', 'Berlin'], a: 1,
       why: { 0: 'Hamburg’da sadece 8 derece, soğuk.', 2: 'Berlin’de hafta sonu eksi 2 derece.' },
@@ -291,7 +291,7 @@ K.addText('de-a1-r11', {
       why: { 1: 'Gün *Montag* (pazartesi) ve saat 10; 12 oda numarasıdır.', 2: 'Tarih *3. März*, saat *10 Uhr*; sayıları karıştırma.' },
       e: '*Montag, 3. März, um 10 Uhr.* Tarihte sıra sayısından sonra nokta yazılır: *3.* = üçüncü.' },
     { id: 'de-a1-r11.q2', t: 'gap', q: 'Bitte bringen Sie den ___ mit.', a: ['Pass'],
-      wrong: { 'pass': 'İsimler **büyük** harfle yazılır: *der Pass*.', 'Termin': '*Termin* randevudur; getirilecek şey *Pass* (pasaport).' },
+      wrong: { 'Termin': '*Termin* randevudur; getirilecek şey *Pass* (pasaport).' },
       e: '*mitbringen* = beraberinde getirmek: *Bitte bringen Sie Ihren Pass mit.* *mit* cümle sonuna gider.' },
     { id: 'de-a1-r11.q3', t: 'mc', q: 'Hangi odaya gidilecek?', o: ['10 numaralı odada', '12 numaralı odada', '3 numaralı odada'], a: 1,
       why: { 0: '10 randevu saatidir.', 2: '3 tarihtir (3. Mart).' },

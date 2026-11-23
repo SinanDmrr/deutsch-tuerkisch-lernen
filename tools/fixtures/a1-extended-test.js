@@ -1,5 +1,5 @@
 /* TEST-FIXTURE (nicht in index.html, nicht im Inhalt): simuliert ein aufgerüstetes A1 (A1-Aufrüstung Paket 0).
- * Je Kurs: +300 Wörter (zusammen ≈ 650; nur simuliert, solange der Kurs noch keine echten ext-Wörter hat) und 4 neue Grammatikthemen mit je 24 Aufgaben (zusammen 16 Themen), alle mit ext:1.
+ * Je Kurs: +300 Wörter (zusammen ≈ 650; nur simuliert, solange der Kurs noch keine echten ext-Wörter hat) und 4 neue Grammatikthemen mit je 24 Aufgaben (zusammen 16 Themen), alle mit ext:1; Themen und Wörter werden nur simuliert, solange der Kurs keine echten ext-Wörter/-Themen hat.
  * IDs (…-a1.w9001 …, …-a1-91 … -94) liegen absichtlich außerhalb des echten Inhalts und werden nie vergeben.
  * Node: in einer VM nach den A1-Inhalten ausführen (tools/test-core.js). Browser: per page.route an <kurs>-a1-vocab.js anhängen.
  * Läuft je Kurs höchstens einmal (K.__a1ext) und nur, wenn der A1-Wortschatz des Kurses schon geladen ist. */
@@ -20,7 +20,9 @@
         exn: (de ? 'Bu deneme kelime ' : 'Das ist Probewort ') + i + '.', topic: FIELDS[i % FIELDS.length], ext: 1 });
     }
     if (words.length) K.addVocab(key, words);
-    for (var t = 91; t <= 94; t++) {
+    // echte ext-Themen (z. B. -13…-16) vorhanden → keine Testthemen -91…-94
+    var hasExtTopic = Object.keys(K.content || {}).some(function (id) { return id.indexOf(key + '-') === 0 && K.content[id] && K.content[id].ext; });
+    for (var t = 91; t <= 94 && !hasExtTopic; t++) {
       var id = key + '-' + t, ex = [];
       for (var j = 1; j <= 24; j++) {
         ex.push({ id: id + '.' + j, t: 'mc', q: (de ? 'Test-Frage ' : 'Testfrage ') + t + '.' + j, o: ['A', 'B', 'C'], a: 0,
