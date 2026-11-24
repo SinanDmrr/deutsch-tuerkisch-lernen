@@ -319,11 +319,11 @@ Object.keys(K.courses).forEach(cid => {
   covItems.forEach(([id, t]) => {
     const lv = id.startsWith(cid + '-a1-') ? 'a1' : id.startsWith(cid + '-a2-') ? 'a2' : id.startsWith(cid + '-b1-') ? 'b1' : null; if (!lv) return;
     const toks = tokenize(t, names).filter(x => !x.name && !names.has(x.w) && x.w), gl = new Set(); Object.keys(t.gloss || {}).forEach(g => normW(g).forEach(w => gl.add(w)));
-    if (!toks.length) return;
+    if (!toks.length) return;   // Dialoge: Schwelle 90 % (kein gloss-Feld, flektierte Formen)
     const bad = toks.filter(x => !known(x.w, gl, SETS[lv])), pctCov = 100 * (1 - bad.length / toks.length), freq = {};
     bad.forEach(x => { freq[x.w] = (freq[x.w] || 0) + 1; });
     const top = Object.entries(freq).sort((x, y) => y[1] - x[1] || (x[0] < y[0] ? -1 : 1)).slice(0, 10).map(([w, n]) => n > 1 ? `${w} (${n}×)` : w);
-    if (pctCov < 95) warn(`Abdeckung ${id}: ${pctCov.toFixed(0)} % der Textwörter bekannt (${lv === 'a1' ? 'A1' : lv === 'b1' ? 'A1/A2/B1' : 'A1/A2'}-Wortschatz, gloss, ohne Namen/Zahlen/Funktionswörter); häufigste unbekannte: ` + top.join(', '));
+    if (pctCov < (K.dialogs && K.dialogs[id] ? 90 : 95)) warn(`Abdeckung ${id}: ${pctCov.toFixed(0)} % der Textwörter bekannt (${lv === 'a1' ? 'A1' : lv === 'b1' ? 'A1/A2/B1' : 'A1/A2'}-Wortschatz, gloss, ohne Namen/Zahlen/Funktionswörter); häufigste unbekannte: ` + top.join(', '));
   });
 });
 

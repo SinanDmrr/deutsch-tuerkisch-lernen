@@ -514,4 +514,210 @@ K.addText('tr-b1-h09', {
   ]
 });
 
+K.addText('tr-b1-r10', {
+  level: 'B1', kind: 'read', scene: 'ofis', genre: 'email',
+  title: "Başvuru e-postası", sub: "Eine Bewerbung per E-Mail",
+  body: [
+    "Sayın İnsan Kaynakları Yetkilisi,",
+    "Gazetede yayımlanan satış danışmanı ilanınızı gördüm ve bu pozisyona başvurmak istiyorum. Üç yıldır bir giyim mağazasında çalışıyorum. Müşterilerle iletişim kurmayı seviyorum ve ekip çalışmasında deneyimliyim. Zor bir müşteriyle karşılaştığımda sakin kalırım; sorunu dinler, birlikte çözüm ararım.",
+    "Şu anki işimden ayrılmak istememin nedeni, yeni şeyler öğrenmek istememdir. Mağazanıza daha önce birkaç kez geldiğim için ürünlerinizi tanıyorum. Almanca ve İngilizce konuşabiliyorum; Türkçem de iyidir, çünkü ailem Türkiye’den geliyor.",
+    "Mağazada yeni çalışanlara eğitim verdim; bu sırada sabırlı olmayı ve açık konuşmayı öğrendim. Bir keresinde iki iş arkadaşımın arasındaki anlaşmazlığı çözmüştüm ve müdürümüz bundan çok memnun kalmıştı. Böyle deneyimlerin yeni görevimde bana yardımcı olacağını düşünüyorum. Bu işi gerçekten çok istiyorum ve yeni ekibinizle çalışmaktan mutlu olurum.",
+    "Özgeçmişimi ekte bulabilirsiniz. Önümüzdeki hafta sizin için uygun olan bir günde mülakata gelebilirim. Ek bilgiye ihtiyacınız olursa bana her zaman e-postayla ulaşabilirsiniz.",
+    "Zaman ayırdığınız için teşekkür ederim.",
+    "Saygılarımla, Deniz Yıldız"
+  ],
+  gloss: { "anki": "jetzig", "böyle": "solche", "ekte": "im Anhang", "eğitim": "Schulung", "ihtiyacınız": "Sie brauchen", "işi": "die Arbeit", "işimden": "von meiner Arbeit", "keresinde": "einmal", "olacağını": "dass es sein wird", "olmayı": "zu sein", "uygun": "passend", "önümüzdeki": "kommende", "ürünlerinizi": "Ihre Produkte" },
+  questions: [
+    { id: "tr-b1-r10.q1", t: "mc", q: "Wie lange arbeitet der/die Schreibende schon im Bekleidungsgeschäft?", o: ["Seit drei Jahren", "Seit drei Monaten", "Seit einem Jahr", "Seit fünf Jahren"], a: 0,
+      why: { 1: "Monate wären *ay*; im Text steht *üç yıldır*.", 2: "Ein Jahr wäre *bir yıl*.", 3: "Fünf wäre *beş*." },
+      e: "*Üç yıldır … çalışıyorum* = Ich arbeite seit drei Jahren." },
+    { id: "tr-b1-r10.q2", t: "mc", q: "Was tut er/sie bei einem schwierigen Kunden?", o: ["Ruhig bleiben, zuhören und gemeinsam eine Lösung suchen", "Den Chef holen", "Dem Kunden widersprechen", "Das Geschäft verlassen"], a: 0,
+      why: { 1: "Davon ist nicht die Rede; er/sie bleibt selbst ruhig.", 2: "Das Gegenteil: Er/sie hört zu.", 3: "Davon ist nicht die Rede." },
+      e: "*sakin kalırım; sorunu dinler, birlikte çözüm ararım*" },
+    { id: "tr-b1-r10.q3", t: "gap", q: "Zor bir müşteriyle karşılaştığım___ sakin kalırım. (Wenn ich auf einen schwierigen Kunden treffe, bleibe ich ruhig.)", a: ["da"],
+      wrong: { "dan": "-DAn heißt „seit/weil“. Für „wenn/als“ braucht man den Lokativ -DA.", "a": "Der Dativ bedeutet nicht „wenn“.", "ı": "Der Akkusativ passt nicht; es braucht -DA." },
+      e: "karşılaştığım + **da** = **karşılaştığımda** (wenn/als ich traf)." },
+    { id: "tr-b1-r10.q4", t: "mc", q: "Warum möchte er/sie die Stelle wechseln?", o: ["Um Neues zu lernen", "Wegen des Gehalts", "Weil er/sie entlassen wurde", "Weil das Geschäft schließt"], a: 0,
+      why: { 1: "Vom Gehalt ist nicht die Rede.", 2: "Davon sagt der Text nichts.", 3: "Davon sagt der Text nichts." },
+      e: "*yeni şeyler öğrenmek istememdir* = ich möchte Neues lernen." },
+    { id: "tr-b1-r10.q5", t: "mc", q: "Was bietet er/sie am Ende an?", o: ["Nächste Woche zum Gespräch zu kommen und per E-Mail erreichbar zu sein", "Das Geschäft zu besuchen", "Einen Lebenslauf zu schreiben", "Ab sofort zu arbeiten"], a: 0,
+      why: { 1: "Das Geschäft kennt er/sie schon.", 2: "Der Lebenslauf liegt bereits bei.", 3: "Davon ist nicht die Rede." },
+      e: "*Önümüzdeki hafta … mülakata gelebilirim. … bana her zaman e-postayla ulaşabilirsiniz.*" }
+  ]
+});
+
+K.addText('tr-b1-r11', {
+  level: 'B1', kind: 'read', scene: 'market', genre: 'email',
+  title: "Kargo şikâyeti", sub: "Eine Beschwerde per E-Mail",
+  body: [
+    "Sayın Müşteri Hizmetleri,",
+    "Üç hafta önce internet sitenizden iki kitap ve bir lamba sipariş ettim. Teslimat süresi beş gün olarak belirtilmişti, ama paket ancak on ikinci gün geldi. Kurye paketi kapıya bıraktı ve zile basmadı. Paketi açtığımda lambanın kırık olduğunu gördüm. Kitaplardan biri de eksikti.",
+    "Hasarın fotoğraflarını e-postaya ekledim. Lambayı iade etmek istiyorum, eksik kitap için de geri ödeme talep ediyorum. Sipariş numaram ekte yazıyor.",
+    "Bu ilk kez başıma gelmiyor; geçen yıl da başka bir siparişim iki hafta geç geldi. Yine de size güvenmek istiyorum, çünkü ürünleriniz kaliteli. Lütfen bana iade kodunu ve iade için gerekli adımları yazın.",
+    "Sizinle telefonda da görüşmeye çalıştım, ama hat sürekli meşguldü. Bu yüzden yazılı olarak şikâyet ediyorum. Müşteri memnuniyetini önemsediğinizi biliyorum, bu nedenle hızlı bir çözüm bekliyorum. Bu hafta cevap alamazsam başka yollar deneyeceğim. Umarım bu sorun bir daha yaşanmaz. Yardımınız için şimdiden teşekkür ederim.",
+    "Saygılarımla, Ece Kaya"
+  ],
+  gloss: { "belirtilmişti": "war angegeben", "alamazsam": "wenn ich nicht bekomme", "açtığımda": "als ich öffnete", "basmadı": "drückte nicht", "ekledim": "ich habe angehängt", "ekte": "im Anhang", "ettim": "ich tat", "zile": "auf die Klingel", "önemsediğinizi": "dass Sie wichtig nehmen", "ürünleriniz": "Ihre Produkte" },
+  questions: [
+    { id: "tr-b1-r11.q1", t: "mc", q: "Wie lange hat die Lieferung tatsächlich gedauert?", o: ["Zwölf Tage", "Fünf Tage", "Drei Wochen", "Zwei Tage"], a: 0,
+      why: { 1: "Fünf Tage war die versprochene Zeit.", 2: "Drei Wochen ist die Zeit seit der Bestellung.", 3: "Davon ist nicht die Rede." },
+      e: "*paket ancak on ikinci gün geldi* = das Paket kam erst am zwölften Tag." },
+    { id: "tr-b1-r11.q2", t: "mc", q: "Was stimmte mit der Bestellung nicht?", o: ["Die Lampe war kaputt und ein Buch fehlte", "Beide Bücher fehlten", "Die Lampe fehlte", "Es kam ein falsches Paket"], a: 0,
+      why: { 1: "Nur eines der beiden Bücher fehlte.", 2: "Die Lampe war da, aber kaputt.", 3: "Davon ist nicht die Rede." },
+      e: "*lambanın kırık olduğunu … Kitaplardan biri de eksikti.*" },
+    { id: "tr-b1-r11.q3", t: "gap", q: "Paketi açtığımda lambanın kırık ol___ gördüm. (Als ich das Paket öffnete, sah ich, dass die Lampe kaputt war.)", a: ["duğunu"],
+      wrong: { "duğu": "Nach *gördüm* braucht das Objekt den Akkusativ: olduğ**unu**.", "dığını": "Letzter Vokal von *ol-* ist **o** → -duğunu (u).", "ması": "-mAsI heißt „dass (er) sei“ im Sinne einer Handlung; hier steht eine Tatsache in -DIk." },
+      e: "ol- + **duk** → ğ + **unu** = **olduğunu** (dass sie war; Akkusativ nach *görmek*)." },
+    { id: "tr-b1-r11.q4", t: "mc", q: "Warum schreibt sie ihre Beschwerde?", o: ["Weil sie am Telefon niemanden erreichte", "Weil sie lieber schreibt", "Weil die Firma keine Nummer hat", "Weil der Kurier sie darum bat"], a: 0,
+      why: { 1: "Das ist nicht der Grund; die Leitung war ständig besetzt.", 2: "Die Firma hat eine Nummer, nur war sie besetzt.", 3: "Davon ist nicht die Rede." },
+      e: "*hat sürekli meşguldü. Bu yüzden yazılı olarak şikâyet ediyorum.*" },
+    { id: "tr-b1-r11.q5", t: "mc", q: "Was verlangt sie?", o: ["Rückgabe der Lampe und Erstattung für das fehlende Buch", "Eine Entschuldigung des Kuriers", "Einen Gutschein", "Eine neue Lampe"], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Ein Gutschein wird nicht genannt.", 3: "Sie will die Lampe zurückgeben, nicht tauschen." },
+      e: "*Lambayı iade etmek istiyorum, eksik kitap için de geri ödeme talep ediyorum.*" }
+  ]
+});
+
+K.addText('tr-b1-r12', {
+  level: 'B1', kind: 'read', scene: 'ev', genre: 'artikel',
+  title: "Kira sözleşmesinden önce", sub: "Ratgeber: Worauf man vor dem Mietvertrag achten sollte",
+  body: [
+    "Yeni bir daireye taşınmak heyecan vericidir, ama kira sözleşmesini imzalamadan önce birkaç şeye dikkat etmeniz gerekir.",
+    "Önce sözleşmeyi baştan sona okuyun. Kira bedeli, depozito ve ek giderlerin ne kadar olduğunu madde madde kontrol edin. Depozito genellikle bir ya da iki aylık kira kadardır. Daireyi teslim alırken ev sahibiyle birlikte dolaşın ve duvarlardaki hasarları, bozuk muslukları, nemli köşeleri not edin. Bunları yazılı olarak kaydederseniz, daireden çıkarken depozitonuzu geri almanız kolaylaşır.",
+    "İkinci olarak kira artışına ve fesih süresine bakın. Sözleşmeyi ne zaman ve hangi şartlarda bitirebileceğinizi öğrenmeden imza atmayın. Ev sahibiniz size bir bildirim gönderirse, bunu mutlaka saklayın.",
+    "Son olarak ev sahibiyle iyi iletişim kurun. Bir sorun olduğunda önce kibarca konuşun. Çözüm bulamazsanız bir mektup gönderin. Sabırlı olursanız çoğu sorun büyümeden çözülür. Ayrıca taşınmadan önce ev sahibinden anahtar teslimi için yazılı bir tutanak isteyin. Böylece daireyi temiz ve eksiksiz teslim ettiğinizi kanıtlayabilirsiniz. Her ay kira ödemelerinin dekontunu saklamayı da unutmayın."
+  ],
+  gloss: { "edin": "tun Sie", "alırken": "beim Übernehmen", "atmayın": "setzen Sie nicht", "böylece": "so, dadurch", "dekontunu": "den Zahlungsbeleg", "etmeniz": "dass Sie tun", "ettiğinizi": "dass Sie getan haben", "fesih": "Kündigung", "saklamayı": "das Aufbewahren", "saklayın": "bewahren Sie auf", "şartlarda": "unter Bedingungen" },
+  questions: [
+    { id: "tr-b1-r12.q1", t: "mc", q: "Was soll man beim Übernehmen der Wohnung tun?", o: ["Mit dem Vermieter die Wohnung ansehen und Schäden notieren", "Sofort die Möbel kaufen", "Den Vertrag erst später lesen", "Die Nachbarn fragen"], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Der Text rät, den Vertrag vor der Unterschrift ganz zu lesen.", 3: "Davon ist nicht die Rede." },
+      e: "*ev sahibiyle birlikte dolaşın … hasarları … not edin*" },
+    { id: "tr-b1-r12.q2", t: "mc", q: "Wie hoch ist die Kaution laut Text meistens?", o: ["Ein bis zwei Monatsmieten", "Eine halbe Monatsmiete", "Fünf Monatsmieten", "Eine Jahresmiete"], a: 0,
+      why: { 1: "Der Text nennt mindestens eine Monatsmiete.", 2: "So hoch wird sie nicht genannt.", 3: "So hoch wird sie nicht genannt." },
+      e: "*Depozito genellikle bir ya da iki aylık kira kadardır.*" },
+    { id: "tr-b1-r12.q3", t: "gap", q: "Sözleşmeyi imzala___ önce madde madde okuyun. (Bevor Sie den Vertrag unterschreiben, lesen Sie ihn Punkt für Punkt.)", a: ["madan"],
+      wrong: { "meden": "Letzter Vokal von *imzala-* ist **a** → -madan.", "dıktan": "-DIktAn braucht *sonra* („nachdem“), nicht *önce*.", "arak": "-(y)ArAk heißt „indem“; für „bevor“ braucht man -mAdAn önce." },
+      e: "imzala- + **ma** + **dan** + önce = **imzalamadan önce**." },
+    { id: "tr-b1-r12.q4", t: "mc", q: "Was soll man mit einer Mitteilung des Vermieters tun?", o: ["Unbedingt aufbewahren", "Sofort wegwerfen", "Dem Nachbarn zeigen", "Ignorieren"], a: 0,
+      why: { 1: "Das rät der Text nicht.", 2: "Davon ist nicht die Rede.", 3: "Das rät der Text nicht." },
+      e: "*bunu mutlaka saklayın* = bewahren Sie es unbedingt auf." },
+    { id: "tr-b1-r12.q5", t: "mc", q: "Was empfiehlt der Text bei Problemen mit dem Vermieter?", o: ["Zuerst höflich sprechen, dann einen Brief schicken", "Sofort ausziehen", "Die Miete kürzen", "Den Vertrag zerreißen"], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Davon ist nicht die Rede.", 3: "Davon ist nicht die Rede." },
+      e: "*önce kibarca konuşun … bir mektup gönderin*" }
+  ]
+});
+
+K.addText('tr-b1-r13', {
+  level: 'B1', kind: 'read', scene: 'ev', genre: 'nachricht',
+  title: "Apartman duyurusu", sub: "Aushang: Einladung zur Hausversammlung",
+  body: [
+    "Sevgili komşularımız,",
+    "Önümüzdeki cumartesi saat altıda apartmanın girişinde yıllık toplantımızı yapacağız. Gündemimizde şu konular var: asansörün bakımı, ortak alanların temizliği ve gece gürültüsü.",
+    "Asansör son iki ayda üç kez bozuldu. Bakım firmasından teklif aldık; fiyat yüksek olduğu için bu konuda sizin görüşünüzü almak istiyoruz. Ayrıca bazı komşularımız merdivenlere eşya bırakılmasından şikâyet ediyor. Bu nedenle herkesten merdivenlere eşya bırakmamasını rica ediyoruz.",
+    "Geçen toplantıda ortak giderlerin ayda bir kez ödenmesine karar verdik; bazı komşularımız hâlâ ödemedi. Lütfen bu ay sonuna kadar yöneticiye ulaşın. Park yeri konusunda da yeni bir düzenleme hazırladık: Ziyaretçiler otoparka yalnızca akşamları girebilecek. Bu kurallar herkesin huzuru için hazırlanmıştır.",
+    "Toplantıya gelemeyecek olanlar oylarını yazılı olarak yöneticiye bildirebilir. Karar alınabilmesi için kat maliklerinin en az yarısının toplantıda bulunması gerekiyor, bu nedenle katılımınız çok önemli. Lütfen toplantıya zamanında gelin.",
+    "Toplantıdan sonra çay ve kek ikram edeceğiz. Çocuklarınızı da getirebilirsiniz; bahçede bir oyun alanı hazırlanacak.",
+    "Saygılarımızla, Apartman Yönetimi"
+  ],
+  gloss: { "maliklerinin": "der Eigentümer", "yarısının": "der Hälfte", "bırakmamasını": "dass man nichts lässt", "hazırladık": "wir haben vorbereitet", "ayda": "im Monat", "aldık": "wir haben bekommen", "edeceğiz": "wir werden", "ediyor": "beschwert sich", "ediyoruz": "wir bitten", "eşya": "Sachen", "ikram": "anbieten", "olanlar": "die, die sind", "önümüzdeki": "kommende" },
+  questions: [
+    { id: "tr-b1-r13.q1", t: "mc", q: "Wann findet die Versammlung statt?", o: ["Am nächsten Samstag", "Am nächsten Freitag", "Morgen", "Nächsten Monat"], a: 0,
+      why: { 1: "Freitag wäre *cuma*.", 2: "Davon ist nicht die Rede.", 3: "Davon ist nicht die Rede." },
+      e: "*Önümüzdeki cumartesi* = nächsten Samstag." },
+    { id: "tr-b1-r13.q2", t: "mc", q: "Warum möchte die Verwaltung die Meinung der Bewohner zum Aufzug hören?", o: ["Weil das Angebot der Firma teuer ist", "Weil der Aufzug neu ist", "Weil der Aufzug nie funktioniert hat", "Weil die Firma schließt"], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Er ist in zwei Monaten dreimal ausgefallen, nicht immer.", 3: "Davon ist nicht die Rede." },
+      e: "*fiyat yüksek olduğu için … görüşünüzü almak istiyoruz*" },
+    { id: "tr-b1-r13.q3", t: "gap", q: "Fiyat yüksek ol___ için görüşünüzü almak istiyoruz. (Weil der Preis hoch ist, möchten wir Ihre Meinung hören.)", a: ["duğu"],
+      wrong: { "ması": "-mAsI için = „damit der Preis hoch ist“, ein Zweck.", "dığı": "Letzter Vokal von *ol-* ist **o** → -duğu (u).", "duğum": "-um = „ich“; der Preis ist 3. Person: -u." },
+      e: "ol- + **duk** → ğ + **u** = **olduğu** için." },
+    { id: "tr-b1-r13.q4", t: "mc", q: "Was können Bewohner tun, die nicht kommen können?", o: ["Ihre Stimme schriftlich dem Verwalter mitteilen", "Einen Nachbarn schicken", "Nichts tun", "Anrufen"], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Sie können ihre Stimme abgeben.", 3: "Davon ist nicht die Rede." },
+      e: "*oylarını yazılı olarak yöneticiye bildirebilir*" },
+    { id: "tr-b1-r13.q5", t: "mc", q: "Was gibt es nach der Versammlung?", o: ["Tee und Kuchen", "Ein Essen", "Ein Geschenk", "Nichts"], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Davon ist nicht die Rede.", 3: "Es werden Tee und Kuchen angeboten." },
+      e: "*çay ve kek ikram edeceğiz*" }
+  ]
+});
+
+K.addText('tr-b1-h10', {
+  level: 'B1', kind: 'listen', scene: 'sokak', genre: 'gespraech',
+  title: "Mülakat nasıl geçti?", sub: "Gespräch nach dem Vorstellungsgespräch", plays: 2,
+  lines: [
+    { s: 'Nur', g: 'f', t: "Tolga, mülakat nasıl geçti? Çok heyecanlıydın.", n: "Tolga, wie war das Vorstellungsgespräch? Du warst sehr aufgeregt." },
+    { s: 'Tolga', g: 'm', t: "İyi geçti sanırım. İlk başta çok heyecanlandım, ama görüşmeyi yapan kişi kibar olduğu için hemen rahatladım. Mülakat yaklaşık bir saat sürdü. Önce özgeçmişimi sordu, sonra ekip çalışması hakkında konuştuk.", n: "Ich glaube, es lief gut. Zuerst war ich sehr aufgeregt, aber weil die Person, die das Gespräch führte, freundlich war, habe ich mich schnell entspannt. Das Gespräch dauerte etwa eine Stunde. Erst fragte sie nach meinem Lebenslauf, dann sprachen wir über Teamarbeit." },
+    { s: 'Nur', g: 'f', t: "En zor soru neydi?", n: "Was war die schwierigste Frage?" },
+    { s: 'Tolga', g: 'm', t: "Güçlü yönümü sordu. Sabırlı olduğumu söyledim, ama biraz daha hazırlanmalıydım. Keşke daha çok örnek hazırlasaydım.", n: "Sie fragte nach meiner Stärke. Ich sagte, dass ich geduldig bin, aber ich hätte mich etwas mehr vorbereiten sollen. Hätte ich doch mehr Beispiele vorbereitet." },
+    { s: 'Nur', g: 'f', t: "Üzülme, herhalde başarılı olmuşsundur. Ne zaman haber verecekler?", n: "Mach dir keine Sorgen, du warst bestimmt erfolgreich. Wann melden sie sich?" },
+    { s: 'Tolga', g: 'm', t: "Önümüzdeki hafta e-posta gönderecekler. Haber gelene kadar sabırla bekleyeceğim.", n: "Nächste Woche schicken sie eine E-Mail. Bis ich Bescheid bekomme, werde ich geduldig warten." },
+    { s: 'Nur', g: 'f', t: "Güzel. Çalışma saatleri nasıl?", n: "Das ist gut. Wie sind die Arbeitszeiten?" },
+    { s: 'Tolga', g: 'm', t: "Sabah dokuzdan akşam beşe kadar. Eve yakın olduğu için işe yürüyerek gidebilirim. İşi alırsam seni yemeğe götüreceğim!", n: "Von neun Uhr morgens bis fünf Uhr abends. Weil es nah an meinem Zuhause ist, kann ich zu Fuß zur Arbeit gehen. Wenn ich die Stelle bekomme, lade ich dich zum Essen ein!" }
+  ],
+  gloss: { "eve": "nach Hause", "işi": "die Stelle", "neydi": "was war", "olmuşsundur": "du warst sicher", "sanırım": "ich glaube", "önümüzdeki": "kommende", "örnek": "Beispiel" },
+  questions: [
+    { id: "tr-b1-h10.q1", t: "mc", q: "Wie ist das Gespräch laut Tolga gelaufen?", o: ["Gut", "Schlecht", "Es ist ausgefallen", "Er weiß es nicht"], a: 0,
+      why: { 1: "Er sagt *iyi geçti*.", 2: "Es hat stattgefunden.", 3: "Er ist sich ziemlich sicher: *iyi geçti sanırım*." },
+      e: "*İyi geçti sanırım.* = Ich glaube, es ist gut gelaufen." },
+    { id: "tr-b1-h10.q2", t: "mc", q: "Warum hat Tolga sich schnell entspannt?", o: ["Weil die Interviewerin freundlich war", "Weil er Kaffee getrunken hat", "Weil die Fragen leicht waren", "Weil Nur dabei war"], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Eine Frage war schwierig.", 3: "Nur war nicht dabei." },
+      e: "*görüşmeyi yapan kişi kibar olduğu için hemen rahatladım*" },
+    { id: "tr-b1-h10.q3", t: "mc", q: "Was war die schwierigste Frage?", o: ["Nach seiner Stärke", "Nach dem Gehalt", "Nach der Teamarbeit", "Nach seinem Lebenslauf"], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Über Teamarbeit wurde gesprochen, aber das war nicht die schwerste Frage.", 3: "Der Lebenslauf war am Anfang." },
+      e: "*Güçlü yönümü sordu.* = Sie fragte nach meiner Stärke." },
+    { id: "tr-b1-h10.q4", t: "mc", q: "Wann bekommt Tolga Bescheid?", o: ["Nächste Woche per E-Mail", "Morgen per Telefon", "In einem Monat", "Gar nicht"], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Davon ist nicht die Rede.", 3: "Davon ist nicht die Rede." },
+      e: "*Önümüzdeki hafta e-posta gönderecekler.*" }
+  ]
+});
+
+K.addText('tr-b1-h11', {
+  level: 'B1', kind: 'listen', scene: 'market', genre: 'radio',
+  title: "Hasarlı paket", sub: "Radiotipp: Was tun bei beschädigten Paketen?", plays: 2,
+  lines: [
+    { s: 'Sunucu', g: 'f', t: "Online alışverişte paket hasarlı gelirse ne yapmalıyız?", n: "Was sollten wir tun, wenn beim Online-Shopping ein Paket beschädigt ankommt?" },
+    { s: 'Uzman', g: 'm', t: "Önce hasarın fotoğrafını çekin ve hemen müşteri hizmetlerine yazın. Çoğu firmada iade süresi iki hafta kadardır. Faturayı ve paketin kutusunu mutlaka saklayın, çünkü firma bunları isteyebilir.", n: "Machen Sie zuerst ein Foto des Schadens und schreiben Sie sofort dem Kundenservice. Bei den meisten Firmen beträgt die Rückgabefrist etwa zwei Wochen. Bewahren Sie die Rechnung und den Karton unbedingt auf, denn die Firma kann sie verlangen." },
+    { s: 'Sunucu', g: 'f', t: "Para ne zaman geri gelir?", n: "Wann kommt das Geld zurück?" },
+    { s: 'Uzman', g: 'm', t: "Genellikle ürün firmaya ulaştıktan sonra beş ile on gün içinde. Cevap alamazsanız yazılı şikâyet edin. Sabırlı ama kararlı olun; çoğu sorun birkaç yazışmadan sonra çözülür. Telefonla değil, yazıyla iletişim kurmak daha güvenlidir.", n: "Meist innerhalb von fünf bis zehn Tagen, nachdem das Produkt bei der Firma angekommen ist. Wenn Sie keine Antwort bekommen, beschweren Sie sich schriftlich. Seien Sie geduldig, aber entschlossen; die meisten Probleme lösen sich nach einigen Nachrichten. Schriftlich zu kommunizieren ist sicherer als telefonisch." },
+    { s: 'Sunucu', g: 'f', t: "Peki, yanlış ürün gelirse ne olur?", n: "Und was passiert, wenn das falsche Produkt kommt?" },
+    { s: 'Uzman', g: 'm', t: "O zaman da aynı şekilde yazın ve değişim talep edin. Firmalar genellikle kargo ücretini kendileri öder. Yani endişelenmenize gerek yok.", n: "Dann schreiben Sie genauso und verlangen einen Umtausch. Die Firmen übernehmen meist die Versandkosten selbst. Sie müssen sich also keine Sorgen machen." }
+  ],
+  gloss: { "edin": "tun Sie", "ürün": "Produkt", "alamazsanız": "wenn Sie nicht bekommen", "kendileri": "sie selbst", "online": "online", "peki": "na gut / und", "saklayın": "bewahren Sie auf", "şekilde": "Weise" },
+  questions: [
+    { id: "tr-b1-h11.q1", t: "mc", q: "Was soll man zuerst tun?", o: ["Den Schaden fotografieren und dem Kundenservice schreiben", "Das Paket wegwerfen", "Den Kurier anrufen", "Das Produkt reparieren"], a: 0,
+      why: { 1: "Man soll Karton und Rechnung gerade aufbewahren.", 2: "Davon ist nicht die Rede.", 3: "Davon ist nicht die Rede." },
+      e: "*hasarın fotoğrafını çekin ve hemen müşteri hizmetlerine yazın*" },
+    { id: "tr-b1-h11.q2", t: "mc", q: "Wie lang ist die Rückgabefrist bei den meisten Firmen?", o: ["Etwa zwei Wochen", "Etwa zwei Tage", "Etwa zwei Monate", "Ein Jahr"], a: 0,
+      why: { 1: "Tage wären *gün*.", 2: "Monate wären *ay*.", 3: "Ein Jahr wird nicht genannt." },
+      e: "*iade süresi iki hafta kadardır* = etwa zwei Wochen." },
+    { id: "tr-b1-h11.q3", t: "mc", q: "Wann kommt das Geld meist zurück?", o: ["Fünf bis zehn Tage, nachdem das Produkt bei der Firma ist", "Sofort", "Nach drei Monaten", "Nur nach einer Klage"], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Davon ist nicht die Rede.", 3: "Davon ist nicht die Rede." },
+      e: "*ürün firmaya ulaştıktan sonra beş ile on gün içinde*" },
+    { id: "tr-b1-h11.q4", t: "mc", q: "Was empfiehlt der Experte, wenn keine Antwort kommt?", o: ["Schriftlich beschweren", "Das Geld vergessen", "Eine neue Bestellung aufgeben", "Zum Laden fahren"], a: 0,
+      why: { 1: "Er rät zur Hartnäckigkeit.", 2: "Davon ist nicht die Rede.", 3: "Davon ist nicht die Rede." },
+      e: "*Cevap alamazsanız yazılı şikâyet edin.*" }
+  ]
+});
+
+K.addText('tr-b1-h12', {
+  level: 'B1', kind: 'listen', scene: 'ev', genre: 'anrufbeantworter',
+  title: "Anahtar teslimi", sub: "Nachricht des Vermieters wegen der Schlüsselübergabe", plays: 2,
+  lines: [
+    { s: 'Ev sahibi', g: 'f', t: "Merhaba, ben ev sahibiniz. Mektubunuzu aldım; ayın sonunda taşınacağınızı öğrendim. Anahtar teslimi için cuma günü saat beşte buluşabilir miyiz? Daireyi teslim almadan önce birlikte gezeriz, hasar varsa not ederiz. Elektrik ve su sayaçlarının son değerlerini de birlikte yazarız.", n: "Guten Tag, hier ist Ihre Vermieterin. Ich habe Ihren Brief erhalten und erfahren, dass Sie Ende des Monats ausziehen. Können wir uns am Freitag um fünf Uhr zur Schlüsselübergabe treffen? Bevor ich die Wohnung übernehme, gehen wir gemeinsam durch und notieren, falls es Schäden gibt. Die letzten Zählerstände für Strom und Wasser schreiben wir auch gemeinsam auf." },
+    { s: 'Ev sahibi', g: 'f', t: "Daireyi boşaltırken çöpleri de dışarı çıkarın ve mutfaktaki dolapları boş bırakın. Daire temiz olursa depozitonuzu bir hafta içinde geri öderim. Cuma size uygun değilse, lütfen yarın akşama kadar beni arayın. Geçen yıllarda hiç sorun yaşamadık, bu yüzden bu işin de kolay olacağını düşünüyorum. Yeni evinizde mutlu olmanızı dilerim. Başka bir sorunuz olursa lütfen çekinmeden sorun.", n: "Räumen Sie beim Auszug auch den Müll hinaus und lassen Sie die Küchenschränke leer. Wenn die Wohnung sauber ist, zahle ich Ihnen die Kaution innerhalb einer Woche zurück. Wenn Freitag nicht passt, rufen Sie mich bitte bis morgen Abend an. In den letzten Jahren hatten wir nie Probleme, deshalb denke ich, dass das auch leicht wird. Ich wünsche Ihnen viel Glück im neuen Zuhause. Wenn Sie weitere Fragen haben, fragen Sie bitte ohne Scheu." }
+  ],
+  gloss: { "almadan": "bevor ich übernehme", "değerlerini": "die Werte", "dışarı": "nach draußen", "evinizde": "in Ihrem Haus", "işin": "die Sache", "olacağını": "dass es sein wird", "olmanızı": "dass Sie sind", "uygun": "passend" },
+  questions: [
+    { id: "tr-b1-h12.q1", t: "mc", q: "Wann soll die Schlüsselübergabe stattfinden?", o: ["Am Freitag um fünf Uhr", "Am Montag um fünf Uhr", "Am Freitag um sechs Uhr", "Ende des Monats morgens"], a: 0,
+      why: { 1: "Montag wäre *pazartesi*.", 2: "Sechs wäre *altı*.", 3: "Nur der Auszug ist Ende des Monats." },
+      e: "*cuma günü saat beşte* = Freitag um fünf Uhr." },
+    { id: "tr-b1-h12.q2", t: "mc", q: "Was will die Vermieterin vor der Übernahme tun?", o: ["Gemeinsam durch die Wohnung gehen und Schäden notieren", "Die Wohnung allein prüfen", "Die Wohnung streichen", "Den Vertrag ändern"], a: 0,
+      why: { 1: "Sie will es gemeinsam tun.", 2: "Davon ist nicht die Rede.", 3: "Davon ist nicht die Rede." },
+      e: "*teslim almadan önce birlikte gezeriz, hasar varsa not ederiz*" },
+    { id: "tr-b1-h12.q3", t: "mc", q: "Wann gibt sie die Kaution zurück?", o: ["Innerhalb einer Woche, wenn die Wohnung sauber ist", "Sofort bei der Übergabe", "Nach einem Monat", "Gar nicht"], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Davon ist nicht die Rede.", 3: "Davon ist nicht die Rede." },
+      e: "*Daire temiz olursa depozitonuzu bir hafta içinde geri öderim.*" },
+    { id: "tr-b1-h12.q4", t: "mc", q: "Was soll der Mieter tun, wenn Freitag nicht passt?", o: ["Bis morgen Abend anrufen", "Eine E-Mail schreiben", "Den Schlüssel in den Briefkasten werfen", "Zum Notar gehen"], a: 0,
+      why: { 1: "Davon ist nicht die Rede.", 2: "Davon ist nicht die Rede.", 3: "Davon ist nicht die Rede." },
+      e: "*lütfen yarın akşama kadar beni arayın*" }
+  ]
+});
+
 })(window.KOPRU);

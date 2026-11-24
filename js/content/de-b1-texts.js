@@ -520,4 +520,206 @@ K.addText('de-b1-h09', {
   ]
 });
 
+
+K.addText('de-b1-r10', {
+  level: 'B1', kind: 'read', genre: 'artikel',
+  title: 'So gelingt das Vorstellungsgespräch', sub: 'İş görüşmesi nasıl başarılı olur',
+  body: [
+    'Ein Vorstellungsgespräch macht fast jeden nervös, obwohl man sich gut vorbereitet hat. Das ist normal. Wer ein paar Dinge beachtet, wirkt aber sicherer.',
+    'Zuerst sollten Sie die Firma kennen. Informieren Sie sich im Internet, damit Sie im Gespräch gezielte Fragen stellen können. Da die Personalchefin Ihren Lebenslauf schon gelesen hat, müssen Sie ihn nicht noch einmal erzählen. Sprechen Sie lieber über Ihre Stärken und über Beispiele aus Ihrer Erfahrung. Viele Bewerber reden zu lange über ihr Leben, sodass die Zeit für Fragen fehlt.',
+    'Auch nach Schwächen wird oft gefragt. Seien Sie ehrlich, aber nicht zu negativ. Sagen Sie zum Beispiel, woran Sie arbeiten, um besser zu werden.',
+    'Kommen Sie zehn Minuten früher. Falls Sie sich verspäten, rufen Sie rechtzeitig an. Je besser Sie vorbereitet sind, desto ruhiger werden Sie sein. Und denken Sie daran: Ein Vorstellungsgespräch ist nicht nur eine Prüfung. Sowohl die Firma als auch Sie selbst wollen herausfinden, ob es passt.'
+  ],
+  gloss: { 'obwohl': '-e rağmen', 'sodass': 'öyle ki', 'je': 'ne kadar', 'reden': 'konuşmak', 'negativ': 'olumsuz', 'normal': 'normal', 'fehlt': 'eksik (fehlen)', 'gelesen': 'okumuş (lesen)', 'gefragt': 'sorulur (fragen)', 'gezielte': 'hedefli, yerinde', 'Personalchefin': 'insan kaynakları müdiresi', 'Bewerber': 'başvuru sahipleri', 'beachtet': 'dikkate alır (beachten)', 'wirkt': 'etki bırakır, görünür (wirken)', 'Stärken': 'güçlü yönler', 'Schwächen': 'zayıf yönler', 'Lebenslauf': 'özgeçmiş', 'Vorstellungsgespräch': 'iş görüşmesi' },
+  questions: [
+    { id: 'de-b1-r10.q1', t: 'mc', q: 'Schwächen hakkında sorulursa metne göre ne yapılmalı?', o: ['Dürüst olmalı, ama çok olumsuz konuşmamalı.', 'Zayıf yön olmadığını söylemeli.', 'Soruyu cevaplamamalı.', 'Başka birinin zayıf yönlerini anlatmalı.'], a: 0,
+      why: { 1: 'Metin dürüst olmayı öneriyor; “zayıf yönüm yok” dürüst olmaz.', 2: 'Cevap vermeden geçmek önerilmiyor.', 3: 'Başkasından söz edilmiyor.' },
+      e: '*Seien Sie ehrlich, aber nicht zu negativ.* – *aber* karşıtlık bildirir.' },
+    { id: 'de-b1-r10.q2', t: 'mc', q: 'Özgeçmişi neden yeniden anlatmak gerekmiyor?', o: ['İnsan kaynakları müdiresi onu zaten okumuş olduğu için.', 'Özgeçmiş yazılı olduğu için.', 'Görüşme çok kısa olduğu için.', 'Şirket özgeçmiş istemediği için.'], a: 0,
+      why: { 1: 'Metin bunu sebep olarak vermiyor.', 2: 'Görüşmenin kısa olduğundan söz edilmiyor.', 3: 'Şirketin özgeçmiş istemediği yazmıyor.' },
+      e: '*Da die Personalchefin Ihren Lebenslauf schon gelesen hat, …* – *da* bilinen sebebi bildirir.' },
+    { id: 'de-b1-r10.q3', t: 'gap', q: '___ Sie sich verspäten, rufen Sie rechtzeitig an.', a: ['Falls', 'Wenn'],
+      wrong: { 'Obwohl': '*obwohl* karşıtlık bildirir; burada olasılık var.', 'Sodass': '*sodass* sonuç bildirir ve cümle başında durmaz.' },
+      e: '*Falls* ya da *wenn* = olasılık. Yan cümlede fiil sonda: *Sie sich verspäten*.' },
+    { id: 'de-b1-r10.q4', t: 'match', q: 'Tavsiyeyi içeriğiyle eşleştir:', p: [['Vorbereitung', 'die Firma im Internet kennenlernen'], ['im Gespräch', 'über Stärken und Beispiele sprechen'], ['Fragen nach Schwächen', 'ehrlich, aber nicht zu negativ antworten'], ['am Tag des Gesprächs', 'zehn Minuten früher kommen']],
+      e: 'Metnin dört tavsiyesi: hazırlık (şirketi tanımak), görüşmede güçlü yönleri anlatmak, zayıf yönler için dürüst olmak, erken gelmek.' },
+    { id: 'de-b1-r10.q5', t: 'cloze', q: 'Cümleleri tamamla:', text: 'Man ist nervös, {1} man sich gut vorbereitet hat. Je besser man vorbereitet ist, {2} ruhiger ist man.',
+      gaps: {
+        '1': { a: ['obwohl'], o: ['obwohl', 'weil', 'falls'], wrong: { 'weil': 'Hazırlıklı olmak gerginliğin sebebi değildir; karşıtlık için **obwohl**.', 'falls': 'Hazırlık yapıldığı bir gerçek; olasılık değil.' } },
+        '2': { a: ['desto', 'umso'], o: ['desto', 'umso', 'je'], wrong: { 'je': '*je* ilk parçada durur; ikinci parça **desto / umso**.' } }
+      },
+      e: '*obwohl* = -e rağmen. *je … desto* = ne kadar … o kadar; *desto*’dan sonra fiil hemen gelir.' }
+  ]
+});
+
+K.addText('de-b1-r11', {
+  level: 'B1', kind: 'read', genre: 'email',
+  title: 'Reklamation einer Bestellung', sub: 'Bir siparişe itiraz',
+  body: [
+    'Betreff: Reklamation meiner Bestellung',
+    'Sehr geehrte Damen und Herren,',
+    'vor zwei Wochen habe ich auf Ihrer Internetseite ein Handy und eine Schutzhülle bestellt. Die Lieferung kam zwar pünktlich, aber das Paket war beschädigt. Das Handy hat einen Riss im Bildschirm, sodass ich es nicht benutzen kann. Die Schutzhülle wurde gar nicht geliefert, obwohl sie auf der Rechnung steht.',
+    'Ich bitte Sie deshalb, mir ein neues Gerät zu schicken oder den Betrag zu erstatten. Falls Sie ein Foto des Schadens brauchen, schicke ich es Ihnen gern. Da die Garantie noch gilt, erwarte ich eine schnelle Lösung. Ich bitte um eine Antwort innerhalb von zehn Tagen.',
+    'Mit freundlichen Grüßen',
+    'Sara Lindner'
+  ],
+  gloss: { 'obwohl': '-e rağmen', 'sodass': 'öyle ki', 'zwar': 'doğru ama', 'gar': 'hiç (gar nicht)', 'gilt': 'geçerlidir (gelten)', 'kam': 'geldi (kommen)', 'Reklamation': 'şikâyet, itiraz', 'Schutzhülle': 'koruyucu kılıf', 'beschädigt': 'hasarlı', 'Riss': 'çatlak', 'erstatten': 'iade etmek', 'Betreff': 'konu', 'Garantie': 'garanti', 'Bildschirm': 'ekran', 'innerhalb': 'içinde' },
+  questions: [
+    { id: 'de-b1-r11.q1', t: 'mc', q: 'Sara ne için şikâyet ediyor?', o: ['Telefon hasarlı geldi ve kılıf teslim edilmedi.', 'Telefon çok geç geldi.', 'Fatura yanlış düzenlendi.', 'Telefon yanlış renkte geldi.'], a: 0,
+      why: { 1: 'Teslimat zamanında geldi (*pünktlich*).', 2: 'Faturanın yanlışlığından değil, kılıfın eksikliğinden söz ediyor.', 3: 'Renkten söz edilmiyor.' },
+      e: '*Die Lieferung kam zwar pünktlich, aber das Paket war beschädigt.* – *zwar … aber*.' },
+    { id: 'de-b1-r11.q2', t: 'gap', q: 'Das Handy hat einen Riss im Bildschirm, ___ ich es nicht benutzen kann.', a: ['sodass', 'so dass'],
+      wrong: { 'obwohl': '*obwohl* “-e rağmen” demektir; burada çatlağın sonucu anlatılıyor.', 'damit': '*damit* amaç bildirir; kullanamamak amaç olamaz.', 'weil': '*weil* sebep bildirir; çatlak kullanamamanın sebebi, ama cümlede sonuç var.' },
+      e: '**sodass** = öyle ki, böylece (sonuç). Yan cümlede fiil sonda: *benutzen kann*.' },
+    { id: 'de-b1-r11.q3', t: 'gap', q: 'Die Schutzhülle wurde nicht geliefert, ___ sie auf der Rechnung steht.', a: ['obwohl'],
+      wrong: { 'weil': '*weil* sebep bildirir; faturada yazması teslim edilmemesinin sebebi olmaz.', 'falls': '*falls* olasılık bildirir; burada kılıf zaten faturada.' },
+      e: '**obwohl** = beklenenin tersi: faturada yazıyor ama teslim edilmedi.' },
+    { id: 'de-b1-r11.q4', t: 'mc', q: 'Sara ne talep ediyor?', o: ['Yeni bir cihaz ya da tutarın iadesi.', 'Sadece bir özür.', 'Kılıfın ücretsiz gönderilmesi.', 'Telefonun tamir edilmesi.'], a: 0,
+      why: { 1: 'Özür istemiyor, çözüm istiyor.', 2: 'Kılıf da eksik ama asıl talebi cihaz ya da iade.', 3: 'Tamirden söz etmiyor; yeni cihaz ya da iade istiyor.' },
+      e: '*ein neues Gerät zu schicken oder den Betrag zu erstatten* – *zu*-Infinitiv + *oder*.' },
+    { id: 'de-b1-r11.q5', t: 'mc', q: 'Garanti hakkında ne yazıyor?', o: ['Garanti hâlâ geçerli olduğu için hızlı bir çözüm bekliyor.', 'Garanti sona erdiği için ödeme yapacak.', 'Garantiyi uzatmak istiyor.', 'Garanti hakkında bir şey yazmıyor.'], a: 0,
+      why: { 1: 'Garanti geçerli; ödeme yapmayı düşünmüyor.', 2: 'Uzatmaktan söz edilmiyor.', 3: 'Yazıyor: *Da die Garantie noch gilt, …*' },
+      e: '*Da die Garantie noch gilt, erwarte ich eine schnelle Lösung.* – *da* = madem, -diği için.' }
+  ]
+});
+
+K.addText('de-b1-r12', {
+  level: 'B1', kind: 'read', genre: 'artikel',
+  title: 'Einen Vertrag richtig kündigen', sub: 'Bir sözleşme doğru nasıl feshedilir',
+  body: [
+    'Viele Menschen ärgern sich über Verträge, die sich automatisch verlängern. Handyverträge oder Verträge für das Fitnessstudio laufen oft zwei Jahre. Wenn man nicht rechtzeitig kündigt, verlängert sich der Vertrag. Ältere Verträge laufen oft ein weiteres Jahr weiter; neuere kann man danach monatlich kündigen. Deshalb sollten Sie die Kündigungsfrist im Kalender notieren.',
+    'Die Kündigung muss schriftlich erfolgen, entweder per Brief oder per E-Mail. Schreiben Sie darin Ihren Namen, die Kundennummer und das Datum, zu dem der Vertrag enden soll. Bitten Sie außerdem um eine Bestätigung. Falls Sie keine Antwort bekommen, rufen Sie nach einer Woche an.',
+    'Ein Tipp: Je früher Sie kündigen, desto weniger Stress haben Sie. Dann wissen sowohl die Firma als auch Sie, woran man ist. Und wenn die Frist schon vorbei ist, gibt es oft trotzdem eine Lösung: Fragen Sie nach einem günstigeren Tarif. Viele Anbieter sind kulant, weil sie ihre Kunden behalten möchten.'
+  ],
+  gloss: { 'entweder': 'ya', 'sowohl': 'hem', 'je': 'ne kadar', 'Tipp': 'ipucu', 'Stress': 'stres', 'per': 'ile (per E-Mail)', 'erfolgen': 'yapılmak, gerçekleşmek', 'darin': 'içinde', 'woran': 'neye (woran Sie sind: durumunuzun ne olduğu)', 'Kündigungsfrist': 'fesih süresi', 'Bestätigung': 'onay', 'Kundennummer': 'müşteri numarası', 'automatisch': 'otomatik', 'Fitnessstudio': 'spor salonu', 'Anbieter': 'sağlayıcı', 'kulant': 'esnek, anlayışlı', 'Tarif': 'tarife', 'verlängert': 'uzar (sich verlängern)' },
+  questions: [
+    { id: 'de-b1-r12.q1', t: 'mc', q: 'Zamanında fesih yapılmazsa ne olur?', o: ['Sözleşme uzar (eski sözleşmelerde çoğunlukla bir yıl, yenilerinde aylık fesih mümkün).', 'Sözleşme hemen biter.', 'Müşteri ceza öder.', 'Firma sözleşmeyi feshetmek zorunda kalır.'], a: 0,
+      why: { 1: 'Tam tersi: sözleşme kendiliğinden bitmez, uzar.', 2: 'Cezadan söz edilmiyor.', 3: 'Firmanın feshinden söz edilmiyor.' },
+      e: '*Wenn man nicht rechtzeitig kündigt, verlängert sich der Vertrag.* – Eski sözleşmeler çoğunlukla bir yıl daha sürer, yenilerini sonra aylık feshedebilirsiniz.' },
+    { id: 'de-b1-r12.q2', t: 'gap', q: 'Die Kündigung muss ___ erfolgen. (yazılı olarak)', a: ['schriftlich'],
+      wrong: { 'mündlich': '*mündlich* sözlü demektir; metin yazılı fesih istiyor.', 'telefonisch': 'Telefonla fesih metinde önerilmiyor.' },
+      e: '*schriftlich* = yazılı: mektup ya da e-posta.' },
+    { id: 'de-b1-r12.q3', t: 'mc', q: 'Fesih yazısında hangisi yer almalı?', o: ['Ad, müşteri numarası ve sözleşmenin biteceği tarih', 'Sadece ad ve adres', 'Bir şikâyet nedeni', 'Maaş bilgisi'], a: 0,
+      why: { 1: 'Metin müşteri numarası ve tarihi de istiyor.', 2: 'Şikâyet nedeni istenmiyor.', 3: 'Maaşla ilgisi yok.' },
+      e: '*Schreiben Sie darin Ihren Namen, die Kundennummer und das Datum …*' },
+    { id: 'de-b1-r12.q4', t: 'cloze', q: 'Cümleyi tamamla:', text: 'Je früher Sie kündigen, {1} weniger Stress haben Sie. {2} Sie keine Antwort bekommen, rufen Sie nach einer Woche an.',
+      gaps: {
+        '1': { a: ['desto', 'umso'], o: ['desto', 'umso', 'je'], wrong: { 'je': '*je* ilk parçada durur; ikinci parça **desto / umso**.' } },
+        '2': { a: ['Falls', 'Wenn'], o: ['Falls', 'Wenn', 'Obwohl'], wrong: { 'Obwohl': '*obwohl* karşıtlık bildirir; burada olasılık var.' } }
+      },
+      e: '*je … desto* ve olasılık için *falls / wenn*.' },
+    { id: 'de-b1-r12.q5', t: 'mc', q: 'Süre geçmişse metin ne öneriyor?', o: ['Daha uygun bir tarife sormayı', 'Hemen avukata gitmeyi', 'Faturayı ödememeyi', 'Yeni bir sözleşme yapmamayı'], a: 0,
+      why: { 1: 'Avukattan söz edilmiyor.', 2: 'Ödememek önerilmiyor.', 3: 'Böyle bir tavsiye yok.' },
+      e: '*Fragen Sie nach einem günstigeren Tarif. Viele Anbieter sind kulant …*' }
+  ]
+});
+
+K.addText('de-b1-r13', {
+  level: 'B1', kind: 'read', genre: 'artikel',
+  title: 'Streit im Treppenhaus', sub: 'Merdiven boşluğunda kavga',
+  body: [
+    'Letzte Woche gab es in unserem Haus Streit. Eine Nachbarin hat sich über den Lärm beschwert, weil im Treppenhaus oft Kinder spielen. Der Vater der Kinder war verärgert, obwohl er sonst sehr freundlich ist. Beide hatten ein bisschen recht: Kinder sollen spielen dürfen, aber ältere Menschen brauchen auch Ruhe.',
+    'Die Hausverwaltung hat dann ein Treffen organisiert. Zuerst wurde jeder angehört, sodass alle ihre Meinung sagen konnten. Danach wurde ein Kompromiss gefunden: Von Montag bis Freitag gilt nachmittags zwischen zwei und vier Uhr Ruhezeit: Dann soll es im Treppenhaus still sein. Im Hof dürfen die Kinder dagegen jederzeit spielen. Die Hausordnung wurde entsprechend geändert.',
+    'Heute sind alle zufrieden. Je offener man miteinander spricht, desto schneller findet man eine Lösung. Weder die Nachbarin noch der Vater wollten einen langen Streit. Falls es wieder Probleme gibt, wollen wir sofort miteinander reden.'
+  ],
+  gloss: { 'obwohl': '-e rağmen', 'sodass': 'öyle ki', 'je': 'ne kadar', 'Hof': 'avlu', 'reden': 'konuşmak', 'gab': 'vardı (geben)', 'gefunden': 'bulundu (finden)', 'geändert': 'değiştirildi (ändern)', 'letzte': 'geçen', 'Treppenhaus': 'merdiven boşluğu', 'Hausverwaltung': 'bina yönetimi', 'Kompromiss': 'uzlaşma', 'Ruhezeit': 'sessizlik saati', 'verärgert': 'kızgın', 'organisiert': 'organize etti (organisieren)', 'Hausordnung': 'bina kuralları', 'entsprechend': 'buna uygun olarak', 'gilt': 'geçerlidir (gelten)' },
+  questions: [
+    { id: 'de-b1-r13.q1', t: 'mc', q: 'Anlaşmazlığın nedeni neydi?', o: ['Merdiven boşluğunda oynayan çocukların gürültüsü', 'Yanlış park edilmiş bir araba', 'Kira artışı', 'Çöpün yanlış atılması'], a: 0,
+      why: { 1: 'Arabadan söz edilmiyor.', 2: 'Kiradan söz edilmiyor.', 3: 'Çöpten söz edilmiyor.' },
+      e: '*Eine Nachbarin hat sich über den Lärm beschwert, weil im Treppenhaus oft Kinder spielen.*' },
+    { id: 'de-b1-r13.q2', t: 'mc', q: 'Bina yönetimi ne yaptı?', o: ['Bir toplantı düzenledi ve herkesi dinledi.', 'Ailelerden birini binadan çıkardı.', 'Kirayı düşürdü.', 'Hiçbir şey yapmadı.'], a: 0,
+      why: { 1: 'Böyle bir şey yazmıyor.', 2: 'Kiradan söz edilmiyor.', 3: 'Metin tam tersini söylüyor: toplantı düzenledi.' },
+      e: '*Die Hausverwaltung hat dann ein Treffen organisiert. Zuerst wurde jeder gehört …* – Passiv Präteritum.' },
+    { id: 'de-b1-r13.q3', t: 'gap', q: 'Die Hausordnung wurde entsprechend ___. (ändern)', a: ['geändert'],
+      wrong: { 'ändern': 'Passiv’de mastar değil Partizip II gerekir: *geändert*.', 'änderte': 'Bu Präteritum’dur; Passiv’de *wurde + Partizip II*.' },
+      e: 'Präteritum Passiv: **wurde + Partizip II** – *wurde geändert*.' },
+    { id: 'de-b1-r13.q4', t: 'mc', q: 'Uzlaşmaya göre çocuklar nerede ve ne zaman oynayabilir?', o: ['Avluda her zaman; hafta içi 14–16 arası merdiven boşluğunda sessizlik olmalı.', 'Yalnızca hafta sonları.', 'Sadece sabahları.', 'Hiçbir yerde.'], a: 0,
+      why: { 1: 'Hafta sonuyla sınırlı bir kural yok; avluda her zaman oynayabilirler.', 2: 'Sabahlar için ayrı bir kural yazılmıyor.', 3: 'Çocuklar avluda oynayabilir; sessizlik saati sadece merdiven boşluğu için.' },
+      e: '*Im Hof dürfen die Kinder dagegen jederzeit spielen.*' },
+    { id: 'de-b1-r13.q5', t: 'cloze', q: 'Cümleleri tamamla:', text: '{1} die Nachbarin noch der Vater wollten einen langen Streit. Je offener man spricht, {2} schneller findet man eine Lösung.',
+      gaps: {
+        '1': { a: ['Weder'], o: ['Weder', 'Entweder', 'Sowohl'], wrong: { 'Entweder': '*entweder … oder* seçenek bildirir; burada iki kişi de kavga istemiyor.', 'Sowohl': '*sowohl … als auch* olumlu bir “hem … hem de”dir.' } },
+        '2': { a: ['desto', 'umso'], o: ['desto', 'umso', 'je'], wrong: { 'je': '*je* ilk parçada durur; ikinci parça **desto / umso**.' } }
+      },
+      e: '*weder … noch* = ne … ne de. *je … desto* = ne kadar … o kadar.' }
+  ]
+});
+
+K.addText('de-b1-h10', {
+  level: 'B1', kind: 'listen', genre: 'gespraech', plays: 2,
+  title: 'Schichttausch im Team', sub: 'Ekipte vardiya değişimi',
+  lines: [
+    { s: 'Anna', g: 'f', t: 'Jan, hast du kurz Zeit? Es geht um die Schichten nächste Woche. Ich muss am Mittwoch zum Arzt. Kannst du meine Spätschicht übernehmen?', n: 'Jan, kısa bir süren var mı? Gelecek haftaki vardiyalar hakkında. Çarşamba doktora gitmem gerekiyor. Akşam vardiyamı üstlenebilir misin?' },
+    { s: 'Jan', g: 'm', t: 'Mittwoch geht leider nicht, da ich meinem Bruder beim Umzug helfe. Aber ich kann am Freitag für dich arbeiten, falls dir das hilft.', n: 'Çarşamba maalesef olmaz, çünkü kardeşime taşınmada yardım ediyorum. Ama sana yardımı olacaksa cuma günü yerine çalışabilirim.' },
+    { s: 'Anna', g: 'f', t: 'Freitag brauche ich nicht, aber danke. Ich habe lange nach einem anderen Tag gesucht, aber es geht nur Mittwoch.', n: 'Cuma bana gerekmiyor ama teşekkürler. Başka bir gün için uzun uzun baktım ama sadece çarşamba olabiliyor.' },
+    { s: 'Jan', g: 'm', t: 'Frag doch Lea. Sie hat mittwochs frei, und sie sucht zusätzliche Stunden.', n: 'Lea’ya sorsana. Çarşambaları izinli ve ekstra saat arıyor.' },
+    { s: 'Anna', g: 'f', t: 'Gute Idee. Ich frage sie gleich. Danke, dass du mir helfen wolltest, obwohl du selbst viel zu tun hast.', n: 'İyi fikir. Hemen soruyorum. Kendi işin çok olmasına rağmen bana yardım etmek istediğin için sağ ol.' },
+    { s: 'Jan', g: 'm', t: 'Kein Problem. Dafür übernimmst du nächstes Mal meine Schicht, damit ich ausschlafen kann.', n: 'Sorun değil. Karşılığında bir dahaki sefere sen benim vardiyamı üstlenirsin, ben de uzun uzun uyuyabileyim diye.' }
+  ],
+  gloss: { 'obwohl': '-e rağmen', 'damit': 'diye, -sin diye', 'gesucht': 'aradım (suchen)', 'Schicht': 'vardiya', 'Spätschicht': 'akşam vardiyası', 'Umzug': 'taşınma', 'übernehmen': 'üstlenmek', 'zusätzliche': 'ek, ekstra', 'ausschlafen': 'doyasıya uyumak', 'Stunden': 'saatler' },
+  questions: [
+    { id: 'de-b1-h10.q1', t: 'mc', q: 'Jan neden çarşamba günü yardım edemiyor?', o: ['Kardeşine taşınmada yardım ediyor.', 'Kendisi doktora gidiyor.', 'Çarşamba izinli değil.', 'Hasta.'], a: 0,
+      why: { 1: 'Doktora giden Anna.', 2: 'İzinli olup olmadığı söylenmiyor.', 3: 'Hasta olduğundan söz edilmiyor.' },
+      e: '*Mittwoch geht leider nicht, da ich meinem Bruder beim Umzug helfe.* – *da* = -diği için.' },
+    { id: 'de-b1-h10.q2', t: 'mc', q: 'Anna kime soracak?', o: ['Lea’ya', 'Amire', 'Jan’ın kardeşine', 'Kimseye'], a: 0,
+      why: { 1: 'Amirden söz edilmiyor.', 2: 'Kardeş taşınıyor, çalışmıyor.', 3: 'Soracağını söylüyor.' },
+      e: '*Frag doch Lea. Sie hat mittwochs frei.*' },
+    { id: 'de-b1-h10.q3', t: 'listen', say: 'Mittwoch geht leider nicht, da ich meinem Bruder beim Umzug helfe.', q: 'Cümleyi dinle. Ne anlama geliyor?', o: ['Çarşamba maalesef olmaz, çünkü kardeşime taşınmada yardım ediyorum.', 'Çarşamba olur, kardeşime sonra yardım ederim.', 'Çarşamba kardeşim bana yardım ediyor.', 'Kardeşime yardım etmek istemiyorum.'], a: 0,
+      why: { 1: '*geht leider nicht* = olmaz.', 2: 'Yardım eden Jan; kardeşi değil.', 3: 'İsteksizlikten söz edilmiyor; sebep bildirilir.' },
+      e: '*da* sebep bildirir; yan cümlede fiil sonda: *helfe*.' },
+    { id: 'de-b1-h10.q4', t: 'gap', q: 'Anna übernimmt nächstes Mal Jans Schicht, ___ er ausschlafen kann. (uyuyabilsin diye)', a: ['damit', 'sodass'],
+      wrong: { 'obwohl': '*obwohl* “-e rağmen” demektir; burada amaç ya da sonuç var.', 'falls': '*falls* olasılık bildirir; burada olasılık yok.' },
+      e: '**damit** = amaç (uyuyabilsin diye); *sodass* da sonuç olarak anlaşılabilir. Yan cümlede fiil sonda.' }
+  ]
+});
+
+K.addText('de-b1-h11', {
+  level: 'B1', kind: 'listen', genre: 'anrufbeantworter', plays: 2,
+  title: 'Nachricht von der Hausverwaltung', sub: 'Bina yönetiminden mesaj',
+  lines: [
+    { s: 'Frau Berger', g: 'f', t: 'Guten Tag, hier ist die Hausverwaltung. Wir rufen wegen der Heizung an. Die Heizung im Haus wird am Donnerstag überprüft, sodass sie ab Freitag wieder richtig funktioniert. Der Techniker kommt zwischen acht und zwölf Uhr. Bitte seien Sie in dieser Zeit zu Hause oder lassen Sie jemanden in die Wohnung. Falls Sie nicht da sind, rufen Sie uns bitte bis Mittwoch an. Da der Aufzug im Moment defekt ist, geht der Techniker zu Fuß. Bitte stellen Sie keine Schuhe oder Taschen ins Treppenhaus. Vielen Dank für Ihr Verständnis. Sie erreichen uns montags bis freitags von neun bis fünfzehn Uhr.', n: 'İyi günler, ben bina yönetiminden arıyorum. Kalorifer konusunda arıyoruz. Binadaki kalorifer perşembe günü kontrol edilecek, böylece cuma gününden itibaren yeniden düzgün çalışacak. Teknisyen sekiz ile on iki arasında gelecek. Lütfen bu saatler arasında evde olun ya da birinin daireye girmesine izin verin. Evde olmayacaksanız lütfen çarşambaya kadar bizi arayın. Asansör şu anda arızalı olduğu için teknisyen yürüyerek çıkacak. Lütfen merdiven boşluğuna ayakkabı veya çanta koymayın. Anlayışınız için çok teşekkür ederiz. Bize pazartesiden cumaya dokuz ile on beş arası ulaşabilirsiniz.' }
+  ],
+  gloss: { 'Techniker': 'teknisyen', 'Aufzug': 'asansör', 'Treppenhaus': 'merdiven boşluğu', 'überprüft': 'kontrol edilir (überprüfen)', 'funktioniert': 'çalışır (funktionieren)', 'Verständnis': 'anlayış', 'defekt': 'arızalı', 'erreichen': 'ulaşmak' },
+  questions: [
+    { id: 'de-b1-h11.q1', t: 'mc', q: 'Kalorifer ne zaman kontrol edilecek?', o: ['Perşembe günü', 'Çarşamba günü', 'Cuma günü', 'Pazartesi günü'], a: 0,
+      why: { 1: 'Çarşamba, evde olmayacaksa aramak için son gün.', 2: 'Cuma, kaloriferin yeniden çalışmaya başlayacağı gün.', 3: 'Pazartesi söz edilen bir kontrol günü değil.' },
+      e: '*Die Heizung wird am Donnerstag überprüft* – Passiv Präsens.' },
+    { id: 'de-b1-h11.q2', t: 'mc', q: 'Evde olamayan kişi ne yapmalı?', o: ['Çarşambaya kadar bina yönetimini aramalı.', 'Anahtarı komşuya vermeli.', 'Randevuyu iptal etmeli.', 'Hiçbir şey yapmamalı.'], a: 0,
+      why: { 1: 'Komşudan söz edilmiyor; arama isteniyor.', 2: 'İptalden söz edilmiyor.', 3: 'Metin arama istiyor.' },
+      e: '*Falls Sie nicht da sind, rufen Sie uns bitte bis Mittwoch an.*' },
+    { id: 'de-b1-h11.q3', t: 'gap', q: 'Die Heizung ___ am Donnerstag überprüft. (kontrol edilecek)', a: ['wird'],
+      wrong: { 'wurde': '*wurde* geçmiş zamandır; kontrol henüz yapılmadı.', 'ist': '*ist überprüft* durumu bildirir; işlem için *wird*.' },
+      e: 'Präsens Passiv: **wird + Partizip II**; *am Donnerstag* ile gelecek anlamı da verir.' },
+    { id: 'de-b1-h11.q4', t: 'listen', say: 'Da der Aufzug im Moment defekt ist, geht der Techniker zu Fuß.', q: 'Cümleyi dinle. Ne anlama geliyor?', o: ['Asansör şu an arızalı olduğu için teknisyen yürüyerek çıkıyor.', 'Teknisyen asansörü tamir etmek için yürüyor.', 'Asansör arızalı olsa da teknisyen kullanıyor.', 'Teknisyen yürümeyi seviyor.'], a: 0,
+      why: { 1: 'Teknisyen asansör için değil, kaloriferi kontrol etmek için geliyor.', 2: '*da* sebep bildirir; karşıtlık için *obwohl* olurdu.', 3: 'Sevmekten söz edilmiyor.' },
+      e: '*da* = -diği için: *Da der Aufzug defekt ist, …*' }
+  ]
+});
+
+K.addText('de-b1-h12', {
+  level: 'B1', kind: 'listen', genre: 'radio', plays: 2,
+  title: 'Brauche ich diese Versicherung?', sub: 'Bu sigortaya ihtiyacım var mı?',
+  lines: [
+    { s: 'Moderatorin', g: 'f', t: 'Heute geht es um Versicherungen. Herr Weiß, welche braucht man wirklich?', n: 'Bugünkü konumuz sigortalar. Weiß Bey, gerçekten hangilerine ihtiyaç var?' },
+    { s: 'Herr Weiß', g: 'm', t: 'Nicht jede Versicherung und nicht jeder Tarif ist sinnvoll. Aber eine private Haftpflichtversicherung ist sehr wichtig. Wenn man aus Versehen einen Schaden verursacht, zahlt die Versicherung, sodass man nicht selbst viel Geld bezahlen muss.', n: 'Her sigorta ve her tarife mantıklı değil. Ama özel bir sorumluluk sigortası çok önemli. Biri yanlışlıkla bir hasara neden olursa sigorta öder, böylece kişi kendisi çok para ödemek zorunda kalmaz.' },
+    { s: 'Moderatorin', g: 'f', t: 'Und teure Tarife sind immer besser?', n: 'Peki pahalı tarifeler her zaman daha mı iyi?' },
+    { s: 'Herr Weiß', g: 'm', t: 'Nein, ein teurer Tarif ist nicht automatisch besser. Vergleichen Sie mehrere Anbieter, und lesen Sie den Vertrag in Ruhe, bevor Sie ihn abschließen. Falls Sie etwas nicht verstehen, fragen Sie nach.', n: 'Hayır, pahalı bir tarife otomatik olarak daha iyi değildir. Birkaç sağlayıcıyı karşılaştırın ve sözleşmeyi yapmadan önce sakin sakin okuyun. Bir şeyi anlamazsanız tekrar sorun.' }
+  ],
+  gloss: { 'bevor': '-meden önce', 'sodass': 'öyle ki', 'teurer': 'daha pahalı (teuer)', 'Haftpflichtversicherung': 'sorumluluk sigortası', 'Versehen': 'yanlışlık, dikkatsizlik', 'verursacht': 'neden olur (verursachen)', 'vergleichen': 'karşılaştırmak', 'abschließen': 'yapmak (sözleşme)', 'Anbieter': 'sağlayıcı', 'sinnvoll': 'mantıklı, anlamlı', 'automatisch': 'otomatik' },
+  questions: [
+    { id: 'de-b1-h12.q1', t: 'mc', q: 'Herr Weiß’a göre hangi sigorta çok önemli?', o: ['Özel sorumluluk sigortası', 'Her sigorta', 'Telefon sigortası', 'Hiçbiri'], a: 0,
+      why: { 1: 'Tam tersi: her sigorta mantıklı değil (*nicht jede …*).', 2: 'Telefon sigortasından söz edilmiyor.', 3: 'Bir sigorta çok önemli diyor.' },
+      e: '*Nicht jede Versicherung und nicht jeder Tarif ist sinnvoll. Aber eine private Haftpflichtversicherung ist sehr wichtig.*' },
+    { id: 'de-b1-h12.q2', t: 'mc', q: 'Pahalı tarifeler için ne söylüyor?', o: ['Otomatik olarak daha iyi değildir.', 'Her zaman daha iyidir.', 'Hiç değerli değildir.', 'Sadece gençler için uygundur.'], a: 0,
+      why: { 1: 'Tersini söylüyor.', 2: 'Pahalı olan değersiz demiyor; sadece otomatik olarak iyi değil diyor.', 3: 'Gençlerden söz edilmiyor.' },
+      e: '*ein teurer Tarif ist nicht automatisch besser.*' },
+    { id: 'de-b1-h12.q3', t: 'listen', say: 'Falls Sie etwas nicht verstehen, fragen Sie nach.', q: 'Cümleyi dinle. Ne anlama geliyor?', o: ['Bir şeyi anlamazsanız tekrar sorun.', 'Her şeyi anlamanız gerekiyor.', 'Hiçbir şey sormayın.', 'Anlamadıysanız sözleşmeyi imzalayın.'], a: 0,
+      why: { 1: 'Cümle zorunluluk değil, tavsiye veriyor.', 2: '*fragen Sie nach* = sorun.', 3: 'İmzalamaktan söz edilmiyor.' },
+      e: '*Falls* = olasılık. *nachfragen* ayrılabilen fiil: *fragen Sie … nach*.' },
+    { id: 'de-b1-h12.q4', t: 'gap', q: 'Die Versicherung übernimmt den Schaden, ___ man nicht selbst viel Geld zahlen muss. (böylece / diye)', a: ['damit', 'sodass', 'so dass'],
+      wrong: { 'obwohl': '*obwohl* “-e rağmen” demektir; burada amaç ya da sonuç var.', 'falls': '*falls* olasılık bildirir; burada gerçekleşen bir durum anlatılıyor.' },
+      e: '**damit** (amaç) ya da *sodass* (sonuç): sigorta öder, böylece kişi kendisi çok para ödemek zorunda kalmaz.' }
+  ]
+});
+
 })(window.KOPRU);
