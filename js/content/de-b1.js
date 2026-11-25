@@ -77,7 +77,21 @@ K.add('de-b1-01', {
       ["Meine Mutter arbeitete damals in einer Bäckerei.", "Annem o zamanlar bir fırında çalışıyordu."],
       ["Wir fuhren im Sommer oft ans Meer.", "Yazın sık sık denize giderdik."],
       ["Er stand früh auf und ging zur Arbeit.", "Erkenden kalktı ve işe gitti."],
-      ["Plötzlich sah ich meinen alten Lehrer auf der Straße.", "Birden sokakta eski öğretmenimi gördüm."]
+      ["Plötzlich sah ich meinen alten Lehrer auf der Straße.", "Birden sokakta eski öğretmenimi gördüm."],
+      ["Als Kind wuchs er in einer kleinen Stadt auf, und im Sommer verschwand er oft stundenlang im Wald.", "Çocukken küçük bir şehirde büyüdü ve yazın sık sık saatlerce ormanda kayboluyordu."],
+      ["Bei der Panne auf der Autobahn erschrak die Fahrerin, aber glücklicherweise stießen die Wagen nicht zusammen.", "Araba otoyolda arızalanınca sürücü korktu, ama neyse ki araçlar çarpışmadı."],
+      ["Der Journalist schilderte das Ereignis genau, und der Leser verstand den Zusammenhang sofort.", "Gazeteci olayı ayrıntılı anlattı ve okur bağlantıyı hemen anladı."],
+      ["Wegen eines Missverständnisses begann die Aufführung eine Stunde später, obwohl mehr als tausend Gäste warteten.", "Bir yanlış anlama yüzünden gösteri bir saat geç başladı, oysa bin kişiden fazla konuk bekliyordu."],
+      ["Der Bademeister rettete das Kind aus dem Wasser, und daraufhin beschloss die Stadt, einen Schwimmkurs für alle Kinder zu bezahlen.", "Cankurtaran çocuğu sudan kurtardı ve bunun üzerine şehir tüm çocuklar için bir yüzme kursunu ödemeye karar verdi."],
+      ["Nach dem Streit setzten die beiden das Gespräch fort, und schließlich gelang es ihnen, eine Lösung zu finden.", "Tartışmadan sonra ikisi konuşmayı sürdürdü ve sonunda bir çözüm bulmayı başardılar."],
+      ["Sie verpasste den Zug beinahe, weil die Straßenbahn eine Panne hatte.", "Treni neredeyse kaçırıyordu, çünkü tramvay arıza yapmıştı."],
+      ["Das Flugzeug landete pünktlich, aber das Wetter war schrecklich, und wir waren überrascht, wie kalt es war.", "Uçak zamanında indi ama hava korkunçtu ve ne kadar soğuk olduğuna şaşırdık."],
+      ["Am Telefon war die Verbindung schlecht, deshalb verstand ich ihn kaum.", "Telefonda bağlantı kötüydü, bu yüzden onu zor anladım."],
+      ["Wir überquerten die Straße und probierten im Geschäft ein paar Jacken an.", "Caddeyi geçtik ve mağazada birkaç ceket denedik."],
+      ["Mein Vater erlaubte mir nicht, abends allein auszugehen.", "Babam akşamları tek başıma dışarı çıkmama izin vermedi."],
+      ["Wir unterhielten uns lange, außerdem sangen und tanzten wir bis spät in die Nacht.", "Uzun uzun sohbet ettik, ayrıca gece geç saatlere kadar şarkı söyledik ve dans ettik."],
+      ["Der Chef erwähnte die Gehaltserhöhung nur kurz.", "Patron zammı sadece kısaca andı."],
+      ["In der Gegend gab es zu diesem Zeitpunkt kaum Geschäfte.", "O bölgede o sırada neredeyse hiç dükkân yoktu."]
     ] }
   ],
   exercises: [
@@ -202,7 +216,17 @@ K.add('de-b1-11', {
       ["Wenn ich in Bonn war, besuchte ich immer meine Tante.", "Bonn’a gittiğimde hep teyzemi ziyaret ederdim."],
       ["Während wir warteten, tranken wir Tee.", "Beklerken çay içtik."],
       ["Bevor ich gehe, rufe ich dich an.", "Gitmeden önce seni ararım."],
-      ["Ich lerne Deutsch, seitdem ich in Deutschland wohne.", "Almanya’da yaşadığımdan beri Almanca öğreniyorum."]
+      ["Ich lerne Deutsch, seitdem ich in Deutschland wohne.", "Almanya’da yaşadığımdan beri Almanca öğreniyorum."],
+      ["Solange ich in dieser Stadt wohne, besuche ich jeden Sonntag die Moschee gegenüber vom Park.", "Bu şehirde oturduğum sürece her pazar parkın karşısındaki camiye giderim."],
+      ["Seitdem wir zusammen lernen, sind die Ergebnisse im Durchschnitt deutlich besser.", "Birlikte çalıştığımızdan beri sonuçlar ortalamada belirgin biçimde daha iyi."],
+      ["Inzwischen ist mein Onkel in Rente gegangen, und mittlerweile reist er jedes Jahr in ein anderes Land.", "Amcam artık emekli oldu ve şimdilerde her yıl başka bir ülkeye seyahat ediyor."],
+      ["Irgendwann möchte ich ein Haus bauen, aber bisher hatte ich dafür kein Geld.", "Bir gün ev yaptırmak istiyorum, ama şimdiye kadar buna param olmadı."],
+      ["Vorhin hat der Chef angerufen: Er kommt erst in einer Stunde. In der Zwischenzeit kann ich die E-Mails beantworten.", "Az önce patron aradı: Bir saat sonra gelecek. Bu arada e-postaları cevaplayabilirim."],
+      ["Wie die Zeit vergeht! In einem Zeitraum von zehn Jahren hat sich die Stadt stark verändert.", "Zaman ne çabuk geçiyor! On yıllık bir sürede şehir çok değişti."],
+      ["Bei dieser Gelegenheit erzählte mir meine Großmutter, dass es hier im letzten Jahrhundert nur wenige Häuser gab.", "Bu vesileyle büyükannem bana geçen yüzyılda burada yalnızca birkaç ev olduğunu anlattı."],
+      ["Bevor ich den Vertrag unterschreibe, überprüfe ich alle Bedingungen.", "Sözleşmeyi imzalamadan önce tüm koşulları kontrol ederim."],
+      ["– Wo treffen wir uns? – Vor dem Konzert am Eingang. Einverstanden!", "– Nerede buluşuyoruz? – Konserden önce girişte. Anlaştık!"],
+      ["Zu dem Zeitpunkt, als die Meldung kam, war die Handlung schon vorbei.", "Haber geldiği sırada olay çoktan bitmişti."]
     ] }
   ],
   exercises: [
@@ -323,7 +347,13 @@ K.add('de-b1-02', {
       ["Nachdem sie gegessen hatten, gingen sie spazieren.", "Yemek yedikten sonra yürüyüşe çıktılar."],
       ["Ich hatte meinen Schlüssel zu Hause vergessen.", "Anahtarımı evde unutmuştum."],
       ["Mein Bruder war vorher noch nie im Ausland gewesen.", "Erkek kardeşim daha önce hiç yurt dışında bulunmamıştı."],
-      ["Als wir ankamen, hatte das Konzert schon begonnen.", "Biz vardığımızda konser başlamıştı bile."]
+      ["Als wir ankamen, hatte das Konzert schon begonnen.", "Biz vardığımızda konser başlamıştı bile."],
+      ["Nachdem er den Studienplatz abgelehnt hatte, suchte er eine Stelle als Praktikant.", "Üniversite kontenjanını reddettikten sonra stajyer olarak bir iş aradı."],
+      ["Der ehemalige Chef war erstaunt, weil sein Nachfolger die Firma so schnell verändert hatte.", "Eski patron şaşırmıştı, çünkü halefi şirketi çok hızlı değiştirmişti."],
+      ["Nachdem es lange geregnet hatte, bemerkten wir den Wasserschaden im Keller.", "Uzun süre yağmur yağdıktan sonra bodrumdaki su hasarını fark ettik."],
+      ["Der einzige Kandidat kam erst, nachdem die Kommission zwei Stunden gewartet hatte.", "Tek aday, komisyon iki saat bekledikten sonra ancak geldi."],
+      ["Wir hatten die Zutaten gekauft, bevor die Verkäuferin das Geschäft schloss.", "Satıcı dükkânı kapatmadan önce malzemeleri almıştık."],
+      ["Er hatte sich lange mit seiner Nichte unterhalten, bevor sein Cousin kam.", "Kuzeni gelmeden önce yeğeniyle uzun uzun sohbet etmişti."]
     ] }
   ],
   exercises: [
@@ -448,7 +478,16 @@ K.add('de-b1-06', {
       ["Wegen des schlechten Wetters bleiben wir zu Hause.", "Kötü hava nedeniyle evde kalıyoruz."],
       ["Statt eines Kaffees nehme ich einen Tee.", "Kahve yerine çay alıyorum."],
       ["Während des Urlaubs habe ich viel gelesen.", "Tatil sırasında çok okudum."],
-      ["Ich habe dem Nachbarn geholfen.", "Komşuya yardım ettim."]
+      ["Ich habe dem Nachbarn geholfen.", "Komşuya yardım ettim."],
+      ["Die Ursache des Problems ist die schlechte Qualität des Materials.", "Sorunun nedeni malzemenin kalitesinin kötü olması."],
+      ["Trotz der Vorschriften der Stadt gab es kaum eine Veränderung.", "Şehrin kurallarına rağmen neredeyse hiçbir değişiklik olmadı."],
+      ["Die Minderheit des Teams stimmte gegen den Vorschlag des Kandidaten.", "Ekipteki azınlık adayın önerisine karşı oy verdi."],
+      ["Der Journalist sprach mit dem Architekten über das Haus.", "Gazeteci mimarla ev hakkında konuştu."],
+      ["Die Touristen sahen im Zoo den Löwen und den Hasen.", "Turistler hayvanat bahçesinde aslanı ve tavşanı gördü."],
+      ["Der erste Buchstabe des Namens ist ein M.", "Adın ilk harfi M."],
+      ["Anstelle des alten Autos kaufte er ein umweltfreundliches Fahrzeug.", "Eski arabanın yerine çevre dostu bir araç aldı."],
+      ["Wegen des Lärms und der schmalen Straße ist der Weg gefährlich.", "Gürültü ve dar sokak yüzünden yol tehlikeli."],
+      ["Der Vorteil des neuen Mittels ist die schnelle Wirkung.", "Yeni ilacın avantajı hızlı etkisidir."]
     ] }
   ],
   exercises: [
@@ -575,7 +614,20 @@ K.add('de-b1-15', {
       ["Das ist mein neuer Kollege.", "Bu benim yeni iş arkadaşım."],
       ["Der gebratene Fisch schmeckt sehr gut.", "Kızartılmış balık çok lezzetli."],
       ["Die reparierte Heizung funktioniert wieder.", "Tamir edilen kalorifer yeniden çalışıyor."],
-      ["Wir trinken heißen Tee.", "Sıcak çay içiyoruz."]
+      ["Wir trinken heißen Tee.", "Sıcak çay içiyoruz."],
+      ["Das ist eine sparsame, aber trotzdem sehr effektive Methode.", "Bu tutumlu ama yine de çok etkili bir yöntem."],
+      ["Er hat eine chronische Krankheit, aber sie ist nicht ansteckend.", "Kronik bir hastalığı var ama bulaşıcı değil."],
+      ["Die Verkäuferin entschuldigte sich bei der unzufriedenen Kundin für die mangelhafte Ware.", "Satıcı kadın, memnun kalmayan müşteriden kusurlu mal için özür diledi."],
+      ["Ein seriöser Händler gibt glaubwürdige Informationen.", "Güvenilir bir satıcı inandırıcı bilgi verir."],
+      ["Kostenpflichtige Parkplätze sind in der Innenstadt üblich.", "Şehir merkezinde ücretli otoparklar yaygındır."],
+      ["Der mutige Junge rettete den kleinen, schmutzigen Hund aus dem engen Keller.", "Cesur çocuk küçük, kirli köpeği dar bodrumdan kurtardı."],
+      ["Er verdient keinen ausreichenden Lohn für ein so riskantes Projekt.", "Böyle riskli bir proje için yeterli bir ücret kazanmıyor."],
+      ["Die bisherige Lösung war weder wirksam noch umweltfreundlich.", "Şimdiye kadarki çözüm ne etkiliydi ne de çevre dostuydu."],
+      ["Nach der anstrengenden Arbeit war er sehr müde, aber die Anstrengung hat sich gelohnt.", "Yorucu işten sonra çok yorgundu ama çaba boşa gitmedi."],
+      ["Ein rücksichtsvoller Nachbar schließt abends die Tür leise.", "Anlayışlı bir komşu akşamları kapıyı sessizce kapatır."],
+      ["Ihre begabte Nichte singt und tanzt wunderbar.", "Yetenekli yeğeni harika şarkı söylüyor ve dans ediyor."],
+      ["Rauchen ist schädlich für die Lunge und das Herz.", "Sigara akciğere ve kalbe zararlıdır."],
+      ["Die gesetzliche Probezeit dauert höchstens sechs Monate.", "Yasal deneme süresi en fazla altı aydır."]
     ] }
   ],
   exercises: [
@@ -690,7 +742,17 @@ K.add('de-b1-03', {
       ["Das ist der Film, den wir gestern gesehen haben.", "Bu, dün izlediğimiz film."],
       ["Die Frau, der ich geholfen habe, hat sich bedankt.", "Yardım ettiğim kadın teşekkür etti."],
       ["Die Kinder, denen ich Süßigkeiten gegeben habe, freuen sich.", "Şeker verdiğim çocuklar sevindi."],
-      ["Das Buch, das ich lese, ist spannend.", "Okuduğum kitap heyecan verici."]
+      ["Das Buch, das ich lese, ist spannend.", "Okuduğum kitap heyecan verici."],
+      ["Das ist der Brief, den ich gestern beantwortet habe.", "Bu, dün cevapladığım mektup."],
+      ["Das ist die App, die uns das Lernen ermöglicht.", "Bu, öğrenmemizi mümkün kılan uygulama."],
+      ["Der Kollege, der alles kontrolliert, hat die Datei ersetzt.", "Her şeyi kontrol eden iş arkadaşı dosyayı değiştirdi."],
+      ["Die Wörter, die du nicht unterscheiden kannst, bedeuten fast das Gleiche.", "Ayırt edemediğin kelimeler hemen hemen aynı anlama geliyor."],
+      ["Die Firma, die neue Produkte entwickelt, sucht einen Praktikanten.", "Yeni ürünler geliştiren şirket bir stajyer arıyor."],
+      ["Die Überschrift, die du gewählt hast, passt nicht zum Text.", "Seçtiğin başlık metne uymuyor."],
+      ["Das ist die Reihenfolge, die der Lehrer vorgeschlagen hat.", "Bu, öğretmenin önerdiği sıra."],
+      ["Der Mann, der den Einkaufswagen schiebt, ist mein Cousin.", "Alışveriş arabasını iten adam kuzenim."],
+      ["Die Kandidatin, die mir sympathisch ist, hat das Formular schon abgegeben.", "Bana sempatik gelen aday formu çoktan teslim etti."],
+      ["Der Lärm, der mich bei der Arbeit stört, kommt von der Baustelle.", "İşte beni rahatsız eden gürültü inşaat alanından geliyor."]
     ] }
   ],
   exercises: [
@@ -821,7 +883,16 @@ K.add('de-b1-10', {
       ["Worüber habt ihr gestern gesprochen?", "Dün neyin hakkında konuştunuz?"],
       ["Er träumt von einem eigenen Café.", "Kendi kafesinin hayalini kuruyor."],
       ["Ich freue mich darauf, dass du kommst.", "Gelmeni dört gözle bekliyorum."],
-      ["Woran denkst du gerade?", "Şu an neyi düşünüyorsun?"]
+      ["Woran denkst du gerade?", "Şu an neyi düşünüyorsun?"],
+      ["Ich erkundige mich bei der Behörde nach den Öffnungszeiten.", "Resmî daireden çalışma saatlerini soruyorum."],
+      ["Die Bürger beteiligten sich an der Diskussion und kritisierten die Pläne der Stadt.", "Vatandaşlar tartışmaya katıldı ve şehrin planlarını eleştirdi."],
+      ["Sie bemüht sich seit Monaten um einen Studienplatz, aber sie zweifelt an ihren Chancen.", "Aylardır bir üniversite kontenjanı için uğraşıyor ama şansından şüphe ediyor."],
+      ["Er sehnt sich nach dem Sommer und klagt über das kalte Wetter.", "Yaza hasret ve soğuk havadan yakınıyor."],
+      ["Der Schüler widersprach dem Lehrer, aber er bereute es später.", "Öğrenci öğretmene karşı çıktı ama sonradan pişman oldu."],
+      ["Die Firma verpflichtet ihre Mitarbeiter zu einer Weiterbildung.", "Şirket çalışanlarını bir meslek içi eğitim almakla yükümlü tutuyor."],
+      ["– Wovon sprichst du? – Ich spreche davon, dass wir uns endlich mehr bewegen sollten.", "– Ne hakkında konuşuyorsun? – Sonunda daha çok hareket etmemiz gerektiğinden söz ediyorum."],
+      ["Wir ärgern uns darüber, dass die Bank kürzlich die Gebühren erhöht hat.", "Bankanın geçenlerde ücretleri artırmasına kızıyoruz."],
+      ["Selbstverständlich bedanke ich mich bei dir für die Hilfe.", "Tabii ki yardım için sana teşekkür ederim."]
     ] }
   ],
   exercises: [
@@ -945,7 +1016,18 @@ K.add('de-b1-14', {
       ["Das ist die Firma, für die ich arbeite.", "Bu, çalıştığım şirket."],
       ["Die Frau, deren Sohn Arzt ist, wohnt neben uns.", "Oğlu doktor olan kadın bizim yan dairede oturuyor."],
       ["Das ist die Stadt, wo ich geboren bin.", "Burası doğduğum şehir."],
-      ["Alles, was er sagt, ist wahr.", "Söylediği her şey doğru."]
+      ["Alles, was er sagt, ist wahr.", "Söylediği her şey doğru."],
+      ["Das ist die Methode, mit der man Zweifel überwinden kann.", "Bu, şüpheleri yenmeyi sağlayan yöntem."],
+      ["Die Hoffnung, an der sie festhält, gibt ihr Kraft.", "Sıkı sıkıya tutunduğu umut ona güç veriyor."],
+      ["Er trägt eine Last, deren Gewicht niemand kennt.", "Ağırlığını kimsenin bilmediği bir yük taşıyor."],
+      ["Die Strategie, mit der die Firma den Wettbewerb gewann, war einfach.", "Şirketin yarışmayı kazandığı strateji basitti."],
+      ["Der Ratschlag, den du mir gegeben hast, war gut; die Ausrede, mit der er kam, war schlecht.", "Bana verdiğin tavsiye iyiydi; onun getirdiği bahane ise kötüydü."],
+      ["Das Gerücht, das sich verbreitet hat, ist eine Falschmeldung, deren Quelle niemand kennt.", "Yayılan söylenti, kaynağını kimsenin bilmediği bir yalan haber."],
+      ["Ein Wörterbuch ist ein Hilfsmittel, ohne das ich nicht arbeiten kann.", "Sözlük, onsuz çalışamayacağım bir yardımcı araçtır."],
+      ["Der Zweck, für den wir das Geld brauchen, steht im Antrag.", "Paraya neden ihtiyacımız olduğu başvuruda yazıyor."],
+      ["Das Elterngespräch, zu dem die Lehrerin eingeladen hat, findet am Montag statt.", "Öğretmenin davet ettiği veli görüşmesi pazartesi yapılıyor."],
+      ["Die Solaranlage, deren Strom wir nutzen, steht auf dem Dach.", "Elektriğini kullandığımız güneş enerjisi sistemi çatıda duruyor."],
+      ["Die Behörde, die für ihn zuständig ist, hat nur kurze Öffnungszeiten.", "Onun işlerinden sorumlu olan daire yalnızca kısa süre açık."]
     ] }
   ],
   exercises: [
@@ -1064,7 +1146,18 @@ K.add('de-b1-05', {
       ["Er hat angefangen, Deutsch zu lernen.", "Almanca öğrenmeye başladı."],
       ["Es lohnt sich, die Ausstellung zu besuchen.", "Sergiyi gezmeye değer."],
       ["Du brauchst nicht auf mich zu warten.", "Beni beklemene gerek yok."],
-      ["Ich muss heute früh gehen.", "Bugün erken gitmem gerekiyor."]
+      ["Ich muss heute früh gehen.", "Bugün erken gitmem gerekiyor."],
+      ["Es ist nicht leicht, Zweifel zu überwinden und Probleme zu bewältigen.", "Şüpheleri yenmek ve sorunların üstesinden gelmek kolay değil."],
+      ["Sie strebt danach, die Prüfung zu bestehen, und übt jeden Tag zwei Stunden.", "Sınavı geçmeyi hedefliyor ve her gün iki saat çalışıyor."],
+      ["Es ist wichtig, einer Krankheit vorzubeugen und Fehler zu verhindern.", "Bir hastalığı önlemek ve hataları engellemek önemlidir."],
+      ["Der Chef hat vergessen, den Urlaub zu genehmigen.", "Patron izni onaylamayı unuttu."],
+      ["Ich habe versäumt, den Termin abzusagen.", "Randevuyu iptal etmeyi ihmal ettim."],
+      ["Es lohnt sich nicht, Energie zu verschwenden; wir versuchen, den Müll zu recyceln.", "Enerjiyi israf etmeye değmez; çöpü geri dönüştürmeye çalışıyoruz."],
+      ["Ich habe Angst, die Kinder zu überfordern.", "Çocuklara fazla yük bindirmekten korkuyorum."],
+      ["Wir bitten Sie, die Küche nach der Benutzung zu reinigen.", "Mutfağı kullandıktan sonra temizlemenizi rica ederiz."],
+      ["Ich habe vor, das Formular heute online auszufüllen und die Bescheinigung herunterzuladen.", "Formu bugün internetten doldurmayı ve belgeyi indirmeyi planlıyorum."],
+      ["Wir streben einen besseren Abschluss an.", "Daha iyi bir diploma notu hedefliyoruz."],
+      ["Es ist nicht erlaubt, die Eintrittskarte weiterzugeben.", "Giriş biletini başkasına vermek yasaktır."]
     ] }
   ],
   exercises: [
@@ -1181,7 +1274,15 @@ K.add('de-b1-12', {
       ["Wir sind leise, damit die Kinder schlafen können.", "Çocuklar uyuyabilsin diye sessiz davranıyoruz."],
       ["Er ging, ohne sich zu verabschieden.", "Vedalaşmadan gitti."],
       ["Statt zu lernen, sieht er fern.", "Çalışacağına televizyon izliyor."],
-      ["Man lernt Wörter, indem man viel liest.", "Çok okuyarak kelime öğrenilir."]
+      ["Man lernt Wörter, indem man viel liest.", "Çok okuyarak kelime öğrenilir."],
+      ["Der Absender schickte die Sendung per Einschreiben, damit sie sicher ankommt.", "Gönderen, güvenle ulaşsın diye gönderiyi taahhütlü yolladı."],
+      ["Ich gehe mit meiner Bankkarte zum Geldautomaten, um Bargeld abzuheben, ohne zur Bank zu gehen.", "Bankaya gitmeden nakit para çekmek için banka kartımla bankamatiğe gidiyorum."],
+      ["Statt den Brief zu Hause zu lassen, warf sie ihn in den Briefkasten.", "Mektubu evde bırakmak yerine posta kutusuna attı."],
+      ["Er verbessert sein Deutsch, indem er jeden Abend eine Serie ansieht.", "Her akşam bir dizi izleyerek Almancasını geliştiriyor."],
+      ["Wir sparen Strom, indem wir die Geräte an der Steckdose ausschalten.", "Cihazları prizden kapatarak elektrikten tasarruf ediyoruz."],
+      ["Sie kam früh, um die Wartezeit zu verkürzen und die Aufenthaltserlaubnis noch heute abzuholen.", "Bekleme süresini kısaltmak ve oturma iznini bugün almak için erken geldi."],
+      ["Damit sich niemand die Hände schmutzig macht, gibt es Handschuhe am Eingang.", "Kimsenin elleri kirlenmesin diye girişte eldiven var."],
+      ["Nimm genug Geld mit, um die Eintrittskarten zu kaufen.", "Giriş biletlerini almak için yeterince para al."]
     ] }
   ],
   exercises: [
@@ -1302,7 +1403,18 @@ K.add('de-b1-07', {
       ["Da du schon hier bist, kannst du mir helfen.", "Madem buradasın, bana yardım edebilirsin."],
       ["Falls es regnet, bleiben wir zu Hause.", "Yağmur yağarsa evde kalırız."],
       ["Die Straße war gesperrt, sodass wir einen Umweg fahren mussten.", "Yol kapalıydı, bu yüzden dolambaçlı yoldan gitmek zorunda kaldık."],
-      ["Er arbeitet weiter, obwohl er Fieber hat.", "Ateşi olmasına rağmen çalışmaya devam ediyor."]
+      ["Er arbeitet weiter, obwohl er Fieber hat.", "Ateşi olmasına rağmen çalışmaya devam ediyor."],
+      ["Obwohl es tatsächlich nur eine Kleinigkeit war, reklamierte er die Ware.", "Gerçekten sadece küçük bir şeydi, yine de mal için şikâyette bulundu."],
+      ["Falls du Hilfe brauchst, ruf mich notfalls auch nachts an.", "Yardıma ihtiyacın olursa gerekirse gece de ara."],
+      ["Da er immerhin zwei Jahre Erfahrung hat, wird er wahrscheinlich eingeladen.", "En azından iki yıllık deneyimi olduğu için büyük ihtimalle davet edilecek."],
+      ["Es regnete stark, sodass wir sowieso zu Hause blieben.", "Şiddetli yağmur yağdı, bu yüzden zaten evde kaldık."],
+      ["Im Gegensatz zu ihrem Bruder ist sie sehr pünktlich.", "Erkek kardeşinden farklı olarak çok dakiktir."],
+      ["Er ist nicht faul, im Gegenteil: Er arbeitet im Durchschnitt zehn Stunden am Tag.", "Tembel değil, tam tersine: Günde ortalama on saat çalışıyor."],
+      ["Unter Umständen kann man den Vertrag kündigen, falls die Firma die Preise erhöht.", "Bazı durumlarda şirket fiyatları artırırsa sözleşme feshedilebilir."],
+      ["Das Gesetz tritt im Januar in Kraft, folglich müssen alle Firmen die Regeln beachten.", "Yasa ocak ayında yürürlüğe giriyor, dolayısıyla tüm şirketler kurallara uymak zorunda."],
+      ["Der Preis ist insgesamt fair; beispielsweise kostet das Frühstück nur vier Euro.", "Fiyat genel olarak makul; örneğin kahvaltı sadece dört euro."],
+      ["Selbstverständlich komme ich zur Feier, jedenfalls wenn ich nicht krank bin.", "Tabii ki kutlamaya gelirim, en azından hasta olmazsam."],
+      ["Er trinkt selten Kaffee und nie spät abends, da er sonst nicht schlafen kann.", "Nadiren kahve içer, akşam geç saatte asla içmez, çünkü içerse uyuyamıyor."]
     ] }
   ],
   exercises: [
@@ -1418,7 +1530,16 @@ K.add('de-b1-16', {
       ["Er spricht sowohl Englisch als auch Deutsch.", "Hem İngilizce hem de Almanca konuşuyor."],
       ["Ich habe weder Hunger noch Durst.", "Ne açım ne de susuzum."],
       ["Die Wohnung ist zwar klein, aber sehr gemütlich.", "Daire küçük olsa da çok rahat."],
-      ["Je länger ich warte, desto nervöser werde ich.", "Ne kadar uzun beklersem o kadar gerilirim."]
+      ["Je länger ich warte, desto nervöser werde ich.", "Ne kadar uzun beklersem o kadar gerilirim."],
+      ["Sie war weder müde noch unzufrieden – wenigstens sagte sie das.", "Ne yorgundu ne de memnuniyetsizdi; en azından öyle söyledi."],
+      ["Entweder bist du mindestens eine Stunde früher da, oder wir beginnen ohne dich.", "Ya en az bir saat erken gelirsin ya da sensiz başlarız."],
+      ["Das Wetter war offenbar sowohl kalt als auch windig, deswegen blieb die Halle leer.", "Hava anlaşılan hem soğuk hem rüzgârlıydı; bu yüzden salon boş kaldı."],
+      ["Er hat keineswegs gelogen; der Zeuge hat nämlich seine Geschichte bestätigt.", "Kesinlikle yalan söylemedi; çünkü tanık onun hikâyesini doğruladı."],
+      ["Ich habe nichts dagegen, und darüber haben wir schon gesprochen.", "Buna bir itirazım yok, bu konuda zaten konuştuk."],
+      ["Er ist womöglich krank; vermutlich hat er sich im Urlaub erkältet.", "Belki hastadır; büyük ihtimalle tatilde üşütmüştür."],
+      ["Der Film ist sowohl interessant als auch spannend, aber die Geschichte ist teilweise schrecklich.", "Film hem ilginç hem heyecanlı, ama hikâye yer yer korkunç."],
+      ["Das Buch ist zwar dick, aber die Seiten sind erstaunlich dünn.", "Kitap kalın olsa da sayfalar şaşırtıcı derecede ince."],
+      ["Zumindest die Hälfte der Plätze im Zug ist besetzt.", "Trendeki yerlerin en azından yarısı dolu."]
     ] }
   ],
   exercises: [
@@ -1536,7 +1657,16 @@ K.add('de-b1-04', {
       ["Der Vertrag wurde gestern unterschrieben.", "Sözleşme dün imzalandı."],
       ["Die Rechnung ist schon bezahlt worden.", "Fatura çoktan ödendi."],
       ["Der Schaden muss sofort gemeldet werden.", "Hasar hemen bildirilmeli."],
-      ["Ich lasse mein Fahrrad reparieren.", "Bisikletimi tamir ettiriyorum."]
+      ["Ich lasse mein Fahrrad reparieren.", "Bisikletimi tamir ettiriyorum."],
+      ["Die Schmerzen werden mit einem Medikament gelindert, und der Patient wird gut behandelt.", "Ağrılar bir ilaçla hafifletiliyor ve hasta iyi tedavi ediliyor."],
+      ["Die Operation wurde gestern durchgeführt; die Genehmigung der Kasse wurde schon vorher erteilt.", "Ameliyat dün yapıldı; sigortanın onayı daha önce verilmişti."],
+      ["Die Müllentsorgung wird von der Stadt organisiert, und die Mülltrennung wird streng kontrolliert.", "Çöp bertarafı şehir tarafından organize ediliyor ve çöp ayrıştırma sıkı denetleniyor."],
+      ["Das Ehrenamt wird sehr geschätzt, und viele Freiwillige arbeiten ehrenamtlich im Verein.", "Gönüllü görev çok takdir ediliyor ve birçok gönüllü dernekte karşılıksız çalışıyor."],
+      ["Die Methode wurde von Experten bewertet und in der Zeitung zitiert.", "Yöntem uzmanlar tarafından değerlendirildi ve gazetede alıntılandı."],
+      ["Das Gerücht wurde im Internet verbreitet, bevor die Falschmeldung gelöscht wurde.", "Söylenti, yalan haber silinmeden önce internette yayıldı."],
+      ["Im Winter erkranken viele Kinder, weil ansteckende Viren schnell verbreitet werden.", "Kışın birçok çocuk hastalanır, çünkü bulaşıcı virüsler hızla yayılır."],
+      ["Der Mitarbeiter wurde vom Chef gelobt, und die Qualität seiner Arbeit wurde geprüft.", "Çalışan patron tarafından övüldü ve işinin kalitesi kontrol edildi."],
+      ["– Wo tut es weh? – Am Hals und am Magen. Beides wird jetzt untersucht.", "– Nerende ağrıyor? – Boğazımda ve midemde. İkisi de şimdi muayene ediliyor."]
     ] }
   ],
   exercises: [
@@ -1655,7 +1785,12 @@ K.add('de-b1-13', {
       ["Ich wünschte, ich hätte mehr Zeit.", "Keşke daha çok zamanım olsaydı."],
       ["An deiner Stelle würde ich zum Arzt gehen.", "Senin yerinde olsam doktora giderdim."],
       ["Könnten Sie mir bitte helfen?", "Bana yardım edebilir misiniz?"],
-      ["Ich hätte gern einen Termin für Montag.", "Pazartesi için bir randevu isterdim."]
+      ["Ich hätte gern einen Termin für Montag.", "Pazartesi için bir randevu isterdim."],
+      ["Wenn es kein Mobbing in der Schule gäbe, würden die Kinder gern hingehen.", "Okulda zorbalık olmasaydı çocuklar isteyerek giderdi."],
+      ["Wenn du alle Voraussetzungen hättest, könntest du die Stelle bekommen.", "Tüm şartları taşısaydın bu işi alabilirdin."],
+      ["Er würde nicht so reden, wenn seine Behauptung stimmte; er hätte ein besseres Argument.", "İddiası doğru olsaydı böyle konuşmazdı; daha iyi bir argümanı olurdu."],
+      ["Ich würde gern ein Doppelzimmer buchen, wenn es noch frei wäre.", "Hâlâ boş olsa bir çift kişilik oda ayırtmak isterdim."],
+      ["Das finde ich nicht gut. – Dann würde ich an deiner Stelle den Plan ändern.", "Bunu iyi bulmuyorum. – O zaman senin yerinde olsam planı değiştirirdim."]
     ] }
   ],
   exercises: [
@@ -1724,8 +1859,8 @@ K.add('de-b1-13', {
       e: "*Ich wünschte, ich hätte …* – virgül iki cümle arasında. *wünschte*: ü Türkçedeki ü gibi." },
     { id: "de-b1-13.20", t: "speak", say: "Wenn ich reich wäre, würde ich ein Haus kaufen.",
       e: "**reich**: ei = “ay”, ch ince (i/ei’den sonra ich-sesi). **wäre**: w = “v”, ä Türkçedeki e gibi uzun. **würde**: w = “v”, ü Türkçedeki ü gibi, kısa. **Haus**: au tek, kayan ses." },
-    { id: "de-b1-13.21", t: "speak", say: "An deiner Stelle würde ich zum Arzt gehen.",
-      e: "**Stelle**: st = “şt” (kelime başında), ll çift yazılır, kısa ünlü gösterir. **deiner**: ei = “ay”. **Arzt**: A uzun; rzt = rtst (z = “ts”)." },
+    { id: "de-b1-13.21", t: "speak", say: "Ich wünschte, ich könnte besser schlafen.",
+      e: "**wünschte**: w = “v”, ü Türkçedeki ü gibi; **-schte** = “şte” gibi. **könnte**: ö Türkçedeki ö gibi, kısa; nn çift yazılır, kısa ünlü gösterir. **schlafen**: sch = “ş”, a uzun. Cümle Konjunktiv II ile gerçek dışı bir dilek bildirir." },
     { id: "de-b1-13.22", t: "speak", say: "Ich hätte gern einen Termin für Montag.",
       e: "**hätte**: ä Türkçedeki e gibi, kısa; tt çift yazılır, kısa ünlü gösterir. **Termin**: Ter-**MIN**, vurgu son hecede. **für**: ü Türkçedeki ü gibi, uzun." },
     { id: "de-b1-13.23", t: "gap", q: "Wenn ich nicht so müde ___, würde ich noch ausgehen. (sein)", a: ["wäre"],
@@ -1771,7 +1906,11 @@ K.add('de-b1-08', {
       ["Ich hätte dich anrufen sollen.", "Seni aramalıydım."],
       ["Hätte ich doch mehr gelernt!", "Keşke daha çok çalışsaydım!"],
       ["Du hättest mir helfen können.", "Bana yardım edebilirdin."],
-      ["Ohne dich hätte ich es nicht geschafft.", "Sensiz başaramazdım."]
+      ["Ohne dich hätte ich es nicht geschafft.", "Sensiz başaramazdım."],
+      ["Hätte ich den Einwand früher gehört, hätte ich den Plan geändert.", "İtirazı daha önce duysaydım planı değiştirirdim."],
+      ["Er hätte die Gelegenheit nutzen sollen; jetzt empfindet er Reue.", "Fırsatı değerlendirmeliydi; şimdi pişmanlık duyuyor."],
+      ["Wenn ich den Termin nicht versäumt hätte, wäre ich nicht so unzufrieden gewesen.", "Randevuyu kaçırmasaydım bu kadar memnuniyetsiz olmazdım."],
+      ["Du hättest mir sagen sollen, dass er krank ist.", "Bana onun hasta olduğunu söylemeliydin."]
     ] }
   ],
   exercises: [
@@ -1883,7 +2022,15 @@ K.add('de-b1-17', {
       ["Darf ich Ihnen eine Frage stellen?", "Size bir soru sorabilir miyim?"],
       ["Bitte nehmen Sie mit uns Kontakt auf.", "Lütfen bizimle iletişime geçin."],
       ["Der Verein stellt den Raum zur Verfügung.", "Dernek salonu kullanıma sunuyor."],
-      ["Ich gebe dir Bescheid, sobald ich es weiß.", "Öğrenir öğrenmez sana haber veririm."]
+      ["Ich gebe dir Bescheid, sobald ich es weiß.", "Öğrenir öğrenmez sana haber veririm."],
+      ["Im Chaos kann sie trotzdem den Überblick behalten.", "Kargaşada bile durumu kontrol altında tutar."],
+      ["Wie oft fährt der Zug nach Köln? – Jede halbe Stunde, die Verbindung ist gut.", "Köln’e tren ne sıklıkla kalkıyor? – Yarım saatte bir, bağlantı iyi."],
+      ["Bitte füllen Sie das Formular aus; dann bekommen Sie die Aufenthaltserlaubnis.", "Lütfen formu doldurun; sonra oturma iznini alırsınız."],
+      ["– Wer bringt den Antrag zur Behörde? – Das übernehme ich.", "– Başvuruyu daireye kim götürüyor? – Onu ben üstleniyorum."],
+      ["– Wie lange dauert das? – Die Wartezeit beträgt etwa zehn Minuten.", "– Bu ne kadar sürer? – Bekleme süresi yaklaşık on dakika."],
+      ["Er ist ein guter Freund von mir, und sie ist mir sympathisch.", "O benim iyi bir arkadaşım ve o bana sempatik geliyor."],
+      ["Auf der Speisekarte standen viele Vorspeisen, aber der Tisch am Fenster war besetzt.", "Yemek listesinde birçok başlangıç yemeği vardı, ama cam kenarındaki masa doluydu."],
+      ["Die Straße ist breit, aber der Gang zum Ausgang ist schmal.", "Cadde geniş ama çıkışa giden koridor dar."]
     ] }
   ],
   exercises: [
@@ -2089,6 +2236,155 @@ K.add('de-b1-18', {
       models: ["Laut den Nachrichten wird es nächste Woche kälter. Der Bahnhof soll renoviert werden. Angeblich fahren dann weniger Züge, aber das wird wohl nicht lange dauern."],
       modelsN: ["Haberlere göre gelecek hafta hava soğuyacak. İstasyonun yenileneceği söyleniyor. İddiaya göre o zaman daha az tren kalkacak ama bu herhalde uzun sürmez."],
       e: "*Laut + Dativ* (kaynak), *soll + Infinitiv* (söylenti), *angeblich* (iddia), *wird wohl* (tahmin). Cevabın örnekten farklı olabilir." }
+  ]
+});
+
+K.add('de-b1-19', {
+  lesson: [
+    { p: "Türkçede gelecek için *-(y)AcAk* (*Yarın geleceğim.*), tahmin için *-(A/I)r* ve *-DIr* (*Yarın yağmur yağar. Şimdi evdedir.*) kullanırsın. Almancada gelecek ve tahmin için **Futur I** vardır: **werden** (çekimli, 2. sırada) + **Infinitiv** (cümlenin sonunda). *Morgen **wird** es **regnen**.*" },
+    { table: { head: ["Özne", "werden", "Örnek"], rows: [
+      ["ich", "**werde**", "Ich **werde** lernen."],
+      ["du", "**wirst**", "Du **wirst** lernen."],
+      ["er / sie / es", "**wird**", "Er **wird** lernen."],
+      ["wir", "**werden**", "Wir **werden** lernen."],
+      ["ihr", "**werdet**", "Ihr **werdet** lernen."],
+      ["sie / Sie", "**werden**", "Sie **werden** lernen."]
+    ] } },
+    { h: "Futur I ne için kullanılır?" },
+    { table: { head: ["Kullanım", "Almanca", "Türkçe"], rows: [
+      ["Plan, niyet", "Nächstes Jahr **werde** ich einen Kurs **besuchen**.", "Gelecek yıl bir kursa gideceğim."],
+      ["Tahmin (gelecek)", "Morgen **wird** es **regnen**.", "Yarın yağmur yağacak."],
+      ["Söz", "Ich **werde** dir **helfen**.", "Sana yardım edeceğim."],
+      ["Tahmin (şimdi)", "Er **wird** wohl zu Hause **sein**.", "Evdedir herhalde."],
+      ["Güçlü uyarı", "Du **wirst** jetzt sofort **schlafen**!", "Şimdi hemen yatacaksın!"]
+    ] } },
+    { warn: "Almancada gelecek için çoğu zaman **Präsens + zaman ifadesi** yeterlidir: *Morgen fahre ich nach Köln.* ✓ Türkçedeki gibi her gelecek cümlesinde *-AcAk* aramazsın. Futur I; tahmin, söz, vurgu için ya da zaman ifadesi yoksa kullanılır (*Ich werde nach Köln fahren.*)." },
+    { h: "Fiilin yeri ve benzer biçimler" },
+    { p: "**werden** 2. sırada, **Infinitiv** sonda durur: *Ich **werde** morgen früh **aufstehen**.* Yan cümlede çekimli **werden** en sona gider: *Ich glaube, dass er bald **kommen wird**.*" },
+    { table: { head: ["Biçim", "Anlam", "Örnek"], rows: [
+      ["**werden + Infinitiv**", "Futur I (gelecek / tahmin)", "Er **wird** das Auto **reparieren**. (tamir edecek)"],
+      ["**werden + Partizip II**", "Passiv", "Das Auto **wird repariert**. (tamir ediliyor)"],
+      ["**würde + Infinitiv**", "Konjunktiv II (gerçek dışı / kibar)", "Ich **würde** gern **kommen**. (gelirdim)"],
+      ["**wurde**", "Präteritum (geçmiş)", "Es **wurde** dunkel. (karardı)"]
+    ] } },
+    { warn: "✗ *Ich wurde morgen kommen.* ✓ *Ich **werde** morgen kommen.* – *wurde* geçmişte kalır, *würde* ise “-ırdım” anlamında gerçek dışıdır. Gelecek için her zaman **werde / wirst / wird**." },
+    { h: "Tahmin: wohl, vermutlich, bestimmt" },
+    { table: { head: ["Cümle", "Anlam", "Kesinlik"], rows: [
+      ["Er wird **wohl** krank sein.", "Herhalde hastadır.", "muhtemel"],
+      ["Er wird **vermutlich** kommen.", "Büyük ihtimalle gelecek.", "muhtemel"],
+      ["Er wird **bestimmt** kommen.", "Mutlaka gelecek.", "çok emin"]
+    ] } },
+    { tip: "Türkçede *-DIr* (*Evdedir.*) şimdiki zaman tahminidir. Almancada aynı iş için **werden + wohl + Infinitiv** kullanırsın: *Er wird wohl zu Hause sein.* (Bkz. Konu 18: *müssen* = kesin, *wird wohl* = muhtemel.)" },
+    { h: "Türkçeyle karşılaştırma" },
+    { table: { head: ["Türkçe", "Almanca", "Not"], rows: [
+      ["Yarın **geleceğim**.", "Morgen **komme** ich. / Ich **werde** morgen **kommen**.", "plan: Präsens yeterli"],
+      ["Yarın yağmur **yağacak**.", "Morgen **wird** es **regnen**.", "tahmin: Futur I"],
+      ["Sana **yardım edeceğim**.", "Ich **werde** dir **helfen**.", "söz: Futur I"],
+      ["**Evdedir** herhalde.", "Er **wird** wohl zu Hause **sein**.", "şimdiki tahmin"]
+    ] } },
+    { ex: [
+      ["Nächstes Jahr werde ich einen Deutschkurs besuchen.", "Gelecek yıl bir Almanca kursuna gideceğim."],
+      ["Morgen wird es bewölkt sein.", "Yarın hava bulutlu olacak."],
+      ["Wir werden am Wochenende das alte Schloss besichtigen.", "Hafta sonu eski şatoyu gezeceğiz."],
+      ["Ich werde mich bei der Behörde erkundigen.", "Resmî daireden bilgi alacağım."],
+      ["Er wird sein Bargeld am Geldautomaten abheben.", "Nakit parasını bankamatikten çekecek."],
+      ["Die Mülltrennung wird sich vermutlich bald verändern.", "Çöp ayrıştırma büyük ihtimalle yakında değişecek."],
+      ["Sie wird wohl noch im Büro sein.", "Herhalde hâlâ ofistedir."],
+      ["Ich glaube, dass er bald kommen wird.", "Bence yakında gelecek."],
+      ["Er wird die Zutaten probieren, bevor er die Vorspeise serviert.", "Başlangıç yemeğini sunmadan önce malzemelerin tadına bakacak."],
+      ["Einverstanden! Wir werden uns gegenüber der Moschee treffen.", "Anlaştık! Caminin karşısında buluşacağız."],
+      ["Heute werden wir beschließen, wie es weitergeht, und morgen werden wir das Gespräch fortsetzen.", "Bugün nasıl devam edeceğimize karar vereceğiz ve yarın konuşmayı sürdüreceğiz."],
+      ["Die Autos werden zusammenstoßen, wenn niemand bremst.", "Kimse fren yapmazsa arabalar çarpışacak."],
+      ["Der Lärm wird bald verschwinden, und das Baby wird sich nicht mehr erschrecken.", "Gürültü yakında kesilecek ve bebek artık korkmayacak."],
+      ["Es wird dir bestimmt gelingen, und die Firma wird dein Angebot nicht ablehnen.", "Kesinlikle başaracaksın ve şirket teklifini reddetmeyecek."],
+      ["Meine Kinder werden in Deutschland aufwachsen, und vor jeder Prüfung werden sie fleißig üben.", "Çocuklarım Almanya’da büyüyecek ve her sınavdan önce gayretle çalışacak."],
+      ["Niemand wird dir widersprechen, aber viele werden am Projekt zweifeln.", "Kimse sana karşı çıkmayacak, ama birçok kişi projeden şüphe edecek."],
+      ["Der Chef wird die Fehler bemängeln, aber er wird dich bestimmt auch loben.", "Patron hataları eleştirecek, ama seni kesinlikle övecek de."],
+      ["Das Medikament wird die Schmerzen lindern, damit du wieder schlafen kannst.", "İlaç ağrıları hafifletecek, böylece yeniden uyuyabileceksin."],
+      ["Das neue Gesetz wird im Sommer in Kraft treten.", "Yeni yasa yazın yürürlüğe girecek."],
+      ["Wir werden das Spiel gewinnen, denn wir werden zusammen trainieren.", "Maçı kazanacağız, çünkü birlikte antrenman yapacağız."],
+      ["Ich werde die App herunterladen und online testen.", "Uygulamayı indirip çevrimiçi deneyeceğim."],
+      ["Wir werden nie aufgeben, und Fehler werden bei uns hoffentlich selten sein.", "Asla vazgeçmeyeceğiz ve umarım bizde hatalar nadir olacak."]
+    ] }
+  ],
+  exercises: [
+    { id: "de-b1-19.1", t: "match", q: "Türkçe cümleyi Almanca karşılığıyla eşleştir:", p: [["Yarın yağmur yağacak.", "Morgen wird es regnen."], ["Sana yardım edeceğim.", "Ich werde dir helfen."], ["Evdedir herhalde.", "Er wird wohl zu Hause sein."], ["Gelecek yıl taşınacağız.", "Nächstes Jahr werden wir umziehen."]],
+      e: "Futur I: **werden** (çekimli, 2. sırada) + **Infinitiv** (sonda). Tahmin için *wohl* eklenir." },
+    { id: "de-b1-19.2", t: "gap", q: "Ich ___ nächstes Jahr einen Deutschkurs besuchen. (werden)", a: ["werde"],
+      wrong: { "wird": "*wird* er / sie / es ile kullanılır; *ich* ile **werde**.", "werden": "*werden* wir / sie / Sie ile kullanılır; *ich* ile **werde**.", "würde": "*würde* Konjunktiv II’dir (“giderdim”); gerçek bir plan için Futur: **werde**." },
+      e: "**ich werde** + Infinitiv (sonda): *… werde … besuchen*." },
+    { id: "de-b1-19.3", t: "gap", q: "Du ___ die Prüfung bestimmt schaffen. (werden)", a: ["wirst"],
+      wrong: { "wird": "*wird* er / sie / es içindir; *du* ile **wirst**.", "werde": "*werde* sadece *ich* ile kullanılır; *du* ile **wirst**.", "wirdst": "Böyle bir biçim yok: du → **wirst**." },
+      e: "**du wirst** + Infinitiv: *Du wirst die Prüfung schaffen.* – bestimmt = mutlaka." },
+    { id: "de-b1-19.4", t: "gap", q: "Morgen ___ es bewölkt sein. (werden)", a: ["wird"],
+      wrong: { "werden": "*es* tekildir; *werden* çoğul özne içindir. **wird**.", "wurde": "*wurde* geçmiş zamandır (“oldu”); gelecek tahmini için **wird**.", "werde": "*werde* yalnızca *ich* ile." },
+      e: "**es wird** + Infinitiv: hava durumu tahmini. *bewölkt* = bulutlu." },
+    { id: "de-b1-19.5", t: "gap", q: "Wir ___ am Wochenende das alte Schloss besichtigen. (werden)", a: ["werden"],
+      wrong: { "wird": "*wir* çoğuldur; *wird* tekil özne içindir. **werden**.", "werde": "*werde* yalnızca *ich* ile.", "würden": "*würden* Konjunktiv II’dir; plan için **werden**." },
+      e: "**wir werden** + Infinitiv (sonda): *besichtigen* = gezip görmek." },
+    { id: "de-b1-19.6", t: "gap", q: "Ihr ___ sicher viel Spaß haben. (werden)", a: ["werdet"],
+      wrong: { "werden": "*werden* wir / sie / Sie içindir; *ihr* ile **werdet**.", "wirst": "*wirst* sadece *du* ile.", "wird": "*wird* er / sie / es içindir." },
+      e: "**ihr werdet** + Infinitiv. *sicher* = kesinlikle, herhalde." },
+    { id: "de-b1-19.7", t: "gap", q: "Ich glaube, dass der Zug vermutlich Verspätung haben ___. (werden)", a: ["wird"],
+      wrong: { "werden": "*der Zug* tekildir; **wird**.", "wirst": "*wirst* sadece *du* ile.", "ist": "*ist* ile Futur kurulmaz; **wird** (+ Infinitiv *haben*)." },
+      e: "Yan cümlede (*dass*) çekimli fiil en sona gider: *… Verspätung haben **wird***." },
+    { id: "de-b1-19.8", t: "gap", q: "Ich ___ dir morgen helfen, versprochen! (werden)", a: ["werde"],
+      wrong: { "würde": "*würde* Konjunktiv II’dir (“yardım ederdim”); söz vermek için Futur: **werde**.", "wurde": "*wurde* geçmiştir (“oldu”): Futur için *werde*.", "wird": "*wird* er / sie / es ile." },
+      e: "Söz: **Ich werde dir helfen.** Dikkat: *werde* ≠ *würde* ≠ *wurde*." },
+    { id: "de-b1-19.9", t: "order", q: "Cümleyi kur – **Nächstes Jahr** ile başla: “Gelecek yıl daha çok spor yapacağım.”", w: ["Nächstes Jahr", "werde", "ich", "mehr Sport", "machen"], a: ["Nächstes Jahr werde ich mehr Sport machen"],
+      e: "Zaman ifadesi 1. sırayı doldurur; **werde** 2. sırada, özne hemen arkasından gelir, **machen** sonda." },
+    { id: "de-b1-19.10", t: "order", q: "Cümleyi kur – **Es** ile başla: “Yarın yağmur yağacak.”", w: ["Es", "wird", "morgen", "regnen"], a: ["Es wird morgen regnen"],
+      e: "*wird* 2. sırada; *regnen* sonda." },
+    { id: "de-b1-19.11", t: "order", q: "Cümleyi kur – **Ich glaube,** ile başla: “Bence yakında gelecek.”", w: ["Ich glaube,", "dass", "er", "bald", "kommen", "wird"], a: ["Ich glaube, dass er bald kommen wird"],
+      e: "*dass* yan cümlesinde çekimli fiil **wird** en sona gider; Infinitiv *kommen* hemen önünde durur." },
+    { id: "de-b1-19.12", t: "sort", q: "Hangisinde Futur I uygun, hangisinde Präsens yeterli?", cats: ["Futur I uygun (tahmin, söz, vurgu)", "Präsens + zaman ifadesi yeterli"],
+      items: [["Morgen fahre ich nach Köln.", 1], ["Nächste Woche beginnt mein Kurs.", 1], ["Es wird morgen kälter sein.", 0], ["Er wird wohl noch schlafen.", 0], ["Ich werde dich nie vergessen!", 0], ["Am Freitag treffen wir uns.", 1]],
+      why: { "Morgen fahre ich nach Köln.": "Plan + *morgen*: Präsens yeterli.", "Nächste Woche beginnt mein Kurs.": "Zaman ifadesi var: Präsens yeterli.", "Es wird morgen kälter sein.": "Hava tahmini: Futur I.", "Er wird wohl noch schlafen.": "Şimdiki tahmin (*wohl*): Futur I.", "Ich werde dich nie vergessen!": "Söz / vurgu: Futur I.", "Am Freitag treffen wir uns.": "Zaman ifadesi var: Präsens yeterli." },
+      e: "Zaman ifadesi + plan → Präsens. Tahmin, söz ve vurgu → **werden + Infinitiv**." },
+    { id: "de-b1-19.13", t: "cloze", q: "Hava raporunu tamamla.", text: "Morgen {1} es im Norden bewölkt sein. Am Mittag {2} die Sonne scheinen. Die Temperaturen {3} in den nächsten Tagen steigen. Im Süden dagegen wird es noch regnen.",
+      gaps: {
+        "1": { a: ["wird"], o: ["wird", "werden", "wurde"], wrong: { "werden": "*es* tekildir: **wird**.", "wurde": "*wurde* geçmiştir; tahmin için **wird**." } },
+        "2": { a: ["wird"], o: ["wird", "werden", "würde"], wrong: { "werden": "*die Sonne* tekildir: **wird**.", "würde": "*würde* Konjunktiv II’dir; hava tahmini Futur ile: **wird**." } },
+        "3": { a: ["werden"], o: ["werden", "wird", "werde"], wrong: { "wird": "*die Temperaturen* çoğuldur: **werden**.", "werde": "*werde* yalnızca *ich* ile." } }
+      },
+      e: "Çoğul özne (*die Temperaturen*) → **werden**; tekil özne (*es, die Sonne*) → **wird**. Infinitiv sonda." },
+    { id: "de-b1-19.14", t: "cloze", q: "Doğru biçimi seç.", text: "Keine Sorge, ich {1} dir bei den Formularen helfen. Du {2} das schon schaffen. Die Mitarbeiterin im Bürgerbüro {3} bestimmt freundlich sein. Die Wartezeit wird nicht lang sein, und die Bescheinigung bekommst du gleich.",
+      gaps: {
+        "1": { a: ["werde"], o: ["werde", "wirst", "wird"], wrong: { "wirst": "*wirst* sadece *du* ile.", "wird": "*ich* ile **werde**." } },
+        "2": { a: ["wirst"], o: ["wirst", "werde", "wird"], wrong: { "werde": "*werde* sadece *ich* ile.", "wird": "*du* ile **wirst**." } },
+        "3": { a: ["wird"], o: ["wird", "werden", "wirst"], wrong: { "werden": "*die Mitarbeiterin* tekildir: **wird**.", "wirst": "*wirst* sadece *du* ile." } }
+      },
+      e: "Söz (*ich werde*), cesaret (*du wirst*), tahmin (*sie wird … sein*). *Bürgerbüro* = belediye hizmet bürosu." },
+    { id: "de-b1-19.15", t: "mc", q: "Hangi cümlede fiil **yanlış yerde**?", o: ["Ich werde morgen früh aufstehen.", "Morgen werde ich früh aufstehen.", "Ich werde aufstehen morgen früh.", "Ich glaube, dass er kommen wird."], a: 2,
+      why: { 0: "Doğru: *werde* 2. sırada, Infinitiv sonda.", 1: "Doğru: zaman ifadesi 1. sırada, *werde* 2. sırada.", 3: "Doğru: yan cümlede *wird* en sonda." },
+      e: "Futur I’de Infinitiv **en sona** gider: *… werde … aufstehen*. *aufstehen morgen früh* ✗." },
+    { id: "de-b1-19.16", t: "mc", q: "*Er wird wohl zu Hause sein.* ne anlama gelir?", o: ["Herhalde evdedir.", "Eve gitmek istiyor.", "Evde olacağına söz veriyor.", "Evde olması kesin."], a: 0,
+      why: { 1: "İstek için *will* / *möchte* kullanılır; *wird … sein* tahmindir.", 2: "Söz için *Ich werde …* gibi birinci kişi kullanılır; burada *wohl* tahmin bildirir.", 3: "Kesinlik için *muss* (*Er muss zu Hause sein*) kullanılır; *wohl* daha zayıf bir tahmindir." },
+      e: "**werden + wohl + Infinitiv** = şimdiki zaman için muhtemel tahmin (Türkçe *-DIr*, *herhalde*)." },
+    { id: "de-b1-19.17", t: "mc", q: "*Das Auto wird repariert.* ve *Er wird das Auto reparieren.* arasındaki fark nedir?", o: ["İlki Passiv (tamir ediliyor), ikincisi Futur I (tamir edecek).", "İkisi de Futur I.", "İlki Futur I, ikincisi Passiv.", "İkisi de Passiv."], a: 0,
+      why: { 1: "İlk cümlede *werden + Partizip II* (**repariert**) var; bu Passiv’dir.", 2: "Tersi: *Partizip II* Passiv, *Infinitiv* Futur yapar.", 3: "İkinci cümlede Infinitiv (**reparieren**) var; bu Futur I’dir." },
+      e: "**werden + Partizip II** = Passiv; **werden + Infinitiv** = Futur I." },
+    { id: "de-b1-19.18", t: "mc", q: "“Yarın seni arayacağım.” için hangi Almanca cümle **yanlış**?", o: ["Ich rufe dich morgen an.", "Ich werde dich morgen anrufen.", "Ich wurde dich morgen anrufen.", "Morgen rufe ich dich an."], a: 2,
+      why: { 0: "Doğru: Präsens + *morgen* gelecek için yeterlidir.", 1: "Doğru: Futur I.", 3: "Doğru: zaman ifadesi 1. sırada, fiil 2. sırada." },
+      e: "*wurde* geçmiş zamandır (Präteritum / Passiv). Gelecek için *werde* ya da Präsens + zaman ifadesi kullanılır." },
+    { id: "de-b1-19.19", t: "listen", say: "Nächstes Jahr werde ich mehr Sport machen.", q: "Dinle. Ne anlama geliyor?", o: ["Gelecek yıl daha çok spor yapacağım.", "Geçen yıl çok spor yaptım.", "Gelecek yıl spor yapmak istemiyorum.", "Her yıl spor yapıyorum."], a: 0,
+      why: { 1: "Geçmiş için *Ich habe … gemacht* olurdu.", 2: "Olumsuzluk yok (*nicht / kein* duymadın).", 3: "*werde … machen* gelecektir; alışkanlık için Präsens: *Ich mache jedes Jahr …*." },
+      e: "**werde … machen** = Futur I, plan." },
+    { id: "de-b1-19.20", t: "dictation", say: "Morgen wird es wahrscheinlich regnen.", a: ["Morgen wird es wahrscheinlich regnen."],
+      wrong: { "Morgen wird es wahrscheinlich regnet.": "*werden* ile **Infinitiv** gerekir: *regnen*, *regnet* değil.", "Morgen wurde es wahrscheinlich regnen.": "*wurde* geçmiştir; gelecek tahmini için **wird**.", "Morgen wird es wahrscheinlich regen.": "küçük harfle yazılan *regen* fiil değildir (*Regen* büyük harfle “yağmur” anlamlı isimdir: der Regen); burada fiil gerekir: **regnen**." },
+      e: "*wahrscheinlich* uzun bir sözcük: wahr-schein-lich. Fiil **regnen** sonda." },
+    { id: "de-b1-19.21", t: "speak", say: "Ich werde dir bestimmt helfen.",
+      e: "**werde**: w = “v”, e uzun [veː-], r çok hafif (neredeyse duyulmaz); sondaki -e belirsiz (“ı”) gibi. **bestimmt**: **st** = “şt” (be-**şt**immt), mm çift yazılır, tek okunur. **helfen**: e kısa, lf ayrı ayrı." },
+    { id: "de-b1-19.22", t: "speak", say: "Er wird wohl noch schlafen.",
+      e: "**wird**: w = “v”, i kısa, d sonda t gibi (“virt”). **wohl**: w = “v”, o uzun, h okunmaz. **noch**: o’dan sonra ch sert (arka damak). **schlafen**: sch = “ş”, a uzun." },
+    { id: "de-b1-19.23", t: "speak", say: "Morgen wird es bewölkt sein.",
+      e: "**Morgen**: o kısa, r hafif; g Türkçedeki g gibi, -en hafif. **bewölkt**: ö Türkçedeki ö gibi; **lkt** hepsi okunur. **sein**: s = “z”, ei = “ay”." },
+    { id: "de-b1-19.24", t: "respond", say: "Was wirst du nächstes Jahr machen? Hast du Pläne?",
+      q: "Soruyu dinle ve 2–3 cümleyle cevap ver. **werden + Infinitiv** kullan.",
+      chunks: ["Nächstes Jahr werde ich …", "Ich werde wohl …", "Bestimmt werde ich …"],
+      models: ["Nächstes Jahr werde ich einen neuen Kurs besuchen. Ich werde auch mehr Sport machen. Bestimmt werde ich im Sommer eine Reise planen."],
+      modelsN: ["Gelecek yıl yeni bir kursa gideceğim. Ayrıca daha çok spor yapacağım. Kesinlikle yazın bir gezi planlayacağım."],
+      e: "Planlarını **werden + Infinitiv** ile söylersin: *Ich werde … besuchen.* Zaman ifadesi başa gelirse fiil yine 2. sırada kalır: *Nächstes Jahr **werde** ich …* Cevabın örnekten farklı olabilir." }
   ]
 });
 

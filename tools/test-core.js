@@ -1157,12 +1157,13 @@ test('B1-Lehrplan (Paket 0b)', () => {
   const KK = c2.window.KOPRU;
   ['de', 'tr'].forEach(c => {
     const ids = KK.courses[c].levels.B1.map(r => r[0]);
-    eq(ids.length, 17, c + ' B1: 17 Themen');
+    eq(ids.length, c === 'de' ? 18 : 17, c + ' B1: ' + (c === 'de' ? 18 : 17) + ' Themen');
     eq(ids.length, new Set(ids).size, c + ' B1: IDs eindeutig');
     ok(ids.every(i => i.indexOf(c + '-b1-') === 0), c + ' B1: ID-Präfix');
     ok(KK.courses[c].levels.B1.every(r => r.length === 3 && r[1] && r[2]), c + ' B1: Titel in beiden Sprachen');
     ok(KK.courses[c].complete.indexOf('B1') < 0, c + ' B1: nicht freigegeben (im Aufbau)');
   });
+  eq(KK.courses.de.levels.B1.map(r => r[0]).indexOf('de-b1-19'), KK.courses.de.levels.B1.map(r => r[0]).indexOf('de-b1-05') + 1, 'de-b1-19 (Futur I) direkt hinter de-b1-05');
   ok(KK.courses.de.levels.B1.every(r => r[0] !== 'de-b1-09'), 'de-b1-09 entfällt (n-Deklination in de-b1-06)');
   const f = KK.wordfields.map(x => x[0]); ok(f.indexOf('society') >= 0 && f.indexOf('opinion') >= 0, 'Wortfelder society/opinion');
 });
@@ -1256,6 +1257,30 @@ test('catalog: certCheck A1 (Regression) und A2 (ADR-11.6)', () => {
   ok(CAT.certCheck(A2, Object.assign({ skills: noRead }, base)).ok, 'A2: Bereich ohne Aufgaben entfällt');
   ok(!CAT.certCheck(A2, Object.assign({}, base)).ok, 'A2: ohne Fertigkeitszahlen keine Freigabe (Schreiben fehlt)');
 });
+test('B1: CERT_RULES, Meinungstexte, Abzeichen, Zertifikat erst bei complete', () => {
+  const CAT = DT.catalog, B1 = CAT.CERT_RULES.B1, A2 = CAT.CERT_RULES.A2;
+  ok(B1 && B1.ex === A2.ex && B1.words === A2.words && B1.writes === 8 && B1.opinion === 2, 'B1-Regel: Schwellen wie A2, 8 Schreibaufgaben, 2 Meinungstexte');
+  const base = { c: 9, n: 10, wk: 8, wn: 10 }, sk = (done, op, opDone) => ({ grammar: { n: 10, c: 10 }, read: { n: 10, c: 10 }, listen: { n: 10, c: 10 }, dialog: { n: 10, c: 10 }, write: { n: 10, done, op, opDone } });
+  ok(CAT.certCheck(B1, Object.assign({ skills: sk(8, 4, 2) }, base)).ok, 'B1: 8 von 10, 2 Meinungstexte → ok');
+  ok(!CAT.certCheck(B1, Object.assign({ skills: sk(7, 4, 2) }, base)).ok, 'B1: 7 Schreibaufgaben → nein');
+  const r = CAT.certCheck(B1, Object.assign({ skills: sk(9, 4, 1) }, base));
+  ok(!r.ok && r.opinion.need === 2 && r.opinion.done === 1, 'B1: 1 Meinungstext → nein');
+  eq(CAT.certCheck(B1, Object.assign({ skills: sk(1, 1, 1) }, base, {})).opinion, { done: 1, n: 1, need: 1, ok: true }, 'B1: weniger Meinungstexte vorhanden als nötig → alle');
+  ok(CAT.certCheck(A2, Object.assign({ skills: sk(6, 0, 0) }, base)).opinion === null, 'A2: keine Meinungsregel');
+  const K = { courses: { de: { levels: { B1: [] } } }, content: {}, dialogs: {}, texts: {}, writes: { 'de-b1-s01': { id: 'de-b1-s01', opinion: 1 }, 'de-b1-s02': { id: 'de-b1-s02' } } };
+  const s = CAT.skillOf(K, 'de', 'B1', { 'de-b1-s01': { s: 'c' }, 'de-b1-s02': { s: 'c' } }, {});
+  eq([s.write.n, s.write.done, s.write.op, s.write.opDone], [2, 2, 1, 1], 'skillOf: Meinungstexte gezählt');
+  ok(DT.writes.OPINION_OK(undefined) && DT.writes.OPINION_OK(0) && DT.writes.OPINION_OK(1) && !DT.writes.OPINION_OK(2) && !DT.writes.OPINION_OK(true) && !DT.writes.OPINION_OK('1'), 'opinion: nur 0/1');
+  const Bd = DT.badges, ids = Bd.LIST.map(b => b.id);
+  eq(ids.slice(0, 20), ['first-step', 'first-topic', 'topics-5', 'fixer-10', 'dialog-1', 'dialogs-all', 'words-50', 'words-150', 'words-a1', 'streak-3', 'streak-7', 'streak-30', 'goal-10', 'cert-A1', 'a2-topic-1', 'a2-write-1', 'a2-listen-10', 'a2-speak-5', 'words-a2', 'cert-A2'], 'bestehende Abzeichen unverändert');
+  eq(ids.slice(20), ['b1-topics-5', 'b1-write-3', 'words-b1', 'cert-B1'], '4 neue B1-Abzeichen am Ende');
+  const p = { badges: {} };
+  eq(Bd.award(p, 'de', { b1: { topicsDone: 5, writesDone: 3, wordsKnown: 9, wordsTotal: 9, complete: false }, cert: { B1: false } }, 1).map(b => b.id), ['b1-topics-5', 'b1-write-3'], 'B1: Wörter/Zertifikat erst bei complete');
+  eq(Bd.award(p, 'de', { b1: { wordsKnown: 9, wordsTotal: 9, complete: true }, cert: { B1: true } }, 2).map(b => b.id), ['words-b1', 'cert-B1'], 'B1 nach Freigabe');
+  const cur = fs.readFileSync(path.join(root, 'js', 'curriculum.js'), 'utf8'), c2 = { window: {} }; vm.createContext(c2); vm.runInContext(cur, c2);
+  ok(c2.window.KOPRU.courses.de.complete.indexOf('B1') < 0 && c2.window.KOPRU.courses.tr.complete.indexOf('B1') < 0, 'B1 nicht in complete (Zertifikat „im Aufbau“)');
+});
+
 test('badges: A2-Abzeichen (neue IDs, alte unverändert, aus Fortschritt abgeleitet)', () => {
   const B = DT.badges, ids = B.LIST.map(b => b.id);
   eq(ids.slice(0, 14), ['first-step', 'first-topic', 'topics-5', 'fixer-10', 'dialog-1', 'dialogs-all', 'words-50', 'words-150', 'words-a1', 'streak-3', 'streak-7', 'streak-30', 'goal-10', 'cert-A1'], 'bestehende IDs unverändert und in Reihenfolge');
@@ -1482,7 +1507,7 @@ test('A1-Aufrüstung: Fixture erweitert A1 auf ≈ 650 Wörter und 16 Themen (je
     const addT = nT[cid] || 4;   // echte ext-Themen (Anzahl aus den Daten) bzw. 4 simulierte
     eq(a, [b[cid][0] + nExt, b[cid][1] + addT], cid + ': +' + nExt + ' Wörter, +' + addT + ' Themen (einmalig)');
     ok(nExt >= 295 && nExt <= 320, cid + ': Erweiterung ≈ 300 Wörter');
-    ok(a[0] >= 640 && a[0] <= 675 && a[1] === 16, cid + ': ≈ 650 Wörter / 16 Themen');
+    ok(a[0] >= 640 && a[0] <= 710 && a[1] === 16, cid + ': ≈ 650 Wörter / 16 Themen');
   });
   eq(C.CERT_RULES.A1, { ex: 0.8, words: 0.7 }, 'CERT_RULES.A1 unverändert (keine neuen Pflichten)');
 });

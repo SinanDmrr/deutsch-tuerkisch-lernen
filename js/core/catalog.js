@@ -131,6 +131,7 @@
       out.texts.push({ id: id, level: t.level, kind: t.kind, title: t.title, sub: t.sub, n: x.n, sk: x.sk });
     });
     out.writes = Object.keys(K.writes || {}).filter(function (id) { return id.indexOf(pre) === 0; }).sort();
+    out.opinion = out.writes.filter(function (id) { return K.writes[id].opinion === 1; }).length;   // Meinungstexte (B1) – für ungeladene Niveaus
     (K.vocab[key] || []).forEach(function (w) { out.words++; if (w.topic) out.wordsByField[w.topic] = (out.wordsByField[w.topic] || 0) + 1; });
     return out;
   }
@@ -139,7 +140,7 @@
   function levelSummary(K, key) {
     if (levelLoaded(K, key)) return summaryFromContent(K, key);
     var m = K.manifest && K.manifest[key];
-    return m ? { topics: m.topics || {}, dialogs: m.dialogs || [], texts: m.texts || [], writes: m.writes || [], words: m.words || 0, wordsByField: m.wordsByField || {} } : null;
+    return m ? { topics: m.topics || {}, dialogs: m.dialogs || [], texts: m.texts || [], writes: m.writes || [], opinion: m.opinion || 0, words: m.words || 0, wordsByField: m.wordsByField || {} } : null;
   }
 
   // Ungeladene Niveaus: Zeilen aus Lehrplan + Manifest mit lazy:true (avail:false, data:null, n = zählbare Aufgaben, sk).
@@ -219,6 +220,7 @@
         Object.keys(tp.sk || {}).forEach(function (k) { if (out[k]) out[k].n += tp.sk[k]; });
       });
       var sm = levelSummary(K, key); out.write.n = sm ? sm.writes.length : 0;
+      if (sm && sm.opinion) { out.write.op = sm.opinion; out.write.opDone = 0; }
       return out;
     }
     topicsOf(K, cid).forEach(function (tp) {
@@ -233,8 +235,9 @@
       });
     });
     writesOf(K, cid, lv).forEach(function (w) {
-      out.write.n++;
-      if (o.writeDone ? o.writeDone(w.id) : !!(pr[w.id] && pr[w.id].s === 'c')) out.write.done++;
+      var wd = o.writeDone ? o.writeDone(w.id) : !!(pr[w.id] && pr[w.id].s === 'c');
+      out.write.n++; if (wd) out.write.done++;
+      if (w.opinion === 1) { out.write.op = (out.write.op || 0) + 1; out.write.opDone = out.write.opDone || 0; if (wd) out.write.opDone++; }   // Meinungstext (B1)
     });
     return out;
   }
@@ -245,14 +248,15 @@
    * Sprechen ist bewusst keine Bedingung (browserabhängig, ADR-6). Freigabe nur für vollständige Niveaus (complete im Lehrplan, prüft der Aufrufer). */
   var CERT_RULES = {
     A1: { ex: 0.8, words: 0.7 },
-    A2: { ex: 0.8, words: 0.7, skill: { grammar: 0.6, read: 0.6, listen: 0.6, dialog: 0.6 }, writes: 6 }
+    A2: { ex: 0.8, words: 0.7, skill: { grammar: 0.6, read: 0.6, listen: 0.6, dialog: 0.6 }, writes: 6 },
+    B1: { ex: 0.8, words: 0.7, skill: { grammar: 0.6, read: 0.6, listen: 0.6, dialog: 0.6 }, writes: 8, opinion: 2 }   // B1: ≥ 8 Schreibaufgaben, davon ≥ 2 Meinungstexte
   };
-  // rule = CERT_RULES[lv]; st = { c, n, wk, wn, skills: skillOf(…) } → { ok, exOk, wOk, skills: { bereich: { p, n, need, ok } }, writes: { done, n, need, ok } | null }
+  // rule = CERT_RULES[lv]; st = { c, n, wk, wn, skills: skillOf(…) } → { ok, exOk, wOk, skills: { bereich: { p, n, need, ok } }, writes: { done, n, need, ok } | null, opinion: { … } | null }
   function certCheck(rule, st) {
     rule = rule || CERT_RULES.A1; st = st || {};
     var sk = st.skills || {};
     var res = { exOk: st.n > 0 && st.c / st.n >= rule.ex, wOk: !st.wn || st.wk / st.wn >= rule.words, skills: {}, writes: null };
-    var ok = res.exOk && res.wOk && !((rule.skill || rule.writes) && !st.skills);   // Regel mit Bereichen braucht Fertigkeitszahlen
+    var ok = res.exOk && res.wOk && !((rule.skill || rule.writes || rule.opinion) && !st.skills);   // Regel mit Bereichen braucht Fertigkeitszahlen
     Object.keys(rule.skill || {}).forEach(function (k) {
       var x = sk[k] || { n: 0, c: 0 }, need = rule.skill[k], good = !x.n || x.c / x.n >= need;
       res.skills[k] = { p: x.n ? Math.round(x.c / x.n * 100) : 0, n: x.n, need: Math.round(need * 100), ok: good };
@@ -262,6 +266,12 @@
       var wn = (sk.write && sk.write.n) || 0, wd = (sk.write && sk.write.done) || 0, wneed = Math.min(rule.writes, wn);
       res.writes = { done: wd, n: wn, need: wneed, ok: wd >= wneed };
       if (!res.writes.ok) ok = false;
+    }
+    res.opinion = null;
+    if (rule.opinion) {
+      var on = (sk.write && sk.write.op) || 0, od = (sk.write && sk.write.opDone) || 0, oneed = Math.min(rule.opinion, on);
+      res.opinion = { done: od, n: on, need: oneed, ok: od >= oneed };
+      if (!res.opinion.ok) ok = false;
     }
     res.ok = ok;
     return res;

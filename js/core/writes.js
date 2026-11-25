@@ -18,6 +18,9 @@
   var SEP = '\n\n———\n\n';     // trennt mehrere gerettete Fassungen in xk
   var MAX_XK = 20;                // höchstens so viele xk-Teile aus FREMDEN Daten (Import/Übertragung)
 
+  // Meinungstext (B1): Aufgabendefinition trägt opinion: 1 (kein Speicherfeld); erlaubt sind nur fehlend, 0 und 1
+  function OPINION_OK(v) { return v === undefined || v === 0 || v === 1; }
+  function isOpinion(def) { return !!def && def.opinion === 1; }
   function obj(x) { return x && typeof x === 'object' && !Array.isArray(x); }
   function clone(x) { return x === undefined ? undefined : JSON.parse(JSON.stringify(x)); }
   function str(x) { return typeof x === 'string'; }
@@ -208,7 +211,7 @@
   }
 
   DT.writes = {
-    MAX_FIELD: MAX_FIELD, MAX_TOTAL: MAX_TOTAL, MAX_XK: MAX_XK, ID_RE: ID_RE, SEP: SEP,
+    MAX_FIELD: MAX_FIELD, MAX_TOTAL: MAX_TOTAL, MAX_XK: MAX_XK, ID_RE: ID_RE, isOpinion: isOpinion, OPINION_OK: OPINION_OK, SEP: SEP,
     ensure: ensure, get: get, size: size, put: put, submit: submit, restore: restore, remove: remove, removePart: removePart,
     removeCourse: removeCourse, archiveCourse: archiveCourse, isArchived: isArchived, hasCurrent: hasCurrent,
     status: status, countWords: countWords, missingPoints: missingPoints, pick: pick, sanitize: sanitize, commit: commit

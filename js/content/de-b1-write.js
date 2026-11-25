@@ -117,16 +117,16 @@ window.KOPRU.addWrites('de-b1', [
     ],
     e: 'Örnek not nazik bir ton kuruyor: Önce rica („Ich möchte euch bitten“), sonra anlayış („Ich verstehe, dass …, obwohl …“), sonra çözüm („Wie wäre es, wenn …?“). „weder … noch“ ve „je … desto“ notu daha akıcı yapar.' },
 
-  { id: 'de-b1-s06', scene: 'freizeit',
+  { id: 'de-b1-s06', scene: 'arbeit',
     title: 'Meinung im Forum: Homeoffice oder Büro?', sub: 'Forumda görüş yazmak: ev ofis mi, ofis mi?',
     task: 'Bir forumda „Ev ofis mi, ofis mi?“ sorusuna cevap yaz (du): Kendi görüşünü söyle, bir avantaj ve bir dezavantajı belirt ve görüşünü gerekçelendir. „einerseits … andererseits“, „sowohl … als auch“ ya da „zwar … aber“ kullan.',
     points: ['Kendi görüşün', 'Avantaj ve dezavantaj', 'Gerekçen'],
     reg: 'du',
-    words: { min: 55, ziel: 85 },
+    words: { min: 60, ziel: 90 }, opinion: 1,
     chunks: ['Meiner Meinung nach …', 'Einerseits …', 'Andererseits …', 'Sowohl … als auch …', 'Deshalb …'],
     hint: [['meinung', 'finde', 'homeoffice'], ['einerseits', 'andererseits', 'zwar'], ['deshalb', 'weil', 'da ']],
-    model: 'Hallo zusammen,\nmeiner Meinung nach ist eine Mischung am besten. Einerseits spart man im Homeoffice viel Zeit, weil man nicht zur Arbeit fahren muss. Andererseits fehlt der Kontakt zu den Kollegen. Zwar ist es zu Hause ruhiger, aber bei Problemen kann man nicht schnell nachfragen. Sowohl die Firma als auch die Mitarbeiter haben Vorteile, wenn man zwei Tage zu Hause und drei Tage im Büro arbeitet. Deshalb würde ich diese Lösung empfehlen.\nViele Grüße',
-    modeln: 'Herkese merhaba,\nbence en iyisi karma bir düzen. Bir yandan ev ofiste işe gitmek zorunda olmadığımız için çok zaman kazanıyoruz. Öbür yandan iş arkadaşlarıyla temas eksik kalıyor. Evde daha sessiz olsa da sorun çıkınca hızlıca sormak mümkün değil. İki gün evde, üç gün ofiste çalışırsak hem şirketin hem de çalışanların avantajı olur. Bu yüzden bu çözümü öneririm.\nSevgiler',
+    model: 'Hallo zusammen,\nmeiner Meinung nach ist eine Mischung am besten. Einerseits spart man im Homeoffice viel Zeit, weil man nicht zur Arbeit fahren muss. Andererseits fehlt der Kontakt zu den Kollegen. Zwar ist es zu Hause ruhiger, aber bei Problemen kann man nicht schnell nachfragen. Sowohl die Firma als auch die Mitarbeiter haben Vorteile, wenn man zwei Tage zu Hause und drei Tage im Büro arbeitet. Deshalb würde ich diese Lösung empfehlen. Außerdem sollte jede Firma klare Regeln aufstellen, damit niemand benachteiligt wird.\nViele Grüße',
+    modeln: 'Selamlar,\nbence en iyisi karma bir düzen. Bir yandan ev ofiste işe gitmek zorunda olmadığımız için çok zaman kazanıyoruz. Öbür yandan iş arkadaşlarıyla temas eksik kalıyor. Evde daha sessiz olsa da sorun çıkınca hızlıca sormak mümkün değil. İki gün evde, üç gün ofiste çalışırsak hem şirketin hem de çalışanların avantajı olur. Bu yüzden bu çözümü öneririm. Ayrıca her şirket net kurallar koymalı ki kimse mağdur olmasın.\nSevgiler',
     check: [
       { k: 'Görüşünü açık söyledin mi? („Meiner Meinung nach …“)', e: '„Meiner Meinung nach“ görüşü başlatan kalıptır. Hemen ardından fiil gelir: „… ist eine Mischung am besten.“' },
       { k: 'İki yanı dengeli gösterdin mi? („einerseits … andererseits“)', e: '„Einerseits …, andererseits …“ iki zıt tarafı adil biçimde yan yana koyar. Her ikisinde de fiil 2. sırada kalır.' },
@@ -181,46 +181,46 @@ window.KOPRU.addWrites('de-b1', [
       { bad: 'Können Sie mir sagen, bis wann ist die Anmeldung möglich?', good: 'Könnten Sie mir sagen, bis wann die Anmeldung möglich ist?', why: 'Dolaylı soru yan cümledir: fiil sonda. „Könnten“ daha kibardır.' }
     ],
     e: 'Veli mesajı kısa, saygılı ve net olmalı: teşekkür, plan, soru. Geçmiş irreal cümle pişmanlık ve iyi niyeti birlikte gösterir. Dolaylı sorularda fiilin sonda olması sık yapılan hatadır.' },
-  { id: 'de-b1-s09', scene: 'wohnung', title: 'Tipps zum Energiesparen', sub: 'Arkadaşına enerji tasarrufu tavsiyeleri (mesaj)',
-    task: 'Arkadaşına (du) bir mesaj yaz. Yeni dairesinde enerji ve çöp konusunda sorun yaşıyor. İki somut tavsiye ver, bir tanesini Konjunktiv II ile söyle („An deiner Stelle würde ich …“) ve bir Passiv cümlesi kullan.',
-    points: ['Mesajı sıcak başlat', 'İki somut tavsiye ver', 'Passiv ve „An deiner Stelle“ kullan'],
+  { id: 'de-b1-s09', scene: 'wohnung', title: 'Meinung im Forum: Energie sparen – Pflicht oder freiwillig?', sub: 'Forumda görüş: enerji tasarrufu zorunlu mu, gönüllü mü?',
+    task: 'Bir forumda „Soll jeder Haushalt Energie sparen müssen?“ sorusu tartışılıyor. Cevap yaz (du): Kendi görüşünü söyle, iki gerekçe ver, bir karşı görüşe cevap ver ve Konjunktiv II ile bir tavsiye ekle („Ich würde …“). En az iki bağlaç kullan („weil“, „obwohl“, „deshalb“, „damit“). Hedef: 80–100 kelime.',
+    points: ['Kendi görüşün', 'İki gerekçe', 'Karşı görüşe cevap ve tavsiye'],
     reg: 'du',
-    words: { min: 50, ziel: 80 },
-    chunks: ['Hallo …,', 'An deiner Stelle würde ich …', 'werden … getrennt', 'Außerdem …', 'Liebe Grüße'],
-    hint: [['hallo', 'schön', 'danke'], ['würde', 'steckdosenleiste', 'licht', 'sparen'], ['wird', 'werden', 'getrennt']],
-    model: 'Hallo Deniz,\nschön, dass du in die neue Wohnung eingezogen bist! An deiner Stelle würde ich eine Steckdosenleiste mit Schalter kaufen. So wird der Verbrauch im Standby gestoppt. Außerdem wird bei dir im Haus der Müll in vier Tonnen getrennt: gelb, blau, braun und schwarz. Wenn du Fragen hast, melde dich einfach. Wir könnten am Samstag zusammen einkaufen gehen.\nLiebe Grüße\nCan',
-    modeln: 'Merhaba Deniz,\nYeni daireye taşınmana sevindim! Senin yerinde olsam anahtarlı bir çoklu priz alırdım. Böylece bekleme modundaki tüketim durdurulur. Ayrıca senin binanda çöp dört kutuda ayrıştırılıyor: sarı, mavi, kahverengi ve siyah. Sorun olursa hemen haber ver. Cumartesi birlikte alışverişe gidebiliriz.\nSevgiler\nCan',
+    words: { min: 60, ziel: 90 }, opinion: 1,
+    chunks: ['Ich finde, dass …', 'Erstens …', 'Zweitens …', 'Obwohl manche sagen, dass …', 'Ich würde …', 'Viele Grüße'],
+    hint: [['finde', 'meiner meinung', 'sparen'], ['erstens', 'zweitens', 'weil', 'deshalb'], ['obwohl', 'würde', 'damit']],
+    model: 'Hallo zusammen,\nich finde, dass jeder Haushalt Energie sparen sollte, aber niemand sollte dazu gezwungen werden. Erstens sind die Preise hoch, deshalb lohnt sich jede gesparte Kilowattstunde. Zweitens schützt man damit das Klima. Außerdem bringen kleine Schritte oft mehr, als man denkt. Obwohl manche sagen, dass einzelne Haushalte wenig bewirken, wird viel gespart, wenn viele mitmachen. Ich würde zuerst alte Lampen austauschen und die Heizung im Schlafzimmer niedriger stellen. Ein Zwang würde dagegen nur Ärger bringen, denn niemand mag Kontrollen. Wer sich ernst genommen fühlt, macht freiwillig oft mehr.\nViele Grüße',
+    modeln: 'Herkese merhaba,\nbence her hane enerji tasarrufu yapmalı, ama kimse buna zorlanmamalı. Birincisi, fiyatlar yüksek; bu yüzden tasarruf edilen her kilovatsaat işe yarıyor. İkincisi, bununla iklim korunuyor. Ayrıca küçük adımlar çoğu zaman sanıldığından daha çok fayda sağlar. Bazıları tek tek hanelerin az şey değiştirdiğini söylese de çok kişi katılınca epey tasarruf edilir. Ben önce eski ampulleri değiştirirdim ve yatak odasındaki kaloriferi kısardım. Zorunluluk ise yalnızca tepki çeker, çünkü kimse denetimleri sevmez. Ciddiye alındığını hisseden insan genellikle gönüllü olarak daha fazlasını yapar.\nSevgiler',
     check: [
-      { k: '„An deiner Stelle würde ich …“ doğru mu?', e: 'Yerine koyma kalıbı: *würde* 2. sırada, fiil Infinitiv olarak sonda. Du ile yazıldığı için „deiner“.' },
-      { k: 'Passiv cümlesi doğru mu? („wird … gestoppt“, „wird … getrennt“)', e: 'Passiv = werden + Partizip II (sonda). Çoğul özne için „werden“, tekil için „wird“.' },
-      { k: 'Samimi dil ve veda kullandın mı?', e: 'Arkadaşa „Hallo …,“ ve „Liebe Grüße“ yeterli; du formunu sürdür.' },
-      { k: 'İki tavsiye var mı?', e: '„Außerdem …“ ile ikinci tavsiyeyi ekle; fiil 2. sırada kalır.' }
+      { k: 'Görüşünü „dass“ cümlesiyle açık söyledin mi?', e: '„Ich finde, dass …“ yan cümle açar; çekimli fiil sonda durur: „… Energie sparen sollte“ (Modalverb sonda).' },
+      { k: 'İki gerekçeyi sıraladın mı? („erstens … zweitens“)', e: '„Erstens“ ve „zweitens“ cümlenin 1. sırasını doldurur; çekimli fiil hemen arkasından gelir: „Erstens sind die Preise hoch“.' },
+      { k: '„obwohl“ doğru mu?', e: '„Obwohl“ yan cümle açar, fiil sonda; ana cümlede **aber** kullanılmaz: „Obwohl es teuer ist, spare ich.“' },
+      { k: 'Konjunktiv II tavsiyesi var mı?', e: '„Ich würde zuerst … austauschen“: *würde* 2. sırada, asıl fiil Infinitiv olarak sonda.' }
     ],
     mistakes: [
-      { bad: 'An deiner Stelle ich würde eine Steckdosenleiste kaufen.', good: 'An deiner Stelle würde ich eine Steckdosenleiste kaufen.', why: '„An deiner Stelle“ 1. sırayı doldurur; fiil hemen gelir: „würde ich“.' },
-      { bad: 'Der Müll wird in vier Tonnen getrennen.', good: 'Der Müll wird in vier Tonnen getrennt.', why: 'Passiv Partizip II ister: „getrennt“, Infinitiv „trennen“ değil.' },
-      { bad: 'Der Müll werden getrennt.', good: 'Der Müll wird getrennt.', why: 'Özne tekil (der Müll): „wird“. Çoğul özne varsa „werden“.' }
+      { bad: 'Ich finde, dass jeder Haushalt sollte Energie sparen.', good: 'Ich finde, dass jeder Haushalt Energie sparen sollte.', why: '„dass“ yan cümlesinde çekimli fiil (burada *sollte*) en sonda durur.' },
+      { bad: 'Obwohl es teuer ist, aber ich spare Energie.', good: 'Obwohl es teuer ist, spare ich Energie.', why: 'Türkçedeki „-sa da … ama“ gibi düşünüp *aber* ekleme. „Obwohl“ yan cümlesinden sonra ana cümle doğrudan fiille başlar.' },
+      { bad: 'Deshalb ich würde alte Lampen austauschen.', good: 'Deshalb würde ich alte Lampen austauschen.', why: '„Deshalb“ 1. sırayı doldurur; çekimli fiil hemen arkasından gelir: „würde ich“.' }
     ],
-    e: 'Tavsiye mesajı kısa ve sıcak olmalı. „An deiner Stelle würde ich …“ yumuşak bir öneri sunar, Passiv ise kuralları nesnel anlatır. İkisini birleştirmek doğal ve anlaşılır bir metin sağlar.' },
-  { id: 'de-b1-s10', scene: 'fest', title: 'Einladung zum Straßenfest', sub: 'Sokak şenliği için davet ve gönüllü çağrısı',
-    task: 'Komşularına (Sie) bir duyuru yaz. Sokak şenliğini ve zamanını duyur, gönüllü ara ve bir bağlaç yapısı kur („Je mehr Helfer …, desto …“ ya da „damit …“). Kibar bir rica cümlesi ekle („Könnten Sie …?“ / „Dürfte ich …?“).',
-    points: ['Şenliği ve zamanı duyur', 'Gönüllü ara', 'Kibar rica ve bağlaç cümlesi ekle'],
+    e: 'Forum yazısında görüş net olmalı ve gerekçelenmelidir. „Ich finde, dass …“ görüşü açar, „erstens … zweitens“ gerekçeleri sıralar, „obwohl“ karşı görüşü ele alır, „Ich würde …“ ise yumuşak bir tavsiye verir. Bağlaçlarda fiil yerine dikkat et.' },
+  { id: 'de-b1-s10', scene: 'fest', title: 'Leserbrief: Straßenfest – Gewinn oder Störung?', sub: 'Okur mektubu: sokak şenliği kazanç mı, rahatsızlık mı?',
+    task: 'Yerel gazetede „Soll das Straßenfest jedes Jahr stattfinden?“ tartışılıyor. Editöre bir okur mektubu yaz (Sie): Görüşünü söyle, bir argüman ve bir karşı argüman ver, „Je mehr …, desto …“ ya da „damit“ ile bir cümle kur ve kibar bir ricayla bitir („Könnten Sie …?“). Hedef: 80–100 kelime.',
+    points: ['Kendi görüşün', 'Argüman ve karşı argüman', 'Kibar rica ile bitir'],
     reg: 'Sie',
-    words: { min: 55, ziel: 90 },
-    chunks: ['Liebe Nachbarinnen und Nachbarn,', 'Wir suchen …', 'Je mehr …, desto …', 'Könnten Sie …?', 'Viele Grüße'],
-    hint: [['fest', 'straße', 'samstag', 'uhr'], ['suchen', 'helfer', 'kuchen'], ['je mehr', 'desto', 'könnten', 'damit']],
-    model: 'Liebe Nachbarinnen und Nachbarn,\nam Samstag findet unser Straßenfest statt. Es beginnt um 14 Uhr. Wir suchen noch Helfer für den Kuchenstand und für den Aufbau. Je mehr Helfer wir sind, desto besser wird das Fest. Könnten Sie bitte bis Mittwoch Bescheid geben, damit wir alles planen können? Schürzen und Handschuhe werden zur Verfügung gestellt.\nWir freuen uns auf Sie!\nViele Grüße\nIhr Organisationsteam',
-    modeln: 'Sevgili komşular,\ncumartesi günü sokak şenliğimiz yapılıyor. Saat 14.00’te başlıyor. Pasta standı ve kurulum için hâlâ gönüllü arıyoruz. Ne kadar çok gönüllü olursak şenlik o kadar güzel olur. Planlayabilmemiz için lütfen çarşambaya kadar haber verebilir misiniz? Önlük ve eldiven sağlanacak.\nSizi görmekten mutluluk duyarız!\nSevgilerle\nOrganizasyon ekibiniz',
+    words: { min: 60, ziel: 90 }, opinion: 1,
+    chunks: ['Sehr geehrte Damen und Herren,', 'Meiner Meinung nach …', 'Je mehr …, desto …', 'Zwar …, aber …', 'Könnten Sie …?', 'Mit freundlichen Grüßen'],
+    hint: [['meiner meinung', 'straßenfest', 'jedes jahr'], ['zwar', 'aber', 'je mehr', 'desto'], ['könnten', 'veröffentlichen', 'damit']],
+    model: 'Sehr geehrte Damen und Herren,\nmeiner Meinung nach sollte das Straßenfest jedes Jahr stattfinden. Ich wohne seit acht Jahren in dieser Straße und habe dort viele nette Menschen kennengelernt. Je mehr Nachbarn sich kennenlernen, desto freundlicher wird das Zusammenleben. Zwar ist es am Abend manchmal laut, aber das Fest dauert nur einen Tag. Außerdem helfen viele Familien freiwillig, damit die Kinder einen schönen Nachmittag haben. Wer am Abend Ruhe braucht, kann die Veranstalter bitten, die Musik früher zu beenden. Könnten Sie meinen Brief bitte veröffentlichen, damit auch andere Leser ihre Meinung schreiben?\nMit freundlichen Grüßen\nMira Berg',
+    modeln: 'Sayın yetkili,\nbence sokak şenliği her yıl yapılmalı. Sekiz yıldır bu sokakta oturuyorum ve burada birçok iyi insanla tanıştım. Komşular birbirini ne kadar çok tanırsa birlikte yaşam o kadar dostça olur. Akşamları bazen gürültü olsa da şenlik yalnızca bir gün sürüyor. Ayrıca birçok aile gönüllü yardım ediyor ki çocukların güzel bir öğleden sonrası olsun. Akşam huzur isteyen, organizatörlerden müziği erken bitirmelerini rica edebilir. Mektubumu yayımlar mısınız, böylece başka okurlar da görüşünü yazsın?\nSaygılarımla\nMira Berg',
     check: [
-      { k: 'Resmî komşu hitabı ve veda var mı?', e: '„Liebe Nachbarinnen und Nachbarn,“ sıcak ama saygılı; veda „Viele Grüße“ (komşulara samimi ama düzgün).' },
-      { k: '„Je mehr …, desto …“ doğru mu?', e: '„Je mehr Helfer wir sind“ yan cümledir, fiil sonda. Ana cümlede „desto besser“ 1. sırayı doldurur, fiil hemen gelir: „desto besser wird das Fest“.' },
-      { k: '„damit“ yan cümlesinde fiil sonda mı?', e: '„damit wir alles planen können“: çekimli fiil sonda.' },
-      { k: 'Zaman ve yer açık mı?', e: 'Tarih ve saat net verilmelidir: „am Samstag“, „um 14 Uhr“.' }
+      { k: 'Resmî hitap ve veda var mı?', e: 'Gazeteye „Sehr geehrte Damen und Herren,“ ile başla, „Mit freundlichen Grüßen“ ile bitir (Sie).' },
+      { k: '„Je mehr …, desto …“ doğru mu?', e: '„Je mehr Nachbarn sich kennenlernen“ yan cümledir, fiil sonda. Ana cümlede „desto freundlicher“ 1. sırayı doldurur: „desto freundlicher wird das Zusammenleben“.' },
+      { k: '„zwar … aber“ ile karşı argümanı ele aldın mı?', e: '„Zwar ist es laut, aber das Fest dauert nur einen Tag.“ *Aber* 0. konumdadır (cümlenin ilk sırasını saymaz); hemen ardından özne + fiil gelir. Ödün + karşıtlık anlatır.' },
+      { k: 'Kibar rica ve „damit“ cümlesi doğru mu?', e: '„Könnten Sie … veröffentlichen, damit auch andere … schreiben?“ Kibar rica Konjunktiv II ile; „damit“ yan cümlesinde fiil sonda.' }
     ],
     mistakes: [
-      { bad: 'Je mehr Helfer wir sind, desto das Fest wird besser.', good: 'Je mehr Helfer wir sind, desto besser wird das Fest.', why: '„desto“ + sıfat 1. sırayı doldurur; çekimli fiil hemen arkasından gelir.' },
-      { bad: 'Geben Sie bis Mittwoch Bescheid, damit wir können alles planen.', good: 'Könnten Sie bis Mittwoch Bescheid geben, damit wir alles planen können?', why: '„damit“ yan cümlesinde fiil sonda; emir yerine kibar rica daha uygundur.' },
-      { bad: 'Das Fest beginnt am 14 Uhr.', good: 'Das Fest beginnt um 14 Uhr.', why: 'Saat için „um“, gün için „am“ kullanılır: „am Samstag, um 14 Uhr“.' }
+      { bad: 'Je mehr Nachbarn sich kennenlernen, desto das Zusammenleben wird freundlicher.', good: 'Je mehr Nachbarn sich kennenlernen, desto freundlicher wird das Zusammenleben.', why: '„desto“ + sıfat 1. sırayı doldurur; çekimli fiil hemen arkasından gelir.' },
+      { bad: 'Zwar ist es laut, sondern das Fest dauert nur einen Tag.', good: 'Zwar ist es laut, aber das Fest dauert nur einen Tag.', why: '„zwar“ ile **aber** kullanılır. „Sondern“ olumsuz bir cümleden sonra gelir (nicht A, sondern B).' },
+      { bad: 'Veröffentlichen Sie meinen Brief, damit andere Leser schreiben können?', good: 'Könnten Sie meinen Brief bitte veröffentlichen, damit auch andere Leser schreiben können?', why: 'Resmî mektupta emir yerine „Könnten Sie …?“ gibi kibar rica kullan; „damit“ yan cümlesinde fiil sonda.' }
     ],
-    e: 'Bir duyuru zaman, yer ve ihtiyacı net söyler. „Je mehr …, desto …“ davetkâr bir ton katar, „damit“ ise isteğin amacını gösterir. Kibar rica biçimi komşuluk ilişkisini korur.' }
+    e: 'Okur mektubunda önce görüşünü, sonra bir argüman ve bir karşı argüman verirsin. „Je mehr …, desto …“ fikri canlı kılar, „zwar … aber“ karşı tarafı ciddiye aldığını gösterir, „damit“ amacı belirtir. Kibar rica mektubu saygılı bitirir.' }
 ]);

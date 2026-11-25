@@ -9,7 +9,7 @@
   var LEGACY_KEYS = ['kopru.v1'];    // frühere Schlüssel, werden einmalig übernommen
   var DT = window.DT;
   var SCHEMA = DT.storage.SCHEMA;    // Version des Speicherformats (Migrationen nur in js/core/storage.js)
-  var APP_VERSION = '2026-11-24.1';  // bei jedem Release erhöhen (auch in index.html ?v=…)
+  var APP_VERSION = '2026-11-25.1';  // bei jedem Release erhöhen (auch in index.html ?v=…)
   var LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   var app = document.getElementById('app');
 
@@ -205,6 +205,8 @@
     certWords: ['Wörter: {p}\u00a0% (Ziel 70\u00a0%)', 'Kelimeler: %{p} (hedef %70)'],
     certGet: ['Zertifikat holen', 'Sertifikanı al'],
     certCondA2: ['80 % der Aufgaben richtig, in Grammatik, Lesen, Hören und Dialogen je mindestens 60 %, 70 % der Wörter sicher und 6 Schreibaufgaben geübt', 'Alıştırmaların %80’i doğru; dil bilgisi, okuma, dinleme ve diyaloglarda en az %60; kelimelerin %70’i oturmuş ve 6 yazma görevi tamamlanmış olmalı'],
+    certCondB1: ['80 % der Aufgaben richtig, in Grammatik, Lesen, Hören und Dialogen je mindestens 60 %, 70 % der Wörter sicher und 8 Schreibaufgaben geübt, darunter 2 Meinungstexte', 'Alıştırmaların %80’i doğru; dil bilgisi, okuma, dinleme ve diyaloglarda en az %60; kelimelerin %70’i oturmuş ve 8 yazma görevi tamamlanmış olmalı, bunların 2’si görüş yazısı olmalı'],
+    certOpinion: ['Meinungstexte: {d} von {z} geübt', 'Görüş yazıları: {z} yazıdan {d} tanesi tamam'],
     certSkill: ['{s}: {p}\u00a0% (Ziel {z}\u00a0%)', '{s}: %{p} (hedef %{z})'],
     certWrites: ['Schreiben: {d} von {z} geübt', 'Yazma: {z} görevden {d} tanesi tamam'],
     certKept: ['Erworben am {d} – bleibt gültig. {lv} ist seitdem gewachsen, darum zählen die Balken die neuen Inhalte mit.', '{d} tarihinde kazandın, geçerliliği devam ediyor. {lv} o günden beri genişledi; çubuklar yeni içerikleri de hesaba katıyor.'],
@@ -2298,7 +2300,7 @@
     var r = DT.catalog.certCheck(rule, { c: c, n: n, wk: ws.sicher, wn: words.length, skills: rule && rule.skill ? skillsOf(lv, true) : null });
     // A1-Aufrüstung P0: einmal erworben = bleibt (Abzeichen „<kurs>:cert-<Niveau>“), auch wenn neue Inhalte die Live-Rechnung senken
     var held = rule ? DT.badges.certAt(ensureProfile(prof()), cid, lv) : 0, live = !!rule && r.ok;
-    return { c: c, n: n, wk: ws.sicher, wn: words.length, exPct: pct(c, n), wPct: pct(ws.sicher, words.length), ok: live || !!held, live: live, held: held, exOk: r.exOk, wOk: r.wOk, skills: r.skills, writes: r.writes, rule: rule };
+    return { c: c, n: n, wk: ws.sicher, wn: words.length, exPct: pct(c, n), wPct: pct(ws.sicher, words.length), ok: live || !!held, live: live, held: held, exOk: r.exOk, wOk: r.wOk, skills: r.skills, writes: r.writes, opinion: r.opinion, rule: rule };
   }
   var SKILL_ROWS = [['grammar', '📖', 'skGrammar'], ['read', '📄', 'skRead'], ['listen', '🎧', 'skListen'], ['dialog', '💬', 'skDialog'], ['write', '✍️', 'skWrite'], ['speak', '🎤', 'skSpeak']];
   function skillLabel(k) { var r = SKILL_ROWS.filter(function (x) { return x[0] === k; })[0]; return r ? t(r[2]) : k; }
@@ -2327,12 +2329,12 @@
     return bars ? '<div class="card section"><div class="section-head"><h2>' + esc(t('skillsTitle', { lv: lv })) + '</h2><a href="#/overview">' + esc(t('overview')) + ' →</a></div>' + bars + '<p class="muted small" style="margin:8px 0 0">' + esc(t('skillsNote')) + '</p></div>' : '';
   }
   function badgeCtx() {
-    var p = ensureProfile(prof()), cid = courseId(), pr = prog(), ctx = { answered: 0, topicsDone: 0, dialogsDone: 0, dialogsAll: 0, fixed: 0 }, a2Topics = 0;
+    var p = ensureProfile(prof()), cid = courseId(), pr = prog(), ctx = { answered: 0, topicsDone: 0, dialogsDone: 0, dialogsAll: 0, fixed: 0 }, a2Topics = 0, b1Topics = 0;
     allTopics().forEach(function (tp) {
       if (!tp.avail) return;
       var s = topicStats(tp); ctx.answered += s.answered;
       if (tp.kind === 'dialog' && tp.level === 'A1') ctx.dialogsAll++;   // ADR-11.6: nur A1, damit neue A2-Dialoge das Abzeichen nicht erschweren
-      if (s.n && s.c === s.n) { if (tp.kind === 'dialog') { if (tp.level === 'A1') ctx.dialogsDone++; } else if (!tp.kind) { ctx.topicsDone++; if (tp.level === 'A2') a2Topics++; } }
+      if (s.n && s.c === s.n) { if (tp.kind === 'dialog') { if (tp.level === 'A1') ctx.dialogsDone++; } else if (!tp.kind) { ctx.topicsDone++; if (tp.level === 'A2') a2Topics++; if (tp.level === 'B1') b1Topics++; } }
     });
     Object.keys(pr).forEach(function (id) { if (EXI[id] && pr[id].f === 'w' && pr[id].s === 'c') ctx.fixed++; });
     var words = DT.vocab.wordsOf(K, cid, 'A1').map(function (w) { return w.id; });
@@ -2340,11 +2342,13 @@
     var log = (p.daily && p.daily.log) || {};
     ctx.streak = DT.daily.streak(log, todayKey()).days;
     ctx.goalDays = Object.keys(log).filter(function (k) { return DT.daily.reached(log[k]); }).length;
-    ctx.cert = { A1: certStatus('A1').ok, A2: levelComplete('A2') && certStatus('A2').ok };
+    ctx.cert = { A1: certStatus('A1').ok, A2: levelComplete('A2') && certStatus('A2').ok, B1: levelComplete('B1') && certStatus('B1').ok };   // B1 gilt erst, wenn B1 in complete steht
     // A2-Abzeichen: alles aus dem vorhandenen Fortschritt abgeleitet (kein neues Speicherfeld)
     var sk2 = skillsOf('A2', false), w2 = DT.vocab.wordsOf(K, cid, 'A2').map(function (w) { return w.id; });
     ctx.a2 = { topicsDone: a2Topics, writesDone: sk2.write.done, listenOk: sk2.listen.c, speakDone: sk2.speak.done,
       wordsKnown: w2.length ? DT.srs.stats(p, cid, w2).sicher : 0, wordsTotal: w2.length, complete: levelComplete('A2') };
+    var sk3 = skillsOf('B1', false), w3 = DT.vocab.wordsOf(K, cid, 'B1').map(function (w) { return w.id; });
+    ctx.b1 = { topicsDone: b1Topics, writesDone: sk3.write.done, wordsKnown: w3.length ? DT.srs.stats(p, cid, w3).sicher : 0, wordsTotal: w3.length, complete: levelComplete('B1') };
     return ctx;
   }
   function checkBadges(quiet) {   // am Sitzungsende und beim Dashboard (nicht bei jedem Render)
@@ -2394,13 +2398,14 @@
       var x = cs.skills[k]; return certBar(t('certSkill', { s: skillLabel(k), p: x.p, z: x.need }), x.ok, Math.round(x.p / x.need * 100));
     }).join('');
     var wr = cs.writes && cs.writes.need ? certBar(t('certWrites', { d: Math.min(cs.writes.done, cs.writes.need), z: cs.writes.need }), cs.writes.ok, Math.round(cs.writes.done / cs.writes.need * 100)) : '';
+    var op = cs.opinion && cs.opinion.need ? certBar(t('certOpinion', { d: Math.min(cs.opinion.done, cs.opinion.need), z: cs.opinion.need }), cs.opinion.ok, Math.round(cs.opinion.done / cs.opinion.need * 100)) : '';
     // A1-Aufrüstung P0: Lesen/Hören/Schreiben sind in A1 keine Bedingung – nur ein ruhiger Hinweis, sobald es sie gibt
     var skAll = rule.skill ? null : skillsOf(lv, false);
     var skNote = skAll && (skAll.read.n || skAll.write.n) ? '<div class="muted small">' + esc(t('certSkillsHint', { lv: lv })) + '</div>' : '';
     var kept = cs.held && !cs.live ? '<div class="small cert-kept">✓ ' + esc(cs.held > 1 ? t('certKept', { lv: lv, d: new Date(cs.held).toLocaleDateString(locale(uiLang())) }) : t('certKeptNoDate', { lv: lv })) + '</div>' : '';
-    return '<div class="cert-box"><div><b>🎓 ' + esc(t('certTitle', { lv: lv })) + '</b><div class="muted small">' + esc(t(rule.skill ? 'certCondA2' : 'certCond')) + '</div>' + kept + skNote + '</div>' +
+    return '<div class="cert-box"><div><b>🎓 ' + esc(t('certTitle', { lv: lv })) + '</b><div class="muted small">' + esc(t(rule.opinion ? 'certCondB1' : rule.skill ? 'certCondA2' : 'certCond')) + '</div>' + kept + skNote + '</div>' +
       '<div class="cert-bars">' + certBar(t('certEx', { p: cs.exPct }), cs.exOk, Math.round(cs.exPct / (rule.ex || 0.8))) +
-        (cs.wn ? certBar(t('certWords', { p: cs.wPct }), cs.wOk, Math.round(cs.wPct / (rule.words || 0.7))) : '') + skills + wr + '</div>' +
+        (cs.wn ? certBar(t('certWords', { p: cs.wPct }), cs.wOk, Math.round(cs.wPct / (rule.words || 0.7))) : '') + skills + wr + op + '</div>' +
       (cs.ok ? '<a class="btn primary" href="#/certificate/' + lv + '">🎓 ' + esc(t('certGet')) + '</a>' : '') + '</div>';
   }
   /* ADR-11.6: Zertifikats-Box je freigegebenem Niveau; Niveaus im Aufbau nur als graue Zeile ohne Balken */

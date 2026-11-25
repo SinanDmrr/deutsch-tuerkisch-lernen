@@ -104,6 +104,7 @@ window.KOPRU = {
           ['de-b1-10', 'Verben mit Präpositionen; worauf/darauf', 'Edatlı fiiller; worauf / darauf'],   // Lernziel: sich ärgern über, Ich warte darauf, dass …
           ['de-b1-14', 'Relativsätze II: mit Präposition, dessen/deren, wo, was', 'İlgi cümleleri II (edatlı, dessen/deren, wo, was)'],   // Lernziel: die Firma, bei der ich arbeite; alles, was …
           ['de-b1-05', 'Infinitiv mit zu; (nicht) brauchen zu', '“zu” ile mastar; (nicht) brauchen zu'],   // Lernziel: Ich habe vergessen, anzurufen
+          ['de-b1-19', 'Futur I: werden + Infinitiv (Pläne, Vorhersagen, Vermutung)', 'Futur I: werden + mastar (planlar, tahminler)'],   // Lernziel: Pläne und Vorhersagen ausdrücken
           ['de-b1-12', 'Zweck & Art: um … zu, damit, ohne … zu, statt … zu, indem', 'Amaç ve tarz: um … zu, damit, ohne … zu, statt … zu, indem'],   // Lernziel: Amaçları, yolları ve alternatifleri anlatmak
           ['de-b1-07', 'Gegengrund, Bedingung, Folge: obwohl, da, falls, sodass', 'Karşıt neden, koşul, sonuç: obwohl, da, falls, sodass'],   // Lernziel: Görüş savunmak, gerekçe göstermek
           ['de-b1-16', 'Zweiteilige Konnektoren & je … desto', 'İkili bağlaçlar ve je … desto'],   // Lernziel: Metinleri düzenlemek ve bağlamak

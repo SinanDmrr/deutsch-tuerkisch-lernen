@@ -10,7 +10,7 @@ Object.keys(MF).sort().forEach(k => (MF[k].files || []).forEach(f => fs.existsSy
 ['check.js', 'catalog.js'].forEach(f => run('js/core/' + f));
 const K = ctx.window.KOPRU, DT = ctx.window.DT, isC = DT.check.isCountable, CAT = DT.catalog;
 const BUD = { a1: { topics: 16, perTopic: 24, mc: 30, words: 650, phr: 20, dialogs: 10, reads: 12, listens: 10, writes: 10 },
-  b1: { topics: 17, perTopic: 24, mc: 30, words: 675, phr: 20, dialogs: 10, reads: 12, listens: 10, writes: 10 } };   // B1: docs/b1-konzept.md + Umfangsbudget-Kürzung (DE 17 Themen); Lesetexte je 5 Fragen, Hörtexte je 4
+  b1: { topics: 17, topicsMax: 18, perTopic: 24, mc: 30, words: 710, phr: 20, dialogs: 10, reads: 12, listens: 10, writes: 10 } };   // B1: docs/b1-konzept.md + Umfangsbudget-Kürzung (DE 17 Themen); Lesetexte je 5 Fragen, Hörtexte je 4
 const levels = process.argv.slice(2).map(x => x.toLowerCase()); if (!levels.length) levels.push('a1', 'a2');
 const pct = (a, b) => b ? Math.round(100 * a / b) : 0;
 const flag = (v, t, tol) => Math.abs(v - t) <= t * tol ? 'ok' : (v < t ? 'ZU WENIG' : 'ZU VIEL');
@@ -32,7 +32,7 @@ for (const lv of levels) for (const c of ['de', 'tr']) {
   const hr = tx.filter(i => K.texts[i].kind === 'listen').length, rd = tx.length - hr;
   const wr = Object.keys(K.writes || {}).filter(i => i.startsWith(pre)).length;
   const avg = topics.length ? tot / topics.length : 0;
-  rows.push([c + '-' + lv, 'Themen', topics.length, B.topics, flag(topics.length, B.topics, .1)]);
+  rows.push([c + '-' + lv, 'Themen', topics.length, B.topics, B.topicsMax ? (topics.length >= B.topics && topics.length <= B.topicsMax ? 'ok' : (topics.length < B.topics ? 'ZU WENIG' : 'ZU VIEL')) : flag(topics.length, B.topics, .1)]);
   rows.push(['', 'Aufgaben/Thema Ø (min-max)', avg.toFixed(1) + ' (' + (per.length ? Math.min.apply(null, per) + '-' + Math.max.apply(null, per) : '-') + ')', B.perTopic, flag(avg, B.perTopic, .1)]);
   rows.push(['', 'gewertet gesamt', cnt, '', '']);
   rows.push(['', 'mc-Anteil gesamt / max je Thema', pct(mcAll, cnt) + '% / ' + mcMax + '%', '<=' + B.mc + '%', pct(mcAll, cnt) <= B.mc && mcMax <= B.mc ? 'ok' : 'ZU VIEL']);

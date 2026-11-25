@@ -77,6 +77,7 @@
     if (t.scene != null && !t.scene) errors.push('scene leer');
     if (t.gloss != null && (typeof t.gloss !== 'object' || Array.isArray(t.gloss))) errors.push('gloss muss ein Objekt { Wort: Erklärung } sein');
     var n = wordCount(t), lo = L ? MIN_WORDS_L : MIN_WORDS, hi = L ? MAX_WORDS_L : MAX_WORDS;
+    if (m[2] === 'b1') hi = L ? 200 : 300; // B1: längere Texte (Lesen bis 300, Hören bis 200 Wörter)
     if (n && (n < lo || n > hi)) warnings.push('Länge ' + n + ' Wörter (Richtwert ' + lo + '–' + hi + ')');
     var low = fullText(t).toLowerCase();
     Object.keys(t.gloss || {}).forEach(function (w) {

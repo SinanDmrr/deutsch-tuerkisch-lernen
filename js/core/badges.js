@@ -47,7 +47,16 @@
     { id: 'words-a2', scope: 'course', icon: '🎖️', test: function (c) { return !!c.a2 && c.a2.complete && c.a2.wordsTotal > 0 && c.a2.wordsKnown >= c.a2.wordsTotal; },
       title: ['Alle A2-Wörter', 'Bütün A2 kelimeleri'], hint: ['Alle A2-Wörter sitzen sicher.', 'A2’nin bütün kelimeleri otursun.'] },
     { id: 'cert-A2', scope: 'course', icon: '🎓', test: function (c) { return !!(c.cert && c.cert.A2); },
-      title: ['A2 abgeschlossen', 'A2 tamamlandı'], hint: ['Erfülle die Bedingungen für das A2-Zertifikat.', 'A2 sertifikasının koşullarını yerine getir.'] }
+      title: ['A2 abgeschlossen', 'A2 tamamlandı'], hint: ['Erfülle die Bedingungen für das A2-Zertifikat.', 'A2 sertifikasının koşullarını yerine getir.'] },
+    // B1 (Paket B1-Technik): wie A2 nur aus dem eigenen Fortschritt abgeleitet; c.b1 liefert badgeCtx() in app.js
+    { id: 'b1-topics-5', scope: 'course', icon: '🪴', test: function (c) { return !!c.b1 && c.b1.topicsDone >= 5; },
+      title: ['Fünf B1-Themen', 'Beş B1 konusu'], hint: ['Löse alle Aufgaben von fünf B1-Themen richtig.', 'Beş B1 konusunun bütün alıştırmalarını doğru çöz.'] },
+    { id: 'b1-write-3', scope: 'course', icon: '📝', test: function (c) { return !!c.b1 && c.b1.writesDone >= 3; },
+      title: ['Meinung auf Papier', 'Düşünceni yazıya döktün'], hint: ['Schreib drei B1-Texte und geh jeweils die Checkliste durch.', 'Üç B1 metni yaz ve her birinde kontrol listesini gez.'] },
+    { id: 'words-b1', scope: 'course', icon: '🎖️', test: function (c) { return !!c.b1 && c.b1.complete && c.b1.wordsTotal > 0 && c.b1.wordsKnown >= c.b1.wordsTotal; },
+      title: ['Alle B1-Wörter', 'Bütün B1 kelimeleri'], hint: ['Alle B1-Wörter sitzen sicher.', 'B1’in bütün kelimeleri otursun.'] },
+    { id: 'cert-B1', scope: 'course', icon: '🎓', test: function (c) { return !!(c.cert && c.cert.B1); },
+      title: ['B1 abgeschlossen', 'B1 tamamlandı'], hint: ['Erfülle die Bedingungen für das B1-Zertifikat.', 'B1 sertifikasının koşullarını yerine getir.'] }
   ];
 
   function key(b, cid) { return b.scope === 'course' ? cid + ':' + b.id : b.id; }

@@ -373,6 +373,7 @@ Object.entries(K.writes || {}).forEach(([id, w]) => {
   if ((REG[cid] || []).indexOf(w.reg) < 0) E(`reg muss ${(REG[cid] || []).join(' oder ')} sein`, w.reg);
   const wd = w.words || {};
   if (!(Number.isInteger(wd.min) && Number.isInteger(wd.ziel) && wd.min > 0 && wd.min < wd.ziel)) E('words braucht { min, ziel } mit 0 < min < ziel', JSON.stringify(w.words));
+  if (!(coreCtx.window.DT.writes.OPINION_OK(w.opinion))) E('opinion darf nur 0 oder 1 sein', JSON.stringify(w.opinion));
   if (w.chunks != null && (!Array.isArray(w.chunks) || !w.chunks.every(s))) E('chunks muss eine Liste von Texten sein');
   if (w.hint != null && (!Array.isArray(w.hint) || !Array.isArray(w.points) || w.hint.length !== w.points.length || !w.hint.every(h => Array.isArray(h) && h.length && h.every(s)))) E('hint: je Inhaltspunkt eine Liste von Leitwörtern (Länge = points)');
   if (!Array.isArray(w.check) || w.check.length < 2 || w.check.length > 6) E('check braucht 2–6 Punkte');
@@ -414,6 +415,12 @@ Object.entries(K.writes || {}).forEach(([id, w]) => {
   const scT = langScore(w.title), scS = langScore(w.sub);
   if (wCount(w.sub) >= 3 && scS[tL] >= 2 && scS[sL] * 3 < scS[tL]) E(`sub muss ${nm[sL]} sein ${rule}`, String(w.sub).slice(0, 50));
   if (wCount(w.title) >= 3 && scT[sL] >= 2 && scT[tL] * 3 < scT[sL]) E(`title muss ${nm[tL]} sein ${rule}`, String(w.title).slice(0, 50));
+});
+
+// B1: Meinungstexte (opinion: 1) – Zertifikat B1 verlangt 2, darum mindestens 3 je Kurs einplanen
+['de', 'tr'].forEach(c => {
+  const n = Object.keys(K.writes || {}).filter(id => id.indexOf(c + '-b1-s') === 0 && K.writes[id].opinion === 1).length;
+  if (n < 3) warn(`Schreibaufgaben B1 (${c}): nur ${n} Meinungstext(e) mit opinion: 1 – mindestens 3 geplant`);
 });
 
 let nDia = 0;
