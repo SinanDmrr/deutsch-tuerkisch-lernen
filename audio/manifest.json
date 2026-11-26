@@ -17596,28 +17596,28 @@
   "de_DE-kerstin-low": {
    "base": "U.S. English Ryan voice (low quality)",
    "card": "https://huggingface.co/rhasspy/piper-voices/blob/main/de/de_DE/kerstin/low/MODEL_CARD",
-   "checked": "2026-11-25",
+   "checked": "2026-11-26",
    "dataset": "https://github.com/rhasspy/dataset-voice-kerstin",
    "license": "CC0"
   },
   "de_DE-thorsten-high": {
    "base": "U.S. English lessac voice (high quality)",
    "card": "https://huggingface.co/rhasspy/piper-voices/blob/main/de/de_DE/thorsten/high/MODEL_CARD",
-   "checked": "2026-11-25",
+   "checked": "2026-11-26",
    "dataset": "https://github.com/thorstenMueller/Thorsten-Voice",
    "license": "CC0"
   },
   "tr_TR-fahrettin-medium": {
    "base": "U.S. English lessac voice (medium quality)",
    "card": "https://huggingface.co/rhasspy/piper-voices/blob/v1.0.0/tr/tr_TR/fahrettin/medium/MODEL_CARD",
-   "checked": "2026-11-25",
+   "checked": "2026-11-26",
    "dataset": "https://github.com/NabuCasa/voice-datasets",
    "license": "CC0"
   },
   "tr_TR-fettah-medium": {
    "base": "U.S. English lessac voice (medium quality)",
    "card": "https://huggingface.co/rhasspy/piper-voices/blob/v1.0.0/tr/tr_TR/fettah/medium/MODEL_CARD",
-   "checked": "2026-11-25",
+   "checked": "2026-11-26",
    "dataset": "https://github.com/NabuCasa/voice-datasets",
    "license": "CC0"
   }
