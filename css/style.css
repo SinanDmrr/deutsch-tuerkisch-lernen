@@ -449,6 +449,8 @@ footer.foot { max-width: 1040px; margin: 0 auto; padding: 0 16px 40px; color: va
 /* Einstufungstest */
 .bar .skip { background: repeating-linear-gradient(45deg, var(--muted) 0 3px, transparent 3px 7px); opacity: .55; }
 .place-prog { margin: 0 0 12px; display: grid; gap: 6px; }
+.place-prog-head { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; justify-content: space-between; }
+.place-stage { font-size: 1rem; margin: 14px 0 6px; text-align: left; }
 .place-offer { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: space-between; }
 .place-offer h2 { margin: 0 0 4px; }
 .plain-list { list-style: none; padding: 0; margin: 0 0 1em; display: grid; gap: 6px; }

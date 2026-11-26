@@ -233,18 +233,31 @@
     micInfoText: ['Die Spracherkennung macht dein Browser, nicht diese Seite. Je nach Browser wird die Aufnahme dafür an dessen Anbieter geschickt (z. B. Chrome an Google). Wir selbst empfangen und speichern nichts. Die Übung ist freiwillig – du kannst den Satz auch einfach laut sagen.', 'Konuşmayı bu site değil, tarayıcın tanır. Tarayıcına göre kayıt bunun için sağlayıcısına gönderilir (ör. Chrome’da Google’a). Biz hiçbir şey almıyor ve saklamıyoruz. Alıştırma isteğe bağlı – cümleyi sadece sesli söyleyebilirsin de.'],
     micInfoOk: ['Verstanden – Mikrofon starten', 'Anladım – mikrofonu başlat'],
     placeTitle: ['Einstufungstest', 'Seviye testi'],
-    placeIntro: ['Du kannst schon etwas Türkisch? Dann finde in ein paar Minuten heraus, welche A1-Themen du überspringen kannst.', 'Biraz Almancan var mı? Birkaç dakikada hangi A1 konularını atlayabileceğini öğren.'],
-    placeHow1: ['ca. 5 Minuten, höchstens 24 Fragen', 'yaklaşık 5 dakika, en fazla 24 soru'],
+    placeIntro: ['Du kannst schon etwas Türkisch? Der Test geht Stufe für Stufe vor: Erst kommt A1 – sitzt das meiste, geht es mit dem nächsten Niveau weiter. Am Ende weißt du, wo du am besten einsteigst.', 'Biraz Almancan var mı? Test adım adım ilerler: Önce A1 gelir – çoğu oturmuşsa bir sonraki seviyeye geçersin. Sonunda nereden başlaman gerektiğini görürsün.'],
+    placeHow1: ['Stufen {s} · pro Stufe höchstens {n} Fragen, ohne Zeitdruck', 'Seviyeler: {s} · her seviyede en fazla {n} soru, süre sınırı yok'],
+    placeHow4: ['Pausieren kannst du jederzeit – dein Zwischenstand bleibt auf diesem Gerät gespeichert.', 'İstediğin an ara verebilirsin – kaldığın yer bu cihazda saklı kalır.'],
+    placeResumeTitle: ['Du hast schon angefangen', 'Yarım kalan bir testin var'],
+    placeResumeInfo: ['Stufe {lv} · beantwortete Fragen: {n} · zuletzt am {d}', '{lv} seviyesi · cevaplanan soru: {n} · en son {d} tarihinde'],
+    placeResumeDone: ['Der Test ist fertig – dein Ergebnis wartet noch auf dich.', 'Test bitti – sonucun seni bekliyor.'],
+    placeResume: ['Weitermachen', 'Kaldığın yerden devam et'],
+    placeShowResult: ['Ergebnis ansehen', 'Sonucu gör'],
+    placeRestart: ['Neu beginnen', 'Baştan başla'],
+    placeDiscard: ['Test abbrechen', 'Testi iptal et'],
+    placeDiscarded: ['Test abgebrochen – an deinem Lernstand hat sich nichts geändert.', 'Test iptal edildi – öğrenme durumun olduğu gibi duruyor.'],
+    placeLater: ['Später fortsetzen', 'Sonra devam et'],
+    placeLaterToast: ['Gespeichert – unter „Einstufungstest“ machst du später einfach weiter.', 'Kaydedildi – sonra “Seviye testi”nden kaldığın yerden devam edersin.'],
+    placeStageProg: ['Stufe {lv} · Thema {i} von {n}', '{lv} seviyesi · Konu {i} / {n}'],
+    placeStageUp: ['{a} sitzt – weiter geht’s mit {b}.', '{a} tamam – sıra {b} seviyesinde.'],
+    placeStageHead: ['{lv}: {m} von {n} geprüften Themen sitzen', '{lv}: sorulan {n} konudan {m} tanesi oturmuş'],
     placeHow2: ['pro Thema 1–2 Fragen – zwei richtig heißt: sitzt', 'her konudan 1–2 soru – ikisi de doğruysa konu tamam'],
     placeHow3: ['zählt nicht in deine Statistik und landet nicht in „Meine Lücken“', 'istatistiğine sayılmaz, “Eksiklerim”e de düşmez'],
     placePrev: ['Letzter Test am {d}: {n} Themen sicher.', 'Son test {d} tarihinde: {n} konu tamam.'],
     placeStart: ['Test starten', 'Teste başla'],
     placeSkipTest: ['Lieber von vorn anfangen', 'Baştan başlamayı tercih ederim'],
-    placeProgress: ['Thema {i} von {n}', 'Konu {i} / {n}'],
     placeDone: ['Test geschafft!', 'Test bitti!'],
     placeScore: ['{m} von {n} geprüften Themen sitzen schon.', 'Sorulan {n} konudan {m} tanesi zaten oturmuş.'],
-    placeStartAt: ['Starte am besten bei: {x}', 'En iyisi şuradan başla: {x}'],
-    placeAllKnown: ['Alle A1-Themen sitzen – stark!', 'Tüm A1 konuları oturmuş – harika!'],
+    placeStartAt: ['Empfohlener Start: {x}', 'Önerdiğimiz başlangıç: {x}'],
+    placeAllKnown: ['Alle geprüften Themen sitzen – stark!', 'Sorulan konuların hepsi oturmuş – harika!'],
     placeSkipQ: ['Welche Themen möchtest du überspringen? Du kannst sie später jederzeit trotzdem üben.', 'Hangi konuları atlamak istersin? İstediğin zaman yine de çalışabilirsin.'],
     placeKnown: ['sitzt', 'tamam'],
     placeLearn: ['üben', 'çalış'],
@@ -253,7 +266,7 @@
     placeNone: ['Nichts überspringen', 'Hiçbirini atlama'],
     placeSaved: ['Gespeichert – los geht’s!', 'Kaydedildi – haydi başlayalım!'],
     placeOfferTitle: ['Schon Vorkenntnisse?', 'Biraz Almancan var mı?'],
-    placeOfferText: ['Mit dem Einstufungstest überspringst du, was du schon kannst – dauert etwa 5 Minuten.', 'Seviye testiyle bildiğin konuları atlarsın – yaklaşık 5 dakika sürer.'],
+    placeOfferText: ['Mit dem Einstufungstest überspringst du, was du schon kannst – Pause machen geht jederzeit.', 'Seviye testiyle bildiğin konuları atlarsın – istediğin an ara verebilirsin.'],
     skippedBadge: ['übersprungen', 'atlandı'],
     skippedPct: ['{p}\u00a0% übersprungen', '%{p} atlandı'],
     skippedInfo: ['Dieses Thema hast du nach dem Einstufungstest übersprungen. Üben kannst du es trotzdem jederzeit.', 'Bu konuyu seviye testinden sonra atladın. Yine de istediğin zaman çalışabilirsin.'],
@@ -1539,8 +1552,11 @@
 
   function playerDots() {
     if (player.mode === 'placement') {   // keine Sprünge im Test – nur Fortschritt
-      return place ? '<div class="place-prog"><span class="muted small">' + esc(t('placeProgress', { i: Math.min(place.ti + 1, place.topics.length), n: place.topics.length })) + '</span>' +
-        '<div class="bar thin"><span class="fill" style="width:' + pct(place.ti, place.topics.length) + '%"></span></div></div>' : '';
+      if (!place) return '';
+      var prn = place.run, ptops = prn.tops[prn.si] || [];
+      return '<div class="place-prog"><div class="place-prog-head"><span class="muted small">' + esc(t('placeStageProg', { lv: prn.stages[prn.si], i: Math.min(prn.ti + 1, ptops.length), n: ptops.length })) + '</span>' +
+        '<button type="button" class="btn small" data-act="place-later">⏸ ' + esc(t('placeLater')) + '</button></div>' +
+        '<div class="bar thin"><span class="fill" style="width:' + pct(prn.ti, ptops.length) + '%"></span></div></div>';
     }
     var p = prog();
     return '<div class="dots" role="list">' + player.queue.map(function (id, i) {
@@ -2509,8 +2525,9 @@
   /* ================= Einstufungstest (ADR-7) =================
    * Antworten werden NICHT in prog geschrieben (keine geschenkten Punkte, nichts landet in „Meine Lücken“).
    * Ergebnis: place[cid] und – nur wenn der Nutzer zustimmt – skip[cid][topicId]. */
-  var place = null;
-  function placementTopics() { return levelTopics('A1').filter(function (x) { return x.avail && !x.kind; }); }
+  var place = null;   // { run, nextId } – run aus DT.placement; Zwischenstand in localStorage['dt-place-run'] (ADR-17), nie in dt-data
+  var PL = DT.placement;
+  function placementTopics(lv) { return levelTopics(lv || 'A1').filter(function (x) { return x.avail && !x.kind; }); }
   function placementPool(tp) {
     var all = tp.data.exercises, half = all.slice(Math.floor(all.length / 2)).map(function (e) { return e.id; });
     var ok = all.filter(function (e) { return e.t === 'mc' || e.t === 'gap' || (e.t === 'listen' && canPlay(e.say)); });
@@ -2518,46 +2535,70 @@
     var pool = (hard.length >= 2 ? hard : ok).map(function (e) { return e.id; });
     return DT.vocab.shuffle(pool, DT.vocab.rng(DT.vocab.hash(tp.id + ':' + Date.now()))).slice(0, 2);
   }
-  function startPlacement() {
-    var topics = placementTopics();
-    place = { topics: topics, ti: 0, step: 0, cur: placementPool(topics[0]), mastered: [], failed: [], streak: 0, asked: 0, finished: false, nextId: null };
-    newPlayer('placement', 'placement', [place.cur[0]], null);
+  function placeStages() { return PL.stages(course().complete); }
+  function placeCtx() {
+    return { topics: function (lv) { return placementTopics(lv).map(function (x) { return x.id; }); },
+      pool: function (id) { var tp = topicById(id); return tp && tp.avail ? placementPool(tp) : []; } };
+  }
+  // Lauf-Speicher: eigener Schlüssel, Fehler (voll/gesperrt) werden ignoriert → dann nur kein Fortsetzen. dt-data bleibt immer unberührt.
+  function placeSave() { if (place && place.run) rawSet(PL.KEY, PL.serialize(place.run)); }
+  function placeDrop() { try { localStorage.removeItem(PL.KEY); } catch (e) { /* ohne Zugriff: nichts zu löschen */ } }
+  function placeDropFor(pid, cid) {   // beim Kurs-Reset / Profil-Löschen: nur den passenden (oder kaputten) Lauf entfernen
+    var raw = rawGet(PL.KEY), r = null; if (!raw) return;
+    try { r = JSON.parse(raw); } catch (e) { r = null; }
+    if (!r || typeof r !== 'object' || (r.pid === pid && (!cid || r.cid === cid))) placeDrop();
+  }
+  function placeStored() {
+    return PL.parse(rawGet(PL.KEY), { pid: db.active, cid: courseId(), stages: placeStages(), now: Date.now(),
+      hasTopic: function (id) { var tp = topicById(id); return !!(tp && tp.avail); }, hasEx: function (id) { return !!exById(id); } });
+  }
+  function startPlacement(run) {
+    var fresh = !run;
+    if (fresh) run = PL.create({ pid: db.active, cid: courseId(), stages: placeStages(), now: Date.now() }, placeCtx());
+    place = { run: run, nextId: null };
+    if (fresh) placeSave();
+    var cur = PL.current(run);
+    newPlayer('placement', 'placement', cur ? [cur] : [], null);
+    if (!cur) player.done = true;
   }
   function placementAnswer(ok) {
-    place.asked++;
-    var tp = place.topics[place.ti];
-    if (ok && place.step === 0 && place.cur.length > 1) { place.step = 1; place.nextId = place.cur[1]; return; }
-    if (ok) { place.mastered.push(tp.id); place.streak = 0; } else { place.failed.push(tp.id); place.streak++; }
-    place.ti++; place.step = 0;
-    while (place.ti < place.topics.length) {           // Themen ohne passende Aufgaben überspringen
-      place.cur = placementPool(place.topics[place.ti]);
-      if (place.cur.length) break;
-      place.ti++;
-    }
-    if (place.streak >= 3 || place.ti >= place.topics.length) { place.finished = true; place.nextId = null; }
-    else place.nextId = place.cur[0];
+    var rn = place.run, lv0 = rn.stages[rn.si];
+    var r = PL.answer(rn, ok, placeCtx(), Date.now());
+    place.nextId = r.next;
+    placeSave();
+    if (r.nextStage) toast(t('placeStageUp', { a: lv0, b: rn.stages[rn.si] }));
   }
   function viewPlacement() {
     var head = '<div class="crumbs"><a href="#/lessons">' + esc(t('lessons')) + '</a></div><h1>🧭 ' + esc(t('placeTitle')) + '</h1>';
     if (player && player.key === 'placement' && place) return head + renderPlayer();
-    var p = ensureProfile(prof()), prev = p.place[courseId()];
-    return head + '<div class="card section"><p>' + md(t('placeIntro')) + '</p><ul class="plain-list">' +
-      '<li>⏱️ ' + esc(t('placeHow1')) + '</li><li>🎯 ' + esc(t('placeHow2')) + '</li><li>🛡️ ' + esc(t('placeHow3')) + '</li></ul>' +
-      (prev ? '<p class="muted small">' + esc(t('placePrev', { d: new Date(prev.t).toLocaleDateString(locale(uiLang())), n: (prev.mastered || []).length })) + '</p>' : '') +
-      '<div class="btn-row"><button class="btn primary" data-act="place-start">' + esc(t('placeStart')) + ' →</button><a class="btn" href="#/lessons">' + esc(t('placeSkipTest')) + '</a></div></div>';
+    var p = ensureProfile(prof()), prev = p.place[courseId()], st = placeStages(), saved = placeStored(), loc = locale(uiLang());
+    var resume = saved ? '<div class="card section place-resume"><h2>⏸ ' + esc(t('placeResumeTitle')) + '</h2><p>' +
+      esc(saved.finished ? t('placeResumeDone') : t('placeResumeInfo', { lv: saved.stages[saved.si], n: saved.asked, d: new Date(saved.u).toLocaleDateString(loc) })) + '</p>' +
+      '<div class="btn-row"><button class="btn primary" data-act="place-resume">' + esc(t(saved.finished ? 'placeShowResult' : 'placeResume')) + ' →</button>' +
+      '<button class="btn" data-act="place-discard">' + esc(t('placeDiscard')) + '</button></div></div>' : '';
+    return head + resume + '<div class="card section"><p>' + md(t('placeIntro')) + '</p><ul class="plain-list">' +
+      '<li>⏱️ ' + esc(t('placeHow1', { s: st.join(', '), n: PL.MAX_Q })) + '</li><li>🎯 ' + esc(t('placeHow2')) + '</li><li>⏸ ' + esc(t('placeHow4')) + '</li><li>🛡️ ' + esc(t('placeHow3')) + '</li></ul>' +
+      (prev ? '<p class="muted small">' + esc(t('placePrev', { d: new Date(prev.t).toLocaleDateString(loc), n: (prev.mastered || []).length })) + '</p>' : '') +
+      '<div class="btn-row"><button class="btn' + (saved ? '' : ' primary') + '" data-act="place-start">' + esc(t(saved ? 'placeRestart' : 'placeStart')) + ' →</button>' +
+      (saved ? '' : '<a class="btn" href="#/lessons">' + esc(t('placeSkipTest')) + '</a>') + '</div></div>';
   }
   function placementResult() {
-    var cid = courseId(), skip = ensureProfile(prof()).skip[cid] || {}, firstOpen = null;
-    var rows = placementTopics().map(function (tp) {
-      var m = place.mastered.indexOf(tp.id) >= 0, f = place.failed.indexOf(tp.id) >= 0;
-      if (!m && !firstOpen) firstOpen = tp;
-      var tag = m ? '<span class="badge ok">✓ ' + esc(t('placeKnown')) + '</span>' : (f ? '<span class="badge primary">' + esc(t('placeLearn')) + '</span>' : '<span class="badge">' + esc(t('placeNotAsked')) + '</span>');
-      return '<label class="check-row"><input type="checkbox" name="skip" value="' + tp.id + '"' + (m || skip[tp.id] ? ' checked' : '') + '><span><b>' + esc(tp.num + '. ' + tp.title) + '</b> <span class="muted small">' + esc(tp.sub) + '</span></span>' + tag + '</label>';
+    var cid = courseId(), skip = ensureProfile(prof()).skip[cid] || {}, run = place.run, rec = PL.recommend(run);
+    var recTp = rec.topicId ? topicById(rec.topicId) : null;
+    var groups = run.tops.map(function (tops, si) {
+      if (!tops.length) return '';
+      var lv = run.stages[si], m = tops.filter(function (id) { return run.mastered.indexOf(id) >= 0; }).length;
+      var rows = placementTopics(lv).map(function (tp) {
+        var mk = run.mastered.indexOf(tp.id) >= 0, f = run.failed.indexOf(tp.id) >= 0;
+        var tag = mk ? '<span class="badge ok">✓ ' + esc(t('placeKnown')) + '</span>' : (f ? '<span class="badge primary">' + esc(t('placeLearn')) + '</span>' : '<span class="badge">' + esc(t('placeNotAsked')) + '</span>');
+        return '<label class="check-row"><input type="checkbox" name="skip" value="' + tp.id + '"' + (mk || skip[tp.id] ? ' checked' : '') + '><span><b>' + esc(tp.num + '. ' + tp.title) + '</b> <span class="muted small">' + esc(tp.sub) + '</span></span>' + tag + '</label>';
+      }).join('');
+      return '<h3 class="place-stage">' + esc(t('placeStageHead', { lv: lv, m: m, n: tops.length })) + '</h3><div class="check-list">' + rows + '</div>';
     }).join('');
-    return '<div class="card summary place-result"><div style="font-size:2.4rem">🧭</div><h2>' + esc(t('placeDone')) + '</h2>' +
-      '<p>' + esc(t('placeScore', { m: place.mastered.length, n: place.mastered.length + place.failed.length })) + '</p>' +
-      (firstOpen ? '<p><b>' + esc(t('placeStartAt', { x: firstOpen.num + '. ' + firstOpen.title })) + '</b></p>' : '<p><b>' + esc(t('placeAllKnown')) + '</b></p>') +
-      '<p class="muted small" style="text-align:left">' + esc(t('placeSkipQ')) + '</p><div class="check-list">' + rows + '</div>' +
+    return '<div class="card summary place-result"><div style="font-size:2.4rem" aria-hidden="true">🧭</div><h2>' + esc(t('placeDone')) + '</h2>' +
+      '<p>' + esc(t('placeScore', { m: run.mastered.length, n: run.mastered.length + run.failed.length })) + '</p>' +
+      (recTp ? '<p><b>' + esc(t('placeStartAt', { x: rec.level + ' · ' + recTp.num + '. ' + recTp.title })) + '</b></p>' : '<p><b>' + esc(t('placeAllKnown')) + '</b></p>') +
+      '<p class="muted small" style="text-align:left">' + esc(t('placeSkipQ')) + '</p>' + groups +
       '<div class="btn-row"><button class="btn primary" data-act="place-apply">' + esc(t('placeApply')) + '</button><button class="btn" data-act="place-apply" data-none="1">' + esc(t('placeNone')) + '</button></div></div>';
   }
   function skippedOpenCount(list) {   // offene (nicht richtig gelöste) Aufgaben in übersprungenen Themen
@@ -2700,7 +2741,7 @@
     return { topic: 'lessons', write: 'lessons', placement: 'lessons', review: 'words', daily: 'dashboard', certificate: 'dashboard', practice: 'gaps' }[page] || page;
   }
   function neededKeys(r) {
-    var cid = courseId(), need = DT.loader.neededLevels(prof(), cid, r, K.manifest);
+    var cid = courseId(), need = DT.loader.neededLevels(prof(), cid, r, K.manifest, course().complete);
     var fk = DT.catalog.levelKey(cid, focusLevel());   // Fokus-Niveau (Tagesmix, „Weiter“, Wortschatz) – aus Manifest berechenbar
     if (K.manifest[fk] && need.indexOf(fk) < 0) need.push(fk);
     // A1 immer mitladen (wie vor Paket 0, als offene A1-Themen den Fokus auf A1 hielten): Grundlage für „Weiter“-Ersatz,
@@ -2733,7 +2774,7 @@
       return false;
     }
     // Nur Fehlgeschlagenes fehlt: blockiert, wenn die Route es braucht oder vom Kurs noch gar nichts geladen ist
-    var cid = courseId(), route = DT.loader.routeLevels(cid, r);
+    var cid = courseId(), route = DT.loader.routeLevels(cid, r, course().complete);
     var none = !Object.keys(K.manifest).some(function (k) { return k.indexOf(cid + '-') === 0 && LOADER.isLoaded(k); });
     if (none || miss.some(function (k) { return route.indexOf(k) >= 0; })) {
       showingLoadCard = true;   // Fehlerkarte sagt es schon – keine zusätzliche Hinweisleiste
@@ -2957,17 +2998,20 @@
         doNext(); break;
       }
       case 'cert-download': downloadCertificate(el.getAttribute('data-lv') || 'A1'); break;
-      case 'place-start': startPlacement(); render(); break;
+      case 'place-start': placeDrop(); startPlacement(); render(); break;
+      case 'place-resume': { var psr = placeStored(); if (psr) startPlacement(psr); render(); break; }
+      case 'place-discard': placeDrop(); place = null; player = null; toast(t('placeDiscarded')); render(); break;
+      case 'place-later': placeSave(); place = null; player = null; toast(t('placeLaterToast')); go('#/lessons'); break;
       case 'place-apply': {
         var pa = ensureProfile(prof()), pc = courseId(), now = Date.now();
-        pa.place[pc] = { t: now, level: 'A1', mastered: place ? place.mastered.slice() : [], asked: place ? place.asked : 0 };
+        pa.place[pc] = place ? PL.result(place.run, now) : { t: now, level: 'A1', mastered: [], asked: 0 };
         pa.skip[pc] = pa.skip[pc] || {};
         if (el.getAttribute('data-none')) Object.keys(pa.skip[pc]).forEach(function (k) { if (pa.skip[pc][k] && pa.skip[pc][k].by === 'placement') delete pa.skip[pc][k]; });
         else document.querySelectorAll('input[name="skip"]').forEach(function (cb) {
           if (cb.checked) { if (!pa.skip[pc][cb.value]) pa.skip[pc][cb.value] = { t: now, by: 'placement' }; }
           else delete pa.skip[pc][cb.value];
         });
-        save(); place = null; player = null; toast(t('placeSaved')); go('#/dashboard'); break;
+        save(); placeDrop(); place = null; player = null; toast(t('placeSaved')); go('#/dashboard'); break;
       }
       case 'unskip': { var pu = ensureProfile(prof()); delete (pu.skip[courseId()] || {})[el.getAttribute('data-id')]; save(); render(); break; }
       case 'set-goal': { var pg = ensureProfile(prof()); pg.daily.goal = +el.getAttribute('data-v'); save(); render(); break; }
@@ -3003,7 +3047,7 @@
       case 'switch-profile': db.active = el.getAttribute('data-id'); save(); player = null; render(); break;
       case 'delete-profile': {
         var pid = el.getAttribute('data-id'), pn = db.profiles[pid].name || '—';
-        if (armed(el, t('confirmDelete', { n: pn }))) { backupNow(); delete db.profiles[pid]; if (db.active === pid) db.active = Object.keys(db.profiles)[0]; save(); render(); }
+        if (armed(el, t('confirmDelete', { n: pn }))) { backupNow(); placeDropFor(pid); delete db.profiles[pid]; if (db.active === pid) db.active = Object.keys(db.profiles)[0]; save(); render(); }
         break;
       }
       case 'export': doExport(); break;
@@ -3049,7 +3093,7 @@
         el.setAttribute('data-wipe', String(wipeT));
         if (armed(el, t(wipeT ? 'confirmResetTexts' : 'confirmReset'))) {
           backupNow(); var pr3 = ensureProfile(prof()), cr = courseId();
-          pr3.prog[cr] = {}; if (pr3.srs) pr3.srs[cr] = {}; if (pr3.skip) pr3.skip[cr] = {}; if (pr3.place) delete pr3.place[cr];
+          pr3.prog[cr] = {}; if (pr3.srs) pr3.srs[cr] = {}; if (pr3.skip) pr3.skip[cr] = {}; if (pr3.place) delete pr3.place[cr]; placeDropFor(db.active, cr);
           if (wipeT) DT.writes.removeCourse(pr3, cr); else DT.writes.archiveCourse(pr3, cr, Date.now());
           save(); player = null; wst = null; render();
         }

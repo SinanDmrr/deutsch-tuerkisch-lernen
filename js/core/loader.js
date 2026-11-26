@@ -3,8 +3,9 @@
  *
  *   levelKeyOf(id)                       'de-a2-03.5' | 'de-a2.w001' | 'de-a2-s01' → 'de-a2' (sonst null)
  *   usedLevels(profil, kurs)             Pakete des Kurses, zu denen das Profil Einträge hat (prog, srs, skip, place, writes)
- *   routeLevels(kurs, route)             Pakete, die eine Ansicht braucht (route = { page, a, b, lv } wie parseHash)
- *   neededLevels(profil, kurs, route, manifest)
+ *   routeLevels(kurs, route, complete?)  Pakete, die eine Ansicht braucht (route = { page, a, b, lv } wie parseHash);
+ *                                        complete = freigegebene Niveaus des Kurses (Einstufung lädt alle Stufen, ADR-17)
+ *   neededLevels(profil, kurs, route, manifest, complete?)
  *   create({ manifest, inject, version, base, onLoad, timeout, setTimeout }) → { ensure(keys), isLoaded(key), markLoaded(datei), failed() }
  *
  * Grundsatz: Laden verändert NIE den gespeicherten Fortschritt – hier wird nur gelesen.
@@ -42,7 +43,13 @@
     return sortKeys(out);
   }
 
-  function routeLevels(cid, r) {
+  // Einstufung (ADR-17): alle freigegebenen Niveaus; ohne Angabe wie bisher A1+A2
+  function placementLevels(complete) {
+    var l = (Array.isArray(complete) ? complete : []).filter(function (x) { return LV.indexOf(String(x || '').toLowerCase()) >= 0; });
+    return l.length ? l : ['A1', 'A2'];
+  }
+
+  function routeLevels(cid, r, complete) {
     r = r || {};
     var out = [], pre = cid + '-', isLv = function (x) { return LV.indexOf(String(x || '').toLowerCase()) >= 0; };
     function id(x) { var k = levelKeyOf(x); if (k && k.indexOf(pre) === 0) out.push(k); }
@@ -50,14 +57,14 @@
       case 'topic': case 'write': id(r.a); break;
       case 'lessons': case 'certificate': if (isLv(r.a)) out.push(keyOf(cid, r.a)); break;
       case 'words': if (isLv(r.lv)) out.push(keyOf(cid, r.lv)); break;
-      case 'placement': out.push(keyOf(cid, 'A1'), keyOf(cid, 'A2')); break;
+      case 'placement': placementLevels(complete).forEach(function (lv) { out.push(keyOf(cid, lv)); }); break;
     }
     return sortKeys(out);
   }
 
   // manifest optional: nur Pakete, die es gibt; ohne Einträge → erstes Paket des Kurses (neuer Nutzer)
-  function neededLevels(p, cid, r, manifest) {
-    var out = usedLevels(p, cid).concat(routeLevels(cid, r));
+  function neededLevels(p, cid, r, manifest, complete) {
+    var out = usedLevels(p, cid).concat(routeLevels(cid, r, complete));
     if (manifest) out = out.filter(function (k) { return !!manifest[k]; });
     if (!out.length) {
       var first = manifest ? sortKeys(Object.keys(manifest).filter(function (k) { return k.indexOf(cid + '-') === 0; }))[0] : keyOf(cid, 'A1');

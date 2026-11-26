@@ -1,4 +1,4 @@
-/* Umfangs-Budget je Kurs und Niveau (docs/umfangs-budget.md): node tools/count-budget.js [a1|a2|b1 ...]
+/* Umfangs-Budget je Kurs und Niveau (docs/umfangs-budget.md): node tools/count-budget.js [a1|a2|b1|b2 ...]
  * Zählt Themen, gewertete Aufgaben, mc-Anteil, Wörter (phr), Dialoge/Wahlzeilen, Lese-/Hörtexte, Schreiben, Typen. Nur Lesen, Exit 0. */
 const fs = require('fs'), vm = require('vm'), path = require('path');
 const root = path.join(__dirname, '..');
@@ -10,7 +10,8 @@ Object.keys(MF).sort().forEach(k => (MF[k].files || []).forEach(f => fs.existsSy
 ['check.js', 'catalog.js'].forEach(f => run('js/core/' + f));
 const K = ctx.window.KOPRU, DT = ctx.window.DT, isC = DT.check.isCountable, CAT = DT.catalog;
 const BUD = { a1: { topics: 16, perTopic: 24, mc: 30, words: 650, phr: 20, dialogs: 10, reads: 12, listens: 10, writes: 10 },
-  b1: { topics: 17, topicsMax: 18, perTopic: 24, mc: 30, words: 710, phr: 20, dialogs: 10, reads: 12, listens: 10, writes: 10 } };   // B1: docs/b1-konzept.md + Umfangsbudget-Kürzung (DE 17 Themen); Lesetexte je 5 Fragen, Hörtexte je 4
+  b1: { topics: 17, topicsMax: 18, perTopic: 24, mc: 30, words: 710, phr: 20, dialogs: 10, reads: 12, listens: 10, writes: 10 },
+  b2: { topics: 17, perTopic: 24, mc: 25, words: 680, phr: 35, dialogs: 10, reads: 12, listens: 10, writes: 10 } };   // B2: docs/b2-konzept.md §3; B1: docs/b1-konzept.md + Umfangsbudget-Kürzung (DE 17 Themen); Lesetexte je 5 Fragen, Hörtexte je 4
 const levels = process.argv.slice(2).map(x => x.toLowerCase()); if (!levels.length) levels.push('a1', 'a2');
 const pct = (a, b) => b ? Math.round(100 * a / b) : 0;
 const flag = (v, t, tol) => Math.abs(v - t) <= t * tol ? 'ok' : (v < t ? 'ZU WENIG' : 'ZU VIEL');

@@ -1152,6 +1152,22 @@ test('texts: Hörtexte prüfen und registrieren', () => {
   const KK = ctx.window.KOPRU; if (KK) { KK.addText('tr-a2-h99', { level: 'A2' }); eq(KK.texts['tr-a2-h99'].kind, 'listen', 'addText: -h-ID ⇒ kind listen'); delete KK.texts['tr-a2-h99']; }
 });
 
+test('B2-Lehrplan (Paket 0)', () => {
+  const cur = fs.readFileSync(path.join(root, 'js', 'curriculum.js'), 'utf8'), c2 = { window: {} }; vm.createContext(c2); vm.runInContext(cur, c2);
+  const KK = c2.window.KOPRU;
+  const ORD = { de: [8, 9, 11, 12, 10, 5, 17, 2, 13, 1, 3, 6, 14, 7, 15, 16, 18], tr: [3, 12, 13, 11, 7, 6, 9, 2, 4, 15, 8, 10, 17, 14, 5, 16, 18] };
+  ['de', 'tr'].forEach(c => {
+    const rows = KK.courses[c].levels.B2, ids = rows.map(r => r[0]);
+    eq(ids, ORD[c].map(n => c + '-b2-' + (n < 10 ? '0' : '') + n), c + ' B2: 17 Themen in Konzept-Reihenfolge');
+    eq(ids.length, new Set(ids).size, c + ' B2: IDs eindeutig');
+    ok(rows.every(r => r.length === 3 && r[1] && r[2]), c + ' B2: Titel in beiden Sprachen');
+    eq(KK.courses[c].complete, ['A1', 'A2'], c + ' B2: complete unverändert (im Aufbau)');
+  });
+  ok(KK.courses.de.levels.B2.every(r => r[0] !== 'de-b2-04') && KK.courses.tr.levels.B2.every(r => r[0] !== 'tr-b2-01'), 'de-b2-04 / tr-b2-01 entfallen');
+  const f = KK.wordfields.map(x => x[0]); ok(['economy', 'science', 'culture'].every(x => f.indexOf(x) >= 0), 'Wortfelder economy/science/culture');
+  eq(f.length, new Set(f).size, 'Wortfeld-IDs eindeutig');
+});
+
 test('B1-Lehrplan (Paket 0b)', () => {
   const cur = fs.readFileSync(path.join(root, 'js', 'curriculum.js'), 'utf8'), c2 = { window: {} }; vm.createContext(c2); vm.runInContext(cur, c2);
   const KK = c2.window.KOPRU;
@@ -1593,6 +1609,142 @@ test('A1-Aufrüstung: Grundstock/Erweiterung getrennt zählbar (ext:1, kein Spei
   eq([sp.base.n, sp.base.d, sp.ext.n, sp.ext.d], [ws.length - nExt, 300, nExt, 0], 'Wörter: Grundstock 300/' + (ws.length - nExt) + ', Erweiterung 0/' + nExt);
   ok(Math.round(st.sicher / ws.length * 100) < 50 && Math.round(sp.base.d / sp.base.n * 100) >= 85, 'Gesamt fällt unter 50 %, Grundstock bleibt ≥ 85 %');
   eq(JSON.stringify(p), json, 'Profil unverändert (nichts gespeichert)');
+});
+
+/* ---------- ADR-17: Einstufung in Stufen (js/core/placement.js, Lauf in localStorage['dt-place-run']) ---------- */
+const PLC = DT.placement;
+const PNOW = Date.UTC(2026, 10, 25, 12);
+const ptopics = (lv, n) => Array.from({ length: n }, (_, i) => 'de-' + lv.toLowerCase() + '-' + String(i + 1).padStart(2, '0'));
+function pctx(sizes) {   // sizes = { A1: 18, A2: 10 }; jedes Thema hat zwei Aufgaben <thema>.e1/.e2
+  return { topics: lv => ptopics(lv, sizes[lv] || 0), pool: id => [id + '.e1', id + '.e2'] };
+}
+// spielt Themen nach Muster durch: true = beide richtig (sitzt), false = erste Frage falsch
+function pplay(run, ctx, pattern) {
+  let last = null;
+  pattern.forEach(m => {
+    if (run.finished) return;
+    if (m) { last = PLC.answer(run, true, ctx, PNOW); if (!last.stageDone && run.step === 1) last = PLC.answer(run, true, ctx, PNOW); }
+    else last = PLC.answer(run, false, ctx, PNOW);
+  });
+  return last;
+}
+const prun = (sizes, stages) => PLC.create({ pid: 'p1', cid: 'de', stages: stages || ['A1', 'A2'], now: PNOW }, pctx(sizes));
+const pchk = (o) => Object.assign({ pid: 'p1', cid: 'de', stages: ['A1', 'A2'], now: PNOW, hasTopic: () => true, hasEx: () => true }, o || {});
+test('placement: Stufen aus complete', () => {
+  eq(PLC.stages(['A2', 'A1', 'x', 'a1']), ['A1', 'A2'], 'sortiert, eindeutig, nur bekannte Niveaus');
+  eq(PLC.stages(['A1', 'A2', 'B1']), ['A1', 'A2', 'B1'], 'B1 kommt automatisch dazu');
+  eq(PLC.stages(null), [], 'ohne Liste: leer');
+  const r = prun({ A1: 18 });
+  eq([r.si, r.ti, r.step, r.cur], [0, 0, 0, ['de-a1-01.e1', 'de-a1-01.e2']], 'Start auf A1, erstes Thema');
+  eq(PLC.current(r), 'de-a1-01.e1', 'aktuelle Frage');
+});
+test('placement: Stufenwechsel genau bei 75 % (14/18 ja, 13/18 nein)', () => {
+  const ctx = pctx({ A1: 18, A2: 10 });
+  const a = prun({ A1: 18, A2: 10 }), pa = Array(18).fill(true); [1, 5, 9, 13].forEach(i => { pa[i] = false; });
+  const ra = pplay(a, ctx, pa);
+  ok(ra.stageDone && ra.nextStage && !ra.finished, '14/18 → nächste Stufe');
+  eq([a.si, a.stages[a.si], PLC.current(a)], [1, 'A2', 'de-a2-01.e1'], 'steht auf A2, erstes Thema');
+  eq(a.sAsked, 0, 'Fragenzähler je Stufe neu'); eq(a.asked, 14 * 2 + 4, 'Gesamtzahl Fragen');
+  const b = prun({ A1: 18, A2: 10 }), pb = Array(18).fill(true); [1, 5, 9, 13, 16].forEach(i => { pb[i] = false; });
+  const rb = pplay(b, ctx, pb);
+  ok(rb.stageDone && !rb.nextStage && rb.finished && b.finished, '13/18 → fertig');
+  eq(b.tops.length, 1, 'A2 nie betreten'); eq(PLC.result(b, 1).level, 'A1', 'Niveau A1');
+});
+test('placement: 3 nicht beherrschte Themen in Folge beenden die Stufe', () => {
+  const ctx = pctx({ A1: 18, A2: 10 }), r = prun({ A1: 18, A2: 10 });
+  const res = pplay(r, ctx, [true, true, false, false, false, true]);
+  ok(res.finished && r.finished, 'beendet'); eq(r.asked, 2 + 2 + 1 + 1 + 1, 'genau 7 Fragen');
+  eq(r.failed, ['de-a1-03', 'de-a1-04', 'de-a1-05'], 'drei offen'); eq(PLC.current(r), null, 'keine weitere Frage');
+  const s = prun({ A1: 18 }); pplay(s, ctx, [false, false, true, false, false, true]);
+  ok(!s.finished && s.streak === 0, 'unterbrochene Serie zählt neu');
+});
+test('placement: höchstens 40 Fragen je Stufe', () => {
+  const ctx = pctx({ A1: 25, A2: 25 }), r = prun({ A1: 25, A2: 25 });
+  const res = pplay(r, ctx, Array(20).fill(true));
+  ok(res.nextStage, '20/25 sitzen (80 %) → A2'); eq(r.asked, 40, 'A1: genau 40 Fragen, nicht mehr');
+  pplay(r, ctx, Array(25).fill(true));
+  ok(r.finished && r.sAsked === 40 && r.asked === 80, 'A2 ebenfalls gedeckelt, danach fertig (keine Stufe mehr)');
+  const one = PLC.create({ pid: 'p', cid: 'de', stages: ['A1'], now: PNOW }, { topics: () => ptopics('A1', 50), pool: id => [id + '.e1'] });
+  let n = 0; while (!one.finished && n < 100) { PLC.answer(one, true, { topics: () => ptopics('A1', 50), pool: id => [id + '.e1'] }, PNOW); n++; }
+  eq(n, 40, 'auch mit 1 Frage je Thema: 40');
+});
+test('placement: Themen ohne Aufgaben zählen nicht', () => {
+  const ctx = { topics: lv => ptopics(lv, 8), pool: id => /0[78]$/.test(id) ? [] : [id + '.e1', id + '.e2'] };
+  const r = PLC.create({ pid: 'p', cid: 'de', stages: ['A1', 'A2'], now: PNOW }, ctx);
+  eq(r.tops[0].length, 6, 'nur 6 prüfbare Themen');
+  const res = pplay(r, ctx, [true, true, true, true, true, false]);
+  ok(res.nextStage, '5/6 = 83 % → nächste Stufe');
+});
+test('placement: Empfehlung und Ergebnis (Format von place[cid])', () => {
+  const ctx = pctx({ A1: 18, A2: 10 }), r = prun({ A1: 18, A2: 10 });
+  pplay(r, ctx, Array(18).fill(true)); pplay(r, ctx, [true, true, false, false, false]);
+  ok(r.finished, 'A2 nach 3 offenen beendet');
+  eq(PLC.recommend(r), { level: 'A2', topicId: 'de-a2-03' }, 'alles A1 gekonnt + A2 schwach → A2, erstes offenes Thema');
+  const res = PLC.result(r, 123);
+  eq(Object.keys(res).sort(), ['asked', 'level', 'mastered', 't'], 'gleiche Felder wie bisher');
+  eq([res.t, res.level, res.mastered.length, res.asked], [123, 'A2', 20, 18 * 2 + 4 + 3], 'höchstes geprüftes Niveau, Themen aller Stufen');
+  const w = prun({ A1: 18, A2: 10 }); pplay(w, ctx, [true, false, true, false, false, false]);
+  eq(PLC.recommend(w), { level: 'A1', topicId: 'de-a1-02' }, 'A1 schwach → A1, Thema 2');
+  const all = prun({ A1: 4, A2: 4 }); pplay(all, pctx({ A1: 4, A2: 4 }), Array(8).fill(true));
+  eq(PLC.recommend(all), { level: 'A2', topicId: null }, 'alles gekonnt → kein offenes Thema');
+  const a1 = PLC.create({ pid: 'p', cid: 'tr', stages: ['A1'], now: PNOW }, pctx({ A1: 5 })); pplay(a1, pctx({ A1: 5 }), Array(5).fill(true));
+  eq(PLC.result(a1, 1).level, 'A1', 'nur A1 freigegeben → wie bisher level A1');
+});
+test('placement: serialize → parse gleich, Fixture lesbar', () => {
+  const ctx = pctx({ A1: 18, A2: 10 }), r = prun({ A1: 18, A2: 10 });
+  pplay(r, ctx, Array(18).fill(true)); pplay(r, ctx, [true]); PLC.answer(r, true, ctx, PNOW);
+  const back = PLC.parse(PLC.serialize(r), pchk());
+  eq(canon(back), canon(r), 'Rundreise ohne Verlust');
+  ok(PLC.serialize(r).length < 3000, 'klein (nur IDs): ' + PLC.serialize(r).length + ' Bytes');
+  const fx = fs.readFileSync(path.join(__dirname, 'fixtures', 'place-run-v1.json'), 'utf8');
+  const f = PLC.parse(fx, pchk({ now: Date.UTC(2026, 10, 26) }));
+  ok(f && f.si === 1 && PLC.current(f) === 'de-a2-02.e2', 'Fixture: A2, Thema 2, zweite Frage');
+  const res = PLC.answer(f, true, ctx, PNOW); eq(res.next, 'de-a2-03.e1', 'Fixture läuft weiter');
+});
+test('placement: parse verwirft (Verfall/fremd/kaputt) – nie eine Ausnahme', () => {
+  const ctx = pctx({ A1: 18, A2: 10 }), r = prun({ A1: 18, A2: 10 }); pplay(r, ctx, [true, false]);
+  const js = PLC.serialize(r), mod = f => { const o = JSON.parse(js); f(o); return JSON.stringify(o); };
+  ok(PLC.parse(js, pchk({ now: PNOW + 13 * 864e5 })) !== null, '13 Tage: noch gültig');
+  eq(PLC.parse(js, pchk({ now: PNOW + 15 * 864e5 })), null, '15 Tage: verfallen');
+  eq(PLC.parse(js, pchk({ pid: 'p2' })), null, 'anderes Profil');
+  eq(PLC.parse(js, pchk({ cid: 'tr' })), null, 'anderer Kurs');
+  eq(PLC.parse(js, pchk({ stages: ['A1', 'A2', 'B1'] })), null, 'Stufenliste geändert');
+  eq(PLC.parse(js, pchk({ hasTopic: id => id !== 'de-a1-02' })), null, 'Thema gibt es nicht mehr');
+  eq(PLC.parse(js, pchk({ hasEx: () => false })), null, 'Aufgabe gibt es nicht mehr');
+  [null, undefined, '', '{', 'null', '[]', '42', '{}', '"x"', mod(o => { o.v = 2; }), mod(o => { o.si = 5; }), mod(o => { o.cur = 'x'; }),
+    mod(o => { o.mastered = [1]; }), mod(o => { o.u = 'gestern'; }), mod(o => { o.tops = {}; }), mod(o => { o.step = 3; }), mod(o => { o.u = PNOW + 5 * 864e5; })]
+    .forEach((x, i) => { let v; try { v = PLC.parse(x, pchk()); } catch (e) { v = 'Ausnahme'; } eq(v, null, 'kaputt #' + i); });
+});
+test('placement: Lauf-Speicher berührt dt-data nie, nicht im Export (Fixture v4-writes)', () => {
+  const src = fs.readFileSync(path.join(root, 'js', 'core', 'placement.js'), 'utf8');
+  ok(!/localStorage|dt-data|document\./.test(src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '')), 'Modul ohne Speicher-/DOM-Zugriff');
+  const ls = { m: {}, getItem(k) { return k in this.m ? this.m[k] : null; }, setItem(k, v) { this.m[k] = String(v); }, removeItem(k) { delete this.m[k]; } };
+  const p = copy(W4.cur); p.srs = p.srs || { de: { 'de-a1.w001': { b: 2, d: 3 } }, tr: {} }; p.skip = { de: {}, tr: {} }; p.place = {};
+  const db = { v: 4, active: p.id, profiles: { [p.id]: p } };
+  ls.setItem('dt-data', JSON.stringify(db)); const dataBefore = ls.getItem('dt-data');
+  const keep = JSON.stringify({ prog: p.prog, srs: p.srs, writes: p.writes });
+  ls.setItem(PLC.KEY, '{kaputt'); eq(PLC.parse(ls.getItem(PLC.KEY), pchk({ pid: p.id })), null, 'korrupter Schlüssel → null');
+  ls.setItem(PLC.KEY, ''); eq(PLC.parse(ls.getItem(PLC.KEY), pchk({ pid: p.id })), null, 'leerer Schlüssel → null');
+  const ctx = pctx({ A1: 18, A2: 10 }), r = PLC.create({ pid: p.id, cid: 'de', stages: ['A1', 'A2'], now: PNOW }, ctx);
+  ls.setItem(PLC.KEY, PLC.serialize(r));
+  Array(18).fill(true).concat([true, false, false, false]).forEach(m => { pplay(r, ctx, [m]); ls.setItem(PLC.KEY, PLC.serialize(r)); });
+  eq(ls.getItem('dt-data'), dataBefore, 'dt-data während des Laufs byte-gleich');
+  // place-apply nachbilden: Ergebnis + Zustimmung zu allen „sitzt“-Themen
+  const res = PLC.result(r, PNOW); p.place.de = res; res.mastered.forEach(id => { p.skip.de[id] = { t: PNOW, by: 'placement' }; });
+  ls.removeItem(PLC.KEY);
+  eq(JSON.stringify({ prog: p.prog, srs: p.srs, writes: p.writes }), keep, 'prog, srs, writes unverändert');
+  eq(p.place.de.level, 'A2', 'Ergebnis mit erreichtem Niveau');
+  eq(LD.usedLevels(p, 'de'), ['de-a1', 'de-a2'], 'loader liest level + mastered');
+  const ex = JSON.stringify(storage.exportData(p, 'x', 1));
+  ok(ex.indexOf('dt-place-run') < 0 && ex.indexOf('askedIds') < 0 && ex.indexOf('sAsked') < 0, 'Export enthält den Lauf nicht');
+  ok(ls.getItem(PLC.KEY) === null, 'Lauf nach Übernahme gelöscht');
+});
+test('loader: Einstufung lädt alle freigegebenen Niveaus (ADR-17)', () => {
+  eq(LD.routeLevels('de', { page: 'placement' }), ['de-a1', 'de-a2'], 'ohne Liste wie bisher A1+A2');
+  eq(LD.routeLevels('tr', { page: 'placement' }, ['A1']), ['tr-a1'], 'nur A1');
+  eq(LD.routeLevels('de', { page: 'placement' }, ['A1', 'A2', 'B1']), ['de-a1', 'de-a2', 'de-b1'], 'mit B1');
+  const fresh = { course: 'de', prog: { de: {}, tr: {} } };
+  eq(LD.neededLevels(fresh, 'de', { page: 'placement' }, MFX, ['A1', 'A2']), ['de-a1', 'de-a2'], 'neededLevels reicht complete durch');
 });
 
 (async () => {

@@ -29,7 +29,11 @@ window.KOPRU = {
     ['service', 'Dienstleistungen & Behörden', 'Hizmetler ve resmî işler'],
     // ab B1
     ['society', 'Gesellschaft & Zusammenleben', 'Toplum ve birlikte yaşam'],
-    ['opinion', 'Meinung & Argumentation', 'Görüş ve tartışma']
+    ['opinion', 'Meinung & Argumentation', 'Görüş ve tartışma'],
+    // ab B2
+    ['economy', 'Wirtschaft & Konsum', 'Ekonomi ve tüketim'],
+    ['science', 'Wissenschaft & Technik', 'Bilim ve teknoloji'],
+    ['culture', 'Kunst & Kultur', 'Sanat ve kültür']
   ],
   dialogs: {},   // Alltagsdialoge, z. B. dialogs['de-a1-d01'] = { level, title, lines, questions }
   addDialog: function (id, d) { d.id = id; this.dialogs[id] = d; },
@@ -115,13 +119,23 @@ window.KOPRU = {
           ['de-b1-18', 'Wiedergeben & vermuten: sollen, laut, werden + wohl; Konjunktiv I erkennen', 'Aktarma ve tahmin: sollen, laut, werden + wohl; Konjunktiv I’i tanımak']   // Lernziel: Başkalarının sözlerini ve haberleri aktarmak
         ],
         B2: [
-          ['de-b2-01', 'Passiv mit Modalverben', 'Modal fiilli edilgen'],
-          ['de-b2-02', 'Partizip I & II als Adjektiv', 'Sıfat-fiiller'],
-          ['de-b2-03', 'Indirekte Rede (Konjunktiv I)', 'Dolaylı anlatım'],
-          ['de-b2-04', 'Zweiteilige Konnektoren', 'sowohl … als auch, weder … noch'],
-          ['de-b2-05', 'Nominalisierung', 'İsimleştirme'],
-          ['de-b2-06', 'Futur I & II', 'Gelecek zaman'],
-          ['de-b2-07', 'Modalpartikeln', 'doch, mal, ja, eben']
+          ['de-b2-08', 'Gegensätze & Einräumungen: zwar … aber, dennoch, allerdings, hingegen, während', 'Karşıtlık ve kabul: zwar … aber, dennoch, allerdings, hingegen, während'],
+          ['de-b2-09', 'Folge & Bedingung: so … dass, folglich, infolgedessen, sofern, es sei denn', 'Sonuç ve koşul: so … dass, folglich, sofern, es sei denn'],
+          ['de-b2-11', 'Nomen & Adjektive mit Präposition; da(r)- + dass/zu', 'Edatlı isimler ve sıfatlar; da(r)- + dass/zu'],
+          ['de-b2-12', 'Infinitiv: gleich- und vorzeitig, im Passiv', 'Mastar: eş zamanlı, önceden olmuş, edilgen'],
+          ['de-b2-10', 'Präpositionen mit Genitiv: aufgrund, infolge, angesichts, hinsichtlich, bezüglich', 'Tamlayan hâlli edatlar: aufgrund, infolge, angesichts, hinsichtlich, bezüglich'],
+          ['de-b2-05', 'Nominalisierung: Nebensatz ↔ Präpositionalgruppe', 'İsimleştirme: yan cümle ↔ edatlı öbek'],
+          ['de-b2-17', 'Zeit in Texten: binnen, seit, inzwischen, mittlerweile, bislang, daraufhin', 'Metinlerde zaman: binnen, seit, inzwischen, mittlerweile, bislang, daraufhin'],
+          ['de-b2-02', 'Partizip I & kurze Partizipialattribute', 'Partizip I ve kısa sıfat-fiil öbekleri'],
+          ['de-b2-13', 'Relativsätze III: wer …, was, worüber; Relativsatz ↔ Partizip', 'İlgi cümleleri III: wer …, was, worüber; ilgi cümlesi ↔ sıfat-fiil'],
+          ['de-b2-01', 'Passiv-Ersatz & Zustandspassiv: man, sich lassen, sein + zu, -bar', 'Edilgen yerine geçen yapılar ve durum edilgeni: man, sich lassen, sein + zu, -bar'],
+          ['de-b2-03', 'Indirekte Rede mit Konjunktiv I', 'Konjunktiv I ile dolaylı anlatım'],
+          ['de-b2-06', 'Futur II & Vermutung über Vergangenes', 'Futur II ve geçmiş hakkında tahmin'],
+          ['de-b2-14', 'Irreale Vergleiche & Konjunktiv II der Vergangenheit mit Modalverb/Passiv', 'Gerçek dışı karşılaştırmalar ve modal fiil/edilgenle geçmiş Konjunktiv II'],
+          ['de-b2-07', 'Modalpartikeln: doch, ja, eben, halt, mal, wohl, eigentlich', 'Modalpartikeln (konuşmaya renk katan küçük sözcükler): doch, ja, eben, halt, mal, wohl, eigentlich'],
+          ['de-b2-15', 'Satzstellung: Mittelfeld & Vorfeld', 'Cümle dizilişi: Mittelfeld ve Vorfeld'],
+          ['de-b2-16', 'Wortbildung: un-, -bar, -los, -frei, -reich; trennbar/untrennbar', 'Kelime türetme: un-, -bar, -los, -frei, -reich; ayrılan/ayrılmayan fiiller'],
+          ['de-b2-18', 'Register: formell – neutral – umgangssprachlich', 'Dil düzeyi: resmî – nötr – günlük konuşma']
         ],
         C1: [
           ['de-c1-01', 'Nominalstil vs. Verbalstil', 'İsim üslubu – fiil üslubu'],
@@ -208,12 +222,23 @@ window.KOPRU = {
           ['tr-b1-14', 'Textkonnektoren: ancak, oysa, üstelik, ayrıca, yine de, dolayısıyla, kısacası', 'Metin bağlayıcıları']   // Lernziel: Meinungstexte gliedern
         ],
         B2: [
-          ['tr-b2-01', '-(y)ArAk & -mAdAn', 'Zarf-fiiller'],
-          ['tr-b2-02', '-DIkçA & -(y)AlI', 'Zarf-fiiller 2'],
-          ['tr-b2-03', 'Irrealis -sAydI', 'Gerçek dışı şart'],
-          ['tr-b2-04', 'Zusammengesetzte Zeiten', 'Birleşik zamanlar (-mıştı, -acaktı)'],
-          ['tr-b2-05', 'Partikeln: ya, ki, bile, da', 'Pekiştirme edatları'],
-          ['tr-b2-06', 'Postpositionen: göre, rağmen, dolayı', 'Edatlar']
+          ['tr-b2-03', 'Irrealis -sAydI, -mAsAydI', 'Gerçek dışı şart'],
+          ['tr-b2-12', 'Einräumung & Alternative (zwar …, statt …, lieber als)', 'Taviz ve tercih'],
+          ['tr-b2-13', 'Textkonnektoren II: oysaki, ne var ki, mademki, meğer, nitekim, hatta, aksine', 'Metin bağlayıcıları 2'],
+          ['tr-b2-11', 'Zweck & Folge: -mAk üzere, -sIn diye, -mAk amacıyla, öyle … ki', 'Amaç ve sonuç'],
+          ['tr-b2-07', 'Partizipien II: -(A)r/-mAz, -mIş, -(y)AsI als Attribut; Partizipketten', 'Sıfat-fiiller 2'],
+          ['tr-b2-06', 'Postpositionen der Schriftsprache: -e göre, -e karşın, -e dair, -e ilişkin, açısından, sayesinde, nedeniyle', 'Edat ve edat öbekleri'],
+          ['tr-b2-09', 'Bedingung & Vergleich schriftlich: -DIğI takdirde, -DIğI sürece, -mAsI halinde, -DIğI gibi', 'Koşul ve karşılaştırma'],
+          ['tr-b2-02', 'Zeit II: -(y)AlI, -r -mAz, -DIğI sırada, -mAsIylA, -(y)AnA dek', 'Zaman bildiren yapılar 2'],
+          ['tr-b2-04', 'Zusammengesetzte Formen II: rivayet & şart (-(I)yormuş, -(y)AcAkmIş, -DIysA, -(I)yorsA)', 'Birleşik zamanlar (rivayet, şart)'],
+          ['tr-b2-15', 'Modalität & Vermutung II: -mAlIymIş, -(y)AbilIrdI, -mIş olmalı, olsa gerek', 'Kip ve tahmin 2'],
+          ['tr-b2-08', 'Wiedergabe II: Fragen, Bitten, Befehle; -Ip -mAdIğInI; -mAsInI istedi', 'Dolaylı anlatım 2'],
+          ['tr-b2-10', 'Passiv II & Kausativ kombiniert: tarafından, -CA, yaptırıldı, yaptırtmak', 'Edilgen ve ettirgen birlikte'],
+          ['tr-b2-17', 'Nachrichten- und Berichtsstil verstehen: -mAktA(dIr), -DIğI bildirildi, -DIr', 'Haber dili'],
+          ['tr-b2-14', 'Aktionsart-Verben: -(y)Ivermek, -(y)Adurmak, -(y)Agelmek, -(y)Akalmak, -(y)Ayazmak', 'Birleşik fiiller'],
+          ['tr-b2-05', 'Partikeln: ya, ki, bile, da, hani, işte, sanki, artık', 'Pekiştirme edatları'],
+          ['tr-b2-16', 'Wortbildung II: -(I)m, -GI, -(y)IcI, -sAl, -lAş-, -lAn-, -CA', 'Yapım ekleri 2'],
+          ['tr-b2-18', 'Register: resmî – nötr – samimi (siz/sen, rica kalıpları, efendim)', 'Dil düzeyleri']
         ],
         C1: [
           ['tr-c1-01', 'Formelle & Schriftsprache', 'Resmî yazı dili'],

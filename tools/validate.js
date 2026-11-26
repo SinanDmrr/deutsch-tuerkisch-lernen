@@ -184,7 +184,7 @@ function checkExercise(e, where) {
   useId(e.id, where);
   if (!e.e) warn('Erklärung (e) fehlt', e.id);
   if (e.ext != null && e.ext !== 1) err('ext darf nur 1 sein (Erweiterung eines Niveaus, A1-Aufrüstung P0)', e.id);
-  if (e.ext != null && /^[a-z]{2}-b1-/.test(String(e.id || ''))) err('ext ist ab B1 nicht vorgesehen (nur A1-Erweiterung)', e.id);
+  if (e.ext != null && /^[a-z]{2}-(b1|b2)-/.test(String(e.id || ''))) err('ext ist ab B1 nicht vorgesehen (nur A1-Erweiterung)', e.id);
   switch (e.t) {
     case 'mc': case 'listen':
       if (!Array.isArray(e.o) || !(e.a >= 0 && e.a < e.o.length)) err('ungültige Antwort', e.id);
@@ -233,11 +233,12 @@ Object.entries(K.vocab || {}).forEach(([key, list]) => {
     if (v.id && String(v.id).startsWith(key + '.w') && !/^\d{3,}$/.test(String(v.id).slice(key.length + 2))) warn('Wort-ID sollte <kurs>-<niveau>.w<nnn> sein', v.id);
     if (!v.t || !v.n) err('Wort ohne t/n', v.id);
     if (v.ext != null && v.ext !== 1) err('ext darf nur 1 sein (Erweiterung eines Niveaus, A1-Aufrüstung P0)', v.id);
-    if (v.ext != null && /-b1$/.test(key)) err('ext ist ab B1 nicht vorgesehen', v.id);
+    if (v.ext != null && /-(b1|b2)$/.test(key)) err('ext ist ab B1 nicht vorgesehen', v.id);
     if (!v.ex || !v.exn) warn('Wort ohne Beispielsatz', v.id);
     if (key.startsWith('de-') && /^(der|die|das) /.test(v.t) === false && v.pos === 'n') err('Nomen ohne Artikel', v.id);
     // ab A2: ID-Muster <kurs>-a2.w<nnn> bzw. <kurs>-b1.w<nnn> (genau dreistellig bis 999) und optionale Verb-Zusatzfelder
-    if (/-(a2|b1)$/.test(key) && v.id && !new RegExp('^' + key + '\\.w\\d{3}$').test(String(v.id))) err(`${key.slice(3).toUpperCase()}-Wort-ID muss ${key}.w<nnn> lauten`, v.id);
+    if (/-(a2|b1|b2)$/.test(key) && v.id && !new RegExp('^' + key + '\\.w\\d{3}$').test(String(v.id))) err(`${key.slice(3).toUpperCase()}-Wort-ID muss ${key}.w<nnn> lauten`, v.id);
+    if (v.f != null && (!Array.isArray(v.f) || !v.f.length || !v.f.every(x => typeof x === 'string' && x.trim()))) err('Feld „f“ muss eine nicht leere Liste gefundener Formen (Texte) sein', v.id);
     if (v.topic && !(K.wordfields || []).some(f => f[0] === v.topic)) err('Wortfeld (topic) unbekannt', v.id, v.topic);
     const verbFields = key.startsWith('de-') ? ['pf', 'rek'] : ['ao', 'rek'];
     ['pf', 'ao', 'rek'].forEach(f => {
@@ -264,17 +265,21 @@ const stringsOf = o => typeof o === 'string' ? [o] : (o && typeof o === 'object'
 Object.keys(K.courses).forEach(cid => {
   const tr = cid === 'tr';
   // Zusammenhang je Niveau (A1, A2): Wort kommt in keinem Text/Dialog/Übung des Niveaus vor
-  ['a1', 'a2', 'b1'].forEach(lv => {
+  ['a1', 'a2', 'b1', 'b2'].forEach(lv => {
     const words = (K.vocab || {})[cid + '-' + lv] || [];
     if (!words.length) { console.log(`Info: Zusammenhangsprüfung ${lv.toUpperCase()} (${cid}) inaktiv – noch keine Wörter`); return; }
     let corpus = '';
     [K.texts, K.dialogs, K.content].forEach(src => Object.entries(src || {}).forEach(([id, t]) => { if (id.startsWith(cid + '-' + lv + '-')) corpus += ' ' + stringsOf(t).join(' '); }));
     corpus = ' ' + normW(corpus).join(' ');
+    // Feld f (B2, Konzept §4.2.3): gefundene Formen – jede muss im Korpus stehen; Beispielsatz ex zählt nicht
+    if (lv === 'b2') words.forEach(v => (Array.isArray(v.f) ? v.f : []).forEach(x => { if (!corpus.includes(' ' + normW(x).join(' ') + ' ') && !corpus.includes(' ' + normW(x).join(' '))) err(`Form „${x}“ (Feld f) steht in keinem B2-Text/-Dialog/-Übung`, v.id); }));
     const lonely = words.filter(v => {
+      if (lv === 'b2' && Array.isArray(v.f) && v.f.length) return false;
       const toks = normW(String(v.t).replace(/^(der|die|das|sich)\s+/i, '')).filter(w => w.length >= 3 || normW(v.t).length === 1);
       return !toks.some(w => corpus.includes(w.length >= 4 ? ' ' + stemOf(w, tr) : ' ' + w + ' '));
     });
-    if (lonely.length) warn(`${lonely.length} von ${words.length} ${lv.toUpperCase()}-Wörtern (${cid}) kommen in keinem ${lv.toUpperCase()}-Text/-Dialog/-Übung vor, z. B.: ` + lonely.slice(0, 15).map(v => v.t).join(', '));
+    if (lonely.length && lv === 'b2') err(`${lonely.length} von ${words.length} B2-Wörtern (${cid}) ohne Kontext (B2-Wort ohne Kontext = FEHLER), z. B.: ` + lonely.slice(0, 15).map(v => v.id + ' ' + v.t).join(', '));
+    else if (lonely.length) warn(`${lonely.length} von ${words.length} ${lv.toUpperCase()}-Wörtern (${cid}) kommen in keinem ${lv.toUpperCase()}-Text/-Dialog/-Übung vor, z. B.: ` + lonely.slice(0, 15).map(v => v.t).join(', '));
   });
   // Abdeckung je Text: A1- + A2-Wortschatz + gloss. Nicht gezählt: Zahlen, Eigennamen (TR: Wörter mit Apostroph-Suffix, großgeschrieben mitten im Satz;
   // DE: großgeschriebenes Wort, das kein Nomen nach Artikel/Adjektiv ist, Sprechernamen, Unterschriften), Stoppwörter (tools/stopwords.js) gelten als bekannt.
@@ -340,6 +345,7 @@ Object.entries(K.texts || {}).forEach(([id, t]) => {
   // Längen-Richtwert nach Niveau: A1 Lesen 25–90, Hören 20–70 (ab A2 wie in texts.js: 60–180 / 30–120)
   const isA1 = /^[a-z]+-a1-/.test(id);
   r.warnings.forEach(m => { if (isA1 && /^Länge /.test(m)) return; warn(lbl, m, id); });
+  if (/^[a-z]+-b2-/.test(id)) { const n = TX.wordCount(t), L = t.kind === 'listen', lo = L ? 120 : 200, hi = L ? 200 : 320; if (n && (n < lo || n > hi)) warn(lbl, `Länge ${n} Wörter (Richtwert B2 ${lo}–${hi})`, id); }
   if (isA1) { const n = TX.wordCount(t), lo = t.kind === 'listen' ? 20 : 25, hi = t.kind === 'listen' ? 70 : 90; if (n && (n < lo || n > hi)) warn(lbl, `Länge ${n} Wörter (Richtwert A1 ${lo}–${hi})`, id); }
   (t.questions || []).forEach((q, i) => checkExercise(q, id + '?' + i));
 });
