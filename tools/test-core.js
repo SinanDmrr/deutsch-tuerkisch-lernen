@@ -1161,7 +1161,7 @@ test('B2-Lehrplan (Paket 0)', () => {
     eq(ids, ORD[c].map(n => c + '-b2-' + (n < 10 ? '0' : '') + n), c + ' B2: 17 Themen in Konzept-Reihenfolge');
     eq(ids.length, new Set(ids).size, c + ' B2: IDs eindeutig');
     ok(rows.every(r => r.length === 3 && r[1] && r[2]), c + ' B2: Titel in beiden Sprachen');
-    eq(KK.courses[c].complete, ['A1', 'A2'], c + ' B2: complete unverändert (im Aufbau)');
+    eq(KK.courses[c].complete.indexOf('B2'), -1, c + ' B2: nicht freigegeben (im Aufbau)');
   });
   ok(KK.courses.de.levels.B2.every(r => r[0] !== 'de-b2-04') && KK.courses.tr.levels.B2.every(r => r[0] !== 'tr-b2-01'), 'de-b2-04 / tr-b2-01 entfallen');
   const f = KK.wordfields.map(x => x[0]); ok(['economy', 'science', 'culture'].every(x => f.indexOf(x) >= 0), 'Wortfelder economy/science/culture');
