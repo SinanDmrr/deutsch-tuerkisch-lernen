@@ -451,6 +451,29 @@ Object.entries(K.dialogs || {}).forEach(([id, d]) => {
   }
 });
 
+// Jugendschutz: Lernende sind auch Kinder – keine vulgären/obszönen Wörter in Inhalten oder Oberfläche (auch nicht als falsche Antwort oder Beispiel)
+{
+  const DENY = ['ficken', 'fick', 'ficke', 'fickt', 'gefickt', 'scheiße', 'scheisse', 'scheiß', 'scheiss', 'arsch', 'arschloch', 'wichser', 'wichsen', 'fotze', 'titten', 'möse', 'hure', 'huren', 'nutte', 'nutten', 'schlampe', 'pisse', 'pissen', 'bumsen', 'pimmel', 'hurensohn', 'schwuchtel', 'neger', 'vögeln', 'fuck', 'shit', 'bitch', 'pussy',
+    'sik', 'siktir', 'siktim', 'sikik', 'sikmek', 'sikeyim', 'yarak', 'yarağı', 'yaraklı', 'amcık', 'amcığı', 'orospu', 'orospuluk', 'piç', 'göt', 'götü', 'götveren', 'boktan', 'ibne', 'pezevenk', 'kahpe', 'kaltak', 'puşt', 'gavat', 'taşak', 'taşşak', 'çük', 'şerefsiz', 'ananı', 'avradını', 'zenci'];
+  const REVIEW = ['schwanz', 'geil', 'geile', 'geiler', 'sex', 'sexuell', 'porno', 'hitler', 'nazi', 'vergewaltigen', 'sarhoş', 'seks', 'cinsel', 'tecavüz', 'intihar', 'bok', 'meme', 'memeler'];
+  const lc = s => s.replace(/İ/g, 'i').replace(/I/g, 'ı').toLowerCase();
+  const deny = new Set(DENY), review = new Set(REVIEW), files = [];
+  ['js/content', 'js/core'].forEach(d => fs.readdirSync(path.join(root, d)).forEach(f => { if (/\.js$/.test(f) && f !== 'manifest.js') files.push(d + '/' + f); }));
+  files.push('js/app.js', 'js/curriculum.js', 'index.html');
+  files.forEach(f => {
+    fs.readFileSync(path.join(root, f), 'utf8').split('\n').forEach((ln, i) => {
+      const line = lc(ln.replace(/\*/g, ''));
+      let m; const re = /[a-zäöüßçğışâîû]+/g;
+      while ((m = re.exec(line))) {
+        const t = m[0];
+        if (m.index > 0 && line[m.index - 1] === '-') continue;   // Endungs-/Stammschreibung (oku-y-arak) ist keine Wortverwendung
+        if (deny.has(t)) err('Anstößiges Wort „' + t + '“ – nicht zulässig (Jugendschutz):', f + ':' + (i + 1));
+        else if (review.has(t)) warn('Sensibles Wort „' + t + '“ – im Kontext prüfen:', f + ':' + (i + 1));
+      }
+    });
+  });
+}
+
 console.log(`\nVersion: ${appVersion || '?'}${swVersion ? ' (sw.js ✓)' : ''} · Skripte: ${scripts.length}`);
 console.log(`Themen mit Inhalt: ${Object.keys(K.content).length} · Übungen: ${nEx} · Wörter: ${nVocab} · Dialoge: ${nDia} · Lesetexte: ${nTxt} · Schreibaufgaben: ${nWrite}`);
 if (WRONG_SHADOW.total) console.log("wrong-Schlüssel-Schatten (nur Schreibweise anders als Lösung): " + WRONG_SHADOW.total + " – " + Object.keys(WRONG_SHADOW.by).sort().map(k => k + ": " + WRONG_SHADOW.by[k]).join(", "));

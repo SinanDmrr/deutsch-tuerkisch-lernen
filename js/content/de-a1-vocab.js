@@ -353,7 +353,7 @@ K.addVocab('de-a1', [
   { id: "de-a1.w322", t: "nett", pos: "adj", n: "nazik, cana yakın", ex: "Die Nachbarin ist sehr nett.", exn: "Komşu kadın çok cana yakın.", topic: "adj", note: "Türkçedeki „net“ (açık, belirgin) ile karıştırma!" },
   { id: "de-a1.w323", t: "kaputt", pos: "adj", n: "bozuk; kırık", ex: "Mein Handy ist kaputt.", exn: "Telefonum bozuk.", topic: "adj", note: "Günlük dilde „Ich bin kaputt“ = Çok yorgunum, bittim." },
   { id: "de-a1.w324", t: "rot", pos: "adj", n: "kırmızı", ex: "Die Ampel ist rot.", exn: "Işık kırmızı.", topic: "adj" },
-  { id: "de-a1.w325", t: "blau", pos: "adj", n: "mavi", ex: "Der Himmel ist blau.", exn: "Gökyüzü mavi.", topic: "adj", note: "Günlük dilde „blau sein“ ayrıca „sarhoş olmak“ demektir." },
+  { id: "de-a1.w325", t: "blau", pos: "adj", n: "mavi", ex: "Der Himmel ist blau.", exn: "Gökyüzü mavi.", topic: "adj" },
   { id: "de-a1.w326", t: "grün", pos: "adj", n: "yeşil", ex: "Im Frühling ist alles grün.", exn: "İlkbaharda her yer yemyeşil.", topic: "adj" },
   { id: "de-a1.w327", t: "weiß", pos: "adj", n: "beyaz", ex: "Die Wände sind weiß.", exn: "Duvarlar beyaz.", topic: "adj", note: "Dikkat: „ich weiß“ (biliyorum) aynı yazılır ama başka bir kelimedir." },
   { id: "de-a1.w328", t: "schwarz", pos: "adj", n: "siyah", ex: "Ich trinke den Kaffee schwarz.", exn: "Kahveyi sütsüz içiyorum.", topic: "adj", note: "Kahve için „schwarz“ = sütsüz (genelde şekersiz de). Şekerli istersen: schwarz mit Zucker." },
