@@ -1161,7 +1161,7 @@ test('B1-Lehrplan (Paket 0b)', () => {
     eq(ids.length, new Set(ids).size, c + ' B1: IDs eindeutig');
     ok(ids.every(i => i.indexOf(c + '-b1-') === 0), c + ' B1: ID-Präfix');
     ok(KK.courses[c].levels.B1.every(r => r.length === 3 && r[1] && r[2]), c + ' B1: Titel in beiden Sprachen');
-    ok(KK.courses[c].complete.indexOf('B1') < 0, c + ' B1: nicht freigegeben (im Aufbau)');
+    ok(KK.courses[c].complete.indexOf('B1') >= 0, c + ' B1: freigegeben');
   });
   eq(KK.courses.de.levels.B1.map(r => r[0]).indexOf('de-b1-19'), KK.courses.de.levels.B1.map(r => r[0]).indexOf('de-b1-05') + 1, 'de-b1-19 (Futur I) direkt hinter de-b1-05');
   ok(KK.courses.de.levels.B1.every(r => r[0] !== 'de-b1-09'), 'de-b1-09 entfällt (n-Deklination in de-b1-06)');
@@ -1278,7 +1278,7 @@ test('B1: CERT_RULES, Meinungstexte, Abzeichen, Zertifikat erst bei complete', (
   eq(Bd.award(p, 'de', { b1: { topicsDone: 5, writesDone: 3, wordsKnown: 9, wordsTotal: 9, complete: false }, cert: { B1: false } }, 1).map(b => b.id), ['b1-topics-5', 'b1-write-3'], 'B1: Wörter/Zertifikat erst bei complete');
   eq(Bd.award(p, 'de', { b1: { wordsKnown: 9, wordsTotal: 9, complete: true }, cert: { B1: true } }, 2).map(b => b.id), ['words-b1', 'cert-B1'], 'B1 nach Freigabe');
   const cur = fs.readFileSync(path.join(root, 'js', 'curriculum.js'), 'utf8'), c2 = { window: {} }; vm.createContext(c2); vm.runInContext(cur, c2);
-  ok(c2.window.KOPRU.courses.de.complete.indexOf('B1') < 0 && c2.window.KOPRU.courses.tr.complete.indexOf('B1') < 0, 'B1 nicht in complete (Zertifikat „im Aufbau“)');
+  ok(c2.window.KOPRU.courses.de.complete.indexOf('B1') >= 0 && c2.window.KOPRU.courses.tr.complete.indexOf('B1') >= 0, 'B1 freigegeben (in complete)');
 });
 
 test('badges: A2-Abzeichen (neue IDs, alte unverändert, aus Fortschritt abgeleitet)', () => {
