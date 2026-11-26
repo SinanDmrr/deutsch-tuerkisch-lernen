@@ -212,7 +212,7 @@ window.KOPRU = {
           ['tr-b1-08', 'Gleichzeitigkeit -(y)ken', 'Zarf-fiil -ken'],   // Lernziel: „Yolda yürürken …“
           ['tr-b1-09', 'wenn/als: -DIğIndA, -DIğI zaman, -(y)IncA', 'Zaman bildiren yapılar'],   // Lernziel: Zeitpunkte und Abfolgen ausdrücken
           ['tr-b1-16', 'bis, je mehr, seit: -(y)IncAyA kadar, -DIkçA, -DIğIndAn beri', 'Zaman ve ölçü bildiren zarf-fiiller'],   // Lernziel: Dauer, Grenze und Steigerung
-          ['tr-b1-12', 'Art und Weise & „ohne“: -(y)ArAk, -mAdAn', 'Zarf-fiil -arak, -madan'],   // Lernziel: „Koşarak geldi“, „sormadan aldı“
+          ['tr-b1-12', 'Art und Weise & „ohne“: -arak/-erek, -madan/-meden', 'Zarf-fiil: -arak/-erek, -madan/-meden'],   // Lernziel: „Koşarak geldi“, „sormadan aldı“
           ['tr-b1-13', 'Grund & Gegengrund: -DIğI için, -DIğIndAn, -mAsInA rağmen, -DIğI halde', 'Sebep ve karşıtlık'],   // Lernziel: Argumentieren in Nebensatzform
           ['tr-b1-04', 'Bedingung -sA: eğer, -(y)sA am Nomen, -mAzsA, -sA bile', 'Şart kipi'],   // Lernziel: reale und mögliche Bedingungen
           ['tr-b1-15', 'Wunsch & Vermutung: keşke -sA, -DIr, herhalde, galiba, olabilir', 'Dilek ve tahmin'],   // Lernziel: wünschen, bedauern, vermuten

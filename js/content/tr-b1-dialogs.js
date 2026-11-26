@@ -150,7 +150,7 @@ K.addDialog('tr-b1-d04', {
       why: { 1: "„İki aylık kira“ = zwei Monatsmieten, nicht eine.", 2: "„İki“ heißt zwei, nicht drei." },
       e: "„Depozito iki aylık kira.“ = Die Kaution ist zwei Monatsmieten." },
     { id: "tr-b1-d04.2", t: "gap", q: "İmzala___ önce birkaç maddeyi sormak istiyorum. (Bevor ich unterschreibe, möchte ich einige Punkte fragen.)", a: ["madan"],
-      wrong: { "meden": "Letzter Vokal von *imzala-* ist **a** → -madan, nicht -meden.", "dıktan": "-DIktAn braucht *sonra* („nachdem“), nicht *önce*.", "arak": "-(y)ArAk heißt „indem“; für „bevor“ braucht man -mAdAn önce." },
+      wrong: { "meden": "Letzter Vokal von *imzala-* ist **a** → -madan, nicht -meden.", "dıktan": "-DIktAn braucht *sonra* („nachdem“), nicht *önce*.", "arak": "-arak/-erek heißt „indem“; für „bevor“ braucht man -mAdAn önce." },
       e: "imzala- + **ma** + **dan** + önce = **imzalamadan önce** (bevor man unterschreibt)." },
     { id: "tr-b1-d04.3", t: "match", q: "Ordne die Wörter rund um die Miete zu.", p: [["depozito", "Kaution"], ["kiracı", "Mieter"], ["ev sahibi", "Vermieter"], ["kira artışı", "Mieterhöhung"], ["sözleşme", "Vertrag"]],
       e: "Diese Wörter helfen bei jedem Mietvertrag. Merke: „ev sahibi“ ist der Vermieter, „kiracı“ der Mieter." },
